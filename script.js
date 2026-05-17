@@ -1,16 +1,18 @@
-// ==================== INITIALIZE LOCALSTORAGE ====================
-function initializeData() {
-
-    function getData() {
+// ==================== HELPER FUNCTIONS ====================
+function getData() {
     const data = localStorage.getItem('pck_users');
-    return data ? JSON.parse(data) : { students: [], teachers: [], hods: [], courses: [], classes: [], feePayments: [], notices: [] };
+    return data ? JSON.parse(data) : {
+        students: [], teachers: [], hods: [],
+        courses: [], classes: [], feePayments: [], notices: []
+    };
 }
 
 function saveData(data) {
     localStorage.setItem('pck_users', JSON.stringify(data));
 }
 
-
+// ==================== INITIALIZE LOCALSTORAGE ====================
+function initializeData() {
     if (!localStorage.getItem('pck_users')) {
         const demoData = {
             students: [
@@ -68,10 +70,96 @@ function saveData(data) {
     }
 }
 
-function renderDeputyDashboard() {
+// ==================== SHOW DASHBOARD ====================
+function showDashboard(role) {
+    document.getElementById('loginContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'block';
+    document.getElementById('statsGrid').style.display =
+        (role === 'admin' || role === 'deputy') ? 'grid' : 'none';
+
+    if (role === 'deputy') {
+        document.getElementById('dashboardTitle').innerHTML =
+            '<i class="fas fa-crown"></i> Deputy Principal Dashboard';
+        renderDeputyDashboard();
+    } else if (role === 'admin') {
+        document.getElementById('dashboardTitle').innerHTML =
+            '<i class="fas fa-user-shield"></i> H.O.D Dashboard';
+        renderAdminDashboard();
+    } else if (role === 'teacher') {
+        document.getElementById('dashboardTitle').innerHTML =
+            '<i class="fas fa-chalkboard-user"></i> Teacher Dashboard';
+        renderTeacherDashboard();
+    } else if (role === 'student') {
+        document.getElementById('dashboardTitle').innerHTML =
+            '<i class="fas fa-user-graduate"></i> Student Dashboard';
+        renderStudentDashboard();
+    }
+}
+
+// ==================== LOGIN LOGIC ====================
+function handleLogin(role, credentials) {
     const data = getData();
 
-    // Summary stats
+    if (role === 'deputy' && credentials.password === 'Dputy254') {
+        sessionStorage.setItem('currentUser', JSON.stringify({
+            role: 'deputy', name: 'Deputy Principal'
+        }));
+        showDashboard('deputy');
+        return true;
+    }
+
+    if (role === 'admin') {
+        const hod = data.hods?.find(h => h.password === credentials.password);
+        if (hod) {
+            sessionStorage.setItem('currentUser', JSON.stringify({
+                role: 'admin', name: hod.name,
+                hodId: hod.id, department: hod.department
+            }));
+            showDashboard('admin');
+            return true;
+        }
+        alert('❌ Invalid H.O.D password. Contact Deputy.');
+        return false;
+    }
+
+    if (role === 'teacher') {
+        const teacher = data.teachers.find(
+            t => t.id === credentials.staffNo && t.password === credentials.password
+        );
+        if (teacher) {
+            sessionStorage.setItem('currentUser', JSON.stringify({
+                role: 'teacher', id: teacher.id,
+                name: teacher.name, department: teacher.department
+            }));
+            showDashboard('teacher');
+            return true;
+        }
+        alert('❌ Invalid teacher credentials. Contact H.O.D.');
+        return false;
+    }
+
+    if (role === 'student') {
+        const student = data.students.find(
+            s => s.id === credentials.admissionNo && s.passcode === credentials.passcode
+        );
+        if (student) {
+            sessionStorage.setItem('currentUser', JSON.stringify({
+                role: 'student', id: student.id, name: student.name
+            }));
+            showDashboard('student');
+            return true;
+        }
+        alert('❌ Invalid student credentials. Contact teacher.');
+        return false;
+    }
+
+    alert('❌ Invalid credentials.');
+    return false;
+}
+
+// ==================== RENDER DEPUTY DASHBOARD ====================
+function renderDeputyDashboard() {
+    const data = getData();
     document.getElementById('totalStudents').innerText = data.students.length;
     document.getElementById('totalTeachers').innerText = data.teachers.length;
     document.getElementById('totalCourses').innerText = data.courses.length;
@@ -79,23 +167,18 @@ function renderDeputyDashboard() {
     document.getElementById('totalRevenue').innerText = totalRevenue.toLocaleString();
 
     const content = `
-        <!-- Deputy Banner -->
         <div class="deputy-banner">
             <i class="fas fa-crown"></i>
             <div>
                 <h3>Deputy Principal — PC Kinyanjui Technical Training Institute</h3>
-                <p>Full system oversight • Password: Dputy254</p>
+                <p>Full system oversight</p>
             </div>
         </div>
 
-        <!-- Generate HOD Password -->
         <div class="form-card">
             <h3 style="color:var(--accent-gold);">
                 <i class="fas fa-key"></i> Generate H.O.D Password
             </h3>
-            <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:1rem;">
-                Fill in H.O.D details — system will generate their login password
-            </p>
             <div class="form-group">
                 <label>First Name</label>
                 <input type="text" id="hodFirstName" placeholder="First Name">
@@ -122,27 +205,19 @@ function renderDeputyDashboard() {
             <button class="btn-secondary" onclick="generateHodPassword()">
                 <i class="fas fa-key"></i> Generate H.O.D Password
             </button>
-
-            <!-- Generated Password Display -->
             <div class="gen-card" id="hodPasswordCard">
-                <p style="color:var(--text-secondary); font-size:0.85rem;">
-                    Generated password for H.O.D:
-                </p>
+                <p style="color:var(--text-secondary); font-size:0.85rem;">Generated password:</p>
                 <div class="gen-password" id="hodGeneratedPassword"></div>
                 <p style="font-size:0.8rem; color:var(--text-secondary); text-align:center;">
-                    Share this password with the H.O.D — they use it to login
+                    Share with H.O.D — they use it to login
                 </p>
             </div>
         </div>
 
-        <!-- Generate Teacher Password -->
         <div class="form-card">
             <h3 style="color:var(--accent-gold);">
                 <i class="fas fa-chalkboard-user"></i> Generate Teacher Password
             </h3>
-            <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:1rem;">
-                Deputy can also generate teacher passwords directly
-            </p>
             <div class="form-group">
                 <label>First Name</label>
                 <input type="text" id="depTeacherFirstName" placeholder="First Name">
@@ -173,19 +248,15 @@ function renderDeputyDashboard() {
             <button class="btn-secondary" onclick="generateTeacherPassword()">
                 <i class="fas fa-key"></i> Generate Teacher Password
             </button>
-
             <div class="gen-card" id="teacherPasswordCard">
-                <p style="color:var(--text-secondary); font-size:0.85rem;">
-                    Generated password for Teacher:
-                </p>
+                <p style="color:var(--text-secondary); font-size:0.85rem;">Generated password:</p>
                 <div class="gen-password" id="teacherGeneratedPassword"></div>
                 <p style="font-size:0.8rem; color:var(--text-secondary); text-align:center;">
-                    Share this password with the Teacher
+                    Share with Teacher
                 </p>
             </div>
         </div>
 
-        <!-- All HODs Table -->
         <div class="table-container">
             <h3 style="padding:1rem; color:var(--accent-gold);">
                 <i class="fas fa-user-shield"></i> All H.O.Ds
@@ -205,16 +276,13 @@ function renderDeputyDashboard() {
                             <td>${h.name}</td>
                             <td><span class="role-tag hod">${h.department}</span></td>
                             <td>${h.phone || '-'}</td>
-                            <td style="font-family:monospace; color:var(--accent-gold);">
-                                ${h.password}
-                            </td>
+                            <td style="font-family:monospace; color:var(--accent-gold);">${h.password}</td>
                         </tr>
                     `).join('')}
                 </tbody>
             </table>
         </div>
 
-        <!-- Department Summary -->
         <div class="table-container">
             <h3 style="padding:1rem; color:var(--accent-gold);">
                 <i class="fas fa-chart-bar"></i> Department Summary
@@ -234,7 +302,7 @@ function renderDeputyDashboard() {
                             <td>${dept}</td>
                             <td>${data.students.filter(s => s.course === dept).length}</td>
                             <td>${data.teachers.filter(t => t.department === dept).length}</td>
-                            <td>${(data.hods || []).find(h => h.department === dept)?.name || 
+                            <td>${(data.hods || []).find(h => h.department === dept)?.name ||
                                 '<span style="color:var(--danger)">Not assigned</span>'}</td>
                         </tr>
                     `).join('')}
@@ -242,14 +310,10 @@ function renderDeputyDashboard() {
             </table>
         </div>
 
-        <!-- Notice Board — Deputy -->
         <div class="form-card">
             <h3 style="color:var(--accent-gold);">
-                <i class="fas fa-bullhorn"></i> Notice Board
+                <i class="fas fa-bullhorn"></i> Post Notice → H.O.Ds
             </h3>
-            <h4 style="margin-bottom:1rem;">
-                <i class="fas fa-user-shield"></i> Post Notice → H.O.Ds
-            </h4>
             <div class="form-group">
                 <label>Title</label>
                 <input type="text" id="deputyNoticeTitle" placeholder="Notice title">
@@ -266,7 +330,6 @@ function renderDeputyDashboard() {
             </button>
         </div>
 
-        <!-- Notices from HODs to Deputy -->
         <div class="form-card">
             <h4 style="margin-bottom:1rem; color:var(--accent-gold);">
                 <i class="fas fa-envelope-open"></i> Notices from H.O.Ds
@@ -285,13 +348,13 @@ function renderDeputyDashboard() {
                         <p style="font-weight:600; margin-bottom:0.3rem;">${n.title}</p>
                         <p style="color:var(--text-secondary); font-size:0.9rem;">${n.message}</p>
                     </div>
-                `).join('')
-            }
+                `).join('')}
         </div>
     `;
     document.getElementById('dashboardContent').innerHTML = content;
 }
-// ==================== RENDER DASHBOARDS ====================
+
+// ==================== RENDER HOD DASHBOARD ====================
 function renderAdminDashboard() {
     const data = getData();
     document.getElementById('statsGrid').style.display = 'grid';
@@ -302,14 +365,12 @@ function renderAdminDashboard() {
     document.getElementById('totalRevenue').innerText = totalRevenue.toLocaleString();
 
     const content = `
-        <!-- HOD Welcome Banner -->
         <div style="background:var(--bg-elevated); border:1px solid var(--accent-gold);
         border-radius:12px; padding:1rem; margin-bottom:1.5rem; color:var(--accent-gold);">
             <i class="fas fa-user-shield"></i> <strong>Welcome, H.O.D</strong> —
             PC Kinyanjui Technical Training Institute
         </div>
 
-        <!-- Register Student -->
         <div class="form-card">
             <h3><i class="fas fa-user-plus"></i> Register Student</h3>
             <div class="form-group">
@@ -370,7 +431,6 @@ function renderAdminDashboard() {
             </button>
         </div>
 
-        <!-- Register Teacher -->
         <div class="form-card">
             <h3><i class="fas fa-chalkboard-user"></i> Register Teacher</h3>
             <div class="form-group">
@@ -410,7 +470,6 @@ function renderAdminDashboard() {
             </button>
         </div>
 
-        <!-- All Students Table -->
         <div class="table-container">
             <h3 style="padding:1rem; color:var(--accent-gold);">
                 <i class="fas fa-users"></i> All Students
@@ -418,26 +477,17 @@ function renderAdminDashboard() {
             <table>
                 <thead>
                     <tr>
-                        <th>Admission No</th>
-                        <th>Name</th>
-                        <th>Class</th>
-                        <th>Category</th>
-                        <th>Course</th>
-                        <th>Block</th>
-                        <th>Term</th>
-                        <th>Phone</th>
+                        <th>Admission No</th><th>Name</th><th>Class</th>
+                        <th>Category</th><th>Course</th><th>Block</th>
+                        <th>Term</th><th>Phone</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${data.students.map(s => `
                         <tr>
-                            <td>${s.id}</td>
-                            <td>${s.name}</td>
-                            <td>${s.class}</td>
-                            <td>${s.category || '-'}</td>
-                            <td>${s.course || '-'}</td>
-                            <td>${s.block || '-'}</td>
-                            <td>${s.term || '-'}</td>
+                            <td>${s.id}</td><td>${s.name}</td><td>${s.class}</td>
+                            <td>${s.category || '-'}</td><td>${s.course || '-'}</td>
+                            <td>${s.block || '-'}</td><td>${s.term || '-'}</td>
                             <td>${s.phone || '-'}</td>
                         </tr>
                     `).join('')}
@@ -445,7 +495,6 @@ function renderAdminDashboard() {
             </table>
         </div>
 
-        <!-- All Teachers Table -->
         <div class="table-container">
             <h3 style="padding:1rem; color:var(--accent-gold);">
                 <i class="fas fa-chalkboard-user"></i> All Teachers
@@ -453,10 +502,8 @@ function renderAdminDashboard() {
             <table>
                 <thead>
                     <tr>
-                        <th>Staff No</th>
-                        <th>Full Name</th>
-                        <th>Subject</th>
-                        <th>Block</th>
+                        <th>Staff No</th><th>Full Name</th>
+                        <th>Subject</th><th>Block</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -471,164 +518,96 @@ function renderAdminDashboard() {
                 </tbody>
             </table>
         </div>
+
+        <div class="form-card">
+            <h3 style="color:var(--accent-gold);">
+                <i class="fas fa-bullhorn"></i> Notice Board
+            </h3>
+            <h4 style="margin-bottom:1rem;">
+                <i class="fas fa-chalkboard-user"></i> Post Notice → Teachers
+            </h4>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="hodTeacherTitle" placeholder="Notice title">
+            </div>
+            <div class="form-group">
+                <label>Message</label>
+                <textarea id="hodTeacherMessage" placeholder="Write notice here..."
+                style="width:100%; padding:0.8rem; background:var(--bg-elevated);
+                border:1px solid var(--border); border-radius:10px;
+                color:var(--text-primary); min-height:80px; resize:vertical;"></textarea>
+            </div>
+            <button class="btn-secondary" onclick="postNotice('hod','teacher')">
+                <i class="fas fa-paper-plane"></i> Post to Teachers
+            </button>
+
+            <hr style="border-color:var(--border); margin:1.5rem 0;">
+
+            <h4 style="margin-bottom:1rem;">
+                <i class="fas fa-user-graduate"></i> Post Notice → Students
+            </h4>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="hodStudentTitle" placeholder="Notice title">
+            </div>
+            <div class="form-group">
+                <label>Message</label>
+                <textarea id="hodStudentMessage" placeholder="Write notice here..."
+                style="width:100%; padding:0.8rem; background:var(--bg-elevated);
+                border:1px solid var(--border); border-radius:10px;
+                color:var(--text-primary); min-height:80px; resize:vertical;"></textarea>
+            </div>
+            <button class="btn-secondary" onclick="postNotice('hod','student')">
+                <i class="fas fa-paper-plane"></i> Post to Students
+            </button>
+
+            <hr style="border-color:var(--border); margin:1.5rem 0;">
+
+            <h4 style="margin-bottom:1rem;">
+                <i class="fas fa-crown"></i> Send Notice → Deputy
+            </h4>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="hodDeputyTitle" placeholder="Notice title">
+            </div>
+            <div class="form-group">
+                <label>Message</label>
+                <textarea id="hodDeputyMessage" placeholder="Write notice here..."
+                style="width:100%; padding:0.8rem; background:var(--bg-elevated);
+                border:1px solid var(--border); border-radius:10px;
+                color:var(--text-primary); min-height:80px; resize:vertical;"></textarea>
+            </div>
+            <button class="btn-secondary" onclick="postNotice('hod','deputy')">
+                <i class="fas fa-paper-plane"></i> Send to Deputy
+            </button>
+
+            <hr style="border-color:var(--border); margin:1.5rem 0;">
+
+            <h4 style="margin-bottom:1rem; color:var(--accent-gold);">
+                <i class="fas fa-crown"></i> Notices from Deputy
+            </h4>
+            ${(getData().notices || []).filter(n => n.from === 'deputy' && n.to === 'hod').length === 0
+                ? `<p style="color:var(--text-secondary);">No notices from Deputy yet</p>`
+                : (getData().notices || []).filter(n => n.from === 'deputy' && n.to === 'hod').map(n => `
+                    <div style="background:var(--bg-elevated); border:1px solid var(--accent-gold);
+                    border-radius:10px; padding:1rem; margin-bottom:0.8rem;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                            <strong style="color:var(--accent-gold);">
+                                <i class="fas fa-crown"></i> Deputy Principal
+                            </strong>
+                            <small style="color:var(--text-secondary);">${n.date}</small>
+                        </div>
+                        <p style="font-weight:600; margin-bottom:0.3rem;">${n.title}</p>
+                        <p style="color:var(--text-secondary); font-size:0.9rem;">${n.message}</p>
+                    </div>
+                `).join('')}
+        </div>
     `;
     document.getElementById('dashboardContent').innerHTML = content;
 }
 
-
-
-// ==================== DEPUTY ACTIONS ====================
-window.generateHodPassword = function() {
-    const firstName = document.getElementById('hodFirstName')?.value?.trim();
-    const lastName = document.getElementById('hodLastName')?.value?.trim();
-    const phone = document.getElementById('hodPhone')?.value?.trim();
-    const department = document.getElementById('hodDepartment')?.value;
-
-    if (!firstName || !lastName || !phone || !department) {
-        return alert('❌ Please fill all H.O.D details!');
-    }
-
-    // Generate password: HOD-[Name initials]-[Random4digits]
-    const initials = `${firstName[0]}${lastName[0]}`.toUpperCase();
-    const random = Math.floor(1000 + Math.random() * 9000);
-    const password = `HOD-${initials}-${random}`;
-
-    // Save HOD to data
-    const data = getData();
-    if (!data.hods) data.hods = [];
-
-    // Check if department already has HOD
-    const existing = data.hods.find(h => h.department === department);
-    if (existing) {
-        if (!confirm(`${department} already has an H.O.D (${existing.name}). Replace?`)) return;
-        data.hods = data.hods.filter(h => h.department !== department);
-    }
-
-    const hodId = `HOD-${Date.now().toString().slice(-4)}`;
-    data.hods.push({
-        id: hodId,
-        firstName,
-        lastName,
-        name: `${firstName} ${lastName}`,
-        phone,
-        department,
-        password
-    });
-
-    saveData(data);
-
-    // Show generated password
-    document.getElementById('hodGeneratedPassword').innerText = password;
-    document.getElementById('hodPasswordCard').classList.add('show');
-
-    alert(`✅ H.O.D ${firstName} ${lastName} registered!\nDepartment: ${department}\nPassword: ${password}\n\nShare this password with the H.O.D`);
-};
-
-window.generateTeacherPassword = function() {
-    const firstName = document.getElementById('depTeacherFirstName')?.value?.trim();
-    const lastName = document.getElementById('depTeacherLastName')?.value?.trim();
-    const id = document.getElementById('depTeacherId')?.value?.trim();
-    const subject = document.getElementById('depTeacherSubject')?.value?.trim();
-    const department = document.getElementById('depTeacherDept')?.value;
-
-    if (!firstName || !lastName || !id || !subject || !department) {
-        return alert('❌ Please fill all teacher details!');
-    }
-
-    // Generate password: TCH-[Name initials]-[Random4digits]
-    const initials = `${firstName[0]}${lastName[0]}`.toUpperCase();
-    const random = Math.floor(1000 + Math.random() * 9000);
-    const password = `TCH-${initials}-${random}`;
-
-    // Save teacher
-    const data = getData();
-    const existing = data.teachers.find(t => t.id === id);
-    if (existing) return alert('❌ Staff number already exists!');
-
-    data.teachers.push({
-        id,
-        firstName,
-        lastName,
-        name: `${firstName} ${lastName}`,
-        subject,
-        department,
-        block: '-',
-        password
-    });
-
-    saveData(data);
-
-    document.getElementById('teacherGeneratedPassword').innerText = password;
-    document.getElementById('teacherPasswordCard').classList.add('show');
-
-    alert(`✅ Teacher ${firstName} ${lastName} registered!\nPassword: ${password}\n\nShare with teacher`);
-};
-
-
-window.postNotice = function(from, to) {
-    let title, message, department = '';
-
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
-
-    if (from === 'deputy' && to === 'hod') {
-        title = document.getElementById('deputyNoticeTitle')?.value?.trim();
-        message = document.getElementById('deputyNoticeMessage')?.value?.trim();
-    } 
-    // Add more cases later if needed
-
-    if (!title || !message) {
-        return alert('❌ Please enter both title and message!');
-    }
-
-    const data = getData();
-    if (!data.notices) data.notices = [];
-
-    data.notices.unshift({
-        from,
-        to,
-        title,
-        message,
-        department: currentUser.department || 'General',
-        postedBy: currentUser.name || from,
-        date: new Date().toLocaleDateString('en-KE', {
-            day: '2-digit', month: 'short', year: 'numeric',
-            hour: '2-digit', minute: '2-digit'
-        })
-    });
-
-    saveData(data);
-    alert(`✅ Notice posted successfully!`);
-
-    // Refresh current dashboard
-    if (currentUser.role === 'deputy') renderDeputyDashboard();
-    else if (currentUser.role === 'admin') renderAdminDashboard();
-    else if (currentUser.role === 'teacher') renderTeacherDashboard();
-};
-
-// ==================== COURSE DROPDOWN ====================
-window.updateCourses = function() {
-    const category = document.getElementById('stuCategory')?.value;
-    const courseSelect = document.getElementById('stuCourse');
-    if (!courseSelect) return;
-
-    const courses = {
-        'Diploma': ['Hospitality', 'Computer Studies', 'Electrical', 'Plumbing', 'Motor Vehicle'],
-        'Certificate': ['Hospitality', 'Computer Studies', 'Electrical', 'Plumbing', 'Motor Vehicle'],
-        'Artisan': ['Hospitality', 'Computer Studies', 'Electrical', 'Plumbing', 'Motor Vehicle']
-    };
-
-    if (category && courses[category]) {
-        courseSelect.innerHTML = courses[category]
-            .map(c => `<option value="${c}">${c}</option>`)
-            .join('');
-    } else {
-        courseSelect.innerHTML = '<option>-- Select Category First --</option>';
-    }
-};
-
 // ==================== RENDER TEACHER DASHBOARD ====================
 function renderTeacherDashboard() {
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     const data = getData();
     const content = `
         <div class="form-card">
@@ -684,25 +663,64 @@ function renderTeacherDashboard() {
             <table>
                 <thead>
                     <tr>
-                        <th>Student</th>
-                        <th>Admission No</th>
-                        <th>Class</th>
-                        <th>Attendance %</th>
-                        <th>Top CAT Score</th>
+                        <th>Student</th><th>Admission No</th>
+                        <th>Class</th><th>Attendance %</th><th>Top CAT</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${data.students.map(s => `
                         <tr>
-                            <td>${s.name}</td>
-                            <td>${s.id}</td>
-                            <td>${s.class}</td>
-                            <td>${s.attendance}%</td>
+                            <td>${s.name}</td><td>${s.id}</td>
+                            <td>${s.class}</td><td>${s.attendance}%</td>
                             <td>${Object.values(s.catMarks || {}).slice(0,1)[0] || '-'}</td>
                         </tr>
                     `).join('')}
                 </tbody>
             </table>
+        </div>
+
+        <div class="form-card">
+            <h3 style="color:var(--accent-gold);">
+                <i class="fas fa-bullhorn"></i> Notice Board
+            </h3>
+            <h4 style="margin-bottom:1rem;">
+                <i class="fas fa-user-graduate"></i> Post Notice → Students
+            </h4>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="teacherStudentTitle" placeholder="Notice title">
+            </div>
+            <div class="form-group">
+                <label>Message</label>
+                <textarea id="teacherStudentMessage" placeholder="Write notice here..."
+                style="width:100%; padding:0.8rem; background:var(--bg-elevated);
+                border:1px solid var(--border); border-radius:10px;
+                color:var(--text-primary); min-height:80px; resize:vertical;"></textarea>
+            </div>
+            <button class="btn-secondary" onclick="postNotice('teacher','student')">
+                <i class="fas fa-paper-plane"></i> Post to Students
+            </button>
+
+            <hr style="border-color:var(--border); margin:1.5rem 0;">
+
+            <h4 style="margin-bottom:1rem; color:var(--accent-gold);">
+                <i class="fas fa-envelope-open"></i> Notices from H.O.D
+            </h4>
+            ${(getData().notices || []).filter(n => n.from === 'hod' && n.to === 'teacher').length === 0
+                ? `<p style="color:var(--text-secondary);">No notices from H.O.D yet</p>`
+                : (getData().notices || []).filter(n => n.from === 'hod' && n.to === 'teacher').map(n => `
+                    <div style="background:var(--bg-elevated); border:1px solid var(--accent-gold);
+                    border-radius:10px; padding:1rem; margin-bottom:0.8rem;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                            <strong style="color:var(--accent-gold);">
+                                <i class="fas fa-user-shield"></i> H.O.D
+                            </strong>
+                            <small style="color:var(--text-secondary);">${n.date}</small>
+                        </div>
+                        <p style="font-weight:600; margin-bottom:0.3rem;">${n.title}</p>
+                        <p style="color:var(--text-secondary); font-size:0.9rem;">${n.message}</p>
+                    </div>
+                `).join('')}
         </div>
     `;
     document.getElementById('dashboardContent').innerHTML = content;
@@ -742,38 +760,66 @@ function renderStudentDashboard() {
 
         <div class="table-container">
             <h3 style="padding:1rem; color:var(--accent-gold);">
-                <i class="fas fa-calendar-check"></i> My Attendance
-            </h3>
-            <table>
-                <tr>
-                    <th>Current Attendance</th>
-                    <td>${student.attendance}%</td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="table-container">
-            <h3 style="padding:1rem; color:var(--accent-gold);">
                 <i class="fas fa-chart-simple"></i> My CAT Marks
             </h3>
             <table>
                 <thead>
-                    <tr>
-                        <th>Subject</th>
-                        <th>Score</th>
-                        <th>Grade</th>
-                    </tr>
+                    <tr><th>Subject</th><th>Score</th><th>Grade</th></tr>
                 </thead>
                 <tbody>
                     ${Object.entries(student.catMarks || {}).map(([sub, mark]) => `
                         <tr>
-                            <td>${sub}</td>
-                            <td>${mark}</td>
+                            <td>${sub}</td><td>${mark}</td>
                             <td>${mark >= 70 ? '🟢 A' : mark >= 50 ? '🟡 B' : mark >= 40 ? '🟠 C' : '🔴 F'}</td>
                         </tr>
                     `).join('')}
                 </tbody>
             </table>
+        </div>
+
+        <div class="form-card">
+            <h3 style="color:var(--accent-gold);">
+                <i class="fas fa-bullhorn"></i> Notice Board
+            </h3>
+            <h4 style="margin-bottom:1rem;">
+                <i class="fas fa-user-shield"></i> Notices from H.O.D
+            </h4>
+            ${(getData().notices || []).filter(n => n.from === 'hod' && n.to === 'student').length === 0
+                ? `<p style="color:var(--text-secondary); margin-bottom:1rem;">No notices from H.O.D yet</p>`
+                : (getData().notices || []).filter(n => n.from === 'hod' && n.to === 'student').map(n => `
+                    <div style="background:var(--bg-elevated); border:1px solid var(--accent-gold);
+                    border-radius:10px; padding:1rem; margin-bottom:0.8rem;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                            <strong style="color:var(--accent-gold);">
+                                <i class="fas fa-user-shield"></i> H.O.D
+                            </strong>
+                            <small style="color:var(--text-secondary);">${n.date}</small>
+                        </div>
+                        <p style="font-weight:600; margin-bottom:0.3rem;">${n.title}</p>
+                        <p style="color:var(--text-secondary); font-size:0.9rem;">${n.message}</p>
+                    </div>
+                `).join('')}
+
+            <hr style="border-color:var(--border); margin:1.5rem 0;">
+
+            <h4 style="margin-bottom:1rem;">
+                <i class="fas fa-chalkboard-user"></i> Notices from Teacher
+            </h4>
+            ${(getData().notices || []).filter(n => n.from === 'teacher' && n.to === 'student').length === 0
+                ? `<p style="color:var(--text-secondary);">No notices from teachers yet</p>`
+                : (getData().notices || []).filter(n => n.from === 'teacher' && n.to === 'student').map(n => `
+                    <div style="background:var(--bg-elevated); border:1px solid var(--border);
+                    border-radius:10px; padding:1rem; margin-bottom:0.8rem;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                            <strong style="color:var(--accent);">
+                                <i class="fas fa-chalkboard-user"></i> Teacher
+                            </strong>
+                            <small style="color:var(--text-secondary);">${n.date}</small>
+                        </div>
+                        <p style="font-weight:600; margin-bottom:0.3rem;">${n.title}</p>
+                        <p style="color:var(--text-secondary); font-size:0.9rem;">${n.message}</p>
+                    </div>
+                `).join('')}
         </div>
     `;
     document.getElementById('dashboardContent').innerHTML = content;
@@ -795,28 +841,17 @@ window.registerStudent = function() {
     }
 
     const data = getData();
-
-    // Check duplicate admission number
     const exists = data.students.find(s => s.id === admissionNo);
     if (exists) return alert('❌ Admission number already exists!');
 
     data.students.push({
-        id: admissionNo,
-        name,
-        phone: phone || '-',
-        class: className,
-        category,
-        course,
-        block,
-        term,
-        passcode: null,
-        feeBalance: 0,
-        attendance: 0,
-        catMarks: {}
+        id: admissionNo, name, phone: phone || '-',
+        class: className, category, course, block, term,
+        passcode: null, feeBalance: 0, attendance: 0, catMarks: {}
     });
 
     saveData(data);
-    alert(`✅ Student ${name} registered!\nAdmission No: ${admissionNo}\nPasscode will be generated by teacher.`);
+    alert(`✅ Student ${name} registered!\nAdmission No: ${admissionNo}`);
     renderAdminDashboard();
 };
 
@@ -834,33 +869,39 @@ window.registerTeacher = function() {
 
     const data = getData();
     data.teachers.push({
-        id,
-        firstName,
-        middleName,
-        lastName,
+        id, firstName, middleName, lastName,
         name: `${firstName} ${middleName} ${lastName}`.trim(),
-        subject,
-        block,
-        password: 'tech254'
+        subject, block, password: 'tech254'
     });
 
     saveData(data);
-    alert(`✅ Teacher ${firstName} ${lastName} registered!\nStaff No: ${id}\nPassword: tech254`);
+    alert(`✅ Teacher ${firstName} ${lastName} registered!\nPassword: tech254`);
     renderAdminDashboard();
 };
 
-
 // ==================== TEACHER ACTIONS ====================
 window.generateNewPasscode = function() {
-    const studentId = document.getElementById('genStudentSelect')?.value;
+    const admissionNo = document.getElementById('genAdmissionInput')?.value?.trim();
+    if (!admissionNo) return alert('❌ Please enter an admission number!');
+
     const data = getData();
-    const student = data.students.find(s => s.id === studentId);
-    if (student) {
-        const newPass = Math.floor(1000 + Math.random() * 9000).toString();
-        student.passcode = newPass;
-        saveData(data);
-        document.getElementById('passcodeResult').innerHTML = `New passcode for ${student.name}: <strong>${newPass}</strong>`;
+    const student = data.students.find(s => s.id === admissionNo);
+
+    if (!student) {
+        document.getElementById('passcodeResult').innerHTML =
+            `❌ No student found with admission: <strong>${admissionNo}</strong>`;
+        return;
     }
+
+    const random = Math.floor(1000 + Math.random() * 9000);
+    const newPasscode = `PCK-${admissionNo}-${random}`;
+    student.passcode = newPasscode;
+    saveData(data);
+
+    document.getElementById('passcodeResult').innerHTML =
+        `✅ Passcode for <strong>${student.name}</strong>:<br>
+        <span style="font-size:1.2rem; letter-spacing:2px;">${newPasscode}</span><br>
+        <small>Share with student for login</small>`;
 };
 
 window.markAttendance = function() {
@@ -870,7 +911,7 @@ window.markAttendance = function() {
     if (student) {
         student.attendance = Math.min(100, student.attendance + 5);
         saveData(data);
-        alert(`Attendance updated for ${student.name} to ${student.attendance}%`);
+        alert(`✅ Attendance updated for ${student.name} → ${student.attendance}%`);
         renderTeacherDashboard();
     }
 };
@@ -879,127 +920,149 @@ window.enterCatMarks = function() {
     const studentId = document.getElementById('markStudentSelect')?.value;
     const subject = document.getElementById('catSubject')?.value;
     const score = parseInt(document.getElementById('catScore')?.value);
-    if (!subject || isNaN(score)) return alert('Valid subject & score required');
+    if (!subject || isNaN(score)) return alert('❌ Enter valid subject and score!');
     const data = getData();
     const student = data.students.find(s => s.id === studentId);
     if (student) {
         if (!student.catMarks) student.catMarks = {};
         student.catMarks[subject] = score;
         saveData(data);
-        alert(`CAT mark saved: ${subject} = ${score}`);
+        alert(`✅ CAT mark saved: ${subject} = ${score}`);
         renderTeacherDashboard();
     }
 };
 
-// ==================== LOGIN LOGIC ====================
-// ==================== LOGIN LOGIC ====================
-function handleLogin(role, credentials) {
-    const data = getData();   // ← This was failing
+// ==================== DEPUTY ACTIONS ====================
+window.generateHodPassword = function() {
+    const firstName = document.getElementById('hodFirstName')?.value?.trim();
+    const lastName = document.getElementById('hodLastName')?.value?.trim();
+    const phone = document.getElementById('hodPhone')?.value?.trim();
+    const department = document.getElementById('hodDepartment')?.value;
 
-    // DEPUTY LOGIN
-    if (role === 'deputy' && credentials.password === 'Deputy254') {
-        sessionStorage.setItem('currentUser', JSON.stringify({
-            role: 'deputy',
-            name: 'Deputy Principal'
-        }));
-        showDashboard('deputy');
-        return true;
+    if (!firstName || !lastName || !phone || !department) {
+        return alert('❌ Please fill all H.O.D details!');
     }
 
-    // HOD LOGIN
-    if (role === 'admin') {
-        const hod = data.hods?.find(h => h.password === credentials.password);
-        if (hod) {
-            sessionStorage.setItem('currentUser', JSON.stringify({
-                role: 'admin',
-                name: hod.name,
-                hodId: hod.id,
-                department: hod.department
-            }));
-            showDashboard('admin');
-            return true;
-        }
-        alert('❌ Invalid H.O.D password. Contact Deputy.');
-        return false;
+    const initials = `${firstName[0]}${lastName[0]}`.toUpperCase();
+    const random = Math.floor(1000 + Math.random() * 9000);
+    const password = `HOD-${initials}-${random}`;
+
+    const data = getData();
+    if (!data.hods) data.hods = [];
+
+    const existing = data.hods.find(h => h.department === department);
+    if (existing) {
+        if (!confirm(`${department} already has H.O.D (${existing.name}). Replace?`)) return;
+        data.hods = data.hods.filter(h => h.department !== department);
     }
 
-    // TEACHER LOGIN
-    if (role === 'teacher') {
-        const teacher = data.teachers.find(
-            t => t.id === credentials.staffNo && t.password === credentials.password
-        );
-        if (teacher) {
-            sessionStorage.setItem('currentUser', JSON.stringify({
-                role: 'teacher',
-                id: teacher.id,
-                name: teacher.name,
-                department: teacher.department
-            }));
-            showDashboard('teacher');
-            return true;
-        }
-        alert('❌ Invalid teacher credentials. Contact H.O.D.');
-        return false;
-    }
+    data.hods.push({
+        id: `HOD-${Date.now().toString().slice(-4)}`,
+        firstName, lastName,
+        name: `${firstName} ${lastName}`,
+        phone, department, password
+    });
 
-    // STUDENT LOGIN
-    if (role === 'student') {
-        const student = data.students.find(
-            s => s.id === credentials.admissionNo && s.passcode === credentials.passcode
-        );
-        if (student) {
-            sessionStorage.setItem('currentUser', JSON.stringify({
-                role: 'student',
-                id: student.id,
-                name: student.name
-            }));
-            showDashboard('student');
-            return true;
-        }
-        alert('❌ Invalid student credentials. Contact teacher.');
-        return false;
-    }
-
-    alert('❌ Invalid credentials.');
-    return false;
-}
-
-// ==================== EVENT LISTENERS ====================
-function initEventListeners() {
-
-    document.getElementById('deputyLoginBtn').onclick = () => {
-    const password = document.getElementById('deputyPassword').value;
-    handleLogin('deputy', { password });
+    saveData(data);
+    document.getElementById('hodGeneratedPassword').innerText = password;
+    document.getElementById('hodPasswordCard').classList.add('show');
+    alert(`✅ H.O.D registered!\nPassword: ${password}\nShare with H.O.D`);
 };
-    document.getElementById('studentLoginBtn').onclick = () => {
-        const admissionNo = document.getElementById('studentAdmission').value;
-        const passcode = document.getElementById('studentPasscode').value;
-        handleLogin('student', { admissionNo, passcode });
+
+window.generateTeacherPassword = function() {
+    const firstName = document.getElementById('depTeacherFirstName')?.value?.trim();
+    const lastName = document.getElementById('depTeacherLastName')?.value?.trim();
+    const id = document.getElementById('depTeacherId')?.value?.trim();
+    const subject = document.getElementById('depTeacherSubject')?.value?.trim();
+    const department = document.getElementById('depTeacherDept')?.value;
+
+    if (!firstName || !lastName || !id || !subject || !department) {
+        return alert('❌ Please fill all teacher details!');
+    }
+
+    const initials = `${firstName[0]}${lastName[0]}`.toUpperCase();
+    const random = Math.floor(1000 + Math.random() * 9000);
+    const password = `TCH-${initials}-${random}`;
+
+    const data = getData();
+    if (data.teachers.find(t => t.id === id)) return alert('❌ Staff number exists!');
+
+    data.teachers.push({
+        id, firstName, lastName,
+        name: `${firstName} ${lastName}`,
+        subject, department, block: '-', password
+    });
+
+    saveData(data);
+    document.getElementById('teacherGeneratedPassword').innerText = password;
+    document.getElementById('teacherPasswordCard').classList.add('show');
+    alert(`✅ Teacher registered!\nPassword: ${password}\nShare with teacher`);
+};
+
+// ==================== NOTICE BOARD ====================
+window.postNotice = function(from, to) {
+    let title, message;
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+
+    if (from === 'deputy' && to === 'hod') {
+        title = document.getElementById('deputyNoticeTitle')?.value?.trim();
+        message = document.getElementById('deputyNoticeMessage')?.value?.trim();
+    } else if (from === 'hod' && to === 'deputy') {
+        title = document.getElementById('hodDeputyTitle')?.value?.trim();
+        message = document.getElementById('hodDeputyMessage')?.value?.trim();
+    } else if (from === 'hod' && to === 'teacher') {
+        title = document.getElementById('hodTeacherTitle')?.value?.trim();
+        message = document.getElementById('hodTeacherMessage')?.value?.trim();
+    } else if (from === 'hod' && to === 'student') {
+        title = document.getElementById('hodStudentTitle')?.value?.trim();
+        message = document.getElementById('hodStudentMessage')?.value?.trim();
+    } else if (from === 'teacher' && to === 'student') {
+        title = document.getElementById('teacherStudentTitle')?.value?.trim();
+        message = document.getElementById('teacherStudentMessage')?.value?.trim();
+    }
+
+    if (!title || !message) return alert('❌ Please enter both title and message!');
+
+    const data = getData();
+    if (!data.notices) data.notices = [];
+
+    data.notices.unshift({
+        from, to, title, message,
+        department: currentUser.department || 'General',
+        postedBy: currentUser.name || from,
+        date: new Date().toLocaleDateString('en-KE', {
+            day: '2-digit', month: 'short', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        })
+    });
+
+    saveData(data);
+
+    const toLabel = to === 'hod' ? 'H.O.Ds' : to === 'teacher' ? 'Teachers' :
+                    to === 'deputy' ? 'Deputy' : 'Students';
+    alert(`✅ Notice posted to ${toLabel}!`);
+
+    if (currentUser.role === 'deputy') renderDeputyDashboard();
+    else if (currentUser.role === 'admin') renderAdminDashboard();
+    else if (currentUser.role === 'teacher') renderTeacherDashboard();
+};
+
+// ==================== COURSE DROPDOWN ====================
+window.updateCourses = function() {
+    const category = document.getElementById('stuCategory')?.value;
+    const courseSelect = document.getElementById('stuCourse');
+    if (!courseSelect) return;
+
+    const courses = {
+        'Diploma': ['Hospitality', 'Computer Studies', 'Electrical', 'Plumbing', 'Motor Vehicle'],
+        'Certificate': ['Hospitality', 'Computer Studies', 'Electrical', 'Plumbing', 'Motor Vehicle'],
+        'Artisan': ['Hospitality', 'Computer Studies', 'Electrical', 'Plumbing', 'Motor Vehicle']
     };
-    document.getElementById('teacherLoginBtn').onclick = () => {
-        const staffNo = document.getElementById('teacherStaffNo').value;
-        const password = document.getElementById('teacherPassword').value;
-        handleLogin('teacher', { staffNo, password });
-    };
-    document.getElementById('adminLoginBtn').onclick = () => {
-        const password = document.getElementById('adminPassword').value;
-        handleLogin('admin', { password });
-    };
-    document.getElementById('logoutBtn').onclick = () => {
-        sessionStorage.clear();
-        location.reload();
-    };
-    // Role selector tabs
-    document.querySelectorAll('.role-btn').forEach(btn => {
-    btn.onclick = () => {
-        document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const role = btn.dataset.role;
-        document.querySelectorAll('.login-form').forEach(form => form.classList.remove('active'));
-        document.getElementById(`${role}Login`).classList.add('active');
-    };
-});
-}
+
+    courseSelect.innerHTML = category && courses[category]
+        ? courses[category].map(c => `<option value="${c}">${c}</option>`).join('')
+        : '<option>-- Select Category First --</option>';
+};
 
 // ==================== THEME TOGGLE ====================
 function initTheme() {
@@ -1008,9 +1071,46 @@ function initTheme() {
     if (saved === 'light') document.body.classList.add('light');
     toggle.onclick = () => {
         document.body.classList.toggle('light');
-        localStorage.setItem('pck_theme', document.body.classList.contains('light') ? 'light' : 'dark');
-        toggle.innerHTML = document.body.classList.contains('light') ? '<i class="fas fa-sun"></i> Light Mode' : '<i class="fas fa-moon"></i> Dark Mode';
+        localStorage.setItem('pck_theme',
+            document.body.classList.contains('light') ? 'light' : 'dark');
+        toggle.innerHTML = document.body.classList.contains('light')
+            ? '<i class="fas fa-sun"></i> Light Mode'
+            : '<i class="fas fa-moon"></i> Dark Mode';
     };
+}
+
+// ==================== EVENT LISTENERS ====================
+function initEventListeners() {
+    document.getElementById('deputyLoginBtn').onclick = () => {
+        handleLogin('deputy', { password: document.getElementById('deputyPassword').value });
+    };
+    document.getElementById('studentLoginBtn').onclick = () => {
+        handleLogin('student', {
+            admissionNo: document.getElementById('studentAdmission').value,
+            passcode: document.getElementById('studentPasscode').value
+        });
+    };
+    document.getElementById('teacherLoginBtn').onclick = () => {
+        handleLogin('teacher', {
+            staffNo: document.getElementById('teacherStaffNo').value,
+            password: document.getElementById('teacherPassword').value
+        });
+    };
+    document.getElementById('adminLoginBtn').onclick = () => {
+        handleLogin('admin', { password: document.getElementById('adminPassword').value });
+    };
+    document.getElementById('logoutBtn').onclick = () => {
+        sessionStorage.clear();
+        location.reload();
+    };
+    document.querySelectorAll('.role-btn').forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
+            document.getElementById(`${btn.dataset.role}Login`).classList.add('active');
+        };
+    });
 }
 
 // ==================== INIT ====================
@@ -1018,37 +1118,10 @@ initializeData();
 initTheme();
 initEventListeners();
 
-// Auto-restore session
 const savedUser = sessionStorage.getItem('currentUser');
 if (savedUser) {
-    const user = JSON.parse(savedUser);
-    showDashboard(user.role);
+    showDashboard(JSON.parse(savedUser).role);
 } else {
     document.getElementById('loginContainer').style.display = 'flex';
     document.getElementById('dashboardContainer').style.display = 'none';
-}
-
-function showDashboard(role) {
-    document.getElementById('loginContainer').style.display = 'none';
-    document.getElementById('dashboardContainer').style.display = 'block';
-    document.getElementById('statsGrid').style.display =
-        (role === 'admin' || role === 'deputy') ? 'grid' : 'none';
-
-    if (role === 'deputy') {
-        document.getElementById('dashboardTitle').innerHTML =
-            '<i class="fas fa-crown"></i> Deputy Principal Dashboard';
-        renderDeputyDashboard();
-    } else if (role === 'admin') {
-        document.getElementById('dashboardTitle').innerHTML =
-            '<i class="fas fa-user-shield"></i> H.O.D Dashboard';
-        renderAdminDashboard();
-    } else if (role === 'teacher') {
-        document.getElementById('dashboardTitle').innerHTML =
-            '<i class="fas fa-chalkboard-user"></i> Teacher Dashboard';
-        renderTeacherDashboard();
-    } else if (role === 'student') {
-        document.getElementById('dashboardTitle').innerHTML =
-            '<i class="fas fa-user-graduate"></i> Student Dashboard';
-        renderStudentDashboard();
-    }
 }
