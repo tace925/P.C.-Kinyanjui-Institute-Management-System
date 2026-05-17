@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>PC Kinyanjui Institute | Management System</title>
+    <link rel="stylesheet" href="styl.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <h1><i class="fas fa-graduation-cap"></i> P.C. Kinyanjui Institute</h1>
+                <p>State Dept. for Technical & Vocational Education • Nairobi</p>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i> Dark Mode
+            </button>
+        </div>
+
+        <!-- Stats Cards (visible on admin dashboard) -->
+        <div class="stats-grid" id="statsGrid" style="display: none;">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h3>Students</h3>
+                <p class="stat-number" id="totalStudents">0</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-chalkboard-user"></i>
+                <h3>Teachers</h3>
+                <p class="stat-number" id="totalTeachers">0</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-book-open"></i>
+                <h3>Courses</h3>
+                <p class="stat-number" id="totalCourses">0</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-dollar-sign"></i>
+                <h3>Revenue (KES)</h3>
+                <p class="stat-number" id="totalRevenue">0</p>
+            </div>
+        </div>
+
+        <!-- Login Container -->
+        <div id="loginContainer" class="login-container">
+            <div class="login-card">
+                <div class="role-selector">
+                    <button class="role-btn active" data-role="student">Student</button>
+                    <button class="role-btn" data-role="teacher">Teacher</button>
+                    <button class="role-btn" data-role="admin">Admin</button>
+                </div>
+                
+                <div id="studentLogin" class="login-form active">
+                    <h3><i class="fas fa-user-graduate"></i> Student Portal</h3>
+                    <input type="text" id="studentAdmission" placeholder="Admission Number (e.g., STU-2026-001)" class="login-input">
+                    <input type="password" id="studentPasscode" placeholder="Passcode" class="login-input">
+                    <p class="access-note"><i class="fas fa-key"></i> Ask administration for access</p>
+                    <button id="studentLoginBtn" class="btn-primary">Login <i class="fas fa-arrow-right"></i></button>
+                </div>
+
+                <div id="teacherLogin" class="login-form">
+                    <h3><i class="fas fa-chalkboard-user"></i> Teacher Portal</h3>
+                    <input type="text" id="teacherStaffNo" placeholder="Staff Number (e.g., TCH-2026-001)" class="login-input">
+                    <input type="password" id="teacherPassword" placeholder="Password" class="login-input">
+                    <p class="access-note"><i class="fas fa-key"></i> Ask administration for access</p>
+                    <button id="teacherLoginBtn" class="btn-primary">Login <i class="fas fa-arrow-right"></i></button>
+                </div>
+
+                <div id="adminLogin" class="login-form">
+                    <h3><i class="fas fa-user-shield"></i> Admin Portal</h3>
+                    <input type="password" id="adminPassword" placeholder="Admin Password" class="login-input">
+                    <p class="access-note"><i class="fas fa-key"></i> Ask administration for access</p>
+                    <button id="adminLoginBtn" class="btn-primary">Login <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Container -->
+        <div id="dashboardContainer" style="display: none;">
+            <div class="dashboard-header">
+                <h2 id="dashboardTitle"><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+            <div id="dashboardContent"></div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            Developed by Tevin Mulinge | 0797510552
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
