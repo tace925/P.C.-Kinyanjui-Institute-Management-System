@@ -12,19 +12,16 @@ body {
     min-height: 100vh;
 }
 
-
 :root {
-    --bg-primary: #0d0a14;
-    --bg-secondary: #130f1e;
-    --bg-card: #1a1528;
-    --bg-elevated: #221c33;
-    --text-primary: #ede8f5;
-    --text-secondary: #9b8fb5;
-    --border: #2e2445;
-    --accent: #6b21a8;
-    --accent-hover: #7c3aed;
-    --accent-gold: #b8860b;
-    --accent-gold-hover: #d4a017;
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #111115;
+    --bg-card: #16161c;
+    --bg-elevated: #1e1e2a;
+    --text-primary: #ededee;
+    --text-secondary: #a1a1aa;
+    --border: #2a2a35;
+    --accent: #00c3a0;
+    --accent-hover: #00e0b8;
     --danger: #e5484d;
     --warning: #f5a623;
     --success: #30c28b;
@@ -52,7 +49,6 @@ body.light {
     flex-direction: column;
 }
 
-/* Header */
 .header {
     display: flex;
     justify-content: space-between;
@@ -67,7 +63,7 @@ body.light {
 .logo-area h1 {
     font-size: 1.7rem;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--accent), var(--accent-gold));
+    background: linear-gradient(135deg, var(--accent), #2dd4bf);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -88,7 +84,6 @@ body.light {
     color: var(--text-primary);
 }
 
-/* Stats Grid */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -116,7 +111,6 @@ body.light {
     margin-top: 0.5rem;
 }
 
-/* Login */
 .login-container {
     display: flex;
     justify-content: center;
@@ -129,13 +123,14 @@ body.light {
     border: 1px solid var(--border);
     border-radius: 24px;
     padding: 2rem;
-    max-width: 450px;
+    max-width: 500px;
     width: 100%;
 }
 
 .role-selector {
     display: flex;
     gap: 0.5rem;
+    flex-wrap: wrap;
     margin-bottom: 2rem;
 }
 
@@ -148,6 +143,7 @@ body.light {
     cursor: pointer;
     color: var(--text-secondary);
     font-weight: 500;
+    font-size: 0.85rem;
 }
 
 .role-btn.active {
@@ -203,7 +199,6 @@ body.light {
     background: var(--accent-hover);
 }
 
-/* Dashboard */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -222,7 +217,6 @@ body.light {
     cursor: pointer;
 }
 
-/* Tables & Cards */
 .table-container {
     overflow-x: auto;
     background: var(--bg-card);
@@ -265,7 +259,7 @@ th {
     font-weight: 500;
 }
 
-.form-group input, .form-group select {
+.form-group input, .form-group select, .form-group textarea {
     width: 100%;
     padding: 0.8rem;
     background: var(--bg-elevated);
@@ -286,10 +280,61 @@ th {
 
 .btn-success {
     background: var(--success);
-    color: white;
 }
 
-/* Footer */
+.btn-warning {
+    background: var(--warning);
+    color: #1a1e2c;
+}
+
+.progress-bar {
+    background: var(--bg-elevated);
+    border-radius: 20px;
+    height: 20px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+}
+
+.progress-fill {
+    background: var(--accent);
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.3s;
+}
+
+.competency-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-mastery { background: #10b981; color: white; }
+.badge-proficient { background: #3b82f6; color: white; }
+.badge-competent { background: #f59e0b; color: #1a1e2c; }
+.badge-not-competent { background: #ef4444; color: white; }
+
+.noticeboard {
+    background: var(--bg-elevated);
+    border-radius: 16px;
+    padding: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notice-message {
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.5rem;
+}
+
+.notice-sender {
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 0.8rem;
+}
+
 .footer {
     text-align: center;
     padding: 2rem 0 1rem;
@@ -299,19 +344,6 @@ th {
     font-size: 0.85rem;
 }
 
-/* Badges */
-.status-badge {
-    display: inline-block;
-    padding: 0.2rem 0.6rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-.status-paid { background: var(--success); color: white; }
-.status-pending { background: var(--warning); color: #1a1e2c; }
-
-/* Responsive */
 @media (max-width: 768px) {
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -320,103 +352,8 @@ th {
         padding: 0.75rem;
         font-size: 0.85rem;
     }
-}/* Gold accents for important elements */
-.stat-number {
-    color: var(--accent-gold);
+    .role-btn {
+        font-size: 0.7rem;
+        padding: 0.5rem;
+    }
 }
-
-.dashboard-header h2 {
-    color: var(--accent-gold);
-}
-
-th {
-    color: var(--accent-gold);
-}
-
-/* Deputy gold crown styling */
-.deputy-banner {
-    background: linear-gradient(135deg, #1a0d33, #2d1a4d);
-    border: 1px solid var(--accent-gold);
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.deputy-banner i {
-    font-size: 2rem;
-    color: var(--accent-gold);
-}
-
-.deputy-banner h3 {
-    color: var(--accent-gold);
-    font-size: 1.1rem;
-}
-
-.deputy-banner p {
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-}
-
-/* Department selector on first HOD login */
-.dept-selector {
-    background: var(--bg-card);
-    border: 2px solid var(--accent-gold);
-    border-radius: 16px;
-    padding: 2rem;
-    max-width: 500px;
-    margin: 5rem auto;
-    text-align: center;
-}
-
-.dept-selector h2 {
-    color: var(--accent-gold);
-    margin-bottom: 0.5rem;
-}
-
-.dept-selector p {
-    color: var(--text-secondary);
-    margin-bottom: 1.5rem;
-    font-size: 0.9rem;
-}
-
-/* Password generation card */
-.gen-card {
-    background: var(--bg-elevated);
-    border: 1px solid var(--accent-gold);
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
-    margin-top: 1rem;
-    display: none;
-}
-
-.gen-card.show { display: block; }
-
-.gen-password {
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: 3px;
-    color: var(--accent-gold);
-    text-align: center;
-    padding: 1rem;
-    background: rgba(184,134,11,0.1);
-    border: 1px dashed var(--accent-gold);
-    border-radius: 8px;
-    margin: 0.8rem 0;
-}
-
-/* Role tag badges */
-.role-tag {
-    display: inline-block;
-    padding: 0.2rem 0.7rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.role-tag.deputy { background: rgba(184,134,11,0.2); color: var(--accent-gold); }
-.role-tag.hod { background: rgba(107,33,168,0.2); color: #a855f7; }
-.role-tag.teacher { background: rgba(59,130,246,0.2); color: #60a5fa; }
-.role-tag.student { background: rgba(48,194,139,0.2); color: #30c28b; }
