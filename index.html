@@ -3,108 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>PC Kinyanjui Institute | Management System</title>
+    <title>PC Kinyanjui Institute | Complete Management System</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styl.css">
 </head>
 <body>
-    <div class="app">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo-area">
-                <h1><i class="fas fa-graduation-cap"></i> P.C. Kinyanjui Institute</h1>
-                <p>State Dept. for Technical & Vocational Education • Nairobi</p>
-            </div>
-            <button class="theme-toggle" id="themeToggle">
-                <i class="fas fa-moon"></i> Dark Mode
-            </button>
+<div class="app-layout">
+    <!-- LEFT SIDE MENU (12 roles) -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-graduation-cap"></i> PCK Institute</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li data-role="student"><i class="fas fa-user-graduate"></i> Student</li>
+            <li data-role="classrep"><i class="fas fa-users"></i> Class Rep</li>
+            <li data-role="lecturer"><i class="fas fa-chalkboard-user"></i> Lecturer</li>
+            <li data-role="classteacher"><i class="fas fa-chalkboard"></i> Class Teacher</li>
+            <li data-role="hod"><i class="fas fa-user-tie"></i> H.O.D</li>
+            <li data-role="deo"><i class="fas fa-clipboard-list"></i> D.E.O</li>
+            <li data-role="finance"><i class="fas fa-coins"></i> Finance</li>
+            <li data-role="deputy_acad"><i class="fas fa-crown"></i> Deputy (Acad)</li>
+            <li data-role="deputy_infra"><i class="fas fa-hard-hat"></i> Deputy (Infra)</li>
+            <li data-role="examoffice"><i class="fas fa-building"></i> Exam Office</li>
+            <li data-role="dean"><i class="fas fa-heart"></i> Dean of Students</li>
+            <li data-role="admin"><i class="fas fa-shield-alt"></i> System Admin</li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="top-bar">
+            <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i> Menu</button>
+            <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> Dark Mode</button>
         </div>
 
-        <!-- Stats Cards -->
-        <div class="stats-grid" id="statsGrid" style="display: none;">
-            <div class="stat-card"><i class="fas fa-users"></i><h3>Students</h3><p class="stat-number" id="totalStudents">0</p></div>
-            <div class="stat-card"><i class="fas fa-chalkboard-user"></i><h3>Teachers</h3><p class="stat-number" id="totalTeachers">0</p></div>
-            <div class="stat-card"><i class="fas fa-book-open"></i><h3>Courses</h3><p class="stat-number" id="totalCourses">0</p></div>
-            <div class="stat-card"><i class="fas fa-dollar-sign"></i><h3>Revenue (KES)</h3><p class="stat-number" id="totalRevenue">0</p></div>
-        </div>
-
-        <!-- Login Container -->
-        <div id="loginContainer" class="login-container">
-            <div class="login-card">
-                <div class="role-selector">
-                    <button class="role-btn active" data-role="student">Student</button>
-                    <button class="role-btn" data-role="classrep">Class Rep</button>
-                    <button class="role-btn" data-role="lecturer">Lecturer</button>
-                    <button class="role-btn" data-role="classteacher">Class Teacher</button>
-                    <button class="role-btn" data-role="hod">H.O.D</button>
-                    <button class="role-btn" data-role="deputy">Deputy</button>
-                </div>
-                
-                <div id="studentLogin" class="login-form active">
-                    <h3><i class="fas fa-user-graduate"></i> Student Portal</h3>
-                    <input type="text" id="studentAdmission" placeholder="Admission Number (e.g., STU-2026-001)" class="login-input">
-                    <input type="password" id="studentPasscode" placeholder="Passcode" class="login-input">
-                    <p class="access-note"><i class="fas fa-key"></i> Ask administration for access</p>
-                    <button id="studentLoginBtn" class="btn-primary">Login <i class="fas fa-arrow-right"></i></button>
+        <div id="dynamicContent">
+            <!-- SCHOOL INFORMATION PANEL (Default View) -->
+            <div id="schoolInfoPanel">
+                <div class="school-header">
+                    <img id="schoolLogo" src="https://placehold.co/100x100/00c3a0/white?text=PCK" alt="Logo" class="school-logo">
+                    <div>
+                        <h1>P.C. Kinyanjui Institute</h1>
+                        <p>State Dept. for Technical & Vocational Education • Nairobi</p>
+                    </div>
                 </div>
 
-                <div id="classrepLogin" class="login-form">
-                    <h3><i class="fas fa-users-between"></i> Class Representative Portal</h3>
-                    <input type="text" id="repAdmission" placeholder="Admission Number" class="login-input">
-                    <input type="password" id="repPasscode" placeholder="Class Rep Password" class="login-input">
-                    <p class="access-note"><i class="fas fa-key"></i> Generated by Class Teacher after election</p>
-                    <button id="classrepLoginBtn" class="btn-primary">Login <i class="fas fa-arrow-right"></i></button>
+                <!-- PRINCIPAL HISTORY (Horizontal Cards) -->
+                <div class="section-card">
+                    <h3><i class="fas fa-landmark"></i> Principal's Office - History</h3>
+                    <div id="principalsContainer" class="principals-horizontal"></div>
+                    <div id="adminPrincipalControls" style="display:none; margin-top:1rem;">
+                        <button class="btn-secondary" onclick="showAddPrincipalForm()"><i class="fas fa-plus"></i> Add Principal</button>
+                    </div>
                 </div>
 
-                <div id="lecturerLogin" class="login-form">
-                    <h3><i class="fas fa-person-chalkboard"></i> Lecturer Portal</h3>
-                    <input type="text" id="lecturerStaffNo" placeholder="Staff Number (e.g., LEC-2026-001)" class="login-input">
-                    <input type="password" id="lecturerPassword" placeholder="Password" class="login-input">
-                    <p class="access-note"><i class="fas fa-key"></i> Generated by Class Teacher</p>
-                    <button id="lecturerLoginBtn" class="btn-primary">Login <i class="fas fa-arrow-right"></i></button>
-                </div>
-
-                <div id="classteacherLogin" class="login-form">
-                    <h3><i class="fas fa-chalkboard-user"></i> Class Teacher Portal</h3>
-                    <input type="text" id="ctStaffNo" placeholder="Staff Number (e.g., TCH-2026-001)" class="login-input">
-                    <input type="password" id="ctPassword" placeholder="Password" class="login-input">
-                    <p class="access-note"><i class="fas fa-key"></i> Generated by H.O.D</p>
-                    <button id="classteacherLoginBtn" class="btn-primary">Login <i class="fas fa-arrow-right"></i></button>
-                </div>
-
-                <div id="hodLogin" class="login-form">
-                    <h3><i class="fas fa-user-tie"></i> H.O.D Portal</h3>
-                    <input type="text" id="hodStaffNo" placeholder="Staff Number" class="login-input">
-                    <input type="password" id="hodPassword" placeholder="Password" class="login-input">
-                    <p class="access-note"><i class="fas fa-key"></i> Generated by Deputy Principal</p>
-                    <button id="hodLoginBtn" class="btn-primary">Login <i class="fas fa-arrow-right"></i></button>
-                </div>
-
-                <div id="deputyLogin" class="login-form">
-                    <h3><i class="fas fa-crown"></i> Deputy Principal Portal</h3>
-                    <input type="password" id="deputyPassword" placeholder="Password" class="login-input">
-                    <p class="access-note"><i class="fas fa-key"></i> Ask administration for access</p>
-                    <button id="deputyLoginBtn" class="btn-primary">Login <i class="fas fa-arrow-right"></i></button>
+                <!-- SCHOOL TOUR (Library, Sports, Hostels M/F, Field) -->
+                <div class="section-card">
+                    <h3><i class="fas fa-map-marked-alt"></i> School Tour</h3>
+                    <div class="tour-tabs" id="tourTabs">
+                        <div class="tour-tab active" data-location="library">📚 Library</div>
+                        <div class="tour-tab" data-location="sports">⚽ Sports</div>
+                        <div class="tour-tab" data-location="hostel_m">🏠 Hostel (Male)</div>
+                        <div class="tour-tab" data-location="hostel_f">🏠 Hostel (Female)</div>
+                        <div class="tour-tab" data-location="field">🌿 Field</div>
+                    </div>
+                    <div id="tourMedia" class="media-gallery">
+                        <!-- Dynamic images/videos will load here -->
+                    </div>
+                    <div id="adminTourControls" style="display:none; margin-top:1rem;">
+                        <input type="file" id="tourImageUpload" accept="image/*" multiple>
+                        <button class="btn-secondary" onclick="uploadTourMedia()">Upload Images</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Dashboard Container -->
-        <div id="dashboardContainer" style="display: none;">
-            <div class="dashboard-header">
-                <h2 id="dashboardTitle"><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
-                <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <!-- LOGIN FORM (shown when role clicked) -->
+            <div id="loginFormContainer" style="display:none;">
+                <div class="login-card">
+                    <h2 id="loginTitle"><i class="fas fa-sign-in-alt"></i> Login</h2>
+                    <div id="loginFields"></div>
+                    <button id="loginBtn" class="btn-primary">Login <i class="fas fa-arrow-right"></i></button>
+                    <p class="access-note"><i class="fas fa-key"></i> Contact administration for credentials</p>
+                </div>
             </div>
-            <div id="dashboardContent"></div>
+
+            <!-- DASHBOARD CONTAINER -->
+            <div id="dashboardContainer" style="display:none;">
+                <div class="dashboard-header">
+                    <h2 id="dashboardTitle"><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                    <button id="logoutBtn" class="btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+                <div id="dashboardContent"></div>
+            </div>
         </div>
 
-        <!-- Footer -->
         <footer class="footer">
             Developed by Tevin Mulinge | 0797510552
         </footer>
     </div>
+</div>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
