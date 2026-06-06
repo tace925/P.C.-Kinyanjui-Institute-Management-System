@@ -20,7 +20,7 @@ function initializeData() {
                 hostel_f: { images: ["https://placehold.co/400x300/2563eb/white?text=Female+Hostel"], videos: [] },
                 field:    { images: ["https://placehold.co/400x300/6c3fcf/white?text=Main+Field"], videos: [] }
             },
-            infrastructureList: ["library", "sports", "hostel_m", "hostel_f", "field"],
+            infrastructureList: ["library", "mess", "sports", "hostel", "field"],
             departments: ['Computer Studies', 'Hospitality', 'Automotive Engineering', 'Electrical Engineering', 'Civil Engineering', 'Business'],
             students: [
                 {

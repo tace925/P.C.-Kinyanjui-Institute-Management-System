@@ -100,38 +100,30 @@
             ══════════════════════════════════════════ -->
             <div id="schoolInfoPanel">
 
-                <!-- ── INSTITUTE HEADER BANNER (Image 2 Style) ── -->
-                <div class="institute-header">
-                    <!-- Kenya Coat of Arms placeholder -->
-                    <img
-                        src="https://placehold.co/70x70/ffffff/5b21b6?text=🇰🇪"
-                        alt="Kenya Coat of Arms"
-                        class="header-logo"
-                        onerror="this.src='https://placehold.co/70x70/5b21b6/white?text=KE'"
-                    >
-                    <!-- Institute Name -->
-                    <div class="header-text">
-                        <h1>PC KINYANJUI</h1>
-                        <h2>Technical Training Institute</h2>
-                        <div class="motto">Excellence in Technology</div>
-                    </div>
-                    <!-- Institute Crest placeholder -->
-                    <img
-                        src="https://placehold.co/70x70/ffffff/5b21b6?text=PCK"
-                        alt="PCK Crest"
-                        class="header-logo"
-                        onerror="this.src='https://placehold.co/70x70/5b21b6/white?text=PCK'"
-                    >
-                </div>
+                
 
-                <!-- ── HERO TYPING SECTION ── -->
-                <div class="hero-section" style="margin-top: 1.5rem;">
-                    <div class="typing-container">
-                        <span id="typingText"></span><span class="cursor">|</span>
-                    </div>
-                    <div class="hero-subtitle" id="subtitleText"></div>
-                </div>
+               <!-- ── HERO TYPING SECTION WITH LEFT & RIGHT PLACEHOLDERS ── -->
+<div class="hero-section" style="margin-top: 1.5rem;">
+    <div class="hero-content">
+        <!-- Left Placeholder Image -->
+        <div class="hero-placeholder left">
+            <img src="pc k logo.png" alt="Left Placeholder" class="hero-img">
+        </div>
 
+        <!-- Center Typing Text -->
+        <div class="hero-center">
+            <div class="typing-container">
+                <span id="typingText"></span><span class="cursor">|</span>
+            </div>
+            <div class="hero-subtitle" id="subtitleText"></div>
+        </div>
+
+        <!-- Right Placeholder Image -->
+        <div class="hero-placeholder right">
+            <img src="pc k logo.png" alt="Right Placeholder" class="hero-img">
+        </div>
+    </div>
+</div>
                
                 <!-- ── PRINCIPAL HISTORY ── -->
                 <div class="section-card">
@@ -144,27 +136,102 @@
                     </div>
                 </div>
 
-                <!-- ── SCHOOL TOUR ── -->
-                <div class="section-card">
-                    <h3><i class="fas fa-map-marked-alt"></i> School Tour</h3>
-                    <div class="tour-tabs" id="tourTabs"></div>
-                    <div id="tourMedia" class="media-gallery"></div>
-                    <div id="adminTourControls" style="display:none; margin-top:1rem;">
-                        <div class="add-infra">
-                            <h4><i class="fas fa-plus-circle"></i> Add New Infrastructure</h4>
-                            <input type="text" id="newInfraName" placeholder="e.g., New Library, New Workshop">
-                            <button class="btn-secondary" onclick="addNewInfrastructure()">Add Location</button>
-                            <br><br>
-                            <input type="file" id="tourImageUpload" accept="image/*" multiple>
-                            <select id="infraSelect"></select>
-                            <button class="btn-secondary" onclick="uploadTourMedia()">Upload Images</button>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- ── SCHOOL TOUR WITH 3D TOGGLE + GRAPH ── -->
+<div class="section-card">
+    <h3><i class="fas fa-map-marked-alt"></i> School Tour</h3>
+    
+    <div class="tour-wrapper">
+        <!-- Left: 3D Toggle Buttons -->
+        <div class="tour-left">
+            <div class="tour-tabs-3d" id="tourTabs">
+                <button class="tour-btn-3d active" data-location="library">
+                    <i class="fas fa-book"></i> LIBRARY
+                </button>
+                <button class="tour-btn-3d" data-location="mess">
+                    <i class="fas fa-utensils"></i> MESS
+                </button>
+                <button class="tour-btn-3d" data-location="sports">
+                    <i class="fas fa-futbol"></i> SPORTS
+                </button>
+                <button class="tour-btn-3d" data-location="hostel">
+                    <i class="fas fa-bed"></i> HOSTEL (M/F)
+                </button>
+                <button class="tour-btn-3d" data-location="field">
+                    <i class="fas fa-tree"></i> FIELD
+                </button>
             </div>
-            <!-- end schoolInfoPanel -->
+            
+            <!-- Media Gallery -->
+            <div id="tourMedia" class="media-gallery"></div>
+        </div>
+        
+        <!-- Right: Graph Placeholder -->
+        <div class="tour-right">
+            <div class="graph-placeholder">
+                <img src="pck graph.png" alt="Graph Placeholder" class="graph-img">
+                <p class="graph-caption">Student Enrollment Trends | 2024-2026</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="adminTourControls" style="display:none; margin-top:1rem;">
+        <div class="add-infra">
+            <h4><i class="fas fa-plus-circle"></i> Add New Infrastructure</h4>
+            <input type="text" id="newInfraName" placeholder="e.g., New Library, New Workshop">
+            <button class="btn-secondary" onclick="addNewInfrastructure()">Add Location</button>
+            <br><br>
+            <input type="file" id="tourImageUpload" accept="image/*" multiple>
+            <select id="infraSelect"></select>
+            <button class="btn-secondary" onclick="uploadTourMedia()">Upload Images</button>
+        </div>
+    </div>
+</div>
 
+
+<!-- ── CBET CURRICULUM TABLE ── -->
+<div class="section-card">
+    <h3><i class="fas fa-graduation-cap"></i> CBET Modularized Curriculum</h3>
+    
+    <!-- Level Table -->
+    <div class="curriculum-table">
+        <h4>Level Progression & Industrial Training Hours</h4>
+        <table class="level-table">
+            <thead>
+                <tr>
+                    <th>Level</th>
+                    <th>Duration (Hours)</th>
+                    <th>Industrial Training</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Level 3</td><td>300-599 Hrs</td><td>✓ Required</td></tr>
+                <tr><td>Level 4 / Artisan</td><td>600-1199 Hrs</td><td>✓ Required</td></tr>
+                <tr><td>Level 5 / Craft</td><td>1200-2399 Hrs</td><td>✓ Required</td></tr>
+                <tr><td>Level 6 / Diploma</td><td>2400-4799 Hrs</td><td>✓ Required</td></tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Modules Table -->
+    <div class="modules-table">
+        <h4>Module Progression</h4>
+        <table class="module-table">
+            <thead>
+                <tr>
+                    <th>Module 1</th><th>Module 2</th><th>Module 3</th>
+                    <th>Module 4</th><th>Module 5</th><th>Module 6</th><th>Module 7</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>⬜</td><td>⬜</td><td>⬜</td>
+                    <td>⬜</td><td>⬜</td><td>⬜</td><td>⬜</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="module-note"><i class="fas fa-info-circle"></i> Complete each module sequentially to progress to the next level</p>
+    </div>
+</div>
             <!-- ── LOGIN FORM ── -->
             <div id="loginFormContainer" style="display:none;">
                 <div class="login-card">
