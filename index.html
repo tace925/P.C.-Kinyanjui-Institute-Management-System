@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>PC Kinyanjui Institute | Complete Management System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>PC Kinyanjui Technical Training Institute | Complete Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&family=Great+Vibes&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styl.css">
 </head>
 <body>
 <div class="app-layout">
-    <!-- LEFT SIDE MENU (12 roles) -->
+    <!-- LEFT SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2><i class="fas fa-graduation-cap"></i> PCK Institute</h2>
@@ -34,22 +34,25 @@
     <!-- MAIN CONTENT -->
     <div class="main-content">
         <div class="top-bar">
-            <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i> Menu</button>
+            <div>
+                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i> Menu</button>
+                <button class="settings-btn" id="settingsBtn"><i class="fas fa-cog"></i> Settings / Help</button>
+            </div>
             <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> Dark Mode</button>
         </div>
 
         <div id="dynamicContent">
             <!-- SCHOOL INFORMATION PANEL (Default View) -->
             <div id="schoolInfoPanel">
-                <div class="school-header">
-                    <img id="schoolLogo" src="https://placehold.co/100x100/00c3a0/white?text=PCK" alt="Logo" class="school-logo">
-                    <div>
-                        <h1>P.C. Kinyanjui Institute</h1>
-                        <p>State Dept. for Technical & Vocational Education • Nairobi</p>
+                <!-- Hero Section with Typing Animation -->
+                <div class="hero-section">
+                    <div class="typing-container">
+                        <span id="typingText"></span><span class="cursor">|</span>
                     </div>
+                    <div class="hero-subtitle" id="subtitleText"></div>
                 </div>
 
-                <!-- PRINCIPAL HISTORY (Horizontal Cards) -->
+                <!-- Principal History -->
                 <div class="section-card">
                     <h3><i class="fas fa-landmark"></i> Principal's Office - History</h3>
                     <div id="principalsContainer" class="principals-horizontal"></div>
@@ -58,49 +61,132 @@
                     </div>
                 </div>
 
-                <!-- SCHOOL TOUR (Library, Sports, Hostels M/F, Field) -->
+                <!-- School Tour with Add Infrastructure -->
                 <div class="section-card">
                     <h3><i class="fas fa-map-marked-alt"></i> School Tour</h3>
-                    <div class="tour-tabs" id="tourTabs">
-                        <div class="tour-tab active" data-location="library">📚 Library</div>
-                        <div class="tour-tab" data-location="sports">⚽ Sports</div>
-                        <div class="tour-tab" data-location="hostel_m">🏠 Hostel (Male)</div>
-                        <div class="tour-tab" data-location="hostel_f">🏠 Hostel (Female)</div>
-                        <div class="tour-tab" data-location="field">🌿 Field</div>
-                    </div>
-                    <div id="tourMedia" class="media-gallery">
-                        <!-- Dynamic images/videos will load here -->
-                    </div>
+                    <div class="tour-tabs" id="tourTabs"></div>
+                    <div id="tourMedia" class="media-gallery"></div>
                     <div id="adminTourControls" style="display:none; margin-top:1rem;">
-                        <input type="file" id="tourImageUpload" accept="image/*" multiple>
-                        <button class="btn-secondary" onclick="uploadTourMedia()">Upload Images</button>
+                        <div class="add-infra">
+                            <h4><i class="fas fa-plus-circle"></i> Add New Infrastructure</h4>
+                            <input type="text" id="newInfraName" placeholder="e.g., New Library, New Workshop">
+                            <button class="btn-secondary" onclick="addNewInfrastructure()">Add Location</button>
+                            <br><br>
+                            <input type="file" id="tourImageUpload" accept="image/*" multiple>
+                            <select id="infraSelect"></select>
+                            <button class="btn-secondary" onclick="uploadTourMedia()">Upload Images</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- LOGIN FORM (shown when role clicked) -->
+            <!-- LOGIN FORM -->
             <div id="loginFormContainer" style="display:none;">
                 <div class="login-card">
                     <h2 id="loginTitle"><i class="fas fa-sign-in-alt"></i> Login</h2>
                     <div id="loginFields"></div>
                     <button id="loginBtn" class="btn-primary">Login <i class="fas fa-arrow-right"></i></button>
-                    <p class="access-note"><i class="fas fa-key"></i> Contact administration for credentials</p>
+                    <p class="access-note"><i class="fas fa-key"></i> Forgot password? Contact your Class Teacher or System Admin</p>
                 </div>
             </div>
 
-            <!-- DASHBOARD CONTAINER -->
+            <!-- DASHBOARD -->
             <div id="dashboardContainer" style="display:none;">
-                <div class="dashboard-header">
+                <div class="dashboard-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
                     <h2 id="dashboardTitle"><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
                     <button id="logoutBtn" class="btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
                 </div>
                 <div id="dashboardContent"></div>
             </div>
-        </div>
 
-        <footer class="footer">
-            Developed by Tevin Mulinge | 0797510552
-        </footer>
+            <!-- NEWSLETTER SECTION -->
+            <div class="newsletter-section" id="newsletterSection">
+                <h3><i class="fas fa-envelope"></i> Subscribe to Our Newsletter</h3>
+                <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.5rem; margin-top:1rem;">
+                    <input type="email" id="newsletterEmail" placeholder="Enter your email address">
+                    <button class="btn-primary" onclick="subscribeNewsletter()">SUBSCRIBE</button>
+                </div>
+                <p id="newsletterMsg" style="margin-top:0.5rem; font-size:0.8rem;"></p>
+            </div>
+
+            <!-- ABOUT & CONTACT GRID -->
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="iso-badge"><i class="fas fa-certificate"></i> ISO 9001-2015 CERTIFIED</div>
+                    <h4><i class="fas fa-info-circle"></i> About Us</h4>
+                    <p>P.C. Kinyanjui Technical Training Institute started in 1979 as a Technical Secondary School with a population of 160 students. The vision to establish the Technical School was borne by His Excellency, the late Mzee Jomo Kenyatta, the First President of the Republic of Kenya.</p>
+                </div>
+                <div class="info-card">
+                    <h4><i class="fas fa-phone-alt"></i> Get In Touch</h4>
+                    <ul>
+                        <li><i class="fas fa-mobile-alt"></i> Cell: +254 721 480 199</li>
+                        <li><i class="fas fa-phone"></i> Tel: +254 773 829 417</li>
+                        <li><i class="fas fa-envelope"></i> info@kinyanjuitechnical.ac.ke</li>
+                        <li><i class="fas fa-globe"></i> www.kinyanjuitechnical.ac.ke</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Off Kabiria Road, Riruta Satellite</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h4><i class="fas fa-link"></i> Useful Links</h4>
+                    <ul>
+                        <li><a href="#">History</a></li>
+                        <li><a href="#">Mission & Vision</a></li>
+                        <li><a href="#">Newsletter</a></li>
+                        <li><a href="#">Application Form</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <footer class="footer">
+                <p>Copyright ©2026 PC Kinyanjui Technical Training Institute. ISO 9001:2015 CERTIFIED. All rights reserved.</p>
+                <p>Privacy Policy | Terms & Conditions | Send Message</p>
+                <div class="developer-credit">
+                    <i class="fas fa-code"></i> Crafted by Tevin Mulinge | 0797510552
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settingsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-cog"></i> Settings & Help</h3>
+            <span class="close-modal" onclick="closeSettingsModal()">&times;</span>
+        </div>
+        <div id="settingsContent">
+            <h4><i class="fas fa-key"></i> Password Flow Diagram</h4>
+            <pre style="background:var(--bg-elevated); padding:1rem; border-radius:12px; font-size:0.8rem;">
+SYSTEM ADMIN
+     │
+     ├──► Generates DEAN password
+     ├──► Generates DEPUTY (Academics) password
+     ├──► Generates DEPUTY (Infrastructure) password
+     │
+H.O.D (per department)
+     │
+     └──► Generates CLASS TEACHER password
+              │
+              ├──► Generates LECTURER password
+              ├──► Generates CLASS REP password
+              └──► Generates STUDENT passcode
+            </pre>
+            <h4><i class="fas fa-question-circle"></i> Lost? Need Help?</h4>
+            <table style="width:100%; border-collapse:collapse;">
+                <tr style="border-bottom:1px solid var(--border);"><th>Problem</th><th>Who to See</th></tr>
+                <tr><td>Forgot Student Passcode</td><td>Class Teacher</td></tr>
+                <tr><td>Forgot Lecturer Password</td><td>Class Teacher / HOD</td></tr>
+                <tr><td>Forgot HOD/Deputy/Dean Password</td><td>System Admin</td></tr>
+                <tr><td>Fee Payment Issue</td><td>Finance Officer</td></tr>
+                <tr><td>Exam Registration Problem</td><td>D.E.O / HOD</td></tr>
+                <tr><td>Technical System Bug</td><td>Tevin Mulinge - 0797510552</td></tr>
+            </table>
+            <h4><i class="fas fa-phone"></i> Contact Developer</h4>
+            <p>Tevin Mulinge | 0797510552</p>
+        </div>
     </div>
 </div>
 

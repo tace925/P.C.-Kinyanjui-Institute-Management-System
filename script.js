@@ -1,11 +1,11 @@
 // ==================== INITIALIZE LOCALSTORAGE ====================
 function initializeData() {
-    if (!localStorage.getItem('pck_institute_v2')) {
+    if (!localStorage.getItem('pck_institute_v3')) {
         const demoData = {
             schoolInfo: {
-                logo: "https://placehold.co/100x100/00c3a0/white?text=PCK",
-                name: "P.C. Kinyanjui Institute",
-                motto: "State Dept. for Technical & Vocational Education • Nairobi"
+                logo: "https://placehold.co/100x100/ffd700/white?text=PCK",
+                name: "P.C. Kinyanjui Technical Training Institute",
+                motto: "Excellence in Technology"
             },
             principals: [
                 { id: 1, name: "Dr. James Mwangi", photo: "https://randomuser.me/api/portraits/men/32.jpg", startYear: 2010, endYear: 2015, isCurrent: false },
@@ -14,12 +14,13 @@ function initializeData() {
                 { id: 4, name: "Dr. Elizabeth Wanjiku", photo: "https://randomuser.me/api/portraits/women/89.jpg", startYear: 2024, endYear: null, isCurrent: true }
             ],
             schoolTour: {
-                library: { images: ["https://placehold.co/400x300/00c3a0/white?text=Library+Image+1", "https://placehold.co/400x300/00c3a0/white?text=Library+Image+2"], videos: [] },
-                sports: { images: ["https://placehold.co/400x300/00c3a0/white?text=Sports+Field"], videos: [] },
-                hostel_m: { images: ["https://placehold.co/400x300/00c3a0/white?text=Male+Hostel"], videos: [] },
-                hostel_f: { images: ["https://placehold.co/400x300/00c3a0/white?text=Female+Hostel"], videos: [] },
-                field: { images: ["https://placehold.co/400x300/00c3a0/white?text=Main+Field"], videos: [] }
+                library: { images: ["https://placehold.co/400x300/ffd700/white?text=Library"], videos: [] },
+                sports: { images: ["https://placehold.co/400x300/ffd700/white?text=Sports+Field"], videos: [] },
+                hostel_m: { images: ["https://placehold.co/400x300/ffd700/white?text=Male+Hostel"], videos: [] },
+                hostel_f: { images: ["https://placehold.co/400x300/ffd700/white?text=Female+Hostel"], videos: [] },
+                field: { images: ["https://placehold.co/400x300/ffd700/white?text=Main+Field"], videos: [] }
             },
+            infrastructureList: ["library", "sports", "hostel_m", "hostel_f", "field"],
             departments: ['Computer Studies', 'Hospitality', 'Automotive Engineering', 'Electrical Engineering', 'Civil Engineering', 'Business'],
             students: [
                 { id: 'STU-2026-20669', name: 'John Mwangi', department: 'Computer Studies', class: 'Form 3C', passcode: '1234', phone: '0712345678', feeBalance: 15000, attendance: { total: 45, attended: 38 }, examHistory: {} },
@@ -37,16 +38,17 @@ function initializeData() {
             dean: { id: 'DEAN-001', name: 'Dean of Students', password: 'dean123', kitcoPasswords: [] },
             admin: { password: 'Admin@2026' },
             examRegistrations: [],
-            noticeboard: [{ id: 'n1', sender: 'System', message: 'Welcome to PCK Institute', timestamp: new Date().toISOString(), recipient: 'all' }]
+            noticeboard: [{ id: 'n1', sender: 'System', message: 'Welcome to PCK Institute', timestamp: new Date().toISOString(), recipient: 'all' }],
+            newsletterSubscribers: []
         };
-        localStorage.setItem('pck_institute_v2', JSON.stringify(demoData));
+        localStorage.setItem('pck_institute_v3', JSON.stringify(demoData));
     }
 }
 
-function getData() { return JSON.parse(localStorage.getItem('pck_institute_v2')); }
-function saveData(data) { localStorage.setItem('pck_institute_v2', JSON.stringify(data)); }
+function getData() { return JSON.parse(localStorage.getItem('pck_institute_v3')); }
+function saveData(data) { localStorage.setItem('pck_institute_v3', JSON.stringify(data)); }
 
-// ==================== RENDER PRINCIPAL CARDS (Horizontal) ====================
+// ==================== RENDER PRINCIPALS ====================
 function renderPrincipals() {
     const data = getData();
     const container = document.getElementById('principalsContainer');
@@ -64,18 +66,113 @@ function renderPrincipals() {
 // ==================== RENDER SCHOOL TOUR ====================
 let currentTourLocation = 'library';
 
-function renderTour(location) {
+function renderTourTabs() {
+    const data = getData();
+    const container = document.getElementById('tourTabs');
+    if (!container) return;
+    container.innerHTML = data.infrastructureList.map(loc => `
+        <div class="tour-tab ${loc === currentTourLocation ? 'active' : ''}" data-location="${loc}">
+            <i class="fas fa-building"></i> ${loc.replace(/_/g, ' ').toUpperCase()}
+        </div>
+    `).join('');
+    
+    document.querySelectorAll('.tour-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tour-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentTourLocation = tab.dataset.location;
+            renderTourMedia(currentTourLocation);
+        });
+    });
+}
+
+function renderTourMedia(location) {
     const data = getData();
     const media = data.schoolTour[location];
     if (!media) return;
     const container = document.getElementById('tourMedia');
     container.innerHTML = `
         <div class="media-gallery">
-            ${media.images.map(img => `<div class="media-item"><img src="${img}" alt="Tour image"></div>`).join('')}
-            ${media.videos.map(vid => `<div class="media-item"><video controls src="${vid}"></video></div>`).join('')}
+            ${media.images.map((img, idx) => `
+                <div class="media-item">
+                    <img src="${img}" alt="Tour image">
+                    ${isAdminLoggedIn() ? `<button class="delete-media" onclick="deleteImage('${location}', ${idx})"><i class="fas fa-trash"></i></button>` : ''}
+                </div>
+            `).join('')}
+            ${media.videos.map((vid, idx) => `
+                <div class="media-item">
+                    <video controls src="${vid}"></video>
+                    ${isAdminLoggedIn() ? `<button class="delete-media" onclick="deleteVideo('${location}', ${idx})"><i class="fas fa-trash"></i></button>` : ''}
+                </div>
+            `).join('')}
         </div>
         ${media.images.length === 0 && media.videos.length === 0 ? '<p>No media yet. Admin can upload.</p>' : ''}
     `;
+}
+
+function isAdminLoggedIn() {
+    const user = sessionStorage.getItem('currentUser');
+    if (user) {
+        const parsed = JSON.parse(user);
+        return parsed.role === 'admin';
+    }
+    return false;
+}
+
+function deleteImage(location, index) {
+    const data = getData();
+    data.schoolTour[location].images.splice(index, 1);
+    saveData(data);
+    renderTourMedia(location);
+}
+
+function deleteVideo(location, index) {
+    const data = getData();
+    data.schoolTour[location].videos.splice(index, 1);
+    saveData(data);
+    renderTourMedia(location);
+}
+
+function uploadTourMedia() {
+    const files = document.getElementById('tourImageUpload').files;
+    const location = document.getElementById('infraSelect').value;
+    if (!files.length || !location) return alert('Select a location and files');
+    const data = getData();
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            data.schoolTour[location].images.push(e.target.result);
+            saveData(data);
+            renderTourMedia(currentTourLocation);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function addNewInfrastructure() {
+    const name = document.getElementById('newInfraName').value.trim();
+    if (!name) return alert('Enter infrastructure name');
+    const key = name.toLowerCase().replace(/\s+/g, '_');
+    const data = getData();
+    if (!data.schoolTour[key]) {
+        data.schoolTour[key] = { images: [], videos: [] };
+        data.infrastructureList.push(key);
+        saveData(data);
+        renderTourTabs();
+        populateInfraSelect();
+        document.getElementById('newInfraName').value = '';
+        alert(`Added new infrastructure: ${name}`);
+    } else {
+        alert('Location already exists');
+    }
+}
+
+function populateInfraSelect() {
+    const data = getData();
+    const select = document.getElementById('infraSelect');
+    if (select) {
+        select.innerHTML = data.infrastructureList.map(loc => `<option value="${loc}">${loc.replace(/_/g, ' ').toUpperCase()}</option>`).join('');
+    }
 }
 
 // ==================== LOGIN HANDLING ====================
@@ -107,6 +204,9 @@ function showLoginForm(role) {
         html = `<input type="password" id="loginPass" placeholder="Admin Password" class="login-input">`;
     
     loginFields.innerHTML = html;
+    
+    // Auto-hide sidebar after role click
+    document.getElementById('sidebar').classList.remove('open');
 }
 
 function handleLogin() {
@@ -137,7 +237,6 @@ function handleLogin() {
     }
 }
 
-// ==================== DASHBOARD (Simplified - Keeps Original Features) ====================
 function showDashboard(role, user) {
     document.getElementById('schoolInfoPanel').style.display = 'none';
     document.getElementById('loginFormContainer').style.display = 'none';
@@ -155,6 +254,7 @@ function showDashboard(role, user) {
         <button class="btn-danger" onclick="resetSystem()">Reset System</button></div>`;
         document.getElementById('adminPrincipalControls').style.display = 'block';
         document.getElementById('adminTourControls').style.display = 'block';
+        populateInfraSelect();
     }
     
     document.getElementById('dashboardContent').innerHTML = content;
@@ -185,21 +285,6 @@ function showAddPrincipalForm() {
     renderPrincipals();
 }
 
-function uploadTourMedia() {
-    const files = document.getElementById('tourImageUpload').files;
-    if (!files.length) return;
-    const data = getData();
-    Array.from(files).forEach(file => {
-        const reader = new FileReader();
-        reader.onload = e => {
-            data.schoolTour[currentTourLocation].images.push(e.target.result);
-            saveData(data);
-            renderTour(currentTourLocation);
-        };
-        reader.readAsDataURL(file);
-    });
-}
-
 function exportBackup() {
     const data = getData();
     const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
@@ -211,18 +296,87 @@ function exportBackup() {
 
 function resetSystem() {
     if(confirm('WARNING: This will reset all data. Continue?')) {
-        localStorage.removeItem('pck_institute_v2');
+        localStorage.removeItem('pck_institute_v3');
         initializeData();
         location.reload();
     }
 }
 
-// ==================== EVENT LISTENERS & INIT ====================
+function subscribeNewsletter() {
+    const email = document.getElementById('newsletterEmail').value;
+    if (!email || !email.includes('@')) {
+        document.getElementById('newsletterMsg').innerHTML = '<span style="color:var(--danger)">Please enter a valid email</span>';
+        return;
+    }
+    const data = getData();
+    if (!data.newsletterSubscribers.includes(email)) {
+        data.newsletterSubscribers.push(email);
+        saveData(data);
+        document.getElementById('newsletterMsg').innerHTML = '<span style="color:var(--success)">Subscribed successfully!</span>';
+        document.getElementById('newsletterEmail').value = '';
+    } else {
+        document.getElementById('newsletterMsg').innerHTML = '<span style="color:var(--warning)">Already subscribed</span>';
+    }
+}
+
+// ==================== MODAL ====================
+function openSettingsModal() {
+    document.getElementById('settingsModal').style.display = 'flex';
+}
+
+function closeSettingsModal() {
+    document.getElementById('settingsModal').style.display = 'none';
+}
+
+// ==================== TYPING ANIMATION ====================
+function startTypingAnimation() {
+    const text1 = "PC KINYANJUI TECHNICAL TRAINING INSTITUTE";
+    const text2 = "Excellence in Technology";
+    let i = 0;
+    let isTypingSecond = false;
+    
+    function typeWriter() {
+        if (!isTypingSecond && i < text1.length) {
+            document.getElementById("typingText").innerHTML += text1.charAt(i);
+            i++;
+            setTimeout(typeWriter, 80);
+        } else if (!isTypingSecond && i >= text1.length) {
+            isTypingSecond = true;
+            i = 0;
+            setTimeout(typeWriter, 500);
+        } else if (isTypingSecond && i < text2.length) {
+            document.getElementById("subtitleText").innerHTML += text2.charAt(i);
+            i++;
+            setTimeout(typeWriter, 80);
+        }
+    }
+    typeWriter();
+}
+
+// ==================== INIT ====================
 function init() {
     initializeData();
     renderPrincipals();
-    renderTour('library');
+    renderTourTabs();
+    renderTourMedia('library');
+    populateInfraSelect();
+    startTypingAnimation();
     
+    // Sidebar toggle
+    document.getElementById('menuToggle').addEventListener('click', () => {
+        document.getElementById('sidebar').classList.toggle('open');
+    });
+    
+    // Settings button
+    document.getElementById('settingsBtn').addEventListener('click', openSettingsModal);
+    
+    // Close modal on outside click
+    window.onclick = function(event) {
+        const modal = document.getElementById('settingsModal');
+        if (event.target === modal) closeSettingsModal();
+    };
+    
+    // Sidebar menu clicks
     document.querySelectorAll('.sidebar-menu li').forEach(item => {
         item.addEventListener('click', () => {
             const role = item.dataset.role;
@@ -232,26 +386,15 @@ function init() {
         });
     });
     
-    document.querySelectorAll('.tour-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.tour-tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            currentTourLocation = tab.dataset.location;
-            renderTour(currentTourLocation);
-        });
-    });
-    
     document.getElementById('loginBtn')?.addEventListener('click', handleLogin);
     document.getElementById('logoutBtn')?.addEventListener('click', () => {
         sessionStorage.clear();
         location.reload();
     });
+    
     document.getElementById('themeToggle')?.addEventListener('click', () => {
         document.body.classList.toggle('light');
         localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
-    });
-    document.getElementById('menuToggle')?.addEventListener('click', () => {
-        document.getElementById('sidebar').classList.toggle('open');
     });
     
     if (localStorage.getItem('theme') === 'light') document.body.classList.add('light');
@@ -260,6 +403,13 @@ function init() {
     if (savedUser) {
         const user = JSON.parse(savedUser);
         showDashboard(user.role, user);
+    }
+    
+    // Show admin controls if admin logged in
+    const user = sessionStorage.getItem('currentUser');
+    if (user && JSON.parse(user).role === 'admin') {
+        document.getElementById('adminPrincipalControls').style.display = 'block';
+        document.getElementById('adminTourControls').style.display = 'block';
     }
 }
 
