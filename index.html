@@ -10,58 +10,141 @@
 </head>
 <body>
 <div class="app-layout">
-    <!-- LEFT SIDEBAR -->
+
+    <!-- ══════════════════════════════════════════
+         LEFT SIDEBAR — 3D Role Buttons
+    ══════════════════════════════════════════ -->
     <div class="sidebar" id="sidebar">
+
+        <!-- Sidebar mini-header -->
         <div class="sidebar-header">
             <h2><i class="fas fa-graduation-cap"></i> PCK Institute</h2>
         </div>
+
+        <div class="sidebar-section-label">Navigation</div>
         <ul class="sidebar-menu">
-            <li data-role="student"><i class="fas fa-user-graduate"></i> Student</li>
-            <li data-role="classrep"><i class="fas fa-users"></i> Class Rep</li>
-            <li data-role="lecturer"><i class="fas fa-chalkboard-user"></i> Lecturer</li>
-            <li data-role="classteacher"><i class="fas fa-chalkboard"></i> Class Teacher</li>
-            <li data-role="hod"><i class="fas fa-user-tie"></i> H.O.D</li>
-            <li data-role="deo"><i class="fas fa-clipboard-list"></i> D.E.O</li>
-            <li data-role="finance"><i class="fas fa-coins"></i> Finance</li>
-            <li data-role="deputy_acad"><i class="fas fa-crown"></i> Deputy (Acad)</li>
-            <li data-role="deputy_infra"><i class="fas fa-hard-hat"></i> Deputy (Infra)</li>
-            <li data-role="examoffice"><i class="fas fa-building"></i> Exam Office</li>
-            <li data-role="dean"><i class="fas fa-heart"></i> Dean of Students</li>
-            <li data-role="admin"><i class="fas fa-shield-alt"></i> System Admin</li>
+            <li data-role="home">
+                <i class="fas fa-home"></i> Home
+            </li>
+        </ul>
+
+        <div class="sidebar-section-label">Staff & Student Portals</div>
+        <ul class="sidebar-menu">
+            <li data-role="student">
+                <i class="fas fa-user-graduate"></i> Student
+            </li>
+            <li data-role="classrep">
+                <i class="fas fa-users"></i> Class Rep
+            </li>
+            <li data-role="lecturer">
+                <i class="fas fa-chalkboard-user"></i> Lecturer
+            </li>
+            <li data-role="classteacher">
+                <i class="fas fa-chalkboard"></i> Class Teacher
+            </li>
+            <li data-role="hod">
+                <i class="fas fa-user-tie"></i> H.O.D
+            </li>
+            <li data-role="deo">
+                <i class="fas fa-clipboard-list"></i> D.E.O
+            </li>
+        </ul>
+
+        <div class="sidebar-section-label">Administration</div>
+        <ul class="sidebar-menu">
+            <li data-role="finance">
+                <i class="fas fa-coins"></i> Finance
+            </li>
+            <li data-role="deputy_acad">
+                <i class="fas fa-crown"></i> Deputy (Acad)
+            </li>
+            <li data-role="deputy_infra">
+                <i class="fas fa-hard-hat"></i> Deputy (Infra)
+            </li>
+            <li data-role="examoffice">
+                <i class="fas fa-building"></i> Exam Office
+            </li>
+            <li data-role="dean">
+                <i class="fas fa-heart"></i> Dean of Students
+            </li>
+            <li data-role="admin">
+                <i class="fas fa-shield-alt"></i> System Admin
+            </li>
         </ul>
     </div>
 
-    <!-- MAIN CONTENT -->
+    <!-- ══════════════════════════════════════════
+         MAIN CONTENT
+    ══════════════════════════════════════════ -->
     <div class="main-content">
+
+        <!-- TOP BAR -->
         <div class="top-bar">
             <div>
-                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i> Menu</button>
-                <button class="settings-btn" id="settingsBtn"><i class="fas fa-cog"></i> Settings / Help</button>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i> Menu
+                </button>
+                <button class="settings-btn" id="settingsBtn">
+                    <i class="fas fa-cog"></i> Settings / Help
+                </button>
             </div>
-            <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> Dark Mode</button>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i> Dark Mode
+            </button>
         </div>
 
         <div id="dynamicContent">
-            <!-- SCHOOL INFORMATION PANEL (Default View) -->
+
+            <!-- ══════════════════════════════════════════
+                 SCHOOL INFORMATION PANEL (Default View)
+            ══════════════════════════════════════════ -->
             <div id="schoolInfoPanel">
-                <!-- Hero Section with Typing Animation -->
-                <div class="hero-section">
+
+                <!-- ── INSTITUTE HEADER BANNER (Image 2 Style) ── -->
+                <div class="institute-header">
+                    <!-- Kenya Coat of Arms placeholder -->
+                    <img
+                        src="https://placehold.co/70x70/ffffff/5b21b6?text=🇰🇪"
+                        alt="Kenya Coat of Arms"
+                        class="header-logo"
+                        onerror="this.src='https://placehold.co/70x70/5b21b6/white?text=KE'"
+                    >
+                    <!-- Institute Name -->
+                    <div class="header-text">
+                        <h1>PC KINYANJUI</h1>
+                        <h2>Technical Training Institute</h2>
+                        <div class="motto">Excellence in Technology</div>
+                    </div>
+                    <!-- Institute Crest placeholder -->
+                    <img
+                        src="https://placehold.co/70x70/ffffff/5b21b6?text=PCK"
+                        alt="PCK Crest"
+                        class="header-logo"
+                        onerror="this.src='https://placehold.co/70x70/5b21b6/white?text=PCK'"
+                    >
+                </div>
+
+                <!-- ── HERO TYPING SECTION ── -->
+                <div class="hero-section" style="margin-top: 1.5rem;">
                     <div class="typing-container">
                         <span id="typingText"></span><span class="cursor">|</span>
                     </div>
                     <div class="hero-subtitle" id="subtitleText"></div>
                 </div>
 
-                <!-- Principal History -->
+               
+                <!-- ── PRINCIPAL HISTORY ── -->
                 <div class="section-card">
-                    <h3><i class="fas fa-landmark"></i> Principal's Office - History</h3>
+                    <h3><i class="fas fa-landmark"></i> Principal's Office — History</h3>
                     <div id="principalsContainer" class="principals-horizontal"></div>
                     <div id="adminPrincipalControls" style="display:none; margin-top:1rem;">
-                        <button class="btn-secondary" onclick="showAddPrincipalForm()"><i class="fas fa-plus"></i> Add Principal</button>
+                        <button class="btn-secondary" onclick="showAddPrincipalForm()">
+                            <i class="fas fa-plus"></i> Add Principal
+                        </button>
                     </div>
                 </div>
 
-                <!-- School Tour with Add Infrastructure -->
+                <!-- ── SCHOOL TOUR ── -->
                 <div class="section-card">
                     <h3><i class="fas fa-map-marked-alt"></i> School Tour</h3>
                     <div class="tour-tabs" id="tourTabs"></div>
@@ -78,28 +161,36 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- LOGIN FORM -->
+            </div>
+            <!-- end schoolInfoPanel -->
+
+            <!-- ── LOGIN FORM ── -->
             <div id="loginFormContainer" style="display:none;">
                 <div class="login-card">
                     <h2 id="loginTitle"><i class="fas fa-sign-in-alt"></i> Login</h2>
                     <div id="loginFields"></div>
-                    <button id="loginBtn" class="btn-primary">Login <i class="fas fa-arrow-right"></i></button>
-                    <p class="access-note"><i class="fas fa-key"></i> Forgot password? Contact your Class Teacher or System Admin</p>
+                    <button id="loginBtn" class="btn-primary" style="width:100%;">
+                        Login <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <p class="access-note">
+                        <i class="fas fa-key"></i> Forgot password? Contact your Class Teacher or System Admin
+                    </p>
                 </div>
             </div>
 
-            <!-- DASHBOARD -->
+            <!-- ── DASHBOARD ── -->
             <div id="dashboardContainer" style="display:none;">
                 <div class="dashboard-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
                     <h2 id="dashboardTitle"><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
-                    <button id="logoutBtn" class="btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    <button id="logoutBtn" class="btn-danger">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
                 </div>
                 <div id="dashboardContent"></div>
             </div>
 
-            <!-- NEWSLETTER SECTION -->
+            <!-- ── NEWSLETTER ── -->
             <div class="newsletter-section" id="newsletterSection">
                 <h3><i class="fas fa-envelope"></i> Subscribe to Our Newsletter</h3>
                 <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.5rem; margin-top:1rem;">
@@ -109,7 +200,7 @@
                 <p id="newsletterMsg" style="margin-top:0.5rem; font-size:0.8rem;"></p>
             </div>
 
-            <!-- ABOUT & CONTACT GRID -->
+            <!-- ── ABOUT & CONTACT GRID ── -->
             <div class="info-grid">
                 <div class="info-card">
                     <div class="iso-badge"><i class="fas fa-certificate"></i> ISO 9001-2015 CERTIFIED</div>
@@ -138,7 +229,7 @@
                 </div>
             </div>
 
-            <!-- FOOTER -->
+            <!-- ── FOOTER ── -->
             <footer class="footer">
                 <p>Copyright ©2026 PC Kinyanjui Technical Training Institute. ISO 9001:2015 CERTIFIED. All rights reserved.</p>
                 <p>Privacy Policy | Terms & Conditions | Send Message</p>
@@ -146,11 +237,17 @@
                     <i class="fas fa-code"></i> Crafted by Tevin Mulinge | 0797510552
                 </div>
             </footer>
-        </div>
-    </div>
-</div>
 
-<!-- SETTINGS MODAL -->
+        </div>
+        <!-- end dynamicContent -->
+    </div>
+    <!-- end main-content -->
+</div>
+<!-- end app-layout -->
+
+<!-- ══════════════════════════════════════════
+     SETTINGS MODAL
+══════════════════════════════════════════ -->
 <div id="settingsModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -158,8 +255,10 @@
             <span class="close-modal" onclick="closeSettingsModal()">&times;</span>
         </div>
         <div id="settingsContent">
-            <h4><i class="fas fa-key"></i> Password Flow Diagram</h4>
-            <pre style="background:var(--bg-elevated); padding:1rem; border-radius:12px; font-size:0.8rem;">
+            <h4 style="color:var(--purple-light); margin-bottom:0.5rem;">
+                <i class="fas fa-key"></i> Password Flow Diagram
+            </h4>
+            <pre style="background:var(--bg-elevated); padding:1rem; border-radius:12px; font-size:0.78rem; border:1px solid var(--border); overflow-x:auto;">
 SYSTEM ADMIN
      │
      ├──► Generates DEAN password
@@ -174,17 +273,42 @@ H.O.D (per department)
               ├──► Generates CLASS REP password
               └──► Generates STUDENT passcode
             </pre>
-            <h4><i class="fas fa-question-circle"></i> Lost? Need Help?</h4>
-            <table style="width:100%; border-collapse:collapse;">
-                <tr style="border-bottom:1px solid var(--border);"><th>Problem</th><th>Who to See</th></tr>
-                <tr><td>Forgot Student Passcode</td><td>Class Teacher</td></tr>
-                <tr><td>Forgot Lecturer Password</td><td>Class Teacher / HOD</td></tr>
-                <tr><td>Forgot HOD/Deputy/Dean Password</td><td>System Admin</td></tr>
-                <tr><td>Fee Payment Issue</td><td>Finance Officer</td></tr>
-                <tr><td>Exam Registration Problem</td><td>D.E.O / HOD</td></tr>
-                <tr><td>Technical System Bug</td><td>Tevin Mulinge - 0797510552</td></tr>
+            <h4 style="color:var(--purple-light); margin:1rem 0 0.5rem;">
+                <i class="fas fa-question-circle"></i> Lost? Need Help?
+            </h4>
+            <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+                <tr style="border-bottom:1px solid var(--border); color:var(--purple-light);">
+                    <th style="padding:0.5rem; text-align:left;">Problem</th>
+                    <th style="padding:0.5rem; text-align:left;">Who to See</th>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                    <td style="padding:0.5rem;">Forgot Student Passcode</td>
+                    <td style="padding:0.5rem;">Class Teacher</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                    <td style="padding:0.5rem;">Forgot Lecturer Password</td>
+                    <td style="padding:0.5rem;">Class Teacher / HOD</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                    <td style="padding:0.5rem;">Forgot HOD/Deputy/Dean Password</td>
+                    <td style="padding:0.5rem;">System Admin</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                    <td style="padding:0.5rem;">Fee Payment Issue</td>
+                    <td style="padding:0.5rem;">Finance Officer</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                    <td style="padding:0.5rem;">Exam Registration Problem</td>
+                    <td style="padding:0.5rem;">D.E.O / HOD</td>
+                </tr>
+                <tr>
+                    <td style="padding:0.5rem;">Technical System Bug</td>
+                    <td style="padding:0.5rem;">Tevin Mulinge — 0797510552</td>
+                </tr>
             </table>
-            <h4><i class="fas fa-phone"></i> Contact Developer</h4>
+            <h4 style="color:var(--purple-light); margin:1rem 0 0.5rem;">
+                <i class="fas fa-phone"></i> Contact Developer
+            </h4>
             <p>Tevin Mulinge | 0797510552</p>
         </div>
     </div>
