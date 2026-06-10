@@ -72,32 +72,18 @@ function renderPrincipals() {
     const container = document.getElementById('principalsContainer');
     if (!container) return;
 
-    let html = `<div class="principals-grid">`;
+    const current = data.principals.find(p => p.isCurrent);
+    const past = data.principals
+        .filter(p => !p.isCurrent)
+        .sort((a, b) => b.startYear - a.startYear);
 
-    data.principals.forEach(p => {
-        const isCurrent = p.isCurrent;
-        html += `
-            <div class="principal-card ${isCurrent ? 'current-principal' : ''}">
-                <div class="principal-photo-wrapper">
-                    <img src="${p.photo}" 
-                         alt="${p.name}"
-                         onerror="this.src='https://placehold.co/400x400/6c3fcf/white?text=${encodeURIComponent(p.name.split(' ')[0])}'">
-                    ${isCurrent ? `<div class="current-badge">CURRENT PRINCIPAL</div>` : ''}
-                </div>
-                <div class="principal-info">
-                    <div class="principal-name">${p.name}</div>
-                    <div class="principal-years">${p.startYear} — ${p.endYear || 'Present'}</div>
-                </div>
-            </div>
-        `;
-    });
+    // Work out how many grid rows the right column needs
+    // Right column is 2 cards wide, so rows = ceil(past.length / 2) but we only have 1 col on right
+    // Featured spans all right-column rows so both sides align
+    const rowSpan = past.length; // 1 past per row on the right (single col)
 
-    html += `</div>`;
-    container.innerHTML = html;
-}
-    // Featured card — current principal (spans 2 rows)
     const featuredHTML = current ? `
-        <div class="mag-featured">
+        <div class="mag-featured" style="grid-row: span ${rowSpan};">
             <img src="${current.photo}" alt="${current.name}"
                  onerror="this.src='https://placehold.co/400x500/6c3fcf/white?text=${encodeURIComponent(current.name)}'">
             <div class="mag-featured-overlay">
@@ -108,21 +94,16 @@ function renderPrincipals() {
         </div>
     ` : '';
 
-    // Small cards — past principals, last one spans 2 cols if odd count
-    const pastHTML = past.map((p, idx) => {
-        const spanTwo = (idx === past.length - 1 && past.length % 2 !== 0)
-            ? 'style="grid-column: span 2;"' : '';
-        return `
-            <div class="mag-small" ${spanTwo}>
-                <img src="${p.photo}" alt="${p.name}"
-                     onerror="this.src='https://placehold.co/300x200/251b42/white?text=${encodeURIComponent(p.name)}'">
-                <div class="mag-small-overlay">
-                    <div class="mag-small-name">${p.name}</div>
-                    <div class="mag-small-years">${p.startYear} — ${p.endYear}</div>
-                </div>
+    const pastHTML = past.map(p => `
+        <div class="mag-small">
+            <img src="${p.photo}" alt="${p.name}"
+                 onerror="this.src='https://placehold.co/300x200/251b42/white?text=${encodeURIComponent(p.name)}'">
+            <div class="mag-small-overlay">
+                <div class="mag-small-name">${p.name}</div>
+                <div class="mag-small-years">${p.startYear} — ${p.endYear}</div>
             </div>
-        `;
-    }).join('');
+        </div>
+    `).join('');
 
     container.innerHTML = featuredHTML + pastHTML;
 }
@@ -901,7 +882,7 @@ function init() {
     document.getElementById('logoutBtn').addEventListener('click', () => {
         sessionStorage.clear();
         showHome();
-    }); 
+    });
 
     // ── Theme toggle ──
     document.getElementById('themeToggle').addEventListener('click', () => {
