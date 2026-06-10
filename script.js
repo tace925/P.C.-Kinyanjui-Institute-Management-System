@@ -20,7 +20,7 @@ function initializeData() {
                 hostel_f: { images: ["https://placehold.co/400x300/2563eb/white?text=Female+Hostel"], videos: [] },
                 field:    { images: ["https://placehold.co/400x300/6c3fcf/white?text=Main+Field"], videos: [] }
             },
-            infrastructureList: ["library", "mess", "sports", "hostel", "field"],
+            infrastructureList: ["library", "sports", "hostel_m", "hostel_f", "field"],
             departments: ['Computer Studies', 'Hospitality', 'Automotive Engineering', 'Electrical Engineering', 'Civil Engineering', 'Business'],
             students: [
                 {
@@ -71,50 +71,128 @@ function renderPrincipals() {
     const data = getData();
     const container = document.getElementById('principalsContainer');
     if (!container) return;
-    container.innerHTML = data.principals.map(p => `
-        <div class="principal-card">
-            ${p.isCurrent ? '<span class="current-badge"><i class="fas fa-circle"></i> CURRENT</span>' : ''}
-            <img src="${p.photo}" class="principal-photo" alt="${p.name}">
-            <div class="principal-name">${p.name}</div>
-            <div class="principal-years">${p.startYear} — ${p.endYear || 'Present'}</div>
+
+    let html = `<div class="principals-grid">`;
+
+    data.principals.forEach(p => {
+        const isCurrent = p.isCurrent;
+        html += `
+            <div class="principal-card ${isCurrent ? 'current-principal' : ''}">
+                <div class="principal-photo-wrapper">
+                    <img src="${p.photo}" 
+                         alt="${p.name}"
+                         onerror="this.src='https://placehold.co/400x400/6c3fcf/white?text=${encodeURIComponent(p.name.split(' ')[0])}'">
+                    ${isCurrent ? `<div class="current-badge">CURRENT PRINCIPAL</div>` : ''}
+                </div>
+                <div class="principal-info">
+                    <div class="principal-name">${p.name}</div>
+                    <div class="principal-years">${p.startYear} — ${p.endYear || 'Present'}</div>
+                </div>
+            </div>
+        `;
+    });
+
+    html += `</div>`;
+    container.innerHTML = html;
+}
+    // Featured card — current principal (spans 2 rows)
+    const featuredHTML = current ? `
+        <div class="mag-featured">
+            <img src="${current.photo}" alt="${current.name}"
+                 onerror="this.src='https://placehold.co/400x500/6c3fcf/white?text=${encodeURIComponent(current.name)}'">
+            <div class="mag-featured-overlay">
+                <div class="mag-featured-tag">CURRENT PRINCIPAL</div>
+                <div class="mag-featured-name">${current.name}</div>
+                <div class="mag-featured-years">${current.startYear} — Present</div>
+            </div>
         </div>
-    `).join('');
+    ` : '';
+
+    // Small cards — past principals, last one spans 2 cols if odd count
+    const pastHTML = past.map((p, idx) => {
+        const spanTwo = (idx === past.length - 1 && past.length % 2 !== 0)
+            ? 'style="grid-column: span 2;"' : '';
+        return `
+            <div class="mag-small" ${spanTwo}>
+                <img src="${p.photo}" alt="${p.name}"
+                     onerror="this.src='https://placehold.co/300x200/251b42/white?text=${encodeURIComponent(p.name)}'">
+                <div class="mag-small-overlay">
+                    <div class="mag-small-name">${p.name}</div>
+                    <div class="mag-small-years">${p.startYear} — ${p.endYear}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    container.innerHTML = featuredHTML + pastHTML;
 }
 
-let currentTourLocation = 'library';
+// ==================== SCHOOL TOUR — Design A: Sidebar Nav + Preview ====================
+const tourIcons = {
+    library: '📚', sports: '⚽', hostel_m: '🏠', hostel_f: '🏠',
+    field: '🌿', mess: '🍽️', workshop: '🔧', lab: '🔬'
+};
 
-function renderTourTabs() {
+let currentTourLocation = 'library';
+let currentThumbIdx = 0;
+
+function renderTourNav() {
     const data = getData();
-    const container = document.getElementById('tourTabs');
-    if (!container) return;
-    container.innerHTML = data.infrastructureList.map(loc => `
-        <div class="tour-tab ${loc === currentTourLocation ? 'active' : ''}" data-location="${loc}">
-            ${loc.replace(/_/g, ' ').toUpperCase()}
-        </div>
-    `).join('');
-    document.querySelectorAll('.tour-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.tour-tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            currentTourLocation = tab.dataset.location;
-            renderTourMedia(currentTourLocation);
+    const nav = document.getElementById('tourNav');
+    if (!nav) return;
+    nav.innerHTML = data.infrastructureList.map(loc => {
+        const icon = tourIcons[loc] || '📍';
+        const label = loc.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        return `<div class="tour-nav-item ${loc === currentTourLocation ? 'active' : ''}" data-location="${loc}">
+            ${icon} ${label}
+        </div>`;
+    }).join('');
+    nav.querySelectorAll('.tour-nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            currentTourLocation = item.dataset.location;
+            currentThumbIdx = 0;
+            nav.querySelectorAll('.tour-nav-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            renderTourPreview(currentTourLocation);
         });
     });
 }
 
-function renderTourMedia(location) {
+function renderTourPreview(location) {
     const data = getData();
     const media = data.schoolTour[location] || { images: [], videos: [] };
-    const container = document.getElementById('tourMedia');
-    container.innerHTML = `
-        <div class="media-gallery">
-            ${media.images.map(img => `
-                <div class="media-item">
-                    <img src="${img}" alt="Tour image">
-                </div>
-            `).join('')}
-        </div>
-    `;
+    const label = location.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const imgs = media.images;
+    const mainImg = imgs[currentThumbIdx] || `https://placehold.co/800x400/251b42/white?text=${encodeURIComponent(label)}`;
+
+    const previewImg = document.getElementById('tourPreviewImg');
+    const previewTitle = document.getElementById('tourPreviewTitle');
+    const previewDesc = document.getElementById('tourPreviewDesc');
+    const thumbsEl = document.getElementById('tourThumbs');
+
+    if (previewImg) previewImg.src = mainImg;
+    if (previewTitle) previewTitle.textContent = label;
+    if (previewDesc) previewDesc.textContent = `${imgs.length} photo${imgs.length !== 1 ? 's' : ''} available`;
+
+    // Thumbnail strip — only if multiple images
+    if (thumbsEl) {
+        if (imgs.length > 1) {
+            thumbsEl.innerHTML = imgs.map((src, idx) =>
+                `<img src="${src}" class="tour-thumb ${idx === currentThumbIdx ? 'active' : ''}"
+                      data-idx="${idx}" alt="thumb">`
+            ).join('');
+            thumbsEl.querySelectorAll('.tour-thumb').forEach(t => {
+                t.addEventListener('click', () => {
+                    currentThumbIdx = parseInt(t.dataset.idx);
+                    if (previewImg) previewImg.src = imgs[currentThumbIdx];
+                    thumbsEl.querySelectorAll('.tour-thumb').forEach(x => x.classList.remove('active'));
+                    t.classList.add('active');
+                });
+            });
+        } else {
+            thumbsEl.innerHTML = '';
+        }
+    }
 }
 
 function populateInfraSelect() {
@@ -123,6 +201,45 @@ function populateInfraSelect() {
     if (select) select.innerHTML = data.infrastructureList.map(loc =>
         `<option value="${loc}">${loc.replace(/_/g, ' ').toUpperCase()}</option>`
     ).join('');
+}
+
+// ==================== CBET CURRICULUM — Design B: Step Progress ====================
+function renderCBET() {
+    const stepsEl = document.getElementById('cbetSteps');
+    const modsEl = document.getElementById('cbetModules');
+    if (!stepsEl || !modsEl) return;
+
+    const levels = [
+        { num: '3', name: 'Level 3',        hrs: '300–599 hrs',   it: true },
+        { num: '4', name: 'Artisan',         hrs: '600–1199 hrs',  it: true },
+        { num: '5', name: 'Craft',           hrs: '1200–2399 hrs', it: true },
+        { num: '6', name: 'Diploma',         hrs: '2400–4799 hrs', it: true }
+    ];
+
+    stepsEl.innerHTML = levels.map((l, idx) => `
+        <div class="cbet-step">
+            <div class="cbet-step-dot ${idx < 2 ? 'active' : ''}">${l.num}</div>
+            <div class="cbet-step-name">${l.name}</div>
+            <div class="cbet-step-hrs">${l.hrs}</div>
+            ${l.it ? '<div class="cbet-step-it">✓ IT Required</div>' : ''}
+        </div>
+    `).join('');
+
+    const modules = [
+        { icon: '📐', label: 'Module 1' },
+        { icon: '🔧', label: 'Module 2' },
+        { icon: '⚡', label: 'Module 3' },
+        { icon: '💻', label: 'Module 4' },
+        { icon: '🔬', label: 'Module 5' },
+        { icon: '📊', label: 'Module 6' },
+        { icon: '🎓', label: 'Module 7' }
+    ];
+
+    modsEl.innerHTML = modules.map(m => `
+        <div class="cbet-module">
+            <span>${m.icon}</span>${m.label}
+        </div>
+    `).join('');
 }
 
 // ==================== NAVIGATE TO ROLE ====================
@@ -686,7 +803,7 @@ function addNewInfrastructure() {
     data.infrastructureList.push(key);
     data.schoolTour[key] = { images: [], videos: [] };
     saveData(data);
-    renderTourTabs();
+    renderTourNav();
     populateInfraSelect();
     alert(`✅ "${name}" added successfully!`);
 }
@@ -701,9 +818,10 @@ function closeSettingsModal() {
 function init() {
     initializeData();
     renderPrincipals();
-    renderTourTabs();
-    renderTourMedia('library');
+    renderTourNav();
+    renderTourPreview('library');
     populateInfraSelect();
+    renderCBET();
 
     // Restore saved theme
     if (localStorage.getItem('theme') === 'light') document.body.classList.add('light');
@@ -783,7 +901,7 @@ function init() {
     document.getElementById('logoutBtn').addEventListener('click', () => {
         sessionStorage.clear();
         showHome();
-    });
+    }); 
 
     // ── Theme toggle ──
     document.getElementById('themeToggle').addEventListener('click', () => {
