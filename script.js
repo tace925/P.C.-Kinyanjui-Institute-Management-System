@@ -72,40 +72,52 @@ function renderPrincipals() {
     const container = document.getElementById('principalsContainer');
     if (!container) return;
 
-    const current = data.principals.find(p => p.isCurrent);
-    const past = data.principals
-        .filter(p => !p.isCurrent)
-        .sort((a, b) => b.startYear - a.startYear);
+    const sorted = [...data.principals].sort((a, b) => {
+        if (a.isCurrent) return -1;
+        if (b.isCurrent) return 1;
+        return b.startYear - a.startYear;
+    });
 
-    // Work out how many grid rows the right column needs
-    // Right column is 2 cards wide, so rows = ceil(past.length / 2) but we only have 1 col on right
-    // Featured spans all right-column rows so both sides align
-    const rowSpan = past.length; // 1 past per row on the right (single col)
+    container.innerHTML = sorted.map(p => {
+        const years   = `${p.startYear} — ${p.endYear || 'Present'}`;
+        const tenure  = p.endYear ? `${p.endYear - p.startYear} yrs` : 'Present';
+        const fallback = `https://placehold.co/400x500/251b42/white?text=${encodeURIComponent(p.name)}`;
 
-    const featuredHTML = current ? `
-        <div class="mag-featured" style="grid-row: span ${rowSpan};">
-            <img src="${current.photo}" alt="${current.name}"
-                 onerror="this.src='https://placehold.co/400x500/6c3fcf/white?text=${encodeURIComponent(current.name)}'">
-            <div class="mag-featured-overlay">
-                <div class="mag-featured-tag">CURRENT PRINCIPAL</div>
-                <div class="mag-featured-name">${current.name}</div>
-                <div class="mag-featured-years">${current.startYear} — Present</div>
+        return `
+        <div class="principal-flip ${p.isCurrent ? 'is-current' : ''}" data-flipped="false">
+            <div class="principal-flip-inner">
+
+                <!-- FRONT -->
+                <div class="principal-front">
+                    <img src="${p.photo}" alt="${p.name}" onerror="this.src='${fallback}'">
+                    ${p.isCurrent ? `<div class="principal-current-badge">● CURRENT</div>` : ''}
+                    <div class="principal-front-overlay">
+                        <div class="principal-front-name">${p.name}</div>
+                        <div class="principal-front-years">${years}</div>
+                    </div>
+                </div>
+
+                <!-- BACK -->
+                <div class="principal-back">
+                    <img src="${p.photo}" class="principal-back-photo" alt="${p.name}" onerror="this.src='${fallback}'">
+                    <div class="principal-back-name">${p.name}</div>
+                    <div class="principal-back-years">${years}</div>
+                    <div class="principal-back-tenure">${tenure}</div>
+                    <div class="principal-back-title">${p.title || ''}</div>
+                </div>
+
             </div>
-        </div>
-    ` : '';
+        </div>`;
+    }).join('');
 
-    const pastHTML = past.map(p => `
-        <div class="mag-small">
-            <img src="${p.photo}" alt="${p.name}"
-                 onerror="this.src='https://placehold.co/300x200/251b42/white?text=${encodeURIComponent(p.name)}'">
-            <div class="mag-small-overlay">
-                <div class="mag-small-name">${p.name}</div>
-                <div class="mag-small-years">${p.startYear} — ${p.endYear}</div>
-            </div>
-        </div>
-    `).join('');
-
-    container.innerHTML = featuredHTML + pastHTML;
+    /* Mobile — tap to flip */
+    container.querySelectorAll('.principal-flip').forEach(card => {
+        card.addEventListener('click', () => {
+            const isFlipped = card.dataset.flipped === 'true';
+            card.dataset.flipped = String(!isFlipped);
+            card.classList.toggle('flipped', !isFlipped);
+        });
+    });
 }
 
 // ==================== SCHOOL TOUR — Design A: Sidebar Nav + Preview ====================
