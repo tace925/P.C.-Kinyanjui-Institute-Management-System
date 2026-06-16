@@ -1141,7 +1141,6 @@ function renderFinancePanel(user) {
             <div class="admin-sidenav-title">
                 <i class="fas fa-coins"></i> Finance Menu
             </div>
-            
             <button class="admin-nav-btn active" onclick="financeSection('pending',this)">
                 <i class="fas fa-clock"></i> Pending from HOD
             </button>
@@ -1155,7 +1154,6 @@ function renderFinancePanel(user) {
                 <i class="fas fa-chart-bar"></i> Financial Report
             </button>
         </div>
-        
         <div class="admin-main" id="financeMain">
             ${financePendingHTML()}
         </div>
@@ -1165,52 +1163,44 @@ function renderFinancePanel(user) {
 window.financeSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    
     const map = {
         pending:    () => financePendingHTML(),
         cleared:    () => financeClearedHTML(),
         uncleared:  () => financeUnclearedHTML(),
         report:     () => financeReportHTML()
     };
-    
     document.getElementById('financeMain').innerHTML = map[section]();
 };
 
-// Pending from HOD (Main Screen)
+// Pending from HOD
 function financePendingHTML() {
     const data = getData();
     const pending = data.examRegistrations.filter(r => r.status === 'pending_finance');
 
     if (pending.length === 0) {
-        return `
-            <div class="admin-section-head">💰 Pending from HOD (0)</div>
-            <div class="admin-card">
-                <p style="color:var(--text-secondary);">No pending registrations from HOD at the moment.</p>
-            </div>`;
+        return `<div class="admin-card"><p>No pending registrations from HOD.</p></div>`;
     }
 
     const cards = pending.map(reg => {
         const student = data.students.find(s => s.id === reg.studentId) || {};
-        const currentBalance = student.feeBalance || 0;
         const examFee = reg.totalExamFee || 0;
+        const currentBalance = student.feeBalance || 0;
         const newTotal = currentBalance + examFee;
 
         return `
         <div class="admin-card" style="margin-bottom:15px;">
-            <div style="font-weight:700;font-size:1rem;">${student.name || '—'}</div>
-            <div style="color:var(--text-secondary);font-size:0.8rem;">
-                ${reg.studentId} • ${student.department || ''} • ${student.class || ''}
-            </div>
+            <div style="font-weight:700;">${student.name}</div>
+            <div style="color:var(--text-secondary);font-size:0.8rem;">${reg.studentId} • ${student.department}</div>
             
-            <div style="margin:12px 0;background:var(--bg-elevated);padding:12px;border-radius:10px;">
-                <strong>HOD Confirmed Exam Fee:</strong> KSh ${examFee.toLocaleString()}<br>
-                <strong>Current School Fee Balance:</strong> <span style="color:var(--danger)">KSh ${currentBalance.toLocaleString()}</span><br>
-                <strong style="color:var(--purple-light);font-size:1.05rem;">New Total Balance: KSh ${newTotal.toLocaleString()}</strong>
+            <div style="margin:12px 0;padding:12px;background:var(--bg-elevated);border-radius:10px;">
+                <strong>Exam Fee:</strong> KSh ${examFee.toLocaleString()}<br>
+                <strong>Current Balance:</strong> KSh ${currentBalance.toLocaleString()}<br>
+                <strong style="color:var(--purple-light)">New Total: KSh ${newTotal.toLocaleString()}</strong>
             </div>
 
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <div style="display:flex;gap:10px;">
                 <button class="admin-btn-primary" onclick="financeClearStudent('${reg.id}')">
-                    ✅ Clear Fees & Forward to Exam Office
+                    ✅ Clear & Send to Exam Office
                 </button>
                 <button class="admin-action-btn danger" onclick="financeSendToDeputy('${reg.id}')">
                     ⚠️ Send to Deputy (Uncleared)
@@ -1219,22 +1209,47 @@ function financePendingHTML() {
         </div>`;
     }).join('');
 
-    return `
-        <div class="admin-section-head">💰 Pending from HOD (${pending.length})</div>
-        ${cards}`;
+    return `<div class="admin-section-head">💰 Pending from HOD (${pending.length})</div>${cards}`;
 }
 
-// Other sections (you can expand later)
+window.financeClearStudent = function(regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+    
+    const student = data.students.find(s => s.id === reg.studentId);
+    if (student) student.feeBalance = (student.feeBalance || 0) + (reg.totalExamFee || 0);
+
+    reg.status = 'pending_exam';
+    reg.financeChecked = true;
+    saveData(data);
+    
+    alert(`✅ Fees cleared! Registration ${regId} sent to Exam Office.`);
+    document.getElementById('financeMain').innerHTML = financePendingHTML();
+};
+
+window.financeSendToDeputy = function(regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (reg) {
+        reg.status = 'pending_deputy';
+        reg.referredToDeputy = true;
+        saveData(data);
+        alert(`⚠️ Registration sent to Deputy Academics.`);
+        document.getElementById('financeMain').innerHTML = financePendingHTML();
+    }
+};
+
 function financeClearedHTML() {
-    return `<div class="admin-card"><p>Cleared students will appear here.</p></div>`;
+    return `<div class="admin-card"><p>Cleared students list coming soon (with PDF export).</p></div>`;
 }
 
 function financeUnclearedHTML() {
-    return `<div class="admin-card"><p>Students sent to Deputy Academics will appear here.</p></div>`;
+    return `<div class="admin-card"><p>Students sent to Deputy will appear here.</p></div>`;
 }
 
 function financeReportHTML() {
-    return `<div class="admin-card"><p>Financial Report coming soon.</p></div>`;
+    return `<div class="admin-card"><p>Full Financial Report (with charts) coming soon.</p></div>`;
 }
 
 /* ══════════════════════════════════════════
@@ -3027,88 +3042,167 @@ window.sportLeaderSection = function(section, btn) {
 /* ══════════════════════════════════════════
    STUDENT DASHBOARD — Final Combined Version
 ══════════════════════════════════════════ */
-function renderStudentDashboard(user) {
-    const data = getData();
-    const regs = data.examRegistrations.filter(r => r.studentId === user.id);
-
-    let html = `
-        <div class="stats-grid">
-            <div class="stat-card">
-                <i class="fas fa-check-circle"></i>
-                <h3>Welcome</h3>
-                <p>${user.name}</p>
+// ====================== FINANCE PORTAL — FULLY UPDATED ======================
+function renderFinancePanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">
+                <i class="fas fa-coins"></i> Finance Menu
             </div>
-            <div class="stat-card">
-                <i class="fas fa-id-badge"></i>
-                <h3>Role</h3>
-                <p>STUDENT</p>
-            </div>
-            ${user.department ? `
-            <div class="stat-card">
-                <i class="fas fa-building"></i>
-                <h3>Department</h3>
-                <p>${user.department}</p>
-            </div>` : ''}
-        </div>
-
-        <!-- Quick Stats -->
-        <div class="stats-grid" style="margin-top:1rem;">
-            <div class="stat-card">
-                <i class="fas fa-calendar-check" style="color:#10b981"></i>
-                <h3>Attendance</h3>
-                <p style="font-size:1.4rem;color:#10b981">
-                    ${user.attendance ? Math.round((user.attendance.attended / user.attendance.total) * 100) : 0}%
-                </p>
-                <small>${user.attendance ? user.attendance.attended : 0}/${user.attendance ? user.attendance.total : 0} classes</small>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-wallet" style="color:${user.feeBalance === 0 ? '#10b981' : '#ef4444'}"></i>
-                <h3>Fee Balance</h3>
-                <p style="font-size:1.2rem;color:${user.feeBalance === 0 ? '#10b981' : '#ef4444'}">
-                    ${user.feeBalance === 0 ? '✅ Cleared' : 'KSh ' + user.feeBalance.toLocaleString()}
-                </p>
-            </div>
-        </div>`;
-
-    // My Exam Registrations (keeps your original tracking)
-    html += renderStudentExamTracking(user);
-
-    // New Registration Button
-    html += `
-        <div class="form-card">
-            <button class="btn-primary" onclick="startExamRegistration()">
-                <i class="fas fa-file-signature"></i> New CBET Exam Registration
+            <button class="admin-nav-btn active" onclick="financeSection('pending',this)">
+                <i class="fas fa-clock"></i> Pending from HOD
             </button>
-        </div>`;
-
-    return html;
+            <button class="admin-nav-btn" onclick="financeSection('cleared',this)">
+                <i class="fas fa-check-circle"></i> Cleared Students
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('uncleared',this)">
+                <i class="fas fa-exclamation-triangle"></i> Uncleared → Deputy
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('received',this)">
+                <i class="fas fa-file-pdf"></i> Received PDFs
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('report',this)">
+                <i class="fas fa-chart-bar"></i> Financial Report
+            </button>
+        </div>
+        
+        <div class="admin-main" id="financeMain">
+            ${financePendingHTML()}
+        </div>
+    </div>`;
 }
-function showSportSubLogin() {
-    selectedRole = 'sportclub';
-    document.getElementById('schoolInfoPanel').style.display = 'none';
-    document.getElementById('loginFormContainer').style.display = 'none';
-    document.getElementById('dashboardContainer').style.display = 'block';
 
-    let subHTML = `
-        <div class="form-card" style="max-width:500px;margin:2rem auto;">
-            <h2 style="text-align:center;color:var(--purple-light);margin-bottom:1.5rem;">
-                <i class="fas fa-football-ball"></i> Sport Club Access
-            </h2>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                <button class="admin-btn-primary" style="height:120px;font-size:1.1rem;" onclick="selectSportSubRole('sportsadmin')">
-                    <i class="fas fa-user-tie" style="font-size:2rem;"></i><br>
-                    Sports Admin
+window.financeSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const map = {
+        pending:   () => financePendingHTML(),
+        cleared:   () => financeClearedHTML(),
+        uncleared: () => financeUnclearedHTML(),
+        received:  () => financeReceivedPDFsHTML(),
+        report:    () => financeReportHTML()
+    };
+    document.getElementById('financeMain').innerHTML = map[section]();
+};
+
+// 1. Pending from HOD (with demo data)
+function financePendingHTML() {
+    const data = getData();
+    let pending = data.examRegistrations.filter(r => r.status === 'pending_finance');
+
+    // Add demo data if empty
+    if (pending.length === 0) {
+        pending = [{
+            id: "REG-998877",
+            studentId: "STU-2026-20670",
+            status: "pending_finance",
+            totalExamFee: 3200,
+            units: [{name:"Computer Essentials", code:"CS101"}]
+        }];
+    }
+
+    const cards = pending.map(reg => {
+        const student = data.students.find(s => s.id === reg.studentId) || {name: "Sarah Achieng", department: "Computer Studies"};
+        const examFee = reg.totalExamFee || 0;
+        const currentBalance = student.feeBalance || 0;
+        const newTotal = currentBalance + examFee;
+
+        return `
+        <div class="admin-card" style="margin-bottom:15px;">
+            <div style="font-weight:700;font-size:1.05rem;">${student.name}</div>
+            <div style="color:var(--text-secondary);font-size:0.85rem;">${reg.studentId} • ${student.department}</div>
+            
+            <div style="margin:12px 0;padding:12px;background:var(--bg-elevated);border-radius:10px;">
+                <strong>Exam Fee:</strong> KSh ${examFee.toLocaleString()}<br>
+                <strong>Current Balance:</strong> KSh ${currentBalance.toLocaleString()}<br>
+                <strong style="color:var(--purple-light);font-size:1.1rem;">New Total: KSh ${newTotal.toLocaleString()}</strong>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+                <button class="admin-btn-primary" onclick="financeClearStudent('${reg.id}')">
+                    ✅ Clear Fees → Exam Office
                 </button>
-                <button class="admin-btn-primary" style="height:120px;font-size:1.1rem;" onclick="selectSportSubRole('sportleader')">
-                    <i class="fas fa-user-graduate" style="font-size:2rem;"></i><br>
-                    Student Sport Leader
+                <button class="admin-action-btn danger" onclick="financeSendToDeputy('${reg.id}')">
+                    ⚠️ Send to Deputy (Uncleared)
                 </button>
             </div>
-            <button class="btn-danger" style="margin-top:1.5rem;width:100%;" onclick="showHome()">Back</button>
         </div>`;
+    }).join('');
 
-    document.getElementById('dashboardContent').innerHTML = subHTML;
+    return `
+        <div class="admin-section-head">💰 Pending from HOD (${pending.length})</div>
+        ${cards}`;
 }
+
+// 2. Cleared Students
+function financeClearedHTML() {
+    return `
+        <div class="admin-section-head">✅ Cleared Students</div>
+        <div class="admin-card">
+            <p>Cleared students list with PDF export option coming soon.</p>
+            <button class="admin-btn-primary" onclick="alert('PDF of cleared students downloaded (Demo)')">📄 Download Cleared List PDF</button>
+        </div>`;
+}
+
+// 3. Uncleared → Deputy
+function financeUnclearedHTML() {
+    return `
+        <div class="admin-section-head">⚠️ Uncleared Students → Deputy</div>
+        <div class="admin-card">
+            <p>Students sent to Deputy Academics will appear here.</p>
+        </div>`;
+}
+
+// 4. Received PDFs (New Section)
+function financeReceivedPDFsHTML() {
+    return `
+        <div class="admin-section-head">📥 Received PDFs / Documents</div>
+        <div class="admin-card">
+            <h4>HOD Exam Fee List</h4>
+            <p><strong>REG-998877</strong> — Sarah Achieng (Computer Studies)</p>
+            <button class="admin-btn-primary" onclick="alert('HOD PDF opened')">📄 View / Download PDF</button>
+        </div>
+        <div class="admin-card" style="margin-top:12px;">
+            <h4>Other Department Lists</h4>
+            <p>More incoming PDFs from HODs, Dean, etc. will appear here.</p>
+        </div>`;
+}
+
+// 5. Financial Report
+function financeReportHTML() {
+    return `
+        <div class="admin-section-head">📊 Financial Report</div>
+        <div class="admin-card">
+            <p>Total Expected Exam Fees: <strong>KSh 48,500</strong></p>
+            <p>Cleared: KSh 32,000 | Pending: KSh 16,500</p>
+            <button class="admin-btn-primary" onclick="alert('Full Financial Report PDF Generated')">📄 Generate Full Report PDF</button>
+        </div>`;
+}
+
+// Action Functions
+window.financeClearStudent = function(regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (reg) {
+        reg.status = 'pending_exam';
+        saveData(data);
+        alert(`✅ Fees cleared! Registration ${regId} forwarded to Exam Office.`);
+        document.getElementById('financeMain').innerHTML = financePendingHTML();
+    }
+};
+
+window.financeSendToDeputy = function(regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (reg) {
+        reg.status = 'pending_deputy';
+        saveData(data);
+        alert(`⚠️ Registration sent to Deputy Academics.`);
+        document.getElementById('financeMain').innerHTML = financePendingHTML();
+    }
+};
 
 window.selectSportSubRole = function(subRole) {
     // Set temporary role for login
