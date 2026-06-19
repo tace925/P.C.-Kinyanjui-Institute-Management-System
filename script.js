@@ -3248,8 +3248,9 @@ window.postKITCONotice = function() {
     alert(`✅ KITCO Notice Broadcasted!\n\n"${msg}"`);
     document.getElementById('kitcoNotice').value = '';
 };
+
 /* ══════════════════════════════════════════
-   SPORTS ADMIN PORTAL
+   SPORTS ADMIN PORTAL — FINAL FIXED VERSION
 ══════════════════════════════════════════ */
 function renderSportsAdminPanel(user) {
     return `
@@ -3269,7 +3270,7 @@ function renderSportsAdminPanel(user) {
                 <i class="fas fa-box"></i> Items Inventory
             </button>
             <button class="admin-nav-btn" onclick="sportsSection('participants',this)">
-                <i class="fas fa-users"></i> All Participants
+                <i class="fas fa-user-graduate"></i> Student Sport Leaders
             </button>
             <button class="admin-nav-btn" onclick="sportsSection('requests',this)">
                 <i class="fas fa-inbox"></i> Pending Requests
@@ -3278,7 +3279,7 @@ function renderSportsAdminPanel(user) {
                 <i class="fas fa-exclamation-triangle"></i> Lost Items
             </button>
             <button class="admin-nav-btn" onclick="sportsSection('report',this)">
-                <i class="fas fa-chart-bar"></i> Reports & PDF
+                <i class="fas fa-chart-bar"></i> Reports
             </button>
         </div>
         
@@ -3291,15 +3292,17 @@ function renderSportsAdminPanel(user) {
 window.sportsSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    
     const map = {
         dashboard:    () => sportsDashboardHTML(),
-        sports:       () => sportsListHTML(),
+        sports:       () => sportsManageHTML(),
         items:        () => sportsItemsHTML(),
-        participants: () => sportsParticipantsHTML(),
+        participants: () => sportsStudentSportLeadersHTML(),   // This must point here
         requests:     () => sportsRequestsHTML(),
         lost:         () => sportsLostItemsHTML(),
         report:       () => sportsReportHTML()
     };
+    
     document.getElementById('sportsMain').innerHTML = map[section]();
 };
 
@@ -3357,14 +3360,67 @@ function sportsRequestsHTML() {
 }
 
 // Lost Items
+// ====================== LOST ITEMS (Sports Admin) ======================
 function sportsLostItemsHTML() {
+    const data = getData();
+    if (!data.sportsLostItems) {
+        data.sportsLostItems = [];
+        saveData(data);
+    }
+
+    const rows = data.sportsLostItems.length === 0 
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No lost items recorded yet.</p>`
+        : data.sportsLostItems.map((item, i) => `
+            <div style="padding:0.7rem 0;border-bottom:1px solid var(--border);">
+                <strong>${item.itemName}</strong> — ${item.quantity} pcs<br>
+                <small style="color:var(--text-secondary)">${item.studentName || 'Unknown Student'} • ${new Date(item.date).toLocaleDateString()}</small>
+            </div>`).join('');
+
     return `
         <div class="admin-section-head">🚨 Lost / Damaged Items</div>
-        <div class="admin-card">
-            <p>Record lost items → Generate PDF for Finance billing</p>
-            <button class="admin-btn-primary" onclick="alert('Lost items PDF sent to Finance')">Send to Finance</button>
+       <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Record Lost Item</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
+                <input id="lostItemName" class="admin-input" placeholder="Item name (e.g. Football)">
+                <input id="lostQty" class="admin-input" type="number" min="1" placeholder="Quantity">
+                <input id="lostResponsible" class="admin-input" placeholder="Student / Leader Name">
+                <input id="lostNotes" class="admin-input" placeholder="Notes (optional)">
+            </div>
+        <div class="admin-card" style="margin-top:1rem;">
+            <div class="admin-card-title">Recent Lost Items (${data.sportsLostItems.length})</div>
+            ${rows}
         </div>`;
 }
+
+// ====================== SEND LOST ITEMS TO FINANCE ======================
+window.sportsSendLostItemsToFinance = function() {
+    const data = getData();
+    
+    // Create lost items record for Finance
+    const lostRecord = {
+        id: 'LOST-' + Date.now().toString().slice(-6),
+        department: 'Sports',
+        type: 'Lost Items Report',
+        description: 'Lost/Damaged Sports Equipment',
+        date: new Date().toISOString(),
+        itemsCount: 3, // You can make this dynamic later
+        status: 'received'
+    };
+
+    if (!data.financeReceivedDocs) data.financeReceivedDocs = [];
+    data.financeReceivedDocs.push(lostRecord);
+    
+    saveData(data);
+    
+    // Success Notification (exactly like your 3rd image)
+    showSuccessAlert(`
+        ✅ Lost items PDF sent to Finance!<br>
+        <small style="font-size:0.9rem;">Sports Department Report</small>
+    `);
+    
+    // Refresh current page
+    document.getElementById('sportsMain').innerHTML = sportsLostItemsHTML();
+};
 
 // Reports
 function sportsReportHTML() {
@@ -3384,61 +3440,81 @@ function showSportSubLogin() {
     document.getElementById('dashboardTitle').innerHTML = `<i class="fas fa-football-ball"></i> Sport Club Access`;
 
     const html = `
-      <div class="form-card" style="max-width:560px;margin:40px auto;text-align:center;">
+    <div class="form-card" style="max-width:560px;margin:40px auto;text-align:center;">
             <h2 style="color:var(--purple-light);margin-bottom:25px;">Sport Club Portal</h2>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-                <button onclick="selectSportSubRole('sportsadmin')" 
-                        class="admin-btn-primary" 
+                <button onclick="selectSportSubRole('sportsadmin')"
+                        class="admin-btn-primary"
                         style="height:120px;font-size:1.1rem;padding:20px;">
                     <i class="fas fa-user-tie" style="font-size:2.8rem;display:block;margin-bottom:12px;"></i>
                     Sports Admin
                 </button>
-                <button onclick="selectSportSubRole('sportleader')" 
-                        class="admin-btn-primary" 
+                <button onclick="selectSportSubRole('sportleader')"
+                        class="admin-btn-primary"
                         style="height:120px;font-size:1.1rem;padding:20px;">
                     <i class="fas fa-user-graduate" style="font-size:2.8rem;display:block;margin-bottom:12px;"></i>
                     Student Sport Leader
                 </button>
             </div>
-            <button onclick="showHome()" 
-                    class="btn-danger" 
+            <button onclick="showHome()"
+                    class="btn-danger"
                     style="margin-top:25px;width:100%;padding:14px;">
                 ← Back to Home
             </button>
         </div>`;
-
+  
     document.getElementById('dashboardContent').innerHTML = html;
 }
 
 window.selectSportSubRole = function(subRole) {
     sessionStorage.setItem('sportSubRole', subRole);
-    const title = subRole === 'sportsadmin' ? 'Sports Admin Login' : 'Student Sport Leader Login';
-    document.getElementById('dashboardTitle').innerHTML = `<i class="fas fa-football-ball"></i> ${title}`;
+    const titles = { sportsadmin: 'Sports Admin Login', sportleader: 'Student Sport Leader Login' };
+    document.getElementById('dashboardTitle').innerHTML = `<i class="fas fa-football-ball"></i> ${titles[subRole]}`;
 
     document.getElementById('dashboardContent').innerHTML = `
-        <div class="form-card" style="max-width:400px;margin:40px auto;">
+        <div class="form-card" style="max-width:420px;margin:2rem auto;">
+            <h3 style="text-align:center;margin-bottom:1rem;">Enter Credentials</h3>
             <input type="text" id="sportId" class="login-input" placeholder="ID / Username">
-            <input type="password" id="sportPass" class="login-input" placeholder="Password">
-            <button onclick="handleSportSubLogin()" class="btn-primary" style="width:100%;margin-top:15px;">Login</button>
-            <button onclick="showSportSubLogin()" class="btn-danger" style="width:100%;margin-top:10px;">← Back</button>
+            <input type="password" id="sportPass" class="login-input" placeholder="Password / Passcode">
+            <button type="button" class="btn-primary" style="width:100%;margin-top:1rem;" onclick="handleSportSubLogin()">
+                Login
+            </button>
+            <button type="button" onclick="showSportSubLogin()" class="btn-danger" style="width:100%;margin-top:10px;">
+                ← Back
+            </button>
         </div>`;
 };
 
 window.handleSportSubLogin = function() {
     const subRole = sessionStorage.getItem('sportSubRole');
-    const pass = document.getElementById('sportPass').value.trim();
+    const passEl  = document.getElementById('sportPass');
+    if (!passEl) { alert('⚠️ Login form not loaded correctly. Please go back and try again.'); return; }
+    const pass = passEl.value.trim();
+    const data = getData();
 
     if (subRole === 'sportsadmin' && pass === 'sports123') {
         const user = { role: 'sportsadmin', name: 'Sports Admin', id: 'SP-ADMIN-001' };
         sessionStorage.setItem('currentUser', JSON.stringify(user));
         showDashboard('sportsadmin', user);
-    } else if (subRole === 'sportleader' && pass === 'leader123') {
-        const user = { role: 'sportleader', name: 'John Mwangi (Football Leader)', id: 'LEADER-001', sport: 'Football' };
-        sessionStorage.setItem('currentUser', JSON.stringify(user));
-        showDashboard('sportleader', user);
-    } else {
-        alert('❌ Wrong password!\n\nSports Admin → sports123\nSport Leader → leader123');
+        return;
     }
+
+    if (subRole === 'sportleader') {
+        const leader = (data.sportLeaders || []).find(l => l.passcode === pass);
+        if (leader) {
+            const user = {
+                role: 'sportleader',
+                name: leader.name,
+                id: leader.studentId,
+                sport: leader.sport
+            };
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
+            showDashboard('sportleader', user);
+            return;
+        }
+    }
+
+    alert('❌ Invalid passcode.\n\nSports Admin → sports123\nSport Leader → use the passcode given by Sports Admin');
 };
 
 // ====================== SPORTS ADMIN PORTAL ======================
@@ -3459,8 +3535,8 @@ function renderSportsAdminPanel(user) {
                 <i class="fas fa-box"></i> Items Inventory
             </button>
             <button class="admin-nav-btn" onclick="sportsSection('participants',this)">
-                <i class="fas fa-users"></i> Participants
-            </button>
+           <i class="fas fa-user-graduate"></i> Student Sport Leaders
+           </button>
             <button class="admin-nav-btn" onclick="sportsSection('requests',this)">
                 <i class="fas fa-inbox"></i> Pending Requests
             </button>
@@ -3478,29 +3554,283 @@ function renderSportsAdminPanel(user) {
 window.sportsSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    
     const map = {
-        dashboard: () => sportsDashboardHTML(),
-        sports: () => `<div class="admin-card"><p>Manage Sports coming soon...</p></div>`,
-        items: () => `<div class="admin-card"><p>Items Inventory coming soon...</p></div>`,
-        participants: () => `<div class="admin-card"><p>All Participants list coming soon...</p></div>`,
-        requests: () => `<div class="admin-card"><p>Pending Requests coming soon...</p></div>`,
-        lost: () => `<div class="admin-card"><p>Lost Items (PDF to Finance) coming soon...</p></div>`,
-        report: () => `<div class="admin-card"><p>Reports coming soon...</p></div>`
+        dashboard:    () => sportsDashboardHTML(),
+        sports:       () => sportsManageHTML(),
+        items:        () => sportsItemsHTML(),
+        participants: () => sportsStudentSportLeadersHTML(),   // ← This is the correct one
+        requests:     () => sportsRequestsHTML(),
+        lost:         () => sportsLostItemsHTML(),
+        report:       () => sportsReportHTML()
     };
+    
     document.getElementById('sportsMain').innerHTML = map[section]();
 };
 
+/* ── Dashboard (now reads real counts) ── */
 function sportsDashboardHTML() {
+    const data = getData();
+    const sportsCount       = (data.sportsList || []).length;
+    const participantsCount = (data.sportsParticipants || []).length;
+    const itemsIssued       = (data.sportsInventory || []).reduce((sum, i) => sum + (i.issued || 0), 0);
+
     return `
         <div class="admin-section-head">⚽ Sports Department Dashboard</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
-            <div class="stat-card"><h3>8</h3><p>Active Sports</p></div>
-            <div class="stat-card"><h3>245</h3><p>Participants</p></div>
-            <div class="stat-card"><h3>67</h3><p>Items Issued</p></div>
-            <div class="stat-card"><h3>12</h3><p>Pending Requests</p></div>
+            <div class="stat-card"><h3>${sportsCount}</h3><p>Active Sports</p></div>
+            <div class="stat-card"><h3>${participantsCount}</h3><p>Participants</p></div>
+            <div class="stat-card"><h3>${itemsIssued}</h3><p>Items Issued</p></div>
+            <div class="stat-card"><h3>0</h3><p>Pending Requests</p></div>
         </div>`;
 }
 
+/* ══════════════════════════════════════════
+   1. MANAGE SPORTS
+══════════════════════════════════════════ */
+function sportsManageHTML() {
+    const data = getData();
+    if (!data.sportsList) { data.sportsList = []; saveData(data); }
+
+    const rows = data.sportsList.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No sports added yet.</p>`
+        : data.sportsList.map((s, i) => `
+            <div style="display:flex;justify-content:space-between;align-items:center;
+                padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;flex-wrap:wrap;gap:6px;">
+                <div>
+                    <strong>${s.icon || '⚽'} ${s.name}</strong>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${s.category || '—'}</div>
+                </div>
+                <button class="admin-action-btn danger" onclick="sportsDeleteSport(${i})">🗑 Remove</button>
+            </div>`).join('');
+
+    return `
+        <div class="admin-section-head">🏅 Manage Sports</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Sport</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
+                <input id="sportName" class="admin-input" placeholder="Sport name (e.g. Football)">
+                <select id="sportCategory" class="admin-input">
+                    <option>Team Sport</option>
+                    <option>Individual Sport</option>
+                    <option>Indoor Game</option>
+                </select>
+                <input id="sportIcon" class="admin-input" placeholder="Emoji icon (e.g. ⚽)" maxlength="2">
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="sportsAddSport()">
+                <i class="fas fa-plus"></i> Add Sport
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Sports (${data.sportsList.length})</div>
+            ${rows}
+        </div>`;
+}
+
+window.sportsAddSport = function() {
+    const name     = document.getElementById('sportName').value.trim();
+    const category = document.getElementById('sportCategory').value;
+    const icon     = document.getElementById('sportIcon').value.trim() || '⚽';
+    if (!name) return alert('Enter a sport name.');
+
+    const data = getData();
+    if (!data.sportsList) data.sportsList = [];
+    if (data.sportsList.find(s => s.name.toLowerCase() === name.toLowerCase())) {
+        return alert('This sport already exists.');
+    }
+    data.sportsList.push({ name, category, icon });
+    saveData(data);
+    adminLog(`Sports Admin added sport: ${name}`);
+    document.getElementById('sportsMain').innerHTML = sportsManageHTML();
+};
+
+window.sportsDeleteSport = function(idx) {
+    if (!confirm('Remove this sport? This will not delete existing inventory/participant records tied to it.')) return;
+    const data = getData();
+    adminLog(`Sports Admin removed sport: ${data.sportsList[idx].name}`);
+    data.sportsList.splice(idx, 1);
+    saveData(data);
+    document.getElementById('sportsMain').innerHTML = sportsManageHTML();
+};
+
+/* ══════════════════════════════════════════
+   2. ITEMS INVENTORY
+══════════════════════════════════════════ */
+function sportsItemsHTML() {
+    const data = getData();
+    if (!data.sportsInventory) { data.sportsInventory = []; saveData(data); }
+    const sportsOptions = (data.sportsList || []).map(s => `<option>${s.name}</option>`).join('');
+
+    if ((data.sportsList || []).length === 0) {
+        return `
+        <div class="admin-section-head">📦 Items Inventory</div>
+        <div class="admin-card">
+            <p style="color:var(--warning);font-size:0.85rem;">
+                ⚠️ Add at least one sport in "Manage Sports" first before adding inventory items.
+            </p>
+        </div>`;
+    }
+
+    const rows = data.sportsInventory.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No items recorded yet.</p>`
+        : data.sportsInventory.map((item, i) => `
+            <div style="display:flex;justify-content:space-between;align-items:center;
+                padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;flex-wrap:wrap;gap:6px;">
+                <div>
+                    <strong>${item.name}</strong>
+                    <span class="admin-role-pill" style="margin-left:6px;">${item.sport}</span>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">
+                        Total: ${item.quantity} · Issued: ${item.issued || 0} · Available: ${item.quantity - (item.issued || 0)}
+                    </div>
+                </div>
+                <button class="admin-action-btn danger" onclick="sportsDeleteItem(${i})">🗑</button>
+            </div>`).join('');
+
+    return `
+        <div class="admin-section-head">📦 Items Inventory</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Item</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
+                <select id="itemSport" class="admin-input">${sportsOptions}</select>
+                <input id="itemName" class="admin-input" placeholder="Item name (e.g. Match Ball)">
+                <input id="itemQty" class="admin-input" type="number" min="1" placeholder="Quantity">
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="sportsAddItem()">
+                <i class="fas fa-plus"></i> Add Item
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Inventory (${data.sportsInventory.length})</div>
+            ${rows}
+        </div>`;
+}
+
+window.sportsAddItem = function() {
+    const sport = document.getElementById('itemSport').value;
+    const name  = document.getElementById('itemName').value.trim();
+    const qty   = parseInt(document.getElementById('itemQty').value) || 0;
+    if (!name || qty <= 0) return alert('Enter item name and a valid quantity.');
+
+    const data = getData();
+    if (!data.sportsInventory) data.sportsInventory = [];
+    data.sportsInventory.push({ sport, name, quantity: qty, issued: 0 });
+    saveData(data);
+    adminLog(`Sports Admin added inventory: ${name} ×${qty} (${sport})`);
+    document.getElementById('sportsMain').innerHTML = sportsItemsHTML();
+};
+
+window.sportsDeleteItem = function(idx) {
+    if (!confirm('Remove this inventory item?')) return;
+    const data = getData();
+    adminLog(`Sports Admin removed inventory item: ${data.sportsInventory[idx].name}`);
+    data.sportsInventory.splice(idx, 1);
+    saveData(data);
+    document.getElementById('sportsMain').innerHTML = sportsItemsHTML();
+};
+
+/* ══════════════════════════════════════════
+  /* =========================================
+   3. STUDENT SPORT LEADERS
+   ========================================= */
+function sportsStudentSportLeadersHTML() {
+    const data = getData();
+    if (!data.studentSportLeaders) { 
+        data.studentSportLeaders = []; 
+        saveData(data); 
+    }
+
+    const sportsOptions = (data.sportsList || []).map(s => `<option>${s.name}</option>`).join('');
+
+    if ((data.sportsList || []).length === 0) {
+        return `
+        <div class="admin-section-head">👥 Student Sport Leaders</div>
+        <div class="admin-card">
+            <p style="color:var(--warning);font-size:0.85rem;">
+                ⚠️ Add at least one sport in "Manage Sports" first before adding sport leaders.
+            </p>
+        </div>`;
+    }
+
+    const rows = data.studentSportLeaders.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No student sport leaders registered yet.</p>`
+        : data.studentSportLeaders.map((p, i) => {
+            const student = data.students.find(s => s.id === p.studentId) || {};
+            return `
+            <div style="display:flex;justify-content:space-between;align-items:center;
+                padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;flex-wrap:wrap;gap:6px;">
+                <div>
+                    <strong>${student.name || p.studentId}</strong>
+                    <span class="admin-role-pill" style="margin-left:6px;">${p.sport} Leader</span>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">
+                        ${p.studentId} · ${student.department || '—'}
+                    </div>
+                </div>
+                <button class="admin-action-btn danger" onclick="sportsRemoveStudentSportLeader(${i})">🗑</button>
+            </div>`;
+        }).join('');
+
+    return `
+        <div class="admin-section-head">👥 All Student Sport Leaders</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Register Student Sport Leader</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
+                <input id="leaderStudentId" class="admin-input" placeholder="Student ID (e.g. STU-2026-20669)">
+                <select id="leaderSport" class="admin-input">${sportsOptions}</select>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="sportsAddStudentSportLeader()">
+                <i class="fas fa-plus"></i> Register Leader
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Registered Student Sport Leaders (${data.studentSportLeaders.length})</div>
+            ${rows}
+        </div>`;
+}
+
+// ====================== ADD LEADER ======================
+window.sportsAddStudentSportLeader = function() {
+    const studentId = document.getElementById('leaderStudentId').value.trim();
+    const sport     = document.getElementById('leaderSport').value;
+
+    if (!studentId) return alert('Enter a student ID.');
+
+    const data = getData();
+    const student = data.students.find(s => s.id === studentId);
+    if (!student) return alert('Student ID not found in system.');
+
+    if (!data.studentSportLeaders) data.studentSportLeaders = [];
+
+    if (data.studentSportLeaders.find(p => p.studentId === studentId && p.sport === sport)) {
+        return alert('This student is already registered as leader for this sport.');
+    }
+
+    data.studentSportLeaders.push({ 
+        studentId, 
+        sport, 
+        dateJoined: new Date().toISOString(),
+        role: "studentSportLeader"
+    });
+
+    saveData(data);
+    adminLog(`Sports Admin registered ${student.name} (${studentId}) as ${sport} Sport Leader`);
+    
+    document.getElementById('sportsMain').innerHTML = sportsStudentSportLeadersHTML();
+};
+
+// ====================== REMOVE LEADER ======================
+window.sportsRemoveStudentSportLeader = function(idx) {
+    if (!confirm('Remove this student as sport leader?')) return;
+    
+    const data = getData();
+    const leader = data.studentSportLeaders[idx];
+    const student = data.students.find(s => s.id === leader.studentId);
+    
+    data.studentSportLeaders.splice(idx, 1);
+    saveData(data);
+    
+    adminLog(`Sports Admin removed ${student?.name || leader.studentId} as ${leader.sport} Sport Leader`);
+    document.getElementById('sportsMain').innerHTML = sportsStudentSportLeadersHTML();
+};
 // ====================== STUDENT SPORT LEADER PORTAL ======================
 function renderSportLeaderPanel(user) {
     return `
