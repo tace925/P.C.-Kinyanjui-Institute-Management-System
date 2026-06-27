@@ -243,9 +243,348 @@ function renderCBET() {
 }
 
 // ==================== NAVIGATE TO ROLE ====================
+// ==================== HOME ====================
+function showHome() {
+    document.getElementById('schoolInfoPanel').style.display = 'block';
+    document.getElementById('loginFormContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'none';
+
+    // Reset active states
+    document.querySelectorAll('.sidebar-menu li').forEach(l => l.classList.remove('active'));
+    const homeItem = document.querySelector('.sidebar-menu li[data-role="home"]');
+    if (homeItem) homeItem.classList.add('active');
+
+    document.querySelectorAll('#magazineNav .btn-3d').forEach(b => b.classList.remove('active'));
+    const homeBtn = document.querySelector('#magazineNav .btn-3d[data-page="home"]');
+    if (homeBtn) homeBtn.classList.add('active');
+
+    // Rebuild the full original home content
+    const homeHTML = `
+        <!-- INSTITUTE HEADER BANNER -->
+        <div class="institute-header">
+            <img src="kenya logo.png" alt="Kenya Coat of Arms" class="header-logo" onerror="this.src='https://placehold.co/70x70/5b21b6/white?text=KE'">
+            <div class="header-text">
+                <h1>PC KINYANJUI</h1>
+                <h2>Technical Training Institute</h2>
+                <div class="motto">Excellence in Technology</div>
+            </div>
+            <img src="pc k logo.png" alt="PCK Crest" class="header-logo" onerror="this.src='https://placehold.co/70x70/5b21b6/white?text=PCK'">
+        </div>
+
+        <!-- HERO TYPING -->
+        <div class="hero-section" style="margin-top:1.5rem;">
+            <div class="typing-container"><span id="typingText"></span><span class="cursor">|</span></div>
+            <div class="hero-subtitle" id="subtitleText"></div>
+        </div>
+
+        <!-- PRINCIPALS -->
+        <div class="section-card">
+            <h3><i class="fas fa-landmark"></i> Principal's Office — History</h3>
+            <div id="principalsContainer" class="principals-horizontal"></div>
+        </div>
+
+        <!-- Other sections like CBET, etc. can be added here if needed -->
+    `;
+
+    document.getElementById('schoolInfoPanel').innerHTML = homeHTML;
+
+    // Re-run rendering functions
+    renderPrincipals();
+    // Re-run typing animation
+    let i = 0, j = 0;
+    const title = 'PC KINYANJUI TECHNICAL TRAINING INSTITUTE';
+    const subtitle = 'Excellence in Technology';
+    function type() {
+        if (i < title.length) {
+            document.getElementById('typingText').innerHTML += title.charAt(i++);
+            setTimeout(type, 55);
+        } else if (j < subtitle.length) {
+            document.getElementById('subtitleText').innerHTML += subtitle.charAt(j++);
+            setTimeout(type, 75);
+        }
+    }
+    type();
+}
+
+function showTourPage() {
+    document.getElementById('schoolInfoPanel').style.display = 'block';
+    document.getElementById('loginFormContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'none';
+
+    const tourHTML = `
+        <div style="max-width:1200px; margin:0 auto; padding:2rem 1rem;">
+            <h2 style="text-align:center; color:white; margin-bottom:2rem; font-size:2.2rem;">
+                <i class="fas fa-map-marked-alt"></i> School Tour
+            </h2>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem;">
+
+                <!-- Admin Block -->
+                <div class="tour-card">
+                    <div class="tour-img-placeholder" style="background:linear-gradient(#4c1d95,#6c3fcf); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">🏛️</div>
+                    <h3>Admin Block</h3>
+                    <p>Principal's Office, Deputy Offices, Finance & Exam Office</p>
+                    <small>Directions: Straight from main gate, first building on left</small>
+                </div>
+
+                <!-- Library -->
+                <div class="tour-card">
+                    <div class="tour-img-placeholder" style="background:linear-gradient(#1e3a8a,#3b82f6); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">📚</div>
+                    <h3>Library</h3>
+                    <p>Over 15,000 books & digital resources</p>
+                    <small>Directions: Behind Admin Block, opposite Sports Field</small>
+                </div>
+
+                <!-- Sports -->
+                <div class="tour-card">
+                    <div class="tour-img-placeholder" style="background:linear-gradient(#166534,#4ade80); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">⚽</div>
+                    <h3>Sports Complex</h3>
+                    <p>Football, Basketball, Athletics Field</p>
+                    <small>Directions: Right side of main campus</small>
+                </div>
+
+                <!-- Hostels -->
+                <div class="tour-card">
+                    <div class="tour-img-placeholder" style="background:linear-gradient(#4338ca,#6366f1); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">🏠</div>
+                    <h3>Hostels</h3>
+                    <p>Male & Female Hostels</p>
+                    <small>Directions: Rear of campus, near dining hall</small>
+                </div>
+
+                <!-- Workshops & Labs -->
+                <div class="tour-card">
+                    <div class="tour-img-placeholder" style="background:linear-gradient(#b45309,#f59e0b); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">🔧</div>
+                    <h3>Workshops & Labs</h3>
+                    <p>Mechanical, Automotive, Electrical, Civil Engineering Labs</p>
+                    <small>Directions: Left wing of main academic block</small>
+                </div>
+
+            </div>
+
+            <div style="margin-top:3rem; text-align:center;">
+                <button onclick="showHome()" class="btn-secondary" style="padding:1rem 2rem;">
+                    ← Back to Home
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('schoolInfoPanel').innerHTML = tourHTML;
+}
+
+function showNewsletterPage() {
+    document.getElementById('schoolInfoPanel').style.display = 'block';
+    document.getElementById('loginFormContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'none';
+
+    const newsletterHTML = `
+        <div style="max-width:1100px; margin:0 auto; padding:2rem 1rem; color:white;">
+            <h2 style="text-align:center; margin-bottom:2.5rem; font-size:2.4rem;">
+                <i class="fas fa-newspaper"></i> Stay in the Loop
+            </h2>
+
+            <!-- Principal's Latest Newsletter -->
+            <div style="background:rgba(255,255,255,0.08); border-radius:16px; padding:2rem; margin-bottom:3rem; border:1px solid rgba(139,92,246,0.3);">
+                <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
+                    <div style="background:var(--purple-light); width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.8rem;">📢</div>
+                    <div>
+                        <h3 style="margin:0;">From the Principal's Office</h3>
+                        <small style="color:#c4b5fd;">Posted on ${new Date().toLocaleDateString('en-KE')}</small>
+                    </div>
+                </div>
+                <h4 style="color:#a5b4fc; margin-bottom:1rem;">End of Semester Message</h4>
+                <p style="line-height:1.7; font-size:1.05rem;">
+                    Dear Students and Staff,<br><br>
+                    As we approach the end of this semester, I want to commend all of you for your hard work and dedication. 
+                    Exam registration is now open — please complete yours on time.<br><br>
+                    Remember: Excellence in Technology is our motto. Keep pushing forward!
+                </p>
+                <button class="btn-primary" style="margin-top:1.5rem;" onclick="alert('Newsletter downloaded as PDF (demo)')">
+                    📄 Download Full Newsletter
+                </button>
+            </div>
+
+            <!-- Subscribe Section -->
+            <div style="background:rgba(255,255,255,0.08); border-radius:16px; padding:2.5rem; text-align:center;">
+                <h3 style="margin-bottom:1rem;">Stay Updated with School News</h3>
+                <p style="color:#c4b5fd; max-width:600px; margin:0 auto 2rem;">
+                    Get exam dates, fee reminders, event announcements, and important notices delivered to your email.
+                </p>
+                
+                <div style="max-width:420px; margin:0 auto;">
+                    <input type="email" id="nl-email" placeholder="Enter your email address" 
+                           style="width:100%; padding:1rem; border-radius:12px; border:none; background:rgba(255,255,255,0.1); color:white; margin-bottom:1rem;">
+                    <button onclick="subscribeNewsletterFromPage()" 
+                            style="width:100%; padding:1rem; font-size:1.1rem;">
+                        SUBSCRIBE NOW
+                    </button>
+                </div>
+                <p id="nl-msg" style="margin-top:1rem; min-height:1.2em;"></p>
+            </div>
+
+            <div style="text-align:center; margin-top:3rem;">
+                <button onclick="showHome()" class="btn-secondary" style="padding:1rem 2rem;">
+                    ← Back to Home
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('schoolInfoPanel').innerHTML = newsletterHTML;
+}
+
+// Helper for newsletter subscription from the new page
+window.subscribeNewsletterFromPage = function() {
+    const email = document.getElementById('nl-email').value.trim();
+    const msgEl = document.getElementById('nl-msg');
+    
+    if (!email) {
+        msgEl.innerHTML = `<span style="color:#f87171;">Please enter a valid email</span>`;
+        return;
+    }
+
+    const data = getData();
+    if (!data.newsletterSubscribers) data.newsletterSubscribers = [];
+    
+    if (data.newsletterSubscribers.includes(email)) {
+        msgEl.innerHTML = `<span style="color:#fbbf24;">You are already subscribed!</span>`;
+    } else {
+        data.newsletterSubscribers.push(email);
+        saveData(data);
+        msgEl.innerHTML = `<span style="color:#4ade80;">✅ Successfully subscribed! Thank you.</span>`;
+        document.getElementById('nl-email').value = '';
+    }
+};
+
+function showExaminationPage() {
+    document.getElementById('schoolInfoPanel').style.display = 'block';
+    document.getElementById('loginFormContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'none';
+
+    const examHTML = `
+        <div style="max-width:1100px; margin:0 auto; padding:2rem 1rem; color:white;">
+            <h2 style="text-align:center; margin-bottom:2.5rem; font-size:2.4rem;">
+                <i class="fas fa-file-alt"></i> Examination Department
+            </h2>
+
+            <!-- History & Current System -->
+            <div style="background:rgba(255,255,255,0.08); border-radius:16px; padding:2rem; margin-bottom:2rem;">
+                <h3 style="color:#c4b5fd; margin-bottom:1.5rem;">Examination Evolution</h3>
+                
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:1.5rem;">
+                    <div>
+                        <strong>NEC (National Examination Council)</strong><br>
+                        <small style="color:#94a3b8;">Started • Ended</small>
+                        <p style="margin-top:0.5rem; line-height:1.6;">Traditional examination system used in previous years.</p>
+                    </div>
+                    <div>
+                        <strong>CBET (Competency Based Education & Training)</strong><br>
+                        <small style="color:#4ade80;">Current • Ongoing</small>
+                        <p style="margin-top:0.5rem; line-height:1.6;">We are currently using CBET system. Students register for modular units.</p>
+                    </div>
+                    <div>
+                        <strong>MODULAR (Upcoming)</strong><br>
+                        <small style="color:#facc15;">Starting Soon</small>
+                        <p style="margin-top:0.5rem; line-height:1.6;">New modular system will be introduced in the near future.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info Cards -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:1.5rem; margin-bottom:3rem;">
+                <div class="tour-card">
+                    <h3>📋 Exam Registration</h3>
+                    <p>Students register units through the student portal. Approval goes through DEO → HOD → Finance → Deputy → Exam Office.</p>
+                </div>
+                <div class="tour-card">
+                    <h3>📅 Current Status</h3>
+                    <p>CBET exams are ongoing. Retake fee: KSh 200. Normal registration: KSh 1,500 per unit.</p>
+                </div>
+                <div class="tour-card">
+                    <h3>📊 Reports</h3>
+                    <p>Exam Office generates final registers and results. All records are stored digitally.</p>
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+                <button onclick="showHome()" class="btn-secondary" style="padding:1rem 2rem;">
+                    ← Back to Home
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('schoolInfoPanel').innerHTML = examHTML;
+}
+
+function showGlobalNoticeBoard() {
+    document.getElementById('schoolInfoPanel').style.display = 'block';
+    document.getElementById('loginFormContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'none';
+
+    const data = getData();
+    const notices = data.noticeboard || [];
+
+    let noticesHTML = notices.length === 0 
+        ? `<p style="text-align:center; color:#94a3b8; padding:3rem;">No notices yet. Authorized offices will post here.</p>`
+        : notices.slice().reverse().map(n => `
+            <div style="background:rgba(255,255,255,0.08); border-radius:12px; padding:1.2rem; margin-bottom:1rem; border-left:4px solid #a855f7;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:0.8rem;">
+                    <strong style="color:#c4b5fd;">${n.sender}</strong>
+                    <small style="color:#94a3b8;">${new Date(n.timestamp).toLocaleDateString('en-KE')}</small>
+                </div>
+                <p style="line-height:1.6; color:white;">${n.message}</p>
+            </div>
+        `).join('');
+
+    const html = `
+        <div style="max-width:1100px; margin:0 auto; padding:2rem 1rem; color:white;">
+            <h2 style="text-align:center; margin-bottom:2.5rem; font-size:2.4rem;">
+                <i class="fas fa-bullhorn"></i> Global Notice Board
+            </h2>
+
+            <div style="background:rgba(255,255,255,0.08); border-radius:16px; padding:2rem; margin-bottom:2rem;">
+                <h3 style="color:#c4b5fd; margin-bottom:1rem;">Latest Announcements</h3>
+                <div id="noticesContainer">
+                    ${noticesHTML}
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top:2rem;">
+                <button onclick="showHome()" class="btn-secondary" style="padding:1rem 2rem;">
+                    ← Back to Home
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('schoolInfoPanel').innerHTML = html;
+}
+
+// ==================== NAVIGATE TO ROLE ====================
 function navigateToRole(role) {
     if (role === 'home') {
         showHome();
+        return;
+    }
+    if (role === 'tour') {
+        showTourPage();
+        return;
+    }
+    if (role === 'newsletter') {
+        showNewsletterPage();
+        return;
+    }
+    if (role === 'examination') {
+        alert("📋 Examination page coming soon...");
+        return;
+    }
+    if (role === 'noticeboard') {
+        alert("📢 Global Notice Board coming soon...");
+        return;
+    }
+    if (role === 'studentwall') {
+        alert("👥 Student Wall coming soon...");
         return;
     }
 
@@ -259,7 +598,7 @@ function navigateToRole(role) {
         showSportSubLogin();
         return;
     }
-
+               
     // Normal login for all other roles
     showLoginForm(role);
 
@@ -5295,6 +5634,36 @@ function closeSettingsModal() {
     document.getElementById('settingsModal').style.display = 'none';
 }
 
+// ==================== MAGAZINE NAV BAR ====================
+function initMagazineNav() {
+    document.querySelectorAll('#magazineNav .btn-3d').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const page = btn.dataset.page;
+
+            // Remove active from all buttons
+            document.querySelectorAll('#magazineNav .btn-3d').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Navigate
+            if (page === 'home') {
+                showHome();
+            } else if (page === 'tour') {
+                showTourPage();
+            } else if (page === 'newsletter') {
+                showNewsletterPage();
+            } else if (page === 'examination') {
+                showExaminationPage();
+            } else if (page === 'noticeboard') {
+                showGlobalNoticeBoard();
+            } else if (page === 'studentwall') {
+                alert("👥 Student Wall coming soon...");
+            } else {
+                alert("Page coming soon...");
+            }
+        });
+    });
+}
+
 // ==================== INIT ====================
 function init() {
     initializeData();
@@ -5303,6 +5672,9 @@ function init() {
     renderTourPreview('library');
     populateInfraSelect();
     renderCBET();
+    initMagazineNav();
+
+    // Restore saved theme
 
     // Restore saved theme
     if (localStorage.getItem('theme') === 'light') document.body.classList.add('light');

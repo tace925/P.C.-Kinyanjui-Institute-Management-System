@@ -11,7 +11,7 @@
 <body>
 <div class="app-layout">
 
-   <!-- SIDEBAR -->
+  <!-- LEFT SIDEBAR -->
 <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <h2><i class="fas fa-graduation-cap"></i> PCK Institute</h2>
@@ -34,23 +34,26 @@
 
     <div class="sidebar-section-label">Administration</div>
     <ul class="sidebar-menu">
-        <li data-role="finance"><i class="fas fa-coins"></i> Finance</li>
-        <li data-role="deputy_acad"><i class="fas fa-crown"></i> Deputy (Acad)</li>
-        <li data-role="deputy_infra"><i class="fas fa-hard-hat"></i> Deputy (Infra)</li>
-        <li data-role="examoffice"><i class="fas fa-building"></i> Exam Office</li>
-        <li data-role="hospital"><i class="fas fa-hospital"></i> Hospital</li>
+        <li data-role="principal"><i class="fas fa-user-tie"></i> Principal</li>
+        <li data-role="deputy_acad"><i class="fas fa-crown"></i> Deputy Academics</li>
+        <li data-role="deputy_infra"><i class="fas fa-building"></i> Deputy Infrastructure</li>
+        <li data-role="finance"><i class="fas fa-coins"></i> Finance Office</li>
+        <li data-role="examoffice"><i class="fas fa-file-alt"></i> Examination Office</li>
         <li data-role="dean"><i class="fas fa-heart"></i> Dean of Students</li>
-        <li data-role="admin"><i class="fas fa-shield-alt"></i> System Admin</li>
+        <li data-role="admin"><i class="fas fa-lock"></i> System Administrator</li>
     </ul>
 
-    <div class="sidebar-section-label">Entertainment</div>
-<ul class="sidebar-menu">
-    <li data-role="sportclub"><i class="fas fa-football-ball"></i> Sport Club</li>
-    <li data-role="kitco"><i class="fas fa-users"></i> KITCO</li>
-</ul>
+    <div class="sidebar-section-label">Vivid Hospitality</div>
+    <ul class="sidebar-menu">
+        <li data-role="hospital"><i class="fas fa-hospital"></i> Hospital</li>
+        <li data-role="sportclub"><i class="fas fa-football-ball"></i> Sports</li>
+        <li data-role="kitco"><i class="fas fa-users"></i> KITCO</li>
+        <li data-role="hostels"><i class="fas fa-bed"></i> Hostels</li>
+    </ul>
 </div>
 
-    <!-- MAIN CONTENT -->
+
+             <!-- MAIN CONTENT -->
     <div class="main-content">
 
         <!-- TOP BAR -->
@@ -61,6 +64,25 @@
             </div>
             <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> Dark Mode</button>
         </div>
+
+          <!-- FILTER BAR -->
+        <div class="filter-bar-wrap">
+            <div class="filter-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="globalFilterInput" placeholder="Search Home, Tour, Lecturer Login, Settings...">
+            </div>
+            <div id="filterResults" class="filter-results"></div>
+        </div>
+
+        <!-- MAGAZINE NAV BAR -->
+        <nav class="magazine-nav" id="magazineNav">
+            <button class="btn-3d active" data-page="home"><i class="fas fa-home"></i> Home</button>
+            <button class="btn-3d" data-page="tour"><i class="fas fa-map"></i> Tour</button>
+            <button class="btn-3d" data-page="newsletter"><i class="fas fa-newspaper"></i> Newsletter</button>
+            <button class="btn-3d" data-page="examination"><i class="fas fa-file-alt"></i> Examination</button>
+            <button class="btn-3d" data-page="noticeboard"><i class="fas fa-bullhorn"></i> Global Notice Board</button>
+            <button class="btn-3d" data-page="studentwall"><i class="fas fa-users"></i> Student Wall</button>
+        </nav>
 
         <div id="dynamicContent">
 
@@ -84,30 +106,6 @@
                     <div class="hero-subtitle" id="subtitleText"></div>
                 </div>
 
-                <!-- 3D ROLE GRID -->
-                <div class="roles-grid-section">
-                    <h3><i class="fas fa-th"></i> Quick Access — Select Your Portal</h3>
-                    <div class="roles-grid">
-                        <button class="role-btn-3d btn-home"   data-role="home"><span class="btn-icon">🏠</span>Home</button>
-                        <button class="role-btn-3d btn-purple" data-role="student"><span class="btn-icon">🎓</span>Student</button>
-                        <button class="role-btn-3d btn-purple" data-role="classrep"><span class="btn-icon">🗣️</span>Class Rep</button>
-                        <button class="role-btn-3d btn-purple" data-role="lecturer"><span class="btn-icon">👨‍💻</span>Lecturer</button>
-                        <button class="role-btn-3d btn-purple" data-role="classteacher"><span class="btn-icon">🧑‍🏫</span>Class Teacher</button>
-                        <button class="role-btn-3d btn-purple" data-role="hod"><span class="btn-icon">🤝</span>H.O.D</button>
-                        <button class="role-btn-3d btn-purple" data-role="deo"><span class="btn-icon">📝</span>D.E.O</button>
-                        <button class="role-btn-3d btn-blue"   data-role="finance"><span class="btn-icon">💰</span>Finance</button>
-                        <button class="role-btn-3d btn-blue"   data-role="deputy_acad"><span class="btn-icon">👑</span>Deputy (Acad)</button>
-                        <button class="role-btn-3d btn-blue"   data-role="deputy_infra"><span class="btn-icon">🏗️</span>Deputy (Infra)</button>
-                        <button class="role-btn-3d btn-blue"   data-role="examoffice"><span class="btn-icon">📋</span>Exam Office</button>
-                        <button class="role-btn-3d btn-blue"   data-role="dean"><span class="btn-icon">💛</span>Dean of Students</button>
-                        <button class="role-btn-3d btn-purple" data-role="admin" style="background:linear-gradient(135deg,#6c3fcf,#2563eb);box-shadow:0 6px 0px #1a1870,0 8px 20px rgba(108,63,207,0.5);grid-column:span 2;"><span class="btn-icon">🔐</span>System Admin</button>
-                        <button onclick="window.logoutUser()"
-                           class="btn-danger">
-                          <i class="fas fa-sign-out-alt"></i> Logout
-                        </button>
-                    </div>
-                </div>
-
                 <!-- PRINCIPALS — Magazine Layout -->
                 <div class="section-card">
                     <h3><i class="fas fa-landmark"></i> Principal's Office — History</h3>
@@ -115,41 +113,6 @@
                     <div id="adminPrincipalControls" style="display:none;margin-top:1rem;">
                         <button class="btn-secondary" onclick="showAddPrincipalForm()"><i class="fas fa-plus"></i> Add Principal</button>
                     </div>
-                </div>
-
-                <!-- SCHOOL TOUR — Sidebar Nav + Preview -->
-                <div class="section-card">
-                    <h3><i class="fas fa-map-marked-alt"></i> School Tour</h3>
-                    <div class="tour-layout">
-                        <div class="tour-nav" id="tourNav"></div>
-                        <div class="tour-preview" id="tourPreview">
-                            <img src="" alt="" class="tour-preview-img" id="tourPreviewImg">
-                            <div class="tour-thumbs" id="tourThumbs"></div>
-                            <div class="tour-preview-overlay">
-                                <div class="tour-preview-title" id="tourPreviewTitle"></div>
-                                <div class="tour-preview-desc"  id="tourPreviewDesc"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="adminTourControls" style="display:none;margin-top:1rem;">
-                        <div class="add-infra">
-                            <h4><i class="fas fa-plus-circle"></i> Add New Infrastructure</h4>
-                            <input type="text" id="newInfraName" placeholder="e.g., New Library, New Workshop">
-                            <button class="btn-secondary" onclick="addNewInfrastructure()">Add Location</button>
-                            <br><br>
-                            <input type="file" id="tourImageUpload" accept="image/*" multiple>
-                            <select id="infraSelect"></select>
-                            <button class="btn-secondary" onclick="uploadTourMedia()">Upload Images</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CBET CURRICULUM — Step Progress -->
-                <div class="cbet-section">
-                    <h3><i class="fas fa-graduation-cap"></i> CBET Modularized Curriculum</h3>
-                    <div class="cbet-steps" id="cbetSteps"></div>
-                    <div class="cbet-hint">ℹ️ Complete each level sequentially — 7 modules per level, industrial training required at every stage</div>
-                    <div class="cbet-modules" id="cbetModules"></div>
                 </div>
 
             </div><!-- end schoolInfoPanel -->
@@ -163,7 +126,7 @@
                     <p class="access-note"><i class="fas fa-key"></i> Forgot password? Contact your Class Teacher or System Admin</p>
                 </div>
             </div>
-
+            
             <!-- DASHBOARD -->
             <div id="dashboardContainer" style="display:none;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
