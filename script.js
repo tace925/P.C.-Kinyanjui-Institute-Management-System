@@ -22,20 +22,42 @@ function initializeData() {
             },
             infrastructureList: ["library", "sports", "hostel_m", "hostel_f", "field"],
             departments: ['Computer Studies', 'Hospitality', 'Automotive Engineering', 'Electrical Engineering', 'Civil Engineering', 'Business'],
-            students: [
+           students: [
                 {
                     id: 'STU-2026-20669', name: 'John Mwangi', department: 'Computer Studies', class: 'Form 3C',
-                    passcode: '1234', phone: '0712345678', feeBalance: 0,
+                    passcode: '1234', phone: '0712345678', email: 'john.mwangi@student.pck.ac.ke',
+                    gender: 'Male', dob: '2003-04-12', county: 'Nairobi',
+                    level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
+                    enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
+                    feeBalance: 0, totalFee: 65000,
+                    paymentHistory: [
+                        { amount: 39000, date: '2025-01-01', ref: 'REF713037' },
+                        { amount: 26000, date: '2025-02-15', ref: 'REF416275' }
+                    ],
                     attendance: { total: 45, attended: 38 },
-                    examHistory: { 'CS101': 1, 'CS102': 0 }
+                    examHistory: { 'CS101': 1, 'CS102': 0 },
+                    results: [
+                        { module: 'Apply Occupational Safety and Health Practices', score: 78, competency: 'Competent', remarks: 'Demonstrated required competency' }
+                    ]
                 },
                 {
                     id: 'STU-2026-20670', name: 'Sarah Achieng', department: 'Computer Studies', class: 'Form 3C',
-                    passcode: '5678', phone: '0723456789', feeBalance: 25000,
+                    passcode: '5678', phone: '0723456789', email: 'sarah.achieng@student.pck.ac.ke',
+                    gender: 'Female', dob: '2004-09-02', county: 'Kisumu',
+                    level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
+                    enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
+                    feeBalance: 25000, totalFee: 65000,
+                    paymentHistory: [
+                        { amount: 40000, date: '2025-01-10', ref: 'REF551209' }
+                    ],
                     attendance: { total: 45, attended: 35 },
-                    examHistory: {}
+                    examHistory: {},
+                    results: [
+                        { module: 'Apply Entrepreneurial Skills', score: 47, competency: 'Not Yet Competent', remarks: 'Needs more practice' }
+                    ]
                 }
             ],
+
             classReps:    [{ id: 'STU-2026-20669', name: 'John Mwangi',  department: 'Computer Studies', class: 'Form 3C', passcode: 'REP-4321' }],
             lecturers:    [{ id: 'LEC-2026-001',   name: 'Jane Wanjiku', department: 'Computer Studies', unit: 'ICT/OS/CS/CR/05/6', password: 'lec1234' }],
             classTeachers:[{ id: 'TCH-2026-001',   name: 'James Otieno', department: 'Computer Studies', password: 'tch1234' }],
@@ -53,7 +75,10 @@ function initializeData() {
             deputyInfra:  { id: 'DEP-INFRA-001', name: 'Eng. Peter Maina',   password: 'deputyinfra123' },
             examOffice:   { id: 'EXAM-001', name: 'Exam Officer',    password: 'exam123' },
             dean:         { id: 'DEAN-001', name: 'Dean of Students',password: 'dean123', kitcoPasswords: [] },
-            admin:        { password: 'Admin@2026' },
+            principal:    { id: 'PRINCIPAL-001', name: 'Dr. Elizabeth Wanjiku', password: 'principal123' },
+            hospital:     { id: 'HOSP-001', name: 'School Nurse', password: 'hospital123' },
+            library:      { id: 'LIB-001', name: 'Librarian', password: 'library123' },
+            admin:        { id: 'ADMIN-001', password: 'Admin@2026' },
             courses: [
                 { id: 'CS101', name: 'Computer Essentials',          code: 'CS101' },
                 { id: 'CS102', name: 'Computer Operations',           code: 'CS102' },
@@ -61,6 +86,12 @@ function initializeData() {
                 { id: 'CS104', name: 'Artificial Intelligence',       code: 'CS104' }
             ],
             examRegistrations: [],
+            timetables: [
+                { id: 'TT-001', department: 'Computer Studies', class: 'Form 3C', unit: 'Computer Essentials', unitCode: 'CS101', lecturerId: 'LEC-2026-001', day: new Date().toLocaleDateString('en-US', { weekday: 'long' }), startTime: '08:00', endTime: '10:00' },
+                { id: 'TT-002', department: 'Computer Studies', class: 'Form 3C', unit: 'Computer Operations', unitCode: 'CS102', lecturerId: 'LEC-2026-001', day: new Date().toLocaleDateString('en-US', { weekday: 'long' }), startTime: '10:15', endTime: '12:15' }
+            ],
+            attendanceConfirmations: [],
+            idRequests: [],
             noticeboard: [
                 { id: 'n1', sender: 'System', message: 'Welcome to PCK Institute Management System', timestamp: new Date().toISOString(), recipient: 'all' }
             ],
@@ -620,7 +651,10 @@ const loginTitles = {
     deputy_acad:  '👑 Deputy (Academics) Login',
     deputy_infra: '🏗️ Deputy (Infrastructure) Login',
     examoffice:   '📋 Exam Office Login',
-    dean:         '💛 Dean of Students Login',
+   dean:         '💛 Dean of Students Login',
+    principal:    '🎓 Principal Login',
+    hospital:     '🏥 Hospital Login',
+    library:      '📚 Library Login',
     admin:        '🔐 System Admin Login'
 };
 
@@ -636,7 +670,7 @@ function showLoginForm(role) {
     const fields = document.getElementById('loginFields');
 
     // Roles that only need password (no separate ID field)
-    const passOnlyRoles = ['deputy_acad', 'deputy_infra', 'admin', 'dean', 'examoffice'];
+  const passOnlyRoles = ['deputy_acad', 'deputy_infra', 'admin', 'dean', 'examoffice', 'principal', 'hospital', 'library'];  
 
     if (passOnlyRoles.includes(role)) {
         fields.innerHTML = `<input type="password" id="loginPass" placeholder="Password" class="login-input">`;
@@ -688,6 +722,15 @@ function handleLogin() {
             break;
         case 'dean':
             if (pass === data.dean.password) user = data.dean;
+            break;
+        case 'principal':
+            if (pass === data.principal.password) user = data.principal;
+            break;
+        case 'hospital':
+            if (pass === data.hospital.password) user = data.hospital;
+            break;
+        case 'library':
+            if (pass === data.library.password) user = data.library;
             break;
         case 'admin':
             if (pass === data.admin.password) user = { role: 'admin', name: 'System Admin' };
@@ -754,15 +797,9 @@ function showDashboard(role, user) {
         </div>
     `;
 
-    if (role === 'student') {
-        content += renderStudentExamTracking(user);
+   if (role === 'student') {
+        content += renderStudentPanel(user);
         setTimeout(() => showStudentNotificationPopup(user), 400);
-        content += `
-            <div class="form-card">
-                <button class="btn-primary" onclick="startExamRegistration()">
-                    <i class="fas fa-file-signature"></i> New CBET Exam Registration
-                </button>
-            </div>`;
     } else if (role === 'kitco') {
         content += renderKITCOPanel(user);
     } else if (role === 'classrep') {
@@ -783,8 +820,14 @@ function showDashboard(role, user) {
         content += renderDeputyInfraPanel();
     } else if (role === 'examoffice') {
         content += renderExamOfficePanel(user);
-    } else if (role === 'dean') {
+   } else if (role === 'dean') {
         content += renderDeanPanel(user);
+    } else if (role === 'principal') {
+        content += renderPrincipalPanel(user);
+    } else if (role === 'hospital') {
+        content += renderHospitalPanel(user);
+    } else if (role === 'library') {
+        content += renderLibraryPanel(user);
     } else if (role === 'sportsadmin') {
         content += renderSportsAdminPanel(user);
     } else if (role === 'sportleader') {
@@ -3540,6 +3583,670 @@ window.submitClassRepIssue = function() {
 };
 
 /* ══════════════════════════════════════════
+   PRINCIPAL PORTAL — Placeholder
+══════════════════════════════════════════ */
+function renderPrincipalPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title"><i class="fas fa-user-tie"></i> Principal Menu</div>
+            <button class="admin-nav-btn active" onclick="principalSection('overview',this)"><i class="fas fa-tachometer-alt"></i> Overview</button>
+            <button class="admin-nav-btn" onclick="principalSection('newsletter',this)"><i class="fas fa-newspaper"></i> Post Newsletter</button>
+            <button class="admin-nav-btn" onclick="principalSection('escalations',this)"><i class="fas fa-arrow-up"></i> Escalations</button>
+            <button class="admin-nav-btn" onclick="principalSection('report',this)"><i class="fas fa-chart-bar"></i> School Report</button>
+        </div>
+        <div class="admin-main" id="principalMain">${principalPlaceholder('Overview')}</div>
+    </div>`;
+}
+
+window.principalSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const labels = { overview: 'Overview', newsletter: 'Post Newsletter', escalations: 'Escalations', report: 'School Report' };
+    document.getElementById('principalMain').innerHTML = principalPlaceholder(labels[section] || 'Overview');
+};
+
+function principalPlaceholder(label) {
+    return `
+        <div class="admin-section-head">🎓 ${label}</div>
+        <div class="admin-card">
+            <p style="color:var(--text-secondary);font-size:0.85rem;">
+                This section is reserved for the Principal's portal and is coming soon.
+            </p>
+        </div>`;
+}
+
+/* ══════════════════════════════════════════
+   HOSPITAL PORTAL — Placeholder
+══════════════════════════════════════════ */
+function renderHospitalPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title"><i class="fas fa-hospital"></i> Hospital Menu</div>
+            <button class="admin-nav-btn active" onclick="hospitalSection('overview',this)"><i class="fas fa-tachometer-alt"></i> Overview</button>
+            <button class="admin-nav-btn" onclick="hospitalSection('visits',this)"><i class="fas fa-stethoscope"></i> Patient Visits</button>
+            <button class="admin-nav-btn" onclick="hospitalSection('records',this)"><i class="fas fa-file-medical"></i> Health Records</button>
+            <button class="admin-nav-btn" onclick="hospitalSection('report',this)"><i class="fas fa-chart-bar"></i> Reports</button>
+        </div>
+        <div class="admin-main" id="hospitalMain">${hospitalPlaceholder('Overview')}</div>
+    </div>`;
+}
+
+window.hospitalSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const labels = { overview: 'Overview', visits: 'Patient Visits', records: 'Health Records', report: 'Reports' };
+    document.getElementById('hospitalMain').innerHTML = hospitalPlaceholder(labels[section] || 'Overview');
+};
+
+function hospitalPlaceholder(label) {
+    return `
+        <div class="admin-section-head">🏥 ${label}</div>
+        <div class="admin-card">
+            <p style="color:var(--text-secondary);font-size:0.85rem;">
+                This section is reserved for the Hospital portal and is coming soon.
+            </p>
+        </div>`;
+}
+
+/* ══════════════════════════════════════════
+   LIBRARY PORTAL — Placeholder
+══════════════════════════════════════════ */
+function renderLibraryPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title"><i class="fas fa-book"></i> Library Menu</div>
+            <button class="admin-nav-btn active" onclick="librarySection('overview',this)"><i class="fas fa-tachometer-alt"></i> Overview</button>
+            <button class="admin-nav-btn" onclick="librarySection('catalog',this)"><i class="fas fa-book-open"></i> Book Catalog</button>
+            <button class="admin-nav-btn" onclick="librarySection('borrowing',this)"><i class="fas fa-exchange-alt"></i> Borrowing</button>
+            <button class="admin-nav-btn" onclick="librarySection('fines',this)"><i class="fas fa-coins"></i> Fines → Finance</button>
+            <button class="admin-nav-btn" onclick="librarySection('report',this)"><i class="fas fa-chart-bar"></i> Reports</button>
+        </div>
+        <div class="admin-main" id="libraryMain">${libraryPlaceholder('Overview')}</div>
+    </div>`;
+}
+
+window.librarySection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const labels = { overview: 'Overview', catalog: 'Book Catalog', borrowing: 'Borrowing', fines: 'Fines → Finance', report: 'Reports' };
+    document.getElementById('libraryMain').innerHTML = libraryPlaceholder(labels[section] || 'Overview');
+};
+
+function libraryPlaceholder(label) {
+    return `
+        <div class="admin-section-head">📚 ${label}</div>
+        <div class="admin-card">
+            <p style="color:var(--text-secondary);font-size:0.85rem;">
+                This section is reserved for the Library portal and is coming soon.
+            </p>
+        </div>`;
+}
+
+/* ══════════════════════════════════════════
+   STUDENT PORTAL — Consolidated
+══════════════════════════════════════════ */
+function renderStudentPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title"><i class="fas fa-user-graduate"></i> Student Menu</div>
+            <button class="admin-nav-btn active" onclick="studentSection('idrequest',this)"><i class="fas fa-id-card"></i> ID Request</button>
+            <button class="admin-nav-btn" onclick="studentSection('received',this)"><i class="fas fa-inbox"></i> Received</button>
+            <button class="admin-nav-btn" onclick="studentSection('attendance',this)"><i class="fas fa-calendar-check"></i> Attendance</button>
+            <button class="admin-nav-btn" onclick="studentSection('examreg',this)"><i class="fas fa-file-signature"></i> Exam Registration</button>
+            <button class="admin-nav-btn" onclick="studentSection('fee',this)"><i class="fas fa-wallet"></i> Fee Statement</button>
+            <button class="admin-nav-btn" onclick="studentSection('results',this)"><i class="fas fa-graduation-cap"></i> Results</button>
+            <button class="admin-nav-btn" onclick="studentSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
+            <button class="admin-nav-btn" onclick="studentSection('report',this)"><i class="fas fa-chart-bar"></i> Report</button>
+        </div>
+        <div class="admin-main" id="studentMain">
+            ${studentIDRequestHTML(user)}
+        </div>
+    </div>`;
+}
+
+window.studentSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const map = {
+        idrequest:  () => studentIDRequestHTML(user),
+        received:   () => studentReceivedHTML(user),
+        attendance: () => studentAttendanceHTML(user),
+        examreg:    () => studentExamRegistrationHTML(user),
+        fee:        () => studentFeeStatementHTML(user),
+        results:    () => studentResultsHTML(user),
+        profile:    () => studentProfileHTML(user),
+        report:     () => studentReportHTML(user),
+    };
+    document.getElementById('studentMain').innerHTML = (map[section] || (() => studentIDRequestHTML(user)))();
+};
+
+/* ── 1. ID Request ── */
+function studentIDRequestHTML(user) {
+    const data = getData();
+    const myRequests = (data.idRequests || []).filter(r => r.studentId === user.id);
+    const stageLabels = ['Student', 'Finance', 'System Admin', 'Ready'];
+
+    const reqCards = myRequests.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No ID requests yet. Use the form below to request one.</p>`
+        : myRequests.slice().reverse().map(r => {
+            const idx = r.status === 'pending_finance' ? 1 : r.status === 'pending_admin' ? 2 : r.status === 'ready' ? 4 : 0;
+            return `
+            <div class="admin-card" style="margin-bottom:12px;">
+                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                    <strong>${r.type === 'new' ? 'New ID' : 'Replacement ID'}</strong>
+                    <span class="admin-role-pill">${r.status === 'ready' ? '✅ Ready for Collection' : r.status === 'pending_admin' ? '🔐 With System Admin' : '💰 With Finance'}</span>
+                </div>
+                <div style="display:flex;overflow-x:auto;">
+                    ${stageLabels.map((label, i) => {
+                        const done = i < idx;
+                        const color = done ? 'var(--success)' : 'var(--border)';
+                        return `<div style="display:flex;align-items:center;flex:1;min-width:70px;">
+                            <div style="width:22px;height:22px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#fff;">${done ? '✓' : i + 1}</div>
+                            <span style="font-size:0.65rem;color:${color};margin-left:4px;">${label}</span>
+                            ${i < stageLabels.length - 1 ? `<div style="flex:1;height:2px;background:${done ? 'var(--success)' : 'var(--border)'};margin:0 4px;"></div>` : ''}
+                        </div>`;
+                    }).join('')}
+                </div>
+                <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:10px;">
+                    ${r.fee > 0 ? `Fee: KSh ${r.fee.toLocaleString()} · ` : ''}Requested: ${new Date(r.dateRequested).toLocaleDateString()}
+                    ${r.readyDate ? ` · Collection date: ${r.readyDate}` : ''}
+                </div>
+            </div>`;
+        }).join('');
+
+    return `
+        <div class="admin-section-head">🪪 ID Request</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Request an ID</div>
+            <select id="idReqType" class="admin-input" style="margin-top:10px;">
+                <option value="new">New ID (no charge)</option>
+                <option value="replacement">Replacement ID — KSh 500</option>
+            </select>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="studentSubmitIDRequest('${user.id}')">
+                <i class="fas fa-paper-plane"></i> Submit Request
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">My Requests (${myRequests.length})</div>
+            ${reqCards}
+        </div>`;
+}
+
+window.studentSubmitIDRequest = function(studentId) {
+    const type = document.getElementById('idReqType').value;
+    const data = getData();
+    const id = 'IDR-' + Date.now().toString().slice(-6);
+    data.idRequests = data.idRequests || [];
+    data.idRequests.push({
+        id, studentId, type,
+        fee: type === 'replacement' ? 500 : 0,
+        status: 'pending_finance',
+        dateRequested: new Date().toISOString(),
+        readyDate: null
+    });
+    saveData(data);
+    alert(`✅ ${type === 'replacement' ? 'Replacement' : 'New'} ID request submitted. It will be processed by Finance, then System Admin.`);
+    document.getElementById('studentMain').innerHTML = studentIDRequestHTML({ id: studentId });
+};
+
+/* ── 2. Received ── */
+function studentReceivedHTML(user) {
+    const data = getData();
+    const msgs = (data.studentNotifications || []).filter(n => n.studentId === user.id).slice().reverse();
+
+    return `
+        <div class="admin-section-head">📨 Received</div>
+        <div class="admin-card">
+            <div class="admin-card-title">Messages (${msgs.length})</div>
+            ${msgs.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No messages yet.</p>'
+                : msgs.map(n => `
+                    <div style="padding:0.7rem 0;border-bottom:1px solid var(--border);">
+                        <div style="display:flex;justify-content:space-between;">
+                            <strong style="font-size:0.85rem;color:var(--purple-light);">${n.title || 'Notification'}</strong>
+                            ${!n.seen ? '<span class="admin-role-pill">New</span>' : ''}
+                        </div>
+                        <div style="font-size:0.82rem;margin-top:4px;">${n.message}</div>
+                        <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:4px;">${new Date(n.timestamp).toLocaleString()}</div>
+                    </div>`).join('')}
+        </div>`;
+}
+
+/* ── 3. Attendance ── */
+function studentAttendanceHTML(user) {
+    const data = getData();
+    const todayName = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+    const now = new Date();
+
+    const mySessions = (data.timetables || []).filter(t =>
+        t.department === user.department && (t.class === user.class || !t.class)
+    );
+
+    const attPct = user.attendance ? Math.round((user.attendance.attended / user.attendance.total) * 100) : 0;
+
+    const sessionRows = mySessions.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No timetable uploaded yet. Your Class Teacher will upload it once classes begin.</p>`
+        : mySessions.map(t => {
+            const isToday = t.day === todayName;
+            const endDateTime = new Date(`${now.toDateString()} ${t.endTime}`);
+            const hasEnded = isToday && now > endDateTime;
+
+            const existing = (data.attendanceConfirmations || []).find(c =>
+                c.studentId === user.id && c.timetableId === t.id &&
+                new Date(c.date).toDateString() === now.toDateString()
+            );
+
+            let buttonHTML;
+            if (existing) {
+                const label = existing.status === 'confirmed' ? '✅ Confirmed by Lecturer'
+                    : existing.status === 'rejected' ? '❌ Rejected by Lecturer'
+                    : '🕒 Awaiting Lecturer Review';
+                buttonHTML = `<span class="admin-role-pill">${label}</span>`;
+            } else if (hasEnded) {
+                buttonHTML = `<button class="admin-btn-primary" onclick="studentConfirmAttendance('${t.id}','${user.id}')">
+                    <i class="fas fa-check"></i> Confirm Attendance
+                </button>`;
+            } else {
+                buttonHTML = `<button class="admin-action-btn" disabled style="background:var(--bg-elevated);color:var(--text-secondary);border:1px solid var(--border);cursor:not-allowed;">
+                    🔒 Available after ${t.endTime}
+                </button>`;
+            }
+
+            return `
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:0.8rem 0;border-bottom:1px solid var(--border);">
+                <div>
+                    <strong style="font-size:0.85rem;">${t.unit}</strong>
+                    <span style="font-size:0.7rem;color:var(--text-secondary);margin-left:6px;">(${t.unitCode})</span>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${t.day} · ${t.startTime} – ${t.endTime}</div>
+                </div>
+                ${buttonHTML}
+            </div>`;
+        }).join('');
+
+    return `
+        <div class="admin-section-head">📅 Attendance</div>
+        <div class="stat-card" style="margin-bottom:1rem;max-width:240px;">
+            <i class="fas fa-calendar-check"></i>
+            <h3 style="color:${attPct >= 75 ? 'var(--success)' : 'var(--danger)'}">${attPct}%</h3>
+            <p>${user.attendance?.attended || 0}/${user.attendance?.total || 0} classes confirmed</p>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">My Timetable & Confirmation</div>
+            <p style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:10px;">
+                The confirm button unlocks automatically once a class session has ended. Confirming sends a request to your Lecturer for verification — just like signing the register after class.
+            </p>
+            ${sessionRows}
+        </div>`;
+}
+
+window.studentConfirmAttendance = function(timetableId, studentId) {
+    const data = getData();
+    data.attendanceConfirmations = data.attendanceConfirmations || [];
+    data.attendanceConfirmations.push({
+        id: 'ATC-' + Date.now().toString().slice(-6),
+        studentId, timetableId,
+        date: new Date().toISOString(),
+        status: 'pending_lecturer'
+    });
+    saveData(data);
+    alert('✅ Attendance confirmation sent to your Lecturer for review.');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('studentMain').innerHTML = studentAttendanceHTML(user);
+};
+
+/* ── 4. Exam Registration ── */
+function studentExamRegistrationHTML(user) {
+    const data = getData();
+    const regs = data.examRegistrations.filter(r => r.studentId === user.id);
+
+    const statusMap = {
+        pending_deo:     '🕒 Awaiting DEO',
+        pending_hod:     '📋 Awaiting HOD',
+        pending_finance: '💰 Awaiting Finance',
+        pending_deputy:  '👑 Awaiting Deputy',
+        pending_exam:    '📝 Awaiting Exam Office',
+        approved:        '✅ Fully Approved',
+        rejected:        '❌ Rejected',
+        blocked:         '🚫 Blocked by Deputy',
+        waived:          '✅ Waived by Deputy'
+    };
+    const progressStages = ['pending_deo', 'pending_hod', 'pending_finance', 'pending_deputy', 'pending_exam', 'approved'];
+    const stageLabels    = ['DEO', 'HOD', 'Finance', 'Deputy', 'Exam Office', 'Complete'];
+
+    let listHTML = '';
+    if (regs.length === 0) {
+        listHTML = `<p style="color:var(--text-secondary);font-size:0.85rem;">No registration yet. Click above to register.</p>`;
+    } else {
+        listHTML = regs.map(reg => {
+            const currentIdx = progressStages.indexOf(reg.status);
+            const isBlocked  = reg.status === 'rejected' || reg.status === 'blocked';
+            const isDone     = reg.status === 'approved' || reg.status === 'waived';
+
+            return `
+            <div style="margin-top:1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:14px;padding:1rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+                    <div style="font-size:0.78rem;font-weight:700;color:var(--text-secondary);">
+                        Reg ID: <span style="color:var(--purple-light)">${reg.id}</span>
+                    </div>
+                    <div style="font-size:0.75rem;font-weight:700;padding:3px 12px;border-radius:20px;
+                        background:${isDone ? 'rgba(16,185,129,.15)' : isBlocked ? 'rgba(239,68,68,.15)' : 'rgba(108,63,207,.15)'};
+                        color:${isDone ? 'var(--success)' : isBlocked ? 'var(--danger)' : 'var(--purple-light)'};
+                        border:1px solid ${isDone ? 'var(--success)' : isBlocked ? 'var(--danger)' : 'var(--purple)'};">
+                        ${statusMap[reg.status] || reg.status}
+                    </div>
+                </div>
+                <div style="display:flex;align-items:flex-start;overflow-x:auto;padding-bottom:4px;">
+                    ${stageLabels.map((label, idx) => {
+                        const done   = idx < currentIdx || isDone;
+                        const active = idx === currentIdx && !isDone;
+                        const color  = done ? 'var(--success)' : active ? (isBlocked ? 'var(--danger)' : 'var(--purple-light)') : 'var(--border)';
+                        const isLast = idx === stageLabels.length - 1;
+                        return `
+                        <div style="display:flex;align-items:center;flex:1;min-width:52px;">
+                            <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                                <div style="width:26px;height:26px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:800;color:#fff;">
+                                    ${done ? '✓' : idx + 1}
+                                </div>
+                                <div style="font-size:0.58rem;color:${color};margin-top:3px;text-align:center;white-space:nowrap;">${label}</div>
+                            </div>
+                            ${!isLast ? `<div style="height:2px;flex:1;background:${done ? 'var(--success)' : 'var(--border)'};margin-bottom:14px;"></div>` : ''}
+                        </div>`;
+                    }).join('')}
+                </div>
+                ${reg.rejectionReason ? `
+                <div style="margin-top:8px;font-size:0.75rem;color:var(--danger);background:rgba(239,68,68,.08);border:1px solid var(--danger);border-radius:8px;padding:6px 10px;">
+                    ❌ Rejected by ${reg.rejectedBy || 'Office'}: ${reg.rejectionReason}
+                </div>` : ''}
+                ${reg.deputyDeadline ? `
+                <div style="margin-top:6px;font-size:0.72rem;color:var(--warning);background:rgba(245,158,11,.08);border:1px solid var(--warning);border-radius:8px;padding:6px 10px;">
+                    ⏰ Report to Deputy Principal before: <strong>${reg.deputyDeadline}</strong>
+                </div>` : ''}
+                <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;font-size:0.75rem;color:var(--text-secondary);">
+                    <span>📚 <strong style="color:var(--text-primary)">${reg.units.length}</strong> units</span>
+                    <span>💰 <strong style="color:var(--text-primary)">KSh ${reg.totalExamFee.toLocaleString()}</strong></span>
+                    <span>📅 <strong style="color:var(--text-primary)">${new Date(reg.submittedDate).toLocaleDateString()}</strong></span>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    return `
+        <div class="admin-section-head">📝 Exam Registration</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <button class="btn-primary" onclick="startExamRegistration()">
+                <i class="fas fa-file-signature"></i> New CBET Exam Registration
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">My Exam Registrations (${regs.length})</div>
+            ${listHTML}
+        </div>`;
+}
+
+/* ── 5. Fee Statement ── */
+function studentFeeStatementHTML(user) {
+    const totalFee = user.totalFee || 0;
+    const paid = totalFee - (user.feeBalance || 0);
+    const balance = user.feeBalance || 0;
+    const pct = totalFee ? Math.round((paid / totalFee) * 100) : 0;
+    const history = user.paymentHistory || [];
+
+    return `
+        <div class="admin-section-head">💳 Fee Statement</div>
+        <div class="admin-card" style="background:${balance === 0 ? 'rgba(16,185,129,.12)' : 'rgba(245,158,11,.1)'};border-color:${balance === 0 ? 'var(--success)' : 'var(--warning)'};margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+                <div>
+                    <div style="font-size:0.7rem;color:var(--text-secondary);">FEE STATUS</div>
+                    <strong style="color:${balance === 0 ? 'var(--success)' : 'var(--warning)'};font-size:1.05rem;">
+                        ${balance === 0 ? '✅ Fully Paid' : '⚠️ Balance Outstanding'}
+                    </strong>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user.department || ''}</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);">BALANCE</div>
+                    <strong style="font-size:1.3rem;">KSh ${balance.toLocaleString()}</strong>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:1rem;">
+            <div class="stat-card"><h3>KSh ${totalFee.toLocaleString()}</h3><p>Total Fee</p></div>
+            <div class="stat-card"><h3 style="color:var(--success)">KSh ${paid.toLocaleString()}</h3><p>Total Paid</p></div>
+            <div class="stat-card"><h3 style="color:var(--danger)">KSh ${balance.toLocaleString()}</h3><p>Outstanding</p></div>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Payment Progress (${pct}%)</div>
+            <div style="background:var(--bg-elevated);border-radius:20px;height:10px;overflow:hidden;margin-top:8px;">
+                <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--success),#34d399);border-radius:20px;"></div>
+            </div>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Payment History (${history.length})</div>
+            ${history.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No payments recorded yet.</p>'
+                : history.map(h => `
+                    <div style="display:flex;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
+                        <span>KSh ${h.amount.toLocaleString()}</span>
+                        <span style="color:var(--text-secondary);font-size:0.75rem;">${h.date} · Ref: ${h.ref}</span>
+                    </div>`).join('')}
+        </div>
+
+        <div class="admin-card">
+            <div class="admin-card-title">Accepted Payment Methods</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-top:10px;text-align:center;">
+                <div class="admin-role-pill" style="display:block;padding:10px;">📱 M-Pesa</div>
+                <div class="admin-role-pill" style="display:block;padding:10px;">🏦 Bank Transfer</div>
+                <div class="admin-role-pill" style="display:block;padding:10px;">💵 Cash (Finance Office)</div>
+                <div class="admin-role-pill" style="display:block;padding:10px;">🎓 HELB Loan</div>
+                <div class="admin-role-pill" style="display:block;padding:10px;">🤝 Bursary</div>
+            </div>
+        </div>`;
+}
+
+/* ── 6. Results ── */
+function studentResultsHTML(user) {
+    const results = user.results || [];
+    const competent = results.filter(r => r.competency === 'Competent').length;
+    const nyc = results.length - competent;
+    const rate = results.length ? Math.round((competent / results.length) * 100) : 0;
+
+    return `
+        <div class="admin-section-head">🎓 Results</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.8rem;color:var(--text-secondary);">
+                Results follow the CBET framework. You're assessed as <strong style="color:var(--success)">Competent (C)</strong>
+                or <strong style="color:var(--danger)">Not Yet Competent (NYC)</strong> if more practice is needed.
+            </p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:1rem;">
+            <div class="stat-card"><h3>${results.length}</h3><p>Total Results</p></div>
+            <div class="stat-card"><h3 style="color:var(--success)">${competent}</h3><p>Competent</p></div>
+            <div class="stat-card"><h3 style="color:var(--danger)">${nyc}</h3><p>Not Yet Competent</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light)">${rate}%</h3><p>Competency Rate</p></div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Module Results</div>
+            ${results.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No results recorded yet.</p>'
+                : `<table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:0.82rem;">
+                    <thead><tr style="color:var(--purple-light);border-bottom:1px solid var(--border);">
+                        <th style="text-align:left;padding:0.5rem;">Module</th>
+                        <th style="text-align:left;padding:0.5rem;">Score</th>
+                        <th style="text-align:left;padding:0.5rem;">Competency</th>
+                        <th style="text-align:left;padding:0.5rem;">Remarks</th>
+                    </tr></thead>
+                    <tbody>
+                        ${results.map(r => `
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:0.5rem;">${r.module}</td>
+                            <td style="padding:0.5rem;">${r.score}%</td>
+                            <td style="padding:0.5rem;color:${r.competency === 'Competent' ? 'var(--success)' : 'var(--danger)'};">${r.competency}</td>
+                            <td style="padding:0.5rem;color:var(--text-secondary);">${r.remarks}</td>
+                        </tr>`).join('')}
+                    </tbody>
+                </table>`}
+        </div>`;
+}
+
+/* ── 7. Profile ── */
+function studentProfileHTML(user) {
+    return `
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+                <div>
+                    <h3 style="margin:0;">${user.name}</h3>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user.id}</div>
+                    <span class="admin-role-pill" style="margin-top:6px;display:inline-block;">${user.learningMode || 'CDACC (CBET)'}</span>
+                </div>
+                <button class="admin-btn-secondary" onclick="alert('Profile editing coming soon — contact your Class Teacher for corrections.')">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Personal Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">FULL NAME</span><br>${user.name}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">GENDER</span><br>${user.gender || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DATE OF BIRTH</span><br>${user.dob || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">COUNTY</span><br>${user.county || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">PHONE</span><br>${user.phone || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">EMAIL</span><br>${user.email || '—'}</div>
+            </div>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Academic Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">ADMISSION NO</span><br>${user.id}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">PROGRAM CODE</span><br>${user.programCode || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">LEVEL</span><br>${user.level || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DEPARTMENT</span><br>${user.department || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">LEARNING MODE</span><br>${user.learningMode || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">YEAR / CLASS</span><br>${user.class || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">ENROLLMENT DATE</span><br>${user.enrollmentDate || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DURATION</span><br>${user.programDuration || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">TOTAL MODULES</span><br>${user.totalModules || '—'}</div>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="admin-card-title">Fee Summary</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:10px;">
+                <div class="stat-card"><h3>KSh ${(user.totalFee || 0).toLocaleString()}</h3><p>Total Fee</p></div>
+                <div class="stat-card"><h3 style="color:var(--success)">KSh ${((user.totalFee || 0) - (user.feeBalance || 0)).toLocaleString()}</h3><p>Paid</p></div>
+                <div class="stat-card"><h3 style="color:${(user.feeBalance || 0) === 0 ? 'var(--success)' : 'var(--danger)'}">KSh ${(user.feeBalance || 0).toLocaleString()}</h3><p>Balance</p></div>
+            </div>
+        </div>`;
+}
+
+/* ── 8. Report (inline SVG charts, no external library) ── */
+function svgDonutChart(segments, size = 140) {
+    const total = segments.reduce((s, x) => s + x.value, 0) || 1;
+    const r = size / 2 - 14;
+    const cx = size / 2, cy = size / 2;
+    const circ = 2 * Math.PI * r;
+    let offset = 0;
+    const circles = segments.map(seg => {
+        const dash = (seg.value / total) * circ;
+        const el = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${seg.color}" stroke-width="18"
+            stroke-dasharray="${dash} ${circ - dash}" stroke-dashoffset="${-offset}"
+            transform="rotate(-90 ${cx} ${cy})" stroke-linecap="round"/>`;
+        offset += dash;
+        return el;
+    }).join('');
+    return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${circles}</svg>`;
+}
+
+function svgBarChart(bars, width = 380, height = 180) {
+    const max = Math.max(...bars.map(b => b.value), 1);
+    const gap = 14;
+    const barW = (width - gap * (bars.length + 1)) / bars.length;
+    const bodyH = height - 36;
+    const rects = bars.map((b, i) => {
+        const h = (b.value / max) * bodyH;
+        const x = gap + i * (barW + gap);
+        const y = bodyH - h;
+        return `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="4" fill="${b.color || '#8b5cf6'}"/>
+            <text x="${x + barW / 2}" y="${height - 6}" text-anchor="middle" font-size="9" fill="#c8bfec">${b.label}</text>
+            <text x="${x + barW / 2}" y="${y - 6}" text-anchor="middle" font-size="9" fill="#fff">${b.value}</text>`;
+    }).join('');
+    return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${rects}</svg>`;
+}
+
+function studentReportHTML(user) {
+    const results = user.results || [];
+    const competent = results.filter(r => r.competency === 'Competent').length;
+    const nyc = results.length - competent;
+    const attPct = user.attendance ? Math.round((user.attendance.attended / user.attendance.total) * 100) : 0;
+    const balance = user.feeBalance || 0;
+    const totalFee = user.totalFee || 0;
+    const paid = totalFee - balance;
+
+    const moduleBars = results.length
+        ? results.map(r => ({ label: r.module.split(' ').slice(0, 2).join(' '), value: r.score, color: r.competency === 'Competent' ? '#10b981' : '#ef4444' }))
+        : [{ label: 'No data', value: 0, color: '#3a2d6e' }];
+
+    return `
+        <div class="admin-section-head">📊 My Report</div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Module Scores</div>
+            <div style="overflow-x:auto;margin-top:10px;">${svgBarChart(moduleBars)}</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Competency Results</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: competent || 0.0001, color: '#10b981' },
+                        { value: nyc || 0.0001, color: '#ef4444' }
+                    ])}
+                </div>
+                <div style="font-size:0.78rem;margin-top:8px;">
+                    <span style="color:var(--success)">● Competent ${competent}</span> &nbsp;
+                    <span style="color:var(--danger)">● NYC ${nyc}</span>
+                </div>
+            </div>
+
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Fee Payment Status</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: paid || 0.0001, color: '#10b981' },
+                        { value: balance || 0.0001, color: '#f59e0b' }
+                    ])}
+                </div>
+                <div style="font-size:0.78rem;margin-top:8px;">
+                    <span style="color:var(--success)">● Paid KSh ${paid.toLocaleString()}</span><br>
+                    <span style="color:var(--warning)">● Balance KSh ${balance.toLocaleString()}</span>
+                </div>
+            </div>
+
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Attendance Rate</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: attPct || 0.0001, color: '#8b5cf6' },
+                        { value: (100 - attPct) || 0.0001, color: '#251b42' }
+                    ])}
+                </div>
+                <div style="font-size:0.9rem;margin-top:8px;font-weight:700;color:var(--purple-light);">${attPct}%</div>
+            </div>
+        </div>`;
+}
+
+/* ══════════════════════════════════════════
    KITCO PORTAL — Student Leadership
 ══════════════════════════════════════════ */
 function renderKITCOPanel(user) {
@@ -5462,136 +6169,7 @@ function getExamRegRows(registrations, includeFields = []) {
     });
 }
 
-function renderStudentExamTracking(student) {
-    const data = getData();
-    const regs = data.examRegistrations.filter(r => r.studentId === student.id);
 
-    const attPct = student.attendance
-        ? Math.round((student.attendance.attended / student.attendance.total) * 100)
-        : 0;
-
-    const statusMap = {
-        pending_deo:     '🕒 Awaiting DEO',
-        pending_hod:     '📋 Awaiting HOD',
-        pending_finance: '💰 Awaiting Finance',
-        pending_deputy:  '👑 Awaiting Deputy',
-        pending_exam:    '📝 Awaiting Exam Office',
-        approved:        '✅ Fully Approved',
-        rejected:        '❌ Rejected',
-        blocked:         '🚫 Blocked by Deputy',
-        waived:          '✅ Waived by Deputy'
-    };
-
-    const progressStages = ['pending_deo','pending_hod','pending_finance','pending_deputy','pending_exam','approved'];
-    const stageLabels    = ['DEO','HOD','Finance','Deputy','Exam Office','Complete'];
-
-    let html = `
-        <div class="stats-grid" style="margin-bottom:1rem;">
-            <div class="stat-card">
-                <i class="fas fa-calendar-check"></i>
-                <h3>Attendance</h3>
-                <p style="font-size:1.2rem;color:${attPct >= 75 ? 'var(--success)' : 'var(--danger)'}">
-                    ${attPct}%
-                </p>
-                <small style="color:var(--text-secondary)">${student.attendance?.attended}/${student.attendance?.total} classes</small>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-wallet"></i>
-                <h3>Fee Balance</h3>
-                <p style="font-size:1.1rem;color:${student.feeBalance === 0 ? 'var(--success)' : 'var(--danger)'}">
-                    ${student.feeBalance === 0 ? '✅ Cleared' : 'KSh ' + student.feeBalance.toLocaleString()}
-                </p>
-            </div>
-        </div>`;
-
-    if (regs.length === 0) {
-        html += `<div class="form-card">
-            <h3><i class="fas fa-tasks"></i> My Exam Registrations</h3>
-            <p style="color:var(--text-secondary)">No registrations yet. Click below to register.</p>
-        </div>`;
-    } else {
-        html += `<div class="form-card">
-            <h3><i class="fas fa-tasks"></i> My Exam Registrations</h3>`;
-
-        regs.forEach(reg => {
-            const currentIdx = progressStages.indexOf(reg.status);
-            const isBlocked  = reg.status === 'rejected' || reg.status === 'blocked';
-            const isDone     = reg.status === 'approved' || reg.status === 'waived';
-
-            /* ── Progress Bar ── */
-            html += `
-            <div style="margin-top:1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:14px;padding:1rem;">
-
-                <!-- Reg header -->
-                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
-                    <div style="font-size:0.78rem;font-weight:700;color:var(--text-secondary);">
-                        Reg ID: <span style="color:var(--purple-light)">${reg.id}</span>
-                    </div>
-                    <div style="font-size:0.75rem;font-weight:700;padding:3px 12px;border-radius:20px;
-                        background:${isDone?'rgba(16,185,129,.15)':isBlocked?'rgba(239,68,68,.15)':'rgba(108,63,207,.15)'};
-                        color:${isDone?'var(--success)':isBlocked?'var(--danger)':'var(--purple-light)'};
-                        border:1px solid ${isDone?'var(--success)':isBlocked?'var(--danger)':'var(--purple)'};
-                    ">
-                        ${statusMap[reg.status] || reg.status}
-                    </div>
-                </div>
-
-                <!-- Stage dots + line -->
-                <div style="display:flex;align-items:flex-start;overflow-x:auto;padding-bottom:4px;">
-                    ${stageLabels.map((label, idx) => {
-                        const done   = idx < currentIdx || isDone;
-                        const active = idx === currentIdx && !isDone;
-                        const color  = done ? 'var(--success)' : active ? (isBlocked ? 'var(--danger)' : 'var(--purple-light)') : 'var(--border)';
-                        const isLast = idx === stageLabels.length - 1;
-                        return `
-                        <div style="display:flex;align-items:center;flex:1;min-width:52px;">
-                            <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
-                                <div style="width:26px;height:26px;border-radius:50%;
-                                    background:${color};
-                                    display:flex;align-items:center;justify-content:center;
-                                    font-size:0.65rem;font-weight:800;color:#fff;">
-                                    ${done ? '✓' : idx + 1}
-                                </div>
-                                <div style="font-size:0.58rem;color:${color};margin-top:3px;text-align:center;white-space:nowrap;">
-                                    ${label}
-                                </div>
-                            </div>
-                            ${!isLast ? `<div style="height:2px;flex:1;background:${done?'var(--success)':'var(--border)'};margin-bottom:14px;"></div>` : ''}
-                        </div>`;
-                    }).join('')}
-                </div>
-
-                <!-- Rejection reason -->
-                ${reg.rejectionReason ? `
-                <div style="margin-top:8px;font-size:0.75rem;color:var(--danger);
-                    background:rgba(239,68,68,.08);border:1px solid var(--danger);
-                    border-radius:8px;padding:6px 10px;">
-                    ❌ Rejected by ${reg.rejectedBy || 'Office'}: ${reg.rejectionReason}
-                </div>` : ''}
-
-                <!-- Deputy deadline -->
-                ${reg.deputyDeadline ? `
-                <div style="margin-top:6px;font-size:0.72rem;color:var(--warning);
-                    background:rgba(245,158,11,.08);border:1px solid var(--warning);
-                    border-radius:8px;padding:6px 10px;">
-                    ⏰ Report to Deputy Principal before: <strong>${reg.deputyDeadline}</strong>
-                </div>` : ''}
-
-                <!-- Summary row -->
-                <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;font-size:0.75rem;color:var(--text-secondary);">
-                    <span>📚 <strong style="color:var(--text-primary)">${reg.units.length}</strong> units</span>
-                    <span>💰 <strong style="color:var(--text-primary)">KSh ${reg.totalExamFee.toLocaleString()}</strong></span>
-                    <span>📅 <strong style="color:var(--text-primary)">${new Date(reg.submittedDate).toLocaleDateString()}</strong></span>
-                </div>
-
-            </div>`;
-        });
-
-        html += `</div>`;
-    }
-
-    return html;
-}
 
 // ==================== NEWSLETTER ====================
 function subscribeNewsletter() {
