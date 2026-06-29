@@ -4046,72 +4046,141 @@ window.studentSection = function(section, btn) {
     document.getElementById('studentMain').innerHTML = (map[section] || (() => studentIDRequestHTML(user)))();
 };
 
-/* ── 1. ID Request ── */
-function studentIDRequestHTML(user) {
+/* ── ID Request with Fill Details Modal ── */
+ function studentIDRequestHTML(user) {
     const data = getData();
     const myRequests = (data.idRequests || []).filter(r => r.studentId === user.id);
-    const stageLabels = ['Student', 'Finance', 'System Admin', 'Ready'];
 
     const reqCards = myRequests.length === 0
-        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No ID requests yet. Use the form below to request one.</p>`
+        ? `<p style="color:var(--text-secondary);">No requests yet.</p>`
         : myRequests.slice().reverse().map(r => {
-            const idx = r.status === 'pending_finance' ? 1 : r.status === 'pending_admin' ? 2 : r.status === 'ready' ? 4 : 0;
+            let statusText = '';
+            if (r.status === 'pending_admin') statusText = '🔐 With System Admin';
+            else if (r.status === 'pending_finance') statusText = '💰 With Finance';
+            else if (r.status === 'ready') statusText = '✅ Ready';
+
             return `
             <div class="admin-card" style="margin-bottom:12px;">
-                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;">
                     <strong>${r.type === 'new' ? 'New ID' : 'Replacement ID'}</strong>
-                    <span class="admin-role-pill">${r.status === 'ready' ? '✅ Ready for Collection' : r.status === 'pending_admin' ? '🔐 With System Admin' : '💰 With Finance'}</span>
+                    <span class="admin-role-pill">${statusText}</span>
                 </div>
-                <div style="display:flex;overflow-x:auto;">
-                    ${stageLabels.map((label, i) => {
-                        const done = i < idx;
-                        const color = done ? 'var(--success)' : 'var(--border)';
-                        return `<div style="display:flex;align-items:center;flex:1;min-width:70px;">
-                            <div style="width:22px;height:22px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#fff;">${done ? '✓' : i + 1}</div>
-                            <span style="font-size:0.65rem;color:${color};margin-left:4px;">${label}</span>
-                            ${i < stageLabels.length - 1 ? `<div style="flex:1;height:2px;background:${done ? 'var(--success)' : 'var(--border)'};margin:0 4px;"></div>` : ''}
-                        </div>`;
-                    }).join('')}
-                </div>
-                <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:10px;">
-                    ${r.fee > 0 ? `Fee: KSh ${r.fee.toLocaleString()} · ` : ''}Requested: ${new Date(r.dateRequested).toLocaleDateString()}
-                    ${r.readyDate ? ` · Collection date: ${r.readyDate}` : ''}
+                <div style="font-size:0.8rem;color:var(--text-secondary);margin-top:8px;">
+                    ${r.fullName ? r.fullName + '<br>' : ''}
+                    ${r.fee > 0 ? `Fee: KSh ${r.fee} · ` : ''}Requested: ${new Date(r.dateRequested).toLocaleDateString()}
                 </div>
             </div>`;
         }).join('');
-
+        
     return `
         <div class="admin-section-head">🪪 ID Request</div>
-        <div class="admin-card" style="margin-bottom:1rem;">
+        <div class="admin-card">
             <div class="admin-card-title">➕ Request an ID</div>
-            <select id="idReqType" class="admin-input" style="margin-top:10px;">
+            
+            <select id="idReqType" class="admin-input" style="margin:12px 0;">
                 <option value="new">New ID (no charge)</option>
                 <option value="replacement">Replacement ID — KSh 500</option>
             </select>
-            <button class="admin-btn-primary" style="margin-top:10px;" onclick="studentSubmitIDRequest('${user.id}')">
-                <i class="fas fa-paper-plane"></i> Submit Request
-            </button>
+
+            <div style="display:flex; gap:10px;">
+                <button class="admin-btn-primary" style="flex:1;" onclick="studentSubmitIDRequest('${user.id}')">
+                    🚀 Submit Request
+                </button>
+                <button class="admin-btn-secondary" style="flex:1;" onclick="showIDFillModal('${user.id}')">
+                    ✍️ Fill Details
+                </button>
+            </div>
         </div>
-        <div class="admin-card">
+
+        <div class="admin-card" style="margin-top:1rem;">
             <div class="admin-card-title">My Requests (${myRequests.length})</div>
             ${reqCards}
         </div>`;
 }
 
-window.studentSubmitIDRequest = function(studentId) {
+// Toggle Submit Button for New ID
+window.toggleSubmitButton = function(studentId) {
     const type = document.getElementById('idReqType').value;
+    const submitBtn = document.getElementById('submitBtn');
+    
+    if (type === 'new') {
+        submitBtn.style.opacity = '1';
+        submitBtn.style.cursor = 'pointer';
+    } else {
+        submitBtn.style.opacity = '0.6';
+        submitBtn.style.cursor = 'not-allowed';
+    }
+};
+
+// Show Fill Details Modal
+window.showIDFillModal = function(studentId) {
+    const type = document.getElementById('idReqType').value;
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;display:flex;align-items:center;justify-content:center;`;
+    
+    modal.innerHTML = `
+        <div style="background:#1e1e2e;width:90%;max-width:720px;border-radius:12px;padding:25px;max-height:92vh;overflow-y:auto;">
+            <h2 style="color:#a78bfa;margin-bottom:20px;">📋 Fill Student Identity Card Details</h2>
+            
+            <div class="grid" style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                <div><label>Full Name</label><input id="fName" class="admin-input" placeholder="Full Name" required></div>
+                <div><label>Course</label><input id="fCourse" class="admin-input" placeholder="Course"></div>
+                <div><label>Level</label><input id="fLevel" class="admin-input" placeholder="e.g. Diploma 3"></div>
+                <div><label>Date of Birth</label><input id="fDOB" type="date" class="admin-input"></div>
+                <div><label>National ID / Passport</label><input id="fNationalID" class="admin-input"></div>
+                <div><label>Reg / ADM No.</label><input id="fRegNo" class="admin-input"></div>
+                <div><label>Department</label><input id="fDept" class="admin-input"></div>
+                <div><label>Guardian Name</label><input id="fGuardian" class="admin-input"></div>
+                <div><label>Guardian Tel</label><input id="fGuardianTel" class="admin-input"></div>
+                <div><label>Place of Residence</label><input id="fResidence" class="admin-input"></div>
+            </div>
+
+            <div style="margin:25px 0 15px;">
+                <h3 style="color:#a78bfa;">Consent for Use of Images</h3>
+                <div style="height:180px;overflow-y:auto;background:#161622;padding:12px;font-size:0.85rem;border-radius:8px;">
+                    ${document.querySelector('.consent-text') ? document.querySelector('.consent-text').innerHTML : 'I consent to the use of my image for institutional purposes...'}
+                </div>
+                <label><input type="checkbox" id="consentCheck"> I agree to the Consent for Use of Images</label>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-top:20px;">
+                <button class="admin-btn-primary" style="flex:1;" onclick="submitFullIDRequest('${studentId}', '${type}')">Submit Request + Consent</button>
+                <button class="admin-btn-secondary" style="flex:1;" onclick="this.closest('div[style*=\"position:fixed\"]').remove()">Cancel</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+};
+
+// Submit Full Request
+window.submitFullIDRequest = function(studentId, type) {
+    const consent = document.getElementById('consentCheck');
+    if (!consent || !consent.checked) {
+        alert("Please agree to the Consent for Use of Images");
+        return;
+    }
+
     const data = getData();
     const id = 'IDR-' + Date.now().toString().slice(-6);
+
     data.idRequests = data.idRequests || [];
     data.idRequests.push({
-        id, studentId, type,
+        id,
+        studentId,
+        type,
+        fullName: document.getElementById('fName').value,
+        course: document.getElementById('fCourse').value,
+        level: document.getElementById('fLevel').value,
         fee: type === 'replacement' ? 500 : 0,
         status: 'pending_finance',
         dateRequested: new Date().toISOString(),
-        readyDate: null
+        consentGiven: true
     });
+
     saveData(data);
-    alert(`✅ ${type === 'replacement' ? 'Replacement' : 'New'} ID request submitted. It will be processed by Finance, then System Admin.`);
+    alert("✅ ID Request with details submitted successfully!");
+    document.querySelectorAll('div[style*="position:fixed"]').forEach(el => el.remove());
     document.getElementById('studentMain').innerHTML = studentIDRequestHTML({ id: studentId });
 };
 
