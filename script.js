@@ -22,14 +22,15 @@ function initializeData() {
             },
             infrastructureList: ["library", "sports", "hostel_m", "hostel_f", "field"],
             departments: ['Computer Studies', 'Hospitality', 'Automotive Engineering', 'Electrical Engineering', 'Civil Engineering', 'Business'],
-           students: [
+           
+            students: [
                 {
                     id: 'STU-2026-20669', name: 'John Mwangi', department: 'Computer Studies', class: 'Form 3C',
                     passcode: '1234', phone: '0712345678', email: 'john.mwangi@student.pck.ac.ke',
                     gender: 'Male', dob: '2003-04-12', county: 'Nairobi',
                     level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
                     enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
-                    feeBalance: 0, totalFee: 65000,
+                    feeBalance: 0, totalFee: 65000, status: 'active', deferReason: null,
                     paymentHistory: [
                         { amount: 39000, date: '2025-01-01', ref: 'REF713037' },
                         { amount: 26000, date: '2025-02-15', ref: 'REF416275' }
@@ -46,7 +47,7 @@ function initializeData() {
                     gender: 'Female', dob: '2004-09-02', county: 'Kisumu',
                     level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
                     enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
-                    feeBalance: 25000, totalFee: 65000,
+                    feeBalance: 25000, totalFee: 65000, status: 'active', deferReason: null,
                     paymentHistory: [
                         { amount: 40000, date: '2025-01-10', ref: 'REF551209' }
                     ],
@@ -55,6 +56,30 @@ function initializeData() {
                     results: [
                         { module: 'Apply Entrepreneurial Skills', score: 47, competency: 'Not Yet Competent', remarks: 'Needs more practice' }
                     ]
+                },
+                {
+                    id: 'STU-2026-20671', name: 'Brian Otieno', department: 'Computer Studies', class: 'Form 3C',
+                    passcode: '9012', phone: '0734567890', email: 'brian.otieno@student.pck.ac.ke',
+                    gender: 'Male', dob: '2003-11-20', county: 'Nairobi',
+                    level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
+                    enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
+                    feeBalance: 65000, totalFee: 65000, status: 'not_attending', deferReason: null,
+                    paymentHistory: [],
+                    attendance: { total: 45, attended: 4 },
+                    examHistory: {},
+                    results: []
+                },
+                {
+                    id: 'STU-2026-20672', name: 'Mary Wambui', department: 'Computer Studies', class: 'Form 3C',
+                    passcode: '3456', phone: '0745678901', email: 'mary.wambui@student.pck.ac.ke',
+                    gender: 'Female', dob: '2004-02-08', county: 'Nakuru',
+                    level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
+                    enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
+                    feeBalance: 30000, totalFee: 65000, status: 'deferred', deferReason: 'Medical leave for one semester',
+                    paymentHistory: [],
+                    attendance: { total: 45, attended: 20 },
+                    examHistory: {},
+                    results: []
                 }
             ],
 
@@ -3487,7 +3512,7 @@ function lecturerReportHTML() {
 }
 
 /* ══════════════════════════════════════════
-   CLASS REP PORTAL — With Sidebar
+   CLASS REP PORTAL — Full Implementation
 ══════════════════════════════════════════ */
 function renderClassRepPanel(user) {
     return `
@@ -3497,7 +3522,13 @@ function renderClassRepPanel(user) {
                 <i class="fas fa-users"></i> Class Rep Menu
             </div>
             
-            <button class="admin-nav-btn active" onclick="classRepSection('noticeboard',this)">
+            <button class="admin-nav-btn active" onclick="classRepSection('profile',this)">
+                <i class="fas fa-user"></i> Profile
+            </button>
+            <button class="admin-nav-btn" onclick="classRepSection('received',this)">
+                <i class="fas fa-inbox"></i> Received
+            </button>
+            <button class="admin-nav-btn" onclick="classRepSection('noticeboard',this)">
                 <i class="fas fa-bell"></i> Class Noticeboard
             </button>
             <button class="admin-nav-btn" onclick="classRepSection('issues',this)">
@@ -3505,6 +3536,9 @@ function renderClassRepPanel(user) {
             </button>
             <button class="admin-nav-btn" onclick="classRepSection('students',this)">
                 <i class="fas fa-user-graduate"></i> My Class List
+            </button>
+            <button class="admin-nav-btn" onclick="classRepSection('documents',this)">
+                <i class="fas fa-folder-open"></i> Document Shared
             </button>
             <button class="admin-nav-btn" onclick="classRepSection('reminders',this)">
                 <i class="fas fa-clock"></i> Reminders
@@ -3515,7 +3549,7 @@ function renderClassRepPanel(user) {
         </div>
         
         <div class="admin-main" id="classRepMain">
-            ${classRepNoticeboardHTML()}
+            ${classRepProfileHTML(user)}
         </div>
     </div>`;
 }
@@ -3523,64 +3557,351 @@ function renderClassRepPanel(user) {
 window.classRepSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    
+
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
     const map = {
-        noticeboard: () => classRepNoticeboardHTML(),
+        profile:     () => classRepProfileHTML(user),
+        received:    () => classRepReceivedHTML(),
+        noticeboard: () => classRepNoticeboardHTML(user),
         issues:      () => classRepIssuesHTML(),
-        students:    () => classRepStudentsHTML(),
+        students:    () => classRepStudentsHTML(user),
+        documents:   () => classRepDocumentsHTML(),
         reminders:   () => classRepRemindersHTML(),
-        report:      () => classRepReportHTML()
+        report:      () => classRepReportHTML(user)
     };
-    
+
     document.getElementById('classRepMain').innerHTML = map[section]();
 };
 
-function classRepNoticeboardHTML() {
+// ==================== PROFILE ====================
+function classRepProfileHTML(user) {
+    const data = getData();
+    const me = data.students.find(s => s.id === user.id) || {};
+
     return `
-        <div class="admin-section-head">📢 Class Noticeboard</div>
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+                <div style="display:flex;gap:1.2rem;align-items:center;">
+                    <div style="width:70px;height:70px;border-radius:50%;background:#6c3fcf;display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;">👨‍🎓</div>
+                    <div>
+                        <h3 style="margin:0;">${me.name || user.name}</h3>
+                        <div style="font-size:0.8rem;color:var(--text-secondary);">${me.id || user.id}</div>
+                        <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                            <span class="admin-role-pill" style="background:rgba(108,63,207,.2);border-color:var(--purple);color:var(--purple-light);">🗣️ Class Representative</span>
+                            <span class="admin-role-pill">${me.learningMode || 'CDACC (CBET)'}</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="admin-btn-secondary" onclick="alert('Profile editing coming soon — contact your Class Teacher for corrections.')">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Personal Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">FULL NAME</span><br>${me.name || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">GENDER</span><br>${me.gender || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DATE OF BIRTH</span><br>${me.dob || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">COUNTY</span><br>${me.county || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">PHONE</span><br>${me.phone || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">EMAIL</span><br>${me.email || '—'}</div>
+            </div>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Academic Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">ADMISSION NO</span><br>${me.id || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">PROGRAM CODE</span><br>${me.programCode || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">LEVEL</span><br>${me.level || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DEPARTMENT</span><br>${me.department || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">LEARNING MODE</span><br>${me.learningMode || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">YEAR / CLASS</span><br>${me.class || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">ENROLLMENT DATE</span><br>${me.enrollmentDate || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DURATION</span><br>${me.programDuration || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">TOTAL MODULES</span><br>${me.totalModules || '—'}</div>
+            </div>
+        </div>
+
         <div class="admin-card">
-            <p><strong>From Class Teacher:</strong> Exam registration deadline is 20th June 2026.</p>
-            <p style="margin-top:12px;color:var(--text-secondary);font-size:0.85rem;">
-                Forward important notices to your classmates.
-            </p>
+            <div class="admin-card-title">Fee Summary</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:10px;">
+                <div class="stat-card"><h3>KSh ${(me.totalFee || 0).toLocaleString()}</h3><p>Total Fee</p></div>
+                <div class="stat-card"><h3 style="color:var(--success)">KSh ${((me.totalFee || 0) - (me.feeBalance || 0)).toLocaleString()}</h3><p>Paid</p></div>
+                <div class="stat-card"><h3 style="color:${(me.feeBalance || 0) === 0 ? 'var(--success)' : 'var(--danger)'}">KSh ${(me.feeBalance || 0).toLocaleString()}</h3><p>Balance</p></div>
+            </div>
         </div>`;
 }
 
+// ==================== RECEIVED ====================
+function classRepReceivedHTML() {
+    return `
+        <div class="admin-section-head">📥 Received</div>
+        <div class="admin-card">
+            <p style="color:var(--text-secondary);">Messages, documents and notices from teachers will appear here.</p>
+            <div style="margin-top:1.5rem;padding:1rem;background:rgba(255,255,255,0.05);border-radius:12px;text-align:center;">
+                <p>No new messages yet.</p>
+            </div>
+        </div>`;
+};
+
+// ==================== NOTICEBOARD ====================
+function classRepNoticeboardHTML(user) {
+    const data = getData();
+    const me = data.students.find(s => s.id === user.id) || {};
+
+    if (!data.classNotices || data.classNotices.length === 0) {
+        data.classNotices = [
+            { id: 'cn1', sender: 'James Otieno', senderRole: 'classteacher', department: me.department, message: 'Exam registration deadline is 20th June 2026. Please ensure all units are registered before then.', timestamp: new Date().toISOString() },
+            { id: 'cn2', sender: 'Jane Wanjiku', senderRole: 'lecturer', department: me.department, message: 'Computer Essentials (CS101) catch-up session this Friday at 2pm in Lab 2.', timestamp: new Date().toISOString() }
+        ];
+        saveData(data);
+    }
+
+    const notices = data.classNotices.filter(n => n.department === me.department);
+
+    const roleBadge = (role) => role === 'classteacher'
+        ? `<span class="admin-role-pill" style="background:rgba(37,99,235,.15);border-color:var(--blue);color:var(--blue-light);">🧑‍🏫 Class Teacher</span>`
+        : `<span class="admin-role-pill" style="background:rgba(108,63,207,.15);border-color:var(--purple);color:var(--purple-light);">👨‍💻 Lecturer</span>`;
+
+    const html = notices.length === 0
+        ? `<p style="color:var(--text-secondary);padding:1rem;">No notices yet.</p>`
+        : notices.slice().reverse().map(n => `
+            <div style="background:var(--bg-elevated);border-radius:12px;padding:1rem;margin-bottom:1rem;border-left:4px solid #a855f7;">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                    <strong style="color:var(--purple-light)">${n.sender}</strong>
+                    ${roleBadge(n.senderRole)}
+                </div>
+                <small style="color:var(--text-secondary);">${new Date(n.timestamp).toLocaleDateString()}</small>
+                <p style="margin-top:0.5rem;">${n.message}</p>
+            </div>
+        `).join('');
+
+    return `
+        <div class="admin-section-head">📢 Class Noticeboard — ${me.department || ''}</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Notices from your Class Teacher and Lecturers in your department appear here automatically.
+            </p>
+        </div>
+        <div class="admin-card">
+            ${html}
+        </div>`;
+};
+
+// ==================== REPORT ISSUES ====================
 function classRepIssuesHTML() {
     return `
         <div class="admin-card">
             <h4>Report Class Issue / Complaint</h4>
-            <textarea id="repIssue" class="admin-input" rows="4" placeholder="Describe the issue..."></textarea>
+            <textarea id="repIssue" class="admin-input" rows="5" placeholder="Describe the issue..."></textarea>
             <button class="admin-btn-primary" onclick="submitClassRepIssue()">Submit to Class Teacher</button>
         </div>`;
 }
 
-function classRepStudentsHTML() {
-    return `<div class="admin-card"><p>Full list of students in your class coming soon.</p></div>`;
-}
+window.submitClassRepIssue = function() {
+    const issue = document.getElementById('repIssue').value.trim();
+    if (!issue) return alert("Please describe the issue.");
 
-function classRepRemindersHTML() {
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const data = getData();
+    if (!data.classRepIssues) data.classRepIssues = [];
+
+    data.classRepIssues.push({
+        id: 'issue-' + Date.now(),
+        repId: user.id,
+        department: user.department,
+        student: `${user.name} (Class Rep)`,
+        message: issue,
+        timestamp: new Date().toISOString(),
+        status: 'pending'
+    });
+
+    saveData(data);
+    alert(`✅ Issue submitted successfully!\n\n"${issue}"`);
+    document.getElementById('repIssue').value = '';
+};
+
+// ==================== MY CLASS LIST ====================
+function classRepStudentsHTML(user) {
+    const data = getData();
+    const me = data.students.find(s => s.id === user.id);
+
+    if (!me) {
+        return `
+            <div class="admin-section-head">👥 My Class List</div>
+            <div class="admin-card">
+                <p style="color:var(--danger);">Your student record could not be found.</p>
+            </div>`;
+    }
+
+    const classmates = data.students.filter(s =>
+        s.department === me.department && s.programCode === me.programCode
+    );
+
+    const statusBadge = (s) => {
+        if (s.status === 'deferred') {
+            return `<span class="admin-role-pill" style="background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);">⏸ Deferred</span>`;
+        }
+        if (s.status === 'not_attending') {
+            return `<span class="admin-role-pill" style="background:rgba(239,68,68,.15);border-color:var(--danger);color:var(--danger);">🚫 Not Attending</span>`;
+        }
+        return `<span class="admin-role-pill" style="background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">✅ Present</span>`;
+    };
+
+    const rows = classmates.map(s => `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;padding:0.8rem 0;border-bottom:1px solid var(--border);">
+            <div>
+                <strong>${s.name}</strong> ${s.id === user.id ? '<span style="color:var(--text-secondary);font-size:0.7rem;">(You)</span>' : ''}<br>
+                <small style="color:var(--text-secondary)">${s.id} • 📱 ${s.phone || '—'} • Enrolled: ${s.enrollmentDate || '—'}</small>
+                ${s.status === 'deferred' && s.deferReason ? `<div style="font-size:0.72rem;color:var(--warning);margin-top:4px;">Reason: ${s.deferReason}</div>` : ''}
+            </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+                ${statusBadge(s)}
+                <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                    <button class="admin-action-btn edit" onclick="classRepFlagStudent('${s.id}','active')">Mark Present</button>
+                    <button class="admin-action-btn danger" onclick="classRepFlagStudent('${s.id}','not_attending')">Not Attending</button>
+                    <button class="admin-action-btn danger" onclick="classRepFlagStudent('${s.id}','deferred')">Deferred</button>
+                </div>
+            </div> 
+        </div>
+    `).join('');
+
     return `
+        <div class="admin-section-head">👥 My Class List — ${me.department}</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Showing students who share your exact department and course. Use the flags below to keep
+                records accurate — students who no longer attend, or who have deferred the semester for a
+                valid reason, should be marked accordingly for accountability.
+            </p>
+        </div>
         <div class="admin-card">
-            <h4>Quick Reminders</h4>
-            <ul style="padding-left:20px;">
-                <li>Fee payment deadline approaching</li>
-                <li>Exam registration is open</li>
-                <li>Submit any complaints to Class Teacher</li>
-            </ul>
+            ${rows || '<p style="color:var(--text-secondary);">No classmates found.</p>'}
         </div>`;
 }
 
-function classRepReportHTML() {
-    return `<div class="admin-card"><p>Class attendance & performance summary coming soon.</p></div>`;
-}
+window.classRepFlagStudent = function(studentId, status) {
+    const data = getData();
+    const student = data.students.find(s => s.id === studentId);
+    if (!student) return;
 
-window.submitClassRepIssue = function() {
-    const issue = document.getElementById('repIssue')?.value.trim();
-    if (!issue) return alert("Please describe the issue.");
-    alert(`✅ Issue submitted to Class Teacher!\n\n"${issue}"`);
-    document.getElementById('repIssue').value = '';
+    let reason = null;
+    if (status === 'deferred') {
+        reason = prompt('Enter reason for deferment:');
+        if (!reason) return;
+    }
+
+    student.status = status;
+    student.deferReason = status === 'deferred' ? reason : null;
+    saveData(data);
+
+    const label = status === 'active' ? 'Present' : status === 'deferred' ? 'Deferred' : 'Not Attending';
+    alert(`✅ ${student.name} marked as ${label}.`);
+
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('classRepMain').innerHTML = classRepStudentsHTML(user);
 };
+
+// ==================== DOCUMENT SHARED ====================
+function classRepDocumentsHTML() {
+    return `
+        <div class="admin-card">
+            <h4>📄 Documents Shared by Lecturers</h4>
+            <p style="color:var(--text-secondary);">Shared notes, past papers, and study materials will appear here.</p>
+            <div style="margin-top:1rem;padding:1rem;background:rgba(255,255,255,0.05);border-radius:12px;">
+                <strong>Lecturer Jane Wanjiku</strong><br>
+                <small>Computer Essentials Notes - Week 5</small>
+            </div>
+        </div>`;
+};
+
+// ==================== REMINDERS ====================
+function classRepRemindersHTML() {
+    return `
+        <div class="admin-card">
+            <h4>⏰ Quick Reminders</h4>
+            <ul style="padding-left:20px;line-height:2;">
+                <li>💰 Fee payment deadline: 20th June 2026</li>
+                <li>📝 Exam registration is currently open</li>
+                <li>📨 Submit any class complaints to Class Teacher</li>
+                <li>📚 Collect notes from shared documents</li>
+            </ul>
+        </div>`;
+};
+
+// ==================== CLASS REPORT ====================
+function classRepReportHTML(user) {
+    const data = getData();
+    const me = data.students.find(s => s.id === user.id) || {};
+    const classmates = data.students.filter(s => s.department === me.department && s.programCode === me.programCode);
+
+    const present = classmates.filter(s => (s.status || 'active') === 'active').length;
+    const notAttending = classmates.filter(s => s.status === 'not_attending').length;
+    const deferred = classmates.filter(s => s.status === 'deferred').length;
+
+    const cleared = classmates.filter(s => (s.feeBalance || 0) === 0).length;
+    const outstanding = classmates.length - cleared;
+
+    const issuesCount = (data.classRepIssues || []).filter(i => i.department === me.department).length;
+    const noticesCount = (data.classNotices || []).filter(n => n.department === me.department).length;
+
+    const attendanceBars = classmates.map(s => {
+        const pct = s.attendance ? Math.round((s.attendance.attended / s.attendance.total) * 100) : 0;
+        return { label: s.name.split(' ')[0], value: pct, color: pct >= 75 ? '#10b981' : '#ef4444' };
+    });
+
+    return `
+        <div class="admin-section-head">📊 Class Report — ${me.department || ''}</div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Classmate Attendance %</div>
+            <div style="overflow-x:auto;margin-top:10px;">
+                ${svgBarChart(attendanceBars.length ? attendanceBars : [{label:'No data', value:0, color:'#3a2d6e'}])}
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Class Status Breakdown</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: present || 0.0001, color: '#10b981' },
+                        { value: notAttending || 0.0001, color: '#ef4444' },
+                        { value: deferred || 0.0001, color: '#f59e0b' }
+                    ])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success)">● Present ${present}</span> &nbsp;
+                    <span style="color:var(--danger)">● Not Attending ${notAttending}</span> &nbsp;
+                    <span style="color:var(--warning)">● Deferred ${deferred}</span>
+                </div>
+            </div>
+
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Fee Clearance</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: cleared || 0.0001, color: '#10b981' },
+                        { value: outstanding || 0.0001, color: '#f59e0b' }
+                    ])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success)">● Cleared ${cleared}</span> &nbsp;
+                    <span style="color:var(--warning)">● Outstanding ${outstanding}</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${classmates.length}</h3><p>Class Size</p></div>
+            <div class="stat-card"><h3 style="color:var(--warning)">${issuesCount}</h3><p>Issues Reported</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light)">${noticesCount}</h3><p>Notices Received</p></div>
+        </div>`;
+}
 
 /* ══════════════════════════════════════════
    PRINCIPAL PORTAL — Placeholder
