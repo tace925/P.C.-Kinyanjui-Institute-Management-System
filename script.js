@@ -69,17 +69,35 @@ function initializeData() {
                     examHistory: {},
                     results: []
                 },
-                {
-                    id: 'STU-2026-20672', name: 'Mary Wambui', department: 'Computer Studies', class: 'Form 3C',
-                    passcode: '3456', phone: '0745678901', email: 'mary.wambui@student.pck.ac.ke',
-                    gender: 'Female', dob: '2004-02-08', county: 'Nakuru',
+               {
+                    id: 'STU-2026-20673', name: 'Peter Njoroge', department: 'Computer Studies', class: 'Form 3C',
+                    passcode: '7890', phone: '0756789012', email: 'peter.njoroge@student.pck.ac.ke',
+                    gender: 'Male', dob: '2003-07-15', county: 'Kiambu',
                     level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
                     enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
-                    feeBalance: 30000, totalFee: 65000, status: 'deferred', deferReason: 'Medical leave for one semester',
-                    paymentHistory: [],
-                    attendance: { total: 45, attended: 20 },
-                    examHistory: {},
-                    results: []
+                    feeBalance: 10000, totalFee: 65000, status: 'active', deferReason: null,
+                    paymentHistory: [], attendance: { total: 45, attended: 40 }, examHistory: {}, results: []
+                },
+                {
+                    id: 'STU-2026-20674', name: 'Faith Kamau', department: 'Computer Studies', class: 'Form 3C',
+                    passcode: '2345', phone: '0767890123', email: 'faith.kamau@student.pck.ac.ke',
+                    gender: 'Female', dob: '2004-01-30', county: "Murang'a",
+                    level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
+                    enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
+                    feeBalance: 0, totalFee: 65000, status: 'active', deferReason: null,
+                    paymentHistory: [], attendance: { total: 45, attended: 42 }, examHistory: {}, results: []
+                },
+                {
+                    id: 'STU-2026-20675', name: 'Kevin Oduya', department: 'Computer Studies', class: 'Form 3C',
+                    passcode: '6789', phone: '0778901234', email: 'kevin.oduya@student.pck.ac.ke',
+                    gender: 'Male', dob: '2003-03-22', county: 'Kisumu',
+                    level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
+                    enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
+                    feeBalance: 45000, totalFee: 65000, status: 'active', deferReason: null,
+                    paymentHistory: [], attendance: { total: 45, attended: 30 }, examHistory: {}, results: []
+                },
+                {
+                    id: 'STU-2026-20672', name: 'Mary Wambui', department: 'Computer Studies', class: 'Form 3C',
                 }
             ],
 
@@ -110,7 +128,15 @@ function initializeData() {
                 { id: 'CS103', name: 'Networking & Data Structures',  code: 'CS103' },
                 { id: 'CS104', name: 'Artificial Intelligence',       code: 'CS104' }
             ],
-            examRegistrations: [],
+           examRegistrations: [],
+            lecturerUnits: [
+                { id: 'LU-001', code: 'CS101', name: 'Computer Essentials', level: 5, department: 'Computer Studies', lecturerId: 'LEC-2026-001', semester: 'March/April 2026', description: 'Introduction to computers and digital literacy' },
+                { id: 'LU-002', code: 'CS102', name: 'Computer Operations', level: 5, department: 'Computer Studies', lecturerId: 'LEC-2026-001', semester: 'March/April 2026', description: 'Practical computer operations and software use' }
+            ],
+            attendanceRecords: [],
+            markRegisterEntries: [],
+            lecturerMaterials: [],
+            studentReports: [],
             timetables: [
                 { id: 'TT-001', department: 'Computer Studies', class: 'Form 3C', unit: 'Computer Essentials', unitCode: 'CS101', lecturerId: 'LEC-2026-001', day: new Date().toLocaleDateString('en-US', { weekday: 'long' }), startTime: '08:00', endTime: '10:00' },
                 { id: 'TT-002', department: 'Computer Studies', class: 'Form 3C', unit: 'Computer Operations', unitCode: 'CS102', lecturerId: 'LEC-2026-001', day: new Date().toLocaleDateString('en-US', { weekday: 'long' }), startTime: '10:15', endTime: '12:15' }
@@ -3424,33 +3450,20 @@ window.generateClassReport = function() {
 };
 
 /* ══════════════════════════════════════════
-   LECTURER PORTAL — With Sidebar
+   LECTURER PORTAL — Full Implementation
 ══════════════════════════════════════════ */
 function renderLecturerPanel(user) {
     return `
     <div class="admin-layout">
         <div class="admin-sidenav">
-            <div class="admin-sidenav-title">
-                <i class="fas fa-chalkboard-user"></i> Lecturer Menu
-            </div>
-            
-            <button class="admin-nav-btn active" onclick="lecturerSection('units',this)">
-                <i class="fas fa-book"></i> My Units
-            </button>
-            <button class="admin-nav-btn" onclick="lecturerSection('attendance',this)">
-                <i class="fas fa-calendar-check"></i> Mark Attendance
-            </button>
-            <button class="admin-nav-btn" onclick="lecturerSection('materials',this)">
-                <i class="fas fa-upload"></i> Upload Materials
-            </button>
-            <button class="admin-nav-btn" onclick="lecturerSection('students',this)">
-                <i class="fas fa-users"></i> My Students
-            </button>
-            <button class="admin-nav-btn" onclick="lecturerSection('report',this)">
-                <i class="fas fa-chart-bar"></i> Unit Report
-            </button>
+            <div class="admin-sidenav-title"><i class="fas fa-chalkboard-teacher"></i> Lecturer Menu</div>
+            <button class="admin-nav-btn active" onclick="lecturerSection('units',this)"><i class="fas fa-book"></i> My Units</button>
+            <button class="admin-nav-btn" onclick="lecturerSection('markregister',this)"><i class="fas fa-clipboard-list"></i> Mark Register</button>
+            <button class="admin-nav-btn" onclick="lecturerSection('attendance',this)"><i class="fas fa-calendar-check"></i> Mark Attendance</button>
+            <button class="admin-nav-btn" onclick="lecturerSection('materials',this)"><i class="fas fa-upload"></i> Upload Materials</button>
+            <button class="admin-nav-btn" onclick="lecturerSection('students',this)"><i class="fas fa-users"></i> My Students</button>
+            <button class="admin-nav-btn" onclick="lecturerSection('report',this)"><i class="fas fa-chart-bar"></i> Unit Report</button>
         </div>
-        
         <div class="admin-main" id="lecturerMain">
             ${lecturerUnitsHTML(user)}
         </div>
@@ -3460,56 +3473,631 @@ function renderLecturerPanel(user) {
 window.lecturerSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
     const map = {
-        units:      () => lecturerUnitsHTML(),
-        attendance: () => lecturerAttendanceHTML(),
-        materials:  () => lecturerMaterialsHTML(),
-        students:   () => lecturerStudentsHTML(),
-        report:     () => lecturerReportHTML()
+        units:        () => lecturerUnitsHTML(user),
+        markregister: () => lecturerMarkRegisterHTML(user),
+        attendance:   () => lecturerAttendanceHTML(user),
+        materials:    () => lecturerMaterialsHTML(user),
+        students:     () => lecturerStudentsHTML(user),
+        report:       () => lecturerReportHTML(user)
     };
-    
-    document.getElementById('lecturerMain').innerHTML = map[section]();
+    document.getElementById('lecturerMain').innerHTML = (map[section] || (() => lecturerUnitsHTML(user)))();
 };
 
-// My Units
-function lecturerUnitsHTML() {
+/* ── My Units ── */
+function lecturerUnitsHTML(user) {
+    const data = getData();
+    const units = (data.lecturerUnits || []).filter(u => u.lecturerId === user.id);
+
+    if (units.length === 0) {
+        return `
+            <div class="admin-section-head">📚 My Assigned Units</div>
+            <div class="admin-card">
+                <p style="color:var(--text-secondary);font-size:0.85rem;">
+                    No units assigned yet. Units are distributed by System Admin based on allocations from the Examination Office.
+                    Contact System Admin if your units are missing.
+                </p>
+            </div>`;
+    }
+
+    const cards = units.map(u => `
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+                <div>
+                    <div style="font-size:1.1rem;font-weight:700;">${u.name}</div>
+                    <div style="font-size:0.75rem;color:var(--purple-light);margin-top:4px;">Code: ${u.code} • Level ${u.level} • ${u.semester}</div>
+                    <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">${u.description || ''}</div>
+                </div>
+                <span class="admin-role-pill">${u.department}</span>
+            </div>
+        </div>`).join('');
+
     return `
         <div class="admin-section-head">📚 My Assigned Units</div>
-        <div class="admin-card">
-            <p><strong>Computer Essentials (CS101)</strong><br>
-               <small>Level 5 • 120 Students</small></p>
-            <button class="admin-btn-primary" style="margin-top:12px;" onclick="alert('Unit details & student list opened')">
-                View Students & Resources
-            </button>
-        </div>`;
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Units are assigned by System Admin based on Examination Office allocations. These units feed your Mark Register and Attendance sheets.
+            </p>
+        </div>
+        ${cards}`;
 }
 
-function lecturerAttendanceHTML() {
+/* ── Mark Register ── */
+function lecturerMarkRegisterHTML(user) {
+    const data = getData();
+    const units = (data.lecturerUnits || []).filter(u => u.lecturerId === user.id);
+    const students = (data.students || []).filter(s => s.department === user.department);
+
+    if (units.length === 0) {
+        return `<div class="admin-section-head">📋 Mark Register</div>
+                <div class="admin-card"><p style="color:var(--text-secondary);">No units assigned. Contact System Admin.</p></div>`;
+    }
+
+    const unit = units[0];
+    const unitOptions = units.map(u => `<option value="${u.id}">${u.code} — ${u.name}</option>`).join('');
+
+    const rows = students.map((s, i) => {
+        const saved = (data.markRegisterEntries || []).find(e => e.studentId === s.id && e.unitId === unit.id) || {};
+        return `
+        <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:6px 8px;text-align:center;font-size:0.75rem;border:1px solid var(--border);">${i + 1}</td>
+            <td style="padding:6px 8px;font-size:0.72rem;border:1px solid var(--border);white-space:nowrap;">${s.id}</td>
+            <td style="padding:6px 8px;font-size:0.78rem;border:1px solid var(--border);white-space:nowrap;">${s.name}</td>
+            <td style="padding:4px;border:1px solid var(--border);"><input type="number" min="0" max="30" value="${saved.cam1 || ''}" id="cam1_${s.id}" onchange="lecturerAutoCalc('${s.id}')" class="admin-input" style="width:55px;padding:4px;text-align:center;" placeholder="—"></td>
+            <td style="padding:4px;border:1px solid var(--border);"><input type="number" min="0" max="30" value="${saved.cam2 || ''}" id="cam2_${s.id}" onchange="lecturerAutoCalc('${s.id}')" class="admin-input" style="width:55px;padding:4px;text-align:center;" placeholder="—"></td>
+            <td style="padding:4px;border:1px solid var(--border);"><input type="number" min="0" max="30" value="${saved.cam3 || ''}" id="cam3_${s.id}" onchange="lecturerAutoCalc('${s.id}')" class="admin-input" style="width:55px;padding:4px;text-align:center;" placeholder="—"></td>
+            <td id="waver_${s.id}" style="padding:6px 8px;text-align:center;font-size:0.78rem;font-weight:700;color:var(--purple-light);border:1px solid var(--border);">${saved.waver || '—'}</td>
+            <td style="padding:4px;border:1px solid var(--border);"><input type="number" min="0" max="30" value="${saved.pract1 || ''}" id="pract1_${s.id}" onchange="lecturerAutoCalc('${s.id}')" class="admin-input" style="width:55px;padding:4px;text-align:center;" placeholder="—"></td>
+            <td style="padding:4px;border:1px solid var(--border);"><input type="number" min="0" max="30" value="${saved.pract2 || ''}" id="pract2_${s.id}" onchange="lecturerAutoCalc('${s.id}')" class="admin-input" style="width:55px;padding:4px;text-align:center;" placeholder="—"></td>
+            <td style="padding:4px;border:1px solid var(--border);"><input type="number" min="0" max="30" value="${saved.pract3 || ''}" id="pract3_${s.id}" onchange="lecturerAutoCalc('${s.id}')" class="admin-input" style="width:55px;padding:4px;text-align:center;" placeholder="—"></td>
+            <td id="paver_${s.id}" style="padding:6px 8px;text-align:center;font-size:0.78rem;font-weight:700;color:var(--purple-light);border:1px solid var(--border);">${saved.paver || '—'}</td>
+            <td id="total_${s.id}" style="padding:6px 8px;text-align:center;font-size:0.82rem;font-weight:800;color:var(--success);border:1px solid var(--border);">${saved.total || '—'}</td>
+        </tr>`;
+    }).join('');
+
     return `
+        <div class="admin-section-head">📋 Mark Register</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">SELECT UNIT</label>
+                    <select class="admin-input" id="markRegUnit" onchange="lecturerSwitchMarkUnit(this.value)" style="margin-top:4px;">${unitOptions}</select>
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">ASSESSMENT SERIES</label>
+                    <input type="text" class="admin-input" id="assessSeries" value="${unit.semester || ''}" style="margin-top:4px;" placeholder="e.g. March/April 2026">
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">CENTRE NAME</label>
+                    <input type="text" class="admin-input" value="PC Kinyanjui Technical Training Institute" readonly style="margin-top:4px;background:var(--bg-elevated);min-width:260px;">
+                </div>
+            </div>
+        </div>
+
         <div class="admin-card">
-            <h4>Mark Today's Attendance</h4>
-            <p>Select unit and mark present/absent.</p>
-            <button class="admin-btn-primary" onclick="alert('Attendance sheet opened (demo)')">Open Attendance Sheet</button>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+                <div>
+                    <div class="admin-card-title">CDACC/CBA — Continuous Assessment Mark Sheet</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">Course: ${unit.name} (${unit.code}) • Level ${unit.level}</div>
+                </div>
+                <button class="admin-btn-primary" onclick="lecturerSaveMarkRegister('${unit.id}')">
+                    <i class="fas fa-save"></i> Save Marks
+                </button>
+            </div>
+
+            <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
+                    <thead>
+                        <tr style="background:var(--bg-elevated);color:var(--purple-light);">
+                            <th style="padding:8px;border:1px solid var(--border);" rowspan="2">S/NO</th>
+                            <th style="padding:8px;border:1px solid var(--border);" rowspan="2">REG. CODE</th>
+                            <th style="padding:8px;border:1px solid var(--border);" rowspan="2">CANDIDATE'S NAME</th>
+                            <th style="padding:8px;border:1px solid var(--border);text-align:center;" colspan="4">WRITTEN ASSESSMENT MARKS</th>
+                            <th style="padding:8px;border:1px solid var(--border);text-align:center;" colspan="4">PRACTICAL ASSESSMENT MARKS</th>
+                            <th style="padding:8px;border:1px solid var(--border);" rowspan="2">TOTAL</th>
+                        </tr>
+                        <tr style="background:var(--bg-elevated);color:var(--text-secondary);">
+                            <th style="padding:6px;border:1px solid var(--border);">CAM 1</th>
+                            <th style="padding:6px;border:1px solid var(--border);">CAM 2</th>
+                            <th style="padding:6px;border:1px solid var(--border);">CAM 3</th>
+                            <th style="padding:6px;border:1px solid var(--border);">AVER.</th>
+                            <th style="padding:6px;border:1px solid var(--border);">PRACT. 1</th>
+                            <th style="padding:6px;border:1px solid var(--border);">PRACT. 2</th>
+                            <th style="padding:6px;border:1px solid var(--border);">PRACT. 3</th>
+                            <th style="padding:6px;border:1px solid var(--border);">AVER.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows || `<tr><td colspan="13" style="padding:1rem;text-align:center;color:var(--text-secondary);">No students found for this department.</td></tr>`}
+                    </tbody>
+                </table>
+            </div>
+            <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:8px;">
+                N/B: CAM = Continuous Assessment Mark. Max per CAM: 30. Max PRACT: 30. AVER = Auto-calculated average.
+            </div>
         </div>`;
 }
 
-function lecturerMaterialsHTML() {
+/* ── Mark Attendance ── */
+function lecturerAttendanceHTML(user) {
+    const data = getData();
+    const units = (data.lecturerUnits || []).filter(u => u.lecturerId === user.id);
+    const students = (data.students || []).filter(s => s.department === user.department);
+    const today = new Date().toLocaleDateString('en-CA');
+
+    if (units.length === 0) {
+        return `<div class="admin-section-head">📅 Mark Attendance</div>
+                <div class="admin-card"><p style="color:var(--text-secondary);">No units assigned yet.</p></div>`;
+    }
+
+    const unit = units[0];
+    const unitOptions = units.map(u => `<option value="${u.id}">${u.code} — ${u.name}</option>`).join('');
+    const todayRecord = (data.attendanceRecords || []).find(r => r.unitId === unit.id && r.date === today);
+
+    const rows = students.map((s, i) => {
+        const status = todayRecord ? (todayRecord.attendance[s.id] || 'none') : 'none';
+        const isPresent = status === 'present';
+        const isAbsent  = status === 'absent';
+        return `
+        <tr style="border-bottom:1px solid var(--border);" id="att_row_${s.id}">
+            <td style="padding:8px;text-align:center;font-size:0.75rem;border:1px solid var(--border);">${i + 1}</td>
+            <td style="padding:8px;font-size:0.72rem;border:1px solid var(--border);white-space:nowrap;">${s.id}</td>
+            <td style="padding:8px;font-size:0.78rem;border:1px solid var(--border);">
+                ${s.name}
+                ${s.status === 'not_attending' ? '<div style="color:var(--danger);font-size:0.65rem;">⚠️ Flagged: Not Attending</div>' : ''}
+                ${s.status === 'deferred' ? `<div style="color:var(--warning);font-size:0.65rem;">⏸ Deferred${s.deferReason ? ': ' + s.deferReason : ''}</div>` : ''}
+            </td>
+            <td style="padding:8px;text-align:center;border:1px solid var(--border);">
+                <button onclick="lecturerMarkStudent('${s.id}','present','${unit.id}')" id="btn_present_${s.id}"
+                    class="admin-action-btn edit"
+                    style="${isPresent ? 'background:var(--success);color:#fff;border-color:var(--success);font-weight:700;' : ''}">
+                    ✓ Present
+                </button>
+            </td>
+            <td style="padding:8px;text-align:center;border:1px solid var(--border);">
+                <button onclick="lecturerMarkStudent('${s.id}','absent','${unit.id}')" id="btn_absent_${s.id}"
+                    class="admin-action-btn danger"
+                    style="${isAbsent ? 'background:var(--danger);color:#fff;border-color:var(--danger);font-weight:700;' : ''}">
+                    ✗ Absent
+                </button>
+            </td>
+            <td style="padding:8px;text-align:center;border:1px solid var(--border);">
+                <button onclick="lecturerRestoreStudent('${s.id}','${unit.id}')"
+                    style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:4px 10px;cursor:pointer;font-size:0.8rem;color:var(--text-primary);">
+                    🔄 Restore
+                </button>
+            </td>
+        </tr>`;
+    }).join('');
+
     return `
+        <div class="admin-section-head">📅 Mark Attendance</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">UNIT</label>
+                    <select class="admin-input" id="attUnit" onchange="lecturerSwitchAttUnit(this.value)" style="margin-top:4px;">${unitOptions}</select>
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">DATE</label>
+                    <input type="date" class="admin-input" id="attDate" value="${today}" style="margin-top:4px;">
+                </div>
+                <button class="admin-btn-primary" onclick="lecturerSubmitAttendance('${unit.id}')">
+                    <i class="fas fa-save"></i> Submit Attendance
+                </button>
+            </div>
+            <p style="font-size:0.72rem;color:var(--text-secondary);margin-top:8px;">
+                Flagged students are highlighted. Mark ✓ Present or ✗ Absent for each student.
+                Restore reverses a marking and notifies the Class Teacher with a reason — for accountability.
+            </p>
+        </div>
+
         <div class="admin-card">
-            <h4>Upload Learning Materials</h4>
-            <input type="text" class="admin-input" placeholder="Material Title" style="margin-bottom:10px;">
-            <button class="admin-btn-primary" onclick="alert('Material uploaded successfully! (Demo)')">Upload Now</button>
+            <div class="admin-card-title">Attendance Register — ${unit.name} (${unit.code})</div>
+            <div style="overflow-x:auto;margin-top:10px;">
+                <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+                    <thead>
+                        <tr style="background:var(--bg-elevated);color:var(--purple-light);">
+                            <th style="padding:8px;border:1px solid var(--border);">S/NO</th>
+                            <th style="padding:8px;border:1px solid var(--border);">REG. CODE</th>
+                            <th style="padding:8px;border:1px solid var(--border);">CANDIDATE'S NAME</th>
+                            <th style="padding:8px;text-align:center;border:1px solid var(--border);">✓ PRESENT</th>
+                            <th style="padding:8px;text-align:center;border:1px solid var(--border);">✗ ABSENT</th>
+                            <th style="padding:8px;text-align:center;border:1px solid var(--border);">RESTORE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows || `<tr><td colspan="6" style="padding:1rem;text-align:center;color:var(--text-secondary);">No students found.</td></tr>`}
+                    </tbody>
+                </table>
+            </div>
         </div>`;
 }
 
-function lecturerStudentsHTML() {
-    return `<div class="admin-card"><p>List of students taking your units coming soon.</p></div>`;
+/* ── Upload Materials ── */
+function lecturerMaterialsHTML(user) {
+    const data = getData();
+    const units = (data.lecturerUnits || []).filter(u => u.lecturerId === user.id);
+    const materials = (data.lecturerMaterials || []).filter(m => m.lecturerId === user.id);
+    const unitOptions = units.map(u => `<option value="${u.id}">${u.code} — ${u.name}</option>`).join('');
+
+    const matList = materials.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No materials uploaded yet.</p>`
+        : materials.slice().reverse().map(m => `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;">
+                <div>
+                    <strong style="font-size:0.85rem;">${m.title}</strong>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${m.unitCode} — ${m.unitName} • ${new Date(m.uploadedAt).toLocaleDateString()}${m.fileName ? ' • 📎 ' + m.fileName : ''}</div>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+                    <span class="admin-role-pill" style="${m.sentToClassRep ? 'background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);' : ''}">
+                        ${m.sentToClassRep ? '✅ Sent to Class Rep' : '📁 Not sent yet'}
+                    </span>
+                    ${!m.sentToClassRep ? `<button class="admin-action-btn edit" onclick="lecturerSendMaterial('${m.id}')"><i class="fas fa-paper-plane"></i> Send</button>` : ''}
+                </div>
+            </div>`).join('');
+
+    return `
+        <div class="admin-section-head">📤 Upload Materials</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Upload New Material (from your computer)</div>
+            <div style="display:grid;gap:10px;margin-top:10px;">
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">MATERIAL TITLE</label>
+                    <input type="text" id="matTitle" class="admin-input" placeholder="e.g. Week 5 Notes — Computer Essentials" style="margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">SELECT UNIT</label>
+                    <select id="matUnit" class="admin-input" style="margin-top:4px;">${unitOptions}</select>
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">CHOOSE FILE (PDF, DOCX, PPTX, Image, Video)</label>
+                    <input type="file" id="matFile" class="admin-input" accept=".pdf,.docx,.pptx,.xlsx,.jpg,.png,.mp4,.txt" style="margin-top:4px;">
+                </div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+                <button class="admin-btn-primary" onclick="lecturerUploadMaterial('${user.id}')">
+                    <i class="fas fa-upload"></i> Upload Only
+                </button>
+                <button class="admin-btn-secondary" onclick="lecturerUploadAndSend('${user.id}')">
+                    <i class="fas fa-paper-plane"></i> Upload & Send to Class Rep
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="admin-card-title">My Uploaded Materials (${materials.length})</div>
+            ${matList}
+        </div>`;
 }
 
-function lecturerReportHTML() {
-    return `<div class="admin-card"><p>Unit performance report coming soon.</p></div>`;
+/* ── My Students ── */
+function lecturerStudentsHTML(user) {
+    const data = getData();
+    const students = (data.students || []).filter(s => s.department === user.department);
+
+    if (students.length === 0) {
+        return `<div class="admin-section-head">👥 My Students</div>
+                <div class="admin-card"><p style="color:var(--text-secondary);">No students found for your department.</p></div>`;
+    }
+
+    const cards = students.map(s => {
+        const reports = (data.studentReports || []).filter(r => r.studentId === s.id && r.lecturerId === user.id);
+        return `
+        <div class="admin-card" style="margin-bottom:0.8rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+                <div>
+                    <strong>${s.name}</strong>
+                    <div style="font-size:0.75rem;color:var(--text-secondary);">${s.id} • ${s.phone || '—'}</div>
+                    <div style="font-size:0.72rem;margin-top:4px;">
+                        ${s.status === 'not_attending' ? '<span style="color:var(--danger);">🚫 Not Attending</span>' :
+                          s.status === 'deferred' ? '<span style="color:var(--warning);">⏸ Deferred</span>' :
+                          '<span style="color:var(--success);">✅ Active</span>'}
+                    </div>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+                    ${reports.length > 0 ? `<span class="admin-role-pill" style="background:rgba(16,185,129,.1);color:var(--success);border-color:var(--success);">📝 ${reports.length} Report(s)</span>` : ''}
+                    <button class="admin-action-btn edit" onclick="lecturerToggleReportForm('${s.id}')">
+                        ✏️ Write Report
+                    </button>
+                </div>
+            </div>
+            <div id="report_form_${s.id}" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+                <label style="font-size:0.72rem;color:var(--text-secondary);">REPORT ON ${s.name.toUpperCase()} — This will be sent to HOD for review</label>
+                <textarea id="report_text_${s.id}" class="admin-input" rows="3" placeholder="Write your observation, academic performance summary, concern, or recommendation about this student..." style="margin-top:6px;"></textarea>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                    <button class="admin-btn-primary" onclick="lecturerSubmitStudentReport('${s.id}','${s.name}','${user.id}','${user.department}')">
+                        <i class="fas fa-paper-plane"></i> Submit to HOD
+                    </button>
+                    <button class="admin-btn-secondary" onclick="lecturerToggleReportForm('${s.id}')">Cancel</button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">👥 My Students</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Students in your department. Write a report on any student and it goes to the HOD for review.
+                Class Rep status flags are also visible here.
+            </p>
+        </div>
+        ${cards}`;
 }
+
+/* ── Unit Report ── */
+function lecturerReportHTML(user) {
+    const data = getData();
+    const units = (data.lecturerUnits || []).filter(u => u.lecturerId === user.id);
+    const students = (data.students || []).filter(s => s.department === user.department);
+    const materials = (data.lecturerMaterials || []).filter(m => m.lecturerId === user.id);
+    const reports = (data.studentReports || []).filter(r => r.lecturerId === user.id);
+
+    const myUnitIds = units.map(u => u.id);
+    const myRecords = (data.attendanceRecords || []).filter(r => myUnitIds.includes(r.unitId));
+
+    let totalPresent = 0, totalAbsent = 0;
+    myRecords.forEach(rec => {
+        Object.values(rec.attendance || {}).forEach(s => {
+            if (s === 'present') totalPresent++; else totalAbsent++;
+        });
+    });
+
+    const unitBars = units.map(u => {
+        const uRecs = myRecords.filter(r => r.unitId === u.id);
+        let uPresent = 0, uTotal = 0;
+        uRecs.forEach(rec => Object.values(rec.attendance || {}).forEach(s => { uTotal++; if (s === 'present') uPresent++; }));
+        const pct = uTotal ? Math.round((uPresent / uTotal) * 100) : 0;
+        return { label: u.code, value: pct, color: pct >= 75 ? '#10b981' : '#ef4444' };
+    });
+
+    const active   = students.filter(s => (s.status || 'active') === 'active').length;
+    const notAtt   = students.filter(s => s.status === 'not_attending').length;
+    const deferred = students.filter(s => s.status === 'deferred').length;
+
+    return `
+        <div class="admin-section-head">📊 Unit Report</div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Attendance Rate by Unit</div>
+            <div style="overflow-x:auto;margin-top:10px;">
+                ${svgBarChart(unitBars.length ? unitBars : [{label:'No data', value:0, color:'#3a2d6e'}])}
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Students Attended vs Absent</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: totalPresent || 0.0001, color: '#10b981' },
+                        { value: totalAbsent  || 0.0001, color: '#ef4444' }
+                    ])}
+                </div>
+                <div style="font-size:0.78rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Attended ${totalPresent}</span> &nbsp;
+                    <span style="color:var(--danger);">● Absent ${totalAbsent}</span>
+                </div>
+            </div>
+
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Class Status Breakdown</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: active    || 0.0001, color: '#10b981' },
+                        { value: notAtt    || 0.0001, color: '#ef4444' },
+                        { value: deferred  || 0.0001, color: '#f59e0b' }
+                    ])}
+                </div>
+                <div style="font-size:0.78rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Active ${active}</span> &nbsp;
+                    <span style="color:var(--danger);">● Not Attending ${notAtt}</span> &nbsp;
+                    <span style="color:var(--warning);">● Deferred ${deferred}</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${students.length}</h3><p>Total Students</p></div>
+            <div class="stat-card"><h3>${units.length}</h3><p>Units Assigned</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light);">${materials.length}</h3><p>Materials Uploaded</p></div>
+            <div class="stat-card"><h3 style="color:var(--warning);">${reports.length}</h3><p>Student Reports</p></div>
+            <div class="stat-card"><h3>${myRecords.length}</h3><p>Sessions Recorded</p></div>
+        </div>`;
+}
+/* ── Lecturer Window Actions ── */
+window.lecturerAutoCalc = function(studentId) {
+    const get = id => parseFloat(document.getElementById(id)?.value) || 0;
+    const cam1 = get(`cam1_${studentId}`), cam2 = get(`cam2_${studentId}`), cam3 = get(`cam3_${studentId}`);
+    const p1   = get(`pract1_${studentId}`), p2 = get(`pract2_${studentId}`), p3 = get(`pract3_${studentId}`);
+    const waver = cam1 || cam2 || cam3 ? Math.round((cam1 + cam2 + cam3) / 3) : 0;
+    const paver = p1 || p2 || p3 ? Math.round((p1 + p2 + p3) / 3) : 0;
+    const total = waver + paver;
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+    set(`waver_${studentId}`, waver);
+    set(`paver_${studentId}`, paver);
+    set(`total_${studentId}`, total);
+};
+
+window.lecturerSaveMarkRegister = function(unitId) {
+    const data = getData();
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const students = data.students.filter(s => s.department === user.department);
+    data.markRegisterEntries = data.markRegisterEntries || [];
+    students.forEach(s => {
+        const g = id => parseFloat(document.getElementById(id)?.value) || 0;
+        const cam1 = g(`cam1_${s.id}`), cam2 = g(`cam2_${s.id}`), cam3 = g(`cam3_${s.id}`);
+        const pract1 = g(`pract1_${s.id}`), pract2 = g(`pract2_${s.id}`), pract3 = g(`pract3_${s.id}`);
+        const waver = cam1 || cam2 || cam3 ? Math.round((cam1 + cam2 + cam3) / 3) : 0;
+        const paver = pract1 || pract2 || pract3 ? Math.round((pract1 + pract2 + pract3) / 3) : 0;
+        const total = waver + paver;
+        const idx = data.markRegisterEntries.findIndex(e => e.studentId === s.id && e.unitId === unitId);
+        const entry = { studentId: s.id, unitId, cam1, cam2, cam3, waver, pract1, pract2, pract3, paver, total, savedAt: new Date().toISOString() };
+        if (idx >= 0) data.markRegisterEntries[idx] = entry;
+        else data.markRegisterEntries.push(entry);
+    });
+    saveData(data);
+    alert('✅ Mark register saved!');
+};
+
+window.lecturerMarkStudent = function(studentId, status, unitId) {
+    if (!window._tempAttendance) window._tempAttendance = {};
+    window._tempAttendance[studentId] = status;
+    const pBtn = document.getElementById(`btn_present_${studentId}`);
+    const aBtn = document.getElementById(`btn_absent_${studentId}`);
+    if (status === 'present') {
+        pBtn.style.cssText = 'background:var(--success);color:#fff;border-color:var(--success);font-weight:700;';
+        aBtn.style.cssText = '';
+    } else {
+        aBtn.style.cssText = 'background:var(--danger);color:#fff;border-color:var(--danger);font-weight:700;';
+        pBtn.style.cssText = '';
+    }
+};
+
+window.lecturerRestoreStudent = function(studentId, unitId) {
+    const reason = prompt('Enter reason for restoring this student\'s attendance mark (will be sent to Class Teacher for accountability):');
+    if (!reason) return;
+    if (window._tempAttendance) delete window._tempAttendance[studentId];
+    const pBtn = document.getElementById(`btn_present_${studentId}`);
+    const aBtn = document.getElementById(`btn_absent_${studentId}`);
+    if (pBtn) pBtn.style.cssText = '';
+    if (aBtn) aBtn.style.cssText = '';
+    const data = getData();
+    const student = data.students.find(s => s.id === studentId);
+    data.classRepIssues = data.classRepIssues || [];
+    data.classRepIssues.push({
+        id: 'restore-' + Date.now(),
+        type: 'attendance_restore',
+        studentId,
+        studentName: student?.name || studentId,
+        unitId,
+        reason,
+        timestamp: new Date().toISOString(),
+        status: 'pending',
+        from: 'Lecturer',
+        department: student?.department || ''
+    });
+    saveData(data);
+    alert(`✅ Restore reason recorded and sent to Class Teacher.\nReason: "${reason}"`);
+};
+
+window.lecturerSubmitAttendance = function(unitId) {
+    const date = document.getElementById('attDate')?.value || new Date().toLocaleDateString('en-CA');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const data = getData();
+    const attendance = { ...(window._tempAttendance || {}) };
+    data.students.filter(s => s.department === user.department).forEach(s => {
+        if (!attendance[s.id]) attendance[s.id] = 'absent';
+    });
+    data.attendanceRecords = data.attendanceRecords || [];
+    const existing = data.attendanceRecords.findIndex(r => r.unitId === unitId && r.date === date);
+    const record = { id: 'ATT-' + Date.now(), unitId, date, attendance, submittedAt: new Date().toISOString() };
+    if (existing >= 0) data.attendanceRecords[existing] = record;
+    else data.attendanceRecords.push(record);
+    saveData(data);
+    window._tempAttendance = {};
+    alert(`✅ Attendance for ${date} submitted successfully!`);
+};
+
+window.lecturerUploadMaterial = function(lecturerId) {
+    const title = document.getElementById('matTitle')?.value.trim();
+    const unitId = document.getElementById('matUnit')?.value;
+    const file = document.getElementById('matFile')?.files[0];
+    if (!title) return alert('Please enter a material title.');
+    const data = getData();
+    const unit = (data.lecturerUnits || []).find(u => u.id === unitId);
+    data.lecturerMaterials = data.lecturerMaterials || [];
+    data.lecturerMaterials.push({
+        id: 'MAT-' + Date.now(), lecturerId, unitId,
+        unitCode: unit?.code || '', unitName: unit?.name || '', department: unit?.department || '',
+        title, fileName: file?.name || null, uploadedAt: new Date().toISOString(), sentToClassRep: false
+    });
+    saveData(data);
+    alert(`✅ "${title}" uploaded!`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('lecturerMain').innerHTML = lecturerMaterialsHTML(user);
+};
+
+window.lecturerUploadAndSend = function(lecturerId) {
+    const title = document.getElementById('matTitle')?.value.trim();
+    const unitId = document.getElementById('matUnit')?.value;
+    const file = document.getElementById('matFile')?.files[0];
+    if (!title) return alert('Please enter a material title.');
+    const data = getData();
+    const unit = (data.lecturerUnits || []).find(u => u.id === unitId);
+    data.lecturerMaterials = data.lecturerMaterials || [];
+    data.lecturerMaterials.push({
+        id: 'MAT-' + Date.now(), lecturerId, unitId,
+        unitCode: unit?.code || '', unitName: unit?.name || '', department: unit?.department || '',
+        title, fileName: file?.name || null, uploadedAt: new Date().toISOString(), sentToClassRep: true
+    });
+    data.classNotices = data.classNotices || [];
+    const sender = JSON.parse(sessionStorage.getItem('currentUser'));
+    data.classNotices.push({
+        id: 'notice-' + Date.now(),
+        sender: sender?.name || 'Lecturer', senderRole: 'lecturer',
+        department: unit?.department || '',
+        message: `📚 New material shared: "${title}" for ${unit?.name || ''} (${unit?.code || ''})${file ? ' — 📎 ' + file.name : ''}.`,
+        timestamp: new Date().toISOString(), type: 'material'
+    });
+    saveData(data);
+    alert(`✅ "${title}" uploaded and sent to Class Rep!`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('lecturerMain').innerHTML = lecturerMaterialsHTML(user);
+};
+
+window.lecturerSendMaterial = function(matId) {
+    const data = getData();
+    const mat = data.lecturerMaterials.find(m => m.id === matId);
+    if (!mat) return;
+    mat.sentToClassRep = true;
+    data.classNotices = data.classNotices || [];
+    const sender = JSON.parse(sessionStorage.getItem('currentUser'));
+    data.classNotices.push({
+        id: 'notice-' + Date.now(),
+        sender: sender?.name || 'Lecturer', senderRole: 'lecturer',
+        department: mat.department,
+        message: `📚 Material shared: "${mat.title}" for ${mat.unitName} (${mat.unitCode})${mat.fileName ? ' — 📎 ' + mat.fileName : ''}.`,
+        timestamp: new Date().toISOString(), type: 'material'
+    });
+    saveData(data);
+    alert('✅ Sent to Class Rep!');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('lecturerMain').innerHTML = lecturerMaterialsHTML(user);
+};
+
+window.lecturerToggleReportForm = function(studentId) {
+    const form = document.getElementById(`report_form_${studentId}`);
+    if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+};
+
+window.lecturerSubmitStudentReport = function(studentId, studentName, lecturerId, department) {
+    const text = document.getElementById(`report_text_${studentId}`)?.value.trim();
+    if (!text) return alert('Please write your report before submitting.');
+    const data = getData();
+    data.studentReports = data.studentReports || [];
+    data.studentReports.push({
+        id: 'SR-' + Date.now(), studentId, studentName, lecturerId, department,
+        report: text, timestamp: new Date().toISOString(), status: 'pending_hod'
+    });
+    saveData(data);
+    alert(`✅ Report on ${studentName} submitted to HOD for review.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('lecturerMain').innerHTML = lecturerStudentsHTML(user);
+};
+
+window.lecturerSwitchMarkUnit = function() {
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('lecturerMain').innerHTML = lecturerMarkRegisterHTML(user);
+};
+
+window.lecturerSwitchAttUnit = function() {
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('lecturerMain').innerHTML = lecturerAttendanceHTML(user);
+};
+
 
 /* ══════════════════════════════════════════
    CLASS REP PORTAL — Full Implementation
