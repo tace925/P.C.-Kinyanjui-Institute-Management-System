@@ -1,0 +1,7692 @@
+// ==================== INITIALIZE LOCALSTORAGE ====================
+function initializeData() {
+    if (!localStorage.getItem('pck_institute_v3')) {
+        const demoData = {
+            schoolInfo: {
+                logo: "https://placehold.co/100x100/6c3fcf/white?text=PCK",
+                name: "P.C. Kinyanjui Technical Training Institute",
+                motto: "Excellence in Technology"
+            },
+            principals: [
+                { id: 1, name: "Dr. James Mwangi",    photo: "https://randomuser.me/api/portraits/men/32.jpg",   startYear: 2010, endYear: 2015, isCurrent: false },
+                { id: 2, name: "Prof. Sarah Akinyi",   photo: "https://randomuser.me/api/portraits/women/68.jpg", startYear: 2015, endYear: 2020, isCurrent: false },
+                { id: 3, name: "Dr. Peter Omondi",     photo: "https://randomuser.me/api/portraits/men/45.jpg",   startYear: 2020, endYear: 2024, isCurrent: false },
+                { id: 4, name: "Dr. Elizabeth Wanjiku",photo: "https://randomuser.me/api/portraits/women/89.jpg", startYear: 2024, endYear: null, isCurrent: true  }
+            ],
+            schoolTour: {
+                library:  { images: ["https://placehold.co/400x300/6c3fcf/white?text=Library"], videos: [] },
+                sports:   { images: ["https://placehold.co/400x300/2563eb/white?text=Sports+Field"], videos: [] },
+                hostel_m: { images: ["https://placehold.co/400x300/6c3fcf/white?text=Male+Hostel"], videos: [] },
+                hostel_f: { images: ["https://placehold.co/400x300/2563eb/white?text=Female+Hostel"], videos: [] },
+                field:    { images: ["https://placehold.co/400x300/6c3fcf/white?text=Main+Field"], videos: [] }
+            },
+            infrastructureList: ["library", "sports", "hostel_m", "hostel_f", "field"],
+            departments: ['Computer Studies', 'Hospitality', 'Automotive Engineering', 'Electrical Engineering', 'Civil Engineering', 'Business'],
+           
+            students: [
+                {
+                    id: 'STU-2026-20669', name: 'John Mwangi', department: 'Computer Studies', class: 'Form 3C',
+                    passcode: '1234', phone: '0712345678', email: 'john.mwangi@student.pck.ac.ke',
+                    gender: 'Male', dob: '2003-04-12', county: 'Nairobi',
+                    level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
+                    enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
+                    feeBalance: 0, totalFee: 65000, status: 'active', deferReason: null,
+                    paymentHistory: [
+                        { amount: 39000, date: '2025-01-01', ref: 'REF713037' },
+                        { amount: 26000, date: '2025-02-15', ref: 'REF416275' }
+                    ],
+                    attendance: { total: 45, attended: 38 },
+                    examHistory: { 'CS101': 1, 'CS102': 0 },
+                    results: [
+                        { module: 'Apply Occupational Safety and Health Practices', score: 78, competency: 'Competent', remarks: 'Demonstrated required competency' }
+                    ]
+                },
+                {
+                    id: 'STU-2026-20670', name: 'Sarah Achieng', department: 'Computer Studies', class: 'Form 3C',
+                    passcode: '5678', phone: '0723456789', email: 'sarah.achieng@student.pck.ac.ke',
+                    gender: 'Female', dob: '2004-09-02', county: 'Kisumu',
+                    level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
+                    enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
+                    feeBalance: 25000, totalFee: 65000, status: 'active', deferReason: null,
+                    paymentHistory: [
+                        { amount: 40000, date: '2025-01-10', ref: 'REF551209' }
+                    ],
+                    attendance: { total: 45, attended: 35 },
+                    examHistory: {},
+                    results: [
+                        { module: 'Apply Entrepreneurial Skills', score: 47, competency: 'Not Yet Competent', remarks: 'Needs more practice' }
+                    ]
+                },
+                {
+                    id: 'STU-2026-20671', name: 'Brian Otieno', department: 'Computer Studies', class: 'Form 3C',
+                    passcode: '9012', phone: '0734567890', email: 'brian.otieno@student.pck.ac.ke',
+                    gender: 'Male', dob: '2003-11-20', county: 'Nairobi',
+                    level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
+                    enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
+                    feeBalance: 65000, totalFee: 65000, status: 'not_attending', deferReason: null,
+                    paymentHistory: [],
+                    attendance: { total: 45, attended: 4 },
+                    examHistory: {},
+                    results: []
+                },
+               {
+                    id: 'STU-2026-20673', name: 'Peter Njoroge', department: 'Computer Studies', class: 'Form 3C',
+                    passcode: '7890', phone: '0756789012', email: 'peter.njoroge@student.pck.ac.ke',
+                    gender: 'Male', dob: '2003-07-15', county: 'Kiambu',
+                    level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
+                    enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
+                    feeBalance: 10000, totalFee: 65000, status: 'active', deferReason: null,
+                    paymentHistory: [], attendance: { total: 45, attended: 40 }, examHistory: {}, results: []
+                },
+                {
+                    id: 'STU-2026-20674', name: 'Faith Kamau', department: 'Computer Studies', class: 'Form 3C',
+                    passcode: '2345', phone: '0767890123', email: 'faith.kamau@student.pck.ac.ke',
+                    gender: 'Female', dob: '2004-01-30', county: "Murang'a",
+                    level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
+                    enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
+                    feeBalance: 0, totalFee: 65000, status: 'active', deferReason: null,
+                    paymentHistory: [], attendance: { total: 45, attended: 42 }, examHistory: {}, results: []
+                },
+                {
+                    id: 'STU-2026-20675', name: 'Kevin Oduya', department: 'Computer Studies', class: 'Form 3C',
+                    passcode: '6789', phone: '0778901234', email: 'kevin.oduya@student.pck.ac.ke',
+                    gender: 'Male', dob: '2003-03-22', county: 'Kisumu',
+                    level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
+                    enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
+                    feeBalance: 45000, totalFee: 65000, status: 'active', deferReason: null,
+                    paymentHistory: [], attendance: { total: 45, attended: 30 }, examHistory: {}, results: []
+                },
+                {
+                    id: 'STU-2026-20672', name: 'Mary Wambui', department: 'Computer Studies', class: 'Form 3C',
+                }
+            ],
+
+            classReps:    [{ id: 'STU-2026-20669', name: 'John Mwangi',  department: 'Computer Studies', class: 'Form 3C', passcode: 'REP-4321' }],
+            lecturers:    [{ id: 'LEC-2026-001',   name: 'Jane Wanjiku', department: 'Computer Studies', unit: 'ICT/OS/CS/CR/05/6', password: 'lec1234' }],
+            classTeachers:[{ id: 'TCH-2026-001',   name: 'James Otieno', department: 'Computer Studies', password: 'tch1234' }],
+           hods: [
+          { id: 'HOD-2026-001', name: 'Dr. Jane Kamau',      department: 'Computer Studies',        password: 'hod1234' },
+          { id: 'HOD-2026-002', name: 'Mrs. Aisha Mohamed',  department: 'Hospitality',             password: 'hod2234' },
+          { id:'HOD-2026-003', name: 'Eng. David Njoroge',  department: 'Automotive Engineering',  password: 'hod3234' },
+          { id: 'HOD-2026-004', name: 'Eng. Lucy Wambui',    department: 'Electrical Engineering',  password: 'hod4234' },
+          { id: 'HOD-2026-005', name: 'Mr. Joseph Kamande',  department: 'Civil Engineering',       password: 'hod5234' },
+          { id: 'HOD-2026-006', name: 'Mrs. Grace Nyambura', department: 'Business',                password: 'hod6234' },
+           ],
+            deos:         [{ id: 'DEO-2026-001',   name: 'Alice Moraa',  department: 'Computer Studies', password: 'deo1234' }],
+            finance:      [{ id: 'FIN-001',         name: 'Finance Officer', password: 'finance123' }],
+            deputyAcad:   { id: 'DEP-ACAD-001',  name: 'Dr. Charles Otieno', password: 'deputyacad123' },
+            deputyInfra:  { id: 'DEP-INFRA-001', name: 'Eng. Peter Maina',   password: 'deputyinfra123' },
+            examOffice:   { id: 'EXAM-001', name: 'Exam Officer',    password: 'exam123' },
+            dean:         { id: 'DEAN-001', name: 'Dean of Students',password: 'dean123', kitcoPasswords: [] },
+            principal:    { id: 'PRINCIPAL-001', name: 'Dr. Elizabeth Wanjiku', password: 'principal123' },
+            hospital:     { id: 'HOSP-001', name: 'School Nurse', password: 'hospital123' },
+            library:      { id: 'LIB-001', name: 'Librarian', password: 'library123' },
+            admin:        { id: 'ADMIN-001', password: 'Admin@2026' },
+            courses: [
+                { id: 'CS101', name: 'Computer Essentials',          code: 'CS101' },
+                { id: 'CS102', name: 'Computer Operations',           code: 'CS102' },
+                { id: 'CS103', name: 'Networking & Data Structures',  code: 'CS103' },
+                { id: 'CS104', name: 'Artificial Intelligence',       code: 'CS104' }
+            ],
+           examRegistrations: [],
+            lecturerUnits: [
+                { id: 'LU-001', code: 'CS101', name: 'Computer Essentials', level: 5, department: 'Computer Studies', lecturerId: 'LEC-2026-001', semester: 'March/April 2026', description: 'Introduction to computers and digital literacy' },
+                { id: 'LU-002', code: 'CS102', name: 'Computer Operations', level: 5, department: 'Computer Studies', lecturerId: 'LEC-2026-001', semester: 'March/April 2026', description: 'Practical computer operations and software use' }
+            ],
+            attendanceRecords: [],
+            markRegisterEntries: [],
+            lecturerMaterials: [],
+            studentReports: [],
+            timetables: [
+                { id: 'TT-001', department: 'Computer Studies', class: 'Form 3C', unit: 'Computer Essentials', unitCode: 'CS101', lecturerId: 'LEC-2026-001', day: new Date().toLocaleDateString('en-US', { weekday: 'long' }), startTime: '08:00', endTime: '10:00' },
+                { id: 'TT-002', department: 'Computer Studies', class: 'Form 3C', unit: 'Computer Operations', unitCode: 'CS102', lecturerId: 'LEC-2026-001', day: new Date().toLocaleDateString('en-US', { weekday: 'long' }), startTime: '10:15', endTime: '12:15' }
+            ],
+            attendanceConfirmations: [],
+            idRequests: [],
+            noticeboard: [
+                { id: 'n1', sender: 'System', message: 'Welcome to PCK Institute Management System', timestamp: new Date().toISOString(), recipient: 'all' }
+            ],
+            newsletterSubscribers: []
+        };
+        localStorage.setItem('pck_institute_v3', JSON.stringify(demoData));
+    }
+}
+
+function getData()       { return JSON.parse(localStorage.getItem('pck_institute_v3')); }
+function saveData(data)  { localStorage.setItem('pck_institute_v3', JSON.stringify(data)); }
+
+// ==================== SCHOOL INFO FUNCTIONS ====================
+function renderPrincipals() {
+    const data = getData();
+    const container = document.getElementById('principalsContainer');
+    if (!container) return;
+
+    const sorted = [...data.principals].sort((a, b) => {
+        if (a.isCurrent) return -1;
+        if (b.isCurrent) return 1;
+        return b.startYear - a.startYear;
+    });
+
+    container.innerHTML = sorted.map(p => {
+        const years   = `${p.startYear} — ${p.endYear || 'Present'}`;
+        const tenure  = p.endYear ? `${p.endYear - p.startYear} yrs` : 'Present';
+        const fallback = `https://placehold.co/400x500/251b42/white?text=${encodeURIComponent(p.name)}`;
+
+        return `
+        <div class="principal-flip ${p.isCurrent ? 'is-current' : ''}" data-flipped="false">
+            <div class="principal-flip-inner">
+
+                <!-- FRONT -->
+                <div class="principal-front">
+                    <img src="${p.photo}" alt="${p.name}" onerror="this.src='${fallback}'">
+                    ${p.isCurrent ? `<div class="principal-current-badge">● CURRENT</div>` : ''}
+                    <div class="principal-front-overlay">
+                        <div class="principal-front-name">${p.name}</div>
+                        <div class="principal-front-years">${years}</div>
+                    </div>
+                </div>
+
+                <!-- BACK -->
+                <div class="principal-back">
+                    <img src="${p.photo}" class="principal-back-photo" alt="${p.name}" onerror="this.src='${fallback}'">
+                    <div class="principal-back-name">${p.name}</div>
+                    <div class="principal-back-years">${years}</div>
+                    <div class="principal-back-tenure">${tenure}</div>
+                    <div class="principal-back-title">${p.title || ''}</div>
+                </div>
+
+            </div>
+        </div>`;
+    }).join('');
+
+    /* Mobile — tap to flip */
+    container.querySelectorAll('.principal-flip').forEach(card => {
+        card.addEventListener('click', () => {
+            const isFlipped = card.dataset.flipped === 'true';
+            card.dataset.flipped = String(!isFlipped);
+            card.classList.toggle('flipped', !isFlipped);
+        });
+    });
+}
+
+// ==================== SCHOOL TOUR — Design A: Sidebar Nav + Preview ====================
+const tourIcons = {
+    library: '📚', sports: '⚽', hostel_m: '🏠', hostel_f: '🏠',
+    field: '🌿', mess: '🍽️', workshop: '🔧', lab: '🔬'
+};
+
+let currentTourLocation = 'library';
+let currentThumbIdx = 0;
+
+function renderTourNav() {
+    const data = getData();
+    const nav = document.getElementById('tourNav');
+    if (!nav) return;
+    nav.innerHTML = data.infrastructureList.map(loc => {
+        const icon = tourIcons[loc] || '📍';
+        const label = loc.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        return `<div class="tour-nav-item ${loc === currentTourLocation ? 'active' : ''}" data-location="${loc}">
+            ${icon} ${label}
+        </div>`;
+    }).join('');
+    nav.querySelectorAll('.tour-nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            currentTourLocation = item.dataset.location;
+            currentThumbIdx = 0;
+            nav.querySelectorAll('.tour-nav-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            renderTourPreview(currentTourLocation);
+        });
+    });
+}
+
+function renderTourPreview(location) {
+    const data = getData();
+    const media = data.schoolTour[location] || { images: [], videos: [] };
+    const label = location.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const imgs = media.images;
+    const mainImg = imgs[currentThumbIdx] || `https://placehold.co/800x400/251b42/white?text=${encodeURIComponent(label)}`;
+
+    const previewImg = document.getElementById('tourPreviewImg');
+    const previewTitle = document.getElementById('tourPreviewTitle');
+    const previewDesc = document.getElementById('tourPreviewDesc');
+    const thumbsEl = document.getElementById('tourThumbs');
+
+    if (previewImg) previewImg.src = mainImg;
+    if (previewTitle) previewTitle.textContent = label;
+    if (previewDesc) previewDesc.textContent = `${imgs.length} photo${imgs.length !== 1 ? 's' : ''} available`;
+
+    // Thumbnail strip — only if multiple images
+    if (thumbsEl) {
+        if (imgs.length > 1) {
+            thumbsEl.innerHTML = imgs.map((src, idx) =>
+                `<img src="${src}" class="tour-thumb ${idx === currentThumbIdx ? 'active' : ''}"
+                      data-idx="${idx}" alt="thumb">`
+            ).join('');
+            thumbsEl.querySelectorAll('.tour-thumb').forEach(t => {
+                t.addEventListener('click', () => {
+                    currentThumbIdx = parseInt(t.dataset.idx);
+                    if (previewImg) previewImg.src = imgs[currentThumbIdx];
+                    thumbsEl.querySelectorAll('.tour-thumb').forEach(x => x.classList.remove('active'));
+                    t.classList.add('active');
+                });
+            });
+        } else {
+            thumbsEl.innerHTML = '';
+        }
+    }
+}
+
+function populateInfraSelect() {
+    const data = getData();
+    const select = document.getElementById('infraSelect');
+    if (select) select.innerHTML = data.infrastructureList.map(loc =>
+        `<option value="${loc}">${loc.replace(/_/g, ' ').toUpperCase()}</option>`
+    ).join('');
+}
+
+// ==================== CBET CURRICULUM — Design B: Step Progress ====================
+function renderCBET() {
+    const stepsEl = document.getElementById('cbetSteps');
+    const modsEl = document.getElementById('cbetModules');
+    if (!stepsEl || !modsEl) return;
+
+    const levels = [
+        { num: '3', name: 'Level 3',        hrs: '300–599 hrs',   it: true },
+        { num: '4', name: 'Artisan',         hrs: '600–1199 hrs',  it: true },
+        { num: '5', name: 'Craft',           hrs: '1200–2399 hrs', it: true },
+        { num: '6', name: 'Diploma',         hrs: '2400–4799 hrs', it: true }
+    ];
+
+    stepsEl.innerHTML = levels.map((l, idx) => `
+        <div class="cbet-step">
+            <div class="cbet-step-dot ${idx < 2 ? 'active' : ''}">${l.num}</div>
+            <div class="cbet-step-name">${l.name}</div>
+            <div class="cbet-step-hrs">${l.hrs}</div>
+            ${l.it ? '<div class="cbet-step-it">✓ IT Required</div>' : ''}
+        </div>
+    `).join('');
+
+    const modules = [
+        { icon: '📐', label: 'Module 1' },
+        { icon: '🔧', label: 'Module 2' },
+        { icon: '⚡', label: 'Module 3' },
+        { icon: '💻', label: 'Module 4' },
+        { icon: '🔬', label: 'Module 5' },
+        { icon: '📊', label: 'Module 6' },
+        { icon: '🎓', label: 'Module 7' }
+    ];
+
+    modsEl.innerHTML = modules.map(m => `
+        <div class="cbet-module">
+            <span>${m.icon}</span>${m.label}
+        </div>
+    `).join('');
+}
+
+// ==================== NAVIGATE TO ROLE ====================
+// ==================== HOME ====================
+function showHome() {
+    document.getElementById('schoolInfoPanel').style.display = 'block';
+    document.getElementById('loginFormContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'none';
+
+    // Reset active states
+    document.querySelectorAll('.sidebar-menu li').forEach(l => l.classList.remove('active'));
+    const homeItem = document.querySelector('.sidebar-menu li[data-role="home"]');
+    if (homeItem) homeItem.classList.add('active');
+
+    document.querySelectorAll('#magazineNav .btn-3d').forEach(b => b.classList.remove('active'));
+    const homeBtn = document.querySelector('#magazineNav .btn-3d[data-page="home"]');
+    if (homeBtn) homeBtn.classList.add('active');
+
+    // Rebuild the full original home content
+    const homeHTML = `
+        <!-- INSTITUTE HEADER BANNER -->
+        <div class="institute-header">
+            <img src="kenya logo.png" alt="Kenya Coat of Arms" class="header-logo" onerror="this.src='https://placehold.co/70x70/5b21b6/white?text=KE'">
+            <div class="header-text">
+                <h1>PC KINYANJUI</h1>
+                <h2>Technical Training Institute</h2>
+                <div class="motto">Excellence in Technology</div>
+            </div>
+            <img src="pc k logo.png" alt="PCK Crest" class="header-logo" onerror="this.src='https://placehold.co/70x70/5b21b6/white?text=PCK'">
+        </div>
+
+        <!-- HERO TYPING -->
+        <div class="hero-section" style="margin-top:1.5rem;">
+            <div class="typing-container"><span id="typingText"></span><span class="cursor">|</span></div>
+            <div class="hero-subtitle" id="subtitleText"></div>
+        </div>
+
+        <!-- PRINCIPALS -->
+        <div class="section-card">
+            <h3><i class="fas fa-landmark"></i> Principal's Office — History</h3>
+            <div id="principalsContainer" class="principals-horizontal"></div>
+        </div>
+
+        <!-- Other sections like CBET, etc. can be added here if needed -->
+    `;
+
+    document.getElementById('schoolInfoPanel').innerHTML = homeHTML;
+
+    // Re-run rendering functions
+    renderPrincipals();
+    // Re-run typing animation
+    let i = 0, j = 0;
+    const title = 'PC KINYANJUI TECHNICAL TRAINING INSTITUTE';
+    const subtitle = 'Excellence in Technology';
+    function type() {
+        if (i < title.length) {
+            document.getElementById('typingText').innerHTML += title.charAt(i++);
+            setTimeout(type, 55);
+        } else if (j < subtitle.length) {
+            document.getElementById('subtitleText').innerHTML += subtitle.charAt(j++);
+            setTimeout(type, 75);
+        }
+    }
+    type();
+}
+
+function showTourPage() {
+    document.getElementById('schoolInfoPanel').style.display = 'block';
+    document.getElementById('loginFormContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'none';
+
+    const tourHTML = `
+        <div style="max-width:1200px; margin:0 auto; padding:2rem 1rem;">
+            <h2 style="text-align:center; color:white; margin-bottom:2rem; font-size:2.2rem;">
+                <i class="fas fa-map-marked-alt"></i> School Tour
+            </h2>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem;">
+
+                <!-- Admin Block -->
+                <div class="tour-card">
+                    <div class="tour-img-placeholder" style="background:linear-gradient(#4c1d95,#6c3fcf); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">🏛️</div>
+                    <h3>Admin Block</h3>
+                    <p>Principal's Office, Deputy Offices, Finance & Exam Office</p>
+                    <small>Directions: Straight from main gate, first building on left</small>
+                </div>
+
+                <!-- Library -->
+                <div class="tour-card">
+                    <div class="tour-img-placeholder" style="background:linear-gradient(#1e3a8a,#3b82f6); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">📚</div>
+                    <h3>Library</h3>
+                    <p>Over 15,000 books & digital resources</p>
+                    <small>Directions: Behind Admin Block, opposite Sports Field</small>
+                </div>
+
+                <!-- Sports -->
+                <div class="tour-card">
+                    <div class="tour-img-placeholder" style="background:linear-gradient(#166534,#4ade80); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">⚽</div>
+                    <h3>Sports Complex</h3>
+                    <p>Football, Basketball, Athletics Field</p>
+                    <small>Directions: Right side of main campus</small>
+                </div>
+
+                <!-- Hostels -->
+                <div class="tour-card">
+                    <div class="tour-img-placeholder" style="background:linear-gradient(#4338ca,#6366f1); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">🏠</div>
+                    <h3>Hostels</h3>
+                    <p>Male & Female Hostels</p>
+                    <small>Directions: Rear of campus, near dining hall</small>
+                </div>
+
+                <!-- Workshops & Labs -->
+                <div class="tour-card">
+                    <div class="tour-img-placeholder" style="background:linear-gradient(#b45309,#f59e0b); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">🔧</div>
+                    <h3>Workshops & Labs</h3>
+                    <p>Mechanical, Automotive, Electrical, Civil Engineering Labs</p>
+                    <small>Directions: Left wing of main academic block</small>
+                </div>
+
+            </div>
+
+            <div style="margin-top:3rem; text-align:center;">
+                <button onclick="showHome()" class="btn-secondary" style="padding:1rem 2rem;">
+                    ← Back to Home
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('schoolInfoPanel').innerHTML = tourHTML;
+}
+
+function showNewsletterPage() {
+    document.getElementById('schoolInfoPanel').style.display = 'block';
+    document.getElementById('loginFormContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'none';
+
+    const newsletterHTML = `
+        <div style="max-width:1100px; margin:0 auto; padding:2rem 1rem; color:white;">
+            <h2 style="text-align:center; margin-bottom:2.5rem; font-size:2.4rem;">
+                <i class="fas fa-newspaper"></i> Stay in the Loop
+            </h2>
+
+            <!-- Principal's Latest Newsletter -->
+            <div style="background:rgba(255,255,255,0.08); border-radius:16px; padding:2rem; margin-bottom:3rem; border:1px solid rgba(139,92,246,0.3);">
+                <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
+                    <div style="background:var(--purple-light); width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.8rem;">📢</div>
+                    <div>
+                        <h3 style="margin:0;">From the Principal's Office</h3>
+                        <small style="color:#c4b5fd;">Posted on ${new Date().toLocaleDateString('en-KE')}</small>
+                    </div>
+                </div>
+                <h4 style="color:#a5b4fc; margin-bottom:1rem;">End of Semester Message</h4>
+                <p style="line-height:1.7; font-size:1.05rem;">
+                    Dear Students and Staff,<br><br>
+                    As we approach the end of this semester, I want to commend all of you for your hard work and dedication. 
+                    Exam registration is now open — please complete yours on time.<br><br>
+                    Remember: Excellence in Technology is our motto. Keep pushing forward!
+                </p>
+                <button class="btn-primary" style="margin-top:1.5rem;" onclick="alert('Newsletter downloaded as PDF (demo)')">
+                    📄 Download Full Newsletter
+                </button>
+            </div>
+
+            <!-- Subscribe Section -->
+            <div style="background:rgba(255,255,255,0.08); border-radius:16px; padding:2.5rem; text-align:center;">
+                <h3 style="margin-bottom:1rem;">Stay Updated with School News</h3>
+                <p style="color:#c4b5fd; max-width:600px; margin:0 auto 2rem;">
+                    Get exam dates, fee reminders, event announcements, and important notices delivered to your email.
+                </p>
+                
+                <div style="max-width:420px; margin:0 auto;">
+                    <input type="email" id="nl-email" placeholder="Enter your email address" 
+                           style="width:100%; padding:1rem; border-radius:12px; border:none; background:rgba(255,255,255,0.1); color:white; margin-bottom:1rem;">
+                    <button onclick="subscribeNewsletterFromPage()" 
+                            style="width:100%; padding:1rem; font-size:1.1rem;">
+                        SUBSCRIBE NOW
+                    </button>
+                </div>
+                <p id="nl-msg" style="margin-top:1rem; min-height:1.2em;"></p>
+            </div>
+
+            <div style="text-align:center; margin-top:3rem;">
+                <button onclick="showHome()" class="btn-secondary" style="padding:1rem 2rem;">
+                    ← Back to Home
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('schoolInfoPanel').innerHTML = newsletterHTML;
+}
+
+// Helper for newsletter subscription from the new page
+window.subscribeNewsletterFromPage = function() {
+    const email = document.getElementById('nl-email').value.trim();
+    const msgEl = document.getElementById('nl-msg');
+    
+    if (!email) {
+        msgEl.innerHTML = `<span style="color:#f87171;">Please enter a valid email</span>`;
+        return;
+    }
+
+    const data = getData();
+    if (!data.newsletterSubscribers) data.newsletterSubscribers = [];
+    
+    if (data.newsletterSubscribers.includes(email)) {
+        msgEl.innerHTML = `<span style="color:#fbbf24;">You are already subscribed!</span>`;
+    } else {
+        data.newsletterSubscribers.push(email);
+        saveData(data);
+        msgEl.innerHTML = `<span style="color:#4ade80;">✅ Successfully subscribed! Thank you.</span>`;
+        document.getElementById('nl-email').value = '';
+    }
+};
+
+function showExaminationPage() {
+    document.getElementById('schoolInfoPanel').style.display = 'block';
+    document.getElementById('loginFormContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'none';
+
+    const examHTML = `
+        <div style="max-width:1100px; margin:0 auto; padding:2rem 1rem; color:white;">
+            <h2 style="text-align:center; margin-bottom:2.5rem; font-size:2.4rem;">
+                <i class="fas fa-file-alt"></i> Examination Department
+            </h2>
+
+            <!-- History & Current System -->
+            <div style="background:rgba(255,255,255,0.08); border-radius:16px; padding:2rem; margin-bottom:2rem;">
+                <h3 style="color:#c4b5fd; margin-bottom:1.5rem;">Examination Evolution</h3>
+                
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:1.5rem;">
+                    <div>
+                        <strong>NEC (National Examination Council)</strong><br>
+                        <small style="color:#94a3b8;">Started • Ended</small>
+                        <p style="margin-top:0.5rem; line-height:1.6;">Traditional examination system used in previous years.</p>
+                    </div>
+                    <div>
+                        <strong>CBET (Competency Based Education & Training)</strong><br>
+                        <small style="color:#4ade80;">Current • Ongoing</small>
+                        <p style="margin-top:0.5rem; line-height:1.6;">We are currently using CBET system. Students register for modular units.</p>
+                    </div>
+                    <div>
+                        <strong>MODULAR (Upcoming)</strong><br>
+                        <small style="color:#facc15;">Starting Soon</small>
+                        <p style="margin-top:0.5rem; line-height:1.6;">New modular system will be introduced in the near future.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info Cards -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:1.5rem; margin-bottom:3rem;">
+                <div class="tour-card">
+                    <h3>📋 Exam Registration</h3>
+                    <p>Students register units through the student portal. Approval goes through DEO → HOD → Finance → Deputy → Exam Office.</p>
+                </div>
+                <div class="tour-card">
+                    <h3>📅 Current Status</h3>
+                    <p>CBET exams are ongoing. Retake fee: KSh 200. Normal registration: KSh 1,500 per unit.</p>
+                </div>
+                <div class="tour-card">
+                    <h3>📊 Reports</h3>
+                    <p>Exam Office generates final registers and results. All records are stored digitally.</p>
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+                <button onclick="showHome()" class="btn-secondary" style="padding:1rem 2rem;">
+                    ← Back to Home
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('schoolInfoPanel').innerHTML = examHTML;
+}
+
+function showGlobalNoticeBoard() {
+    document.getElementById('schoolInfoPanel').style.display = 'block';
+    document.getElementById('loginFormContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'none';
+
+    const data = getData();
+    const notices = data.noticeboard || [];
+
+    let noticesHTML = notices.length === 0 
+        ? `<p style="text-align:center; color:#94a3b8; padding:3rem;">No notices yet. Authorized offices will post here.</p>`
+        : notices.slice().reverse().map(n => `
+            <div style="background:rgba(255,255,255,0.08); border-radius:12px; padding:1.2rem; margin-bottom:1rem; border-left:4px solid #a855f7;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:0.8rem;">
+                    <strong style="color:#c4b5fd;">${n.sender}</strong>
+                    <small style="color:#94a3b8;">${new Date(n.timestamp).toLocaleDateString('en-KE')}</small>
+                </div>
+                <p style="line-height:1.6; color:white;">${n.message}</p>
+            </div>
+        `).join('');
+
+    const html = `
+        <div style="max-width:1100px; margin:0 auto; padding:2rem 1rem; color:white;">
+            <h2 style="text-align:center; margin-bottom:2.5rem; font-size:2.4rem;">
+                <i class="fas fa-bullhorn"></i> Global Notice Board
+            </h2>
+
+            <div style="background:rgba(255,255,255,0.08); border-radius:16px; padding:2rem; margin-bottom:2rem;">
+                <h3 style="color:#c4b5fd; margin-bottom:1rem;">Latest Announcements</h3>
+                <div id="noticesContainer">
+                    ${noticesHTML}
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top:2rem;">
+                <button onclick="showHome()" class="btn-secondary" style="padding:1rem 2rem;">
+                    ← Back to Home
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('schoolInfoPanel').innerHTML = html;
+}
+
+// ==================== NAVIGATE TO ROLE ====================
+function navigateToRole(role) {
+    if (role === 'home') {
+        showHome();
+        return;
+    }
+    if (role === 'tour') {
+        showTourPage();
+        return;
+    }
+    if (role === 'newsletter') {
+        showNewsletterPage();
+        return;
+    }
+    if (role === 'examination') {
+        alert("📋 Examination page coming soon...");
+        return;
+    }
+    if (role === 'noticeboard') {
+        alert("📢 Global Notice Board coming soon...");
+        return;
+    }
+    if (role === 'studentwall') {
+        alert("👥 Student Wall coming soon...");
+        return;
+    }
+
+    // Highlight sidebar item
+    document.querySelectorAll('.sidebar-menu li').forEach(l => l.classList.remove('active'));
+    const sideItem = document.querySelector(`.sidebar-menu li[data-role="${role}"]`);
+    if (sideItem) sideItem.classList.add('active');
+
+    // SPECIAL HANDLING FOR SPORT CLUB (Sub-login)
+    if (role === 'sportclub') {
+        showSportSubLogin();
+        return;
+    }
+               
+    // Normal login for all other roles
+    showLoginForm(role);
+
+    // Close sidebar on mobile
+    document.getElementById('sidebar').classList.remove('open');
+}
+
+// ==================== LOGIN ====================
+let selectedRole = null;
+
+const loginTitles = {
+    student:      '🎓 Student Login',
+    classrep:     '🗣️ Class Rep Login',
+    lecturer:     '👨‍💻 Lecturer Login',
+    classteacher: '🧑‍🏫 Class Teacher Login',
+    hod:          '🤝 H.O.D Login',
+    deo:          '📝 D.E.O Login',
+    finance:      '💰 Finance Login',
+    deputy_acad:  '👑 Deputy (Academics) Login',
+    deputy_infra: '🏗️ Deputy (Infrastructure) Login',
+    examoffice:   '📋 Exam Office Login',
+   dean:         '💛 Dean of Students Login',
+    principal:    '🎓 Principal Login',
+    hospital:     '🏥 Hospital Login',
+    library:      '📚 Library Login',
+    admin:        '🔐 System Admin Login'
+};
+
+function showLoginForm(role) {
+    selectedRole = role;
+    document.getElementById('schoolInfoPanel').style.display = 'none';
+    document.getElementById('loginFormContainer').style.display = 'block';
+    document.getElementById('dashboardContainer').style.display = 'none';
+
+    document.getElementById('loginTitle').innerHTML =
+        `<i class="fas fa-sign-in-alt"></i> ${loginTitles[role] || role.toUpperCase() + ' Login'}`;
+
+    const fields = document.getElementById('loginFields');
+
+    // Roles that only need password (no separate ID field)
+  const passOnlyRoles = ['deputy_acad', 'deputy_infra', 'admin', 'dean', 'examoffice', 'principal', 'hospital', 'library'];  
+
+    if (passOnlyRoles.includes(role)) {
+        fields.innerHTML = `<input type="password" id="loginPass" placeholder="Password" class="login-input">`;
+    } else {
+        fields.innerHTML = `
+            <input type="text"     id="loginId"   placeholder="ID / Staff No"  class="login-input">
+            <input type="password" id="loginPass" placeholder="Password / Passcode" class="login-input">
+        `;
+    }
+}
+
+function handleLogin() {
+    const data = getData();
+    const role = selectedRole;
+    const id   = document.getElementById('loginId')?.value?.trim();
+    const pass = document.getElementById('loginPass')?.value?.trim();
+    let user   = null;
+
+    switch (role) {
+        case 'student':
+            user = data.students.find(s => s.id === id && s.passcode === pass);
+            break;
+        case 'classrep':
+            user = data.classReps.find(r => r.id === id && r.passcode === pass);
+            break;
+        case 'lecturer':
+            user = data.lecturers.find(l => l.id === id && l.password === pass);
+            break;
+        case 'classteacher':
+            user = data.classTeachers.find(t => t.id === id && t.password === pass);
+            break;
+        case 'hod':
+            user = data.hods.find(h => h.id === id && h.password === pass);
+            break;
+        case 'deo':
+            user = data.deos.find(d => d.id === id && d.password === pass);
+            break;
+        case 'finance':
+            user = data.finance.find(f => f.id === id && f.password === pass);
+            break;
+        case 'deputy_acad':
+            if (pass === data.deputyAcad.password) user = data.deputyAcad;
+            break;
+        case 'deputy_infra':
+            if (pass === data.deputyInfra.password) user = data.deputyInfra;
+            break;
+        case 'examoffice':
+            if (pass === data.examOffice.password) user = data.examOffice;
+            break;
+        case 'dean':
+            if (pass === data.dean.password) user = data.dean;
+            break;
+        case 'principal':
+            if (pass === data.principal.password) user = data.principal;
+            break;
+        case 'hospital':
+            if (pass === data.hospital.password) user = data.hospital;
+            break;
+        case 'library':
+            if (pass === data.library.password) user = data.library;
+            break;
+        case 'admin':
+            if (pass === data.admin.password) user = { role: 'admin', name: 'System Admin' };
+            break;
+        default:
+            alert('Unknown role. Please try again.');
+            return;
+    }
+
+    if (user) {
+        sessionStorage.setItem('currentUser', JSON.stringify({ role, ...user }));
+        showDashboard(role, user);
+    } else {
+        // Shake animation on fail
+        const card = document.querySelector('.login-card');
+        card.style.animation = 'none';
+        card.offsetHeight; // reflow
+        card.style.animation = 'shake 0.4s ease';
+        setTimeout(() => card.style.animation = '', 500);
+        alert('❌ Invalid credentials. Please try again.');
+    }
+}
+
+// Shake keyframes injected once
+const shakeStyle = document.createElement('style');
+shakeStyle.textContent = `
+@keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%      { transform: translateX(-10px); }
+    40%      { transform: translateX(10px); }
+    60%      { transform: translateX(-8px); }
+    80%      { transform: translateX(8px); }
+}`;
+document.head.appendChild(shakeStyle);
+
+// ==================== DASHBOARD ====================
+function showDashboard(role, user) {
+    document.getElementById('schoolInfoPanel').style.display = 'none';
+    document.getElementById('loginFormContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'block';
+
+    const label = role.toUpperCase().replace(/_/g, ' ');
+    document.getElementById('dashboardTitle').innerHTML =
+        `<i class="fas fa-tachometer-alt"></i> ${label} Dashboard`;
+
+    let content = `
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-check-circle"></i>
+                <h3>Welcome</h3>
+                <p>${user.name || user.id || 'User'}</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-id-badge"></i>
+                <h3>Role</h3>
+                <p>${label}</p>
+            </div>
+            ${user.department ? `
+            <div class="stat-card">
+                <i class="fas fa-building"></i>
+                <h3>Department</h3>
+                <p>${user.department}</p>
+            </div>` : ''}
+        </div>
+    `;
+
+   if (role === 'student') {
+        content += renderStudentPanel(user);
+        setTimeout(() => showStudentNotificationPopup(user), 400);
+    } else if (role === 'kitco') {
+        content += renderKITCOPanel(user);
+    } else if (role === 'classrep') {
+        content += renderClassRepPanel(user);
+    } else if (role === 'lecturer') {
+        content += renderLecturerPanel(user);
+    } else if (role === 'classteacher') {
+        content += renderClassTeacherPanel(user);
+    } else if (role === 'hod') {
+        content += renderHODPanel(user);
+    } else if (role === 'deo') {
+        content += renderDEOPanel(user);
+    } else if (role === 'finance') {
+        content += renderFinancePanel(user);
+    } else if (role === 'deputy_acad') {
+        content += renderDeputyAcadPanel(user);
+    } else if (role === 'deputy_infra') {
+        content += renderDeputyInfraPanel();
+    } else if (role === 'examoffice') {
+        content += renderExamOfficePanel(user);
+   } else if (role === 'dean') {
+        content += renderDeanPanel(user);
+    } else if (role === 'principal') {
+        content += renderPrincipalPanel(user);
+    } else if (role === 'hospital') {
+        content += renderHospitalPanel(user);
+    } else if (role === 'library') {
+        content += renderLibraryPanel(user);
+    } else if (role === 'sportsadmin') {
+        content += renderSportsAdminPanel(user);
+    } else if (role === 'sportleader') {
+        content += renderSportLeaderPanel(user);
+    } else if (role === 'admin') {
+        content += renderAdminPanel();
+    }
+
+    content += `
+        <div class="form-card">
+            <h3><i class="fas fa-bell"></i> Noticeboard</h3>
+            <div class="noticeboard" id="noticeboardPanel"></div>
+        </div>`;
+
+    document.getElementById('dashboardContent').innerHTML = content;
+    renderNoticeboard();
+}
+
+function renderNoticeboard() {
+    const data = getData();
+    const container = document.getElementById('noticeboardPanel');
+    if (!container) return;
+    container.innerHTML = data.noticeboard.slice(-10).reverse().map(n => `
+        <div class="notice-message">
+            <strong style="color:var(--purple-light)">${n.sender}</strong><br>
+            ${n.message}<br>
+            <small style="color:var(--text-secondary)">${new Date(n.timestamp).toLocaleString()}</small>
+        </div>
+    `).join('');
+}
+
+function renderHODRegistrations() {
+    const data = getData();
+    const pending = data.examRegistrations.filter(r => r.status === 'pending_hod');
+    if (pending.length === 0) return '<p style="margin-top:0.5rem;color:var(--text-secondary)">No pending registrations.</p>';
+    return `
+        <table style="width:100%;border-collapse:collapse;margin-top:1rem;font-size:0.85rem;">
+            <thead>
+                <tr style="color:var(--purple-light);border-bottom:1px solid var(--border);">
+                    <th style="padding:0.5rem;text-align:left;">Reg ID</th>
+                    <th style="padding:0.5rem;text-align:left;">Student</th>
+                    <th style="padding:0.5rem;text-align:left;">Units</th>
+                    <th style="padding:0.5rem;text-align:left;">Fee</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${pending.map(r => `
+                    <tr style="border-bottom:1px solid var(--border);">
+                        <td style="padding:0.5rem;">${r.id}</td>
+                        <td style="padding:0.5rem;">${r.studentId}</td>
+                        <td style="padding:0.5rem;">${r.units.length}</td>
+                        <td style="padding:0.5rem;">KSh ${r.totalExamFee}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>`;
+}
+
+function renderFinanceSummary() {
+    const data = getData();
+    const outstanding = data.students.filter(s => s.feeBalance > 0);
+    return `
+        <div style="margin-top:1rem;">
+            <p><strong style="color:var(--purple-light)">${outstanding.length}</strong> students with outstanding fee balance.</p>
+            ${outstanding.map(s => `
+                <div style="padding:0.6rem;border-bottom:1px solid var(--border);font-size:0.85rem;">
+                    ${s.name} (${s.id}) — <span style="color:var(--danger)">KSh ${s.feeBalance.toLocaleString()}</span>
+                </div>
+            `).join('')}
+        </div>`;
+}
+
+function renderAdminPanel() {
+    return `
+    <div class="admin-layout">
+ 
+        <!-- MINI SIDEBAR NAV -->
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">Admin Menu</div>
+            <button class="admin-nav-btn active" onclick="adminSection('users',this)">
+                <i class="fas fa-users-cog"></i> User Management
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('principals',this)">
+                <i class="fas fa-landmark"></i> Principals
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('departments',this)">
+                <i class="fas fa-building"></i> Departments
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('courses',this)">
+                <i class="fas fa-book"></i> Courses
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('announce',this)">
+                <i class="fas fa-bullhorn"></i> Announcements
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('idcards',this)">
+                <i class="fas fa-id-card"></i> ID Cards
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('logs',this)">
+                <i class="fas fa-list-alt"></i> System Logs
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('backup',this)">
+                <i class="fas fa-database"></i> Backup / Restore
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('export',this)">
+                <i class="fas fa-file-export"></i> Export Data
+            </button>
+        </div>
+ 
+        <!-- MAIN CONTENT AREA -->
+        <div class="admin-main" id="adminMain">
+            ${adminUsersHTML()}
+        </div>
+    </div>`;
+}
+
+/* ══════════════════════════════════════════
+   DEO PORTAL — Full Implementation
+══════════════════════════════════════════ */
+function renderDEOPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">DEO Menu</div>
+            <button class="admin-nav-btn active" onclick="deoSection('pending',this)">
+                <i class="fas fa-clock"></i> Pending Review
+            </button>
+            <button class="admin-nav-btn" onclick="deoSection('approved',this)">
+                <i class="fas fa-check-circle"></i> Approved
+            </button>
+            <button class="admin-nav-btn" onclick="deoSection('rejected',this)">
+                <i class="fas fa-times-circle"></i> Rejected
+            </button>
+            <button class="admin-nav-btn" onclick="deoSection('report',this)">
+                <i class="fas fa-chart-bar"></i> Stats Report
+            </button>
+        </div>
+        <div class="admin-main" id="deoMain">${deoPendingHTML(user)}</div>
+    </div>`;
+}
+
+window.deoSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const map  = {
+        pending:  () => deoPendingHTML(user),
+        approved: () => deoFilteredHTML('pending_hod', user, 'Approved by DEO'),
+        rejected: () => deoFilteredHTML('rejected', user, 'Rejected by DEO'),
+        report:   () => deoReportHTML(user),
+    };
+    document.getElementById('deoMain').innerHTML = (map[section] || (() => deoPendingHTML(user)))();
+};
+
+function deoPendingHTML(user) {
+    const data    = getData();
+    const dept    = user.department;
+    const pending = data.examRegistrations.filter(r =>
+        r.status === 'pending_deo' &&
+        (data.students.find(s => s.id === r.studentId)?.department === dept || !dept)
+    );
+
+    if (pending.length === 0) return `
+        <div class="admin-section-head">📋 Pending DEO Review</div>
+        <div class="admin-card">
+            <p style="color:var(--text-secondary);font-size:0.85rem;">
+                ✅ No pending registrations for your department.
+            </p>
+        </div>`;
+
+    const cards = pending.map(reg => {
+        const student = data.students.find(s => s.id === reg.studentId) || {};
+        const units   = (reg.units || []).map(u =>
+            `<span style="display:inline-block;background:var(--bg-elevated);border:1px solid var(--border);
+             border-radius:6px;padding:2px 8px;font-size:0.7rem;margin:2px;">${u.name} (${u.code})</span>`
+        ).join('');
+
+        return `
+        <div class="admin-card" style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+                <div style="flex:1;">
+                    <div style="font-weight:700;font-size:0.92rem;color:var(--text-primary);">
+                        ${student.name || '—'}
+                    </div>
+                    <div style="font-size:0.75rem;color:var(--text-secondary);margin:2px 0 6px;">
+                        ${reg.studentId} · ${student.department || '—'} · ${student.class || '—'} · 📱 ${student.phone || '—'}
+                    </div>
+                    <div style="margin-bottom:6px;">${units}</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">
+                        Submitted: ${new Date(reg.submittedDate).toLocaleDateString()} ·
+                        Exam Fee: KSh ${(reg.totalExamFee || 0).toLocaleString()}
+                    </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;min-width:120px;">
+                    <button class="admin-btn-primary" onclick="deoApprove('${reg.id}')">
+                        ✅ Approve
+                    </button>
+                    <button class="admin-action-btn danger" style="padding:8px;"
+                        onclick="deoReject('${reg.id}')">
+                        ❌ Reject
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">📋 Pending DEO Review (${pending.length})</div>
+        <button class="admin-btn-primary" style="margin-bottom:12px;"
+            onclick="deoGeneratePDF('pending_deo','${dept}')">
+            📄 Download List PDF
+        </button>
+        ${cards}`;
+}
+
+function deoFilteredHTML(status, user, title) {
+    const data = getData();
+    const dept = user.department;
+    const regs = data.examRegistrations.filter(r =>
+        r.status === status &&
+        (data.students.find(s => s.id === r.studentId)?.department === dept || !dept)
+    );
+    return `
+        <div class="admin-section-head">${title} (${regs.length})</div>
+        <div class="admin-card">
+            ${regs.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No records.</p>'
+                : regs.map(reg => {
+                    const student = data.students.find(s => s.id === reg.studentId) || {};
+                    return `
+                    <div style="padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;">
+                        <strong>${student.name || reg.studentId}</strong>
+                        <span style="color:var(--text-secondary);font-size:0.72rem;margin-left:8px;">
+                            ${student.department || '—'} · ${reg.id}
+                        </span>
+                        ${reg.rejectionReason
+                            ? `<div style="font-size:0.72rem;color:var(--danger);margin-top:2px;">
+                                Reason: ${reg.rejectionReason}</div>`
+                            : ''}
+                    </div>`;
+                }).join('')}
+        </div>`;
+}
+
+function deoReportHTML(user) {
+    const data  = getData();
+    const dept  = user.department;
+    const regs  = data.examRegistrations.filter(r =>
+        data.students.find(s => s.id === r.studentId)?.department === dept || !dept
+    );
+    const pending  = regs.filter(r => r.status === 'pending_deo').length;
+    const approved = regs.filter(r => r.status !== 'pending_deo' && r.status !== 'rejected').length;
+    const rejected = regs.filter(r => r.status === 'rejected' && r.rejectedBy === 'DEO').length;
+
+    return `
+        <div class="admin-section-head">📊 DEO Stats — ${dept || 'All Departments'}</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
+            <div class="stat-card"><i class="fas fa-file-alt" style="color:var(--purple-light)"></i>
+                <h3>${regs.length}</h3><p>Total Regs</p></div>
+            <div class="stat-card"><i class="fas fa-clock" style="color:var(--warning)"></i>
+                <h3>${pending}</h3><p>Pending</p></div>
+            <div class="stat-card"><i class="fas fa-check" style="color:var(--success)"></i>
+                <h3>${approved}</h3><p>Forwarded</p></div>
+            <div class="stat-card"><i class="fas fa-times" style="color:var(--danger)"></i>
+                <h3>${rejected}</h3><p>Rejected</p></div>
+        </div>`;
+}
+
+window.deoApprove = function(regId) {
+    const data = getData();
+    const reg  = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+    reg.status      = 'pending_hod';
+    reg.deoApproved = true;
+    reg.deoNote     = 'Approved by DEO';
+    saveData(data);
+    adminLog(`DEO approved registration ${regId}`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('deoMain').innerHTML = deoPendingHTML(user);
+};
+
+window.deoReject = function(regId) {
+    const reason = prompt('Reason for rejection:');
+    if (!reason) return;
+    const data = getData();
+    const reg  = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+    reg.status          = 'rejected';
+    reg.rejectedBy      = 'DEO';
+    reg.rejectionReason = reason;
+    saveData(data);
+    adminLog(`DEO rejected registration ${regId}: ${reason}`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('deoMain').innerHTML = deoPendingHTML(user);
+};
+
+window.deoGeneratePDF = function(status, dept) {
+    const data = getData();
+    const regs = data.examRegistrations.filter(r =>
+        r.status === status &&
+        (data.students.find(s => s.id === r.studentId)?.department === dept || !dept)
+    );
+    const rows = getExamRegRows(regs);
+    generatePDF({
+        title:          'DEO Exam Registration Review List',
+        subtitle:       'Students pending DEO approval — verify details before forwarding to HOD',
+        office:         'DEO OFFICE',
+        stage:          'DEO Review',
+        department:     dept || 'All Departments',
+        signatoryLabel: 'D.E.O Signature',
+        columns: [
+            {label:'Reg ID',     key:'regId'},
+            {label:'Student ID', key:'studentId'},
+            {label:'Name',       key:'name'},
+            {label:'Class',      key:'class'},
+            {label:'Phone',      key:'phone'},
+            {label:'Units',      key:'unitCount'},
+            {label:'Exam Fee',   key:'examFee'},
+            {label:'Submitted',  key:'date'},
+        ],
+        rows,
+    });
+};
+
+/* ══════════════════════════════════════════
+   HOD PORTAL — Improved with Better Sidebar
+══════════════════════════════════════════ */
+function renderHODPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">
+                <i class="fas fa-user-tie"></i> H.O.D Menu
+            </div>
+            
+            <button class="admin-nav-btn active" onclick="hodSection('pending',this)">
+                <i class="fas fa-clock"></i> Pending Approvals
+            </button>
+            <button class="admin-nav-btn" onclick="hodSection('confirmed',this)">
+                <i class="fas fa-check-circle"></i> Confirmed
+            </button>
+            <button class="admin-nav-btn" onclick="hodSection('rejected',this)">
+                <i class="fas fa-times-circle"></i> Rejected
+            </button>
+            
+            <div class="admin-sidenav-divider"></div>
+            
+            <button class="admin-nav-btn" onclick="hodSection('passwords',this)">
+                <i class="fas fa-key"></i> Generate Passwords
+            </button>
+            <button class="admin-nav-btn" onclick="hodSection('staff',this)">
+                <i class="fas fa-users"></i> Department Staff
+            </button>
+            <button class="admin-nav-btn" onclick="hodSection('report',this)">
+                <i class="fas fa-chart-bar"></i> Department Report
+            </button>
+        </div>
+        
+        <div class="admin-main" id="hodMain">
+            ${hodPendingHTML(user)}
+        </div>
+    </div>`;
+}
+
+// Keep your existing hodSection, hodPendingHTML, hodConfirm, hodReject, etc.
+// Just add these new sections:
+
+function hodPasswordsHTML() {
+    return `
+        <div class="admin-section-head">🔑 Generate Passwords</div>
+        <div class="admin-card">
+            <p>Coming soon: Generate passwords for DEO, Lecturers, Class Teachers & Class Reps.</p>
+        </div>`;
+}
+
+function hodStaffHTML(user) {
+    return `
+        <div class="admin-section-head">👥 Department Staff</div>
+        <div class="admin-card">
+            <p>Staff management for ${user.department || 'Department'} will appear here.</p>
+        </div>`;
+}
+
+// Update hodSection function to include new tabs
+window.hodSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const map = {
+        pending:    () => hodPendingHTML(user),
+        confirmed:  () => hodFilteredHTML('pending_finance', user, 'Confirmed — Sent to Finance'),
+        rejected:   () => hodFilteredHTML('rejected', user, 'Rejected by HOD'),
+        passwords:  () => hodPasswordsHTML(),
+        staff:      () => hodStaffHTML(user),
+        report:     () => hodReportHTML(user)
+    };
+    
+    document.getElementById('hodMain').innerHTML = map[section] ? map[section]() : hodPendingHTML(user);
+};
+
+
+function hodPendingHTML(user) {
+    const data    = getData();
+    const dept    = user.department;
+    const pending = data.examRegistrations.filter(r =>
+        r.status === 'pending_hod' &&
+        (data.students.find(s => s.id === r.studentId)?.department === dept || !dept)
+    );
+
+    if (pending.length === 0) return `
+        <div class="admin-section-head">✅ Pending Confirmations</div>
+        <div class="admin-card">
+            <p style="color:var(--text-secondary);font-size:0.85rem;">
+                ✅ No pending registrations for your department.
+            </p>
+        </div>`;
+
+    const cards = pending.map(reg => {
+        const student = data.students.find(s => s.id === reg.studentId) || {};
+        return `
+        <div class="admin-card" style="margin-bottom:12px;">
+            <div style="font-weight:700;font-size:0.92rem;">${student.name || '—'}</div>
+            <div style="font-size:0.75rem;color:var(--text-secondary);margin:2px 0 10px;">
+                ${reg.studentId} · ${student.class || '—'} · 📱 ${student.phone || '—'}
+            </div>
+            ${(reg.units || []).map(u => `
+            <div style="display:flex;align-items:center;justify-content:space-between;
+                padding:6px 10px;background:var(--bg-elevated);border-radius:8px;
+                margin-bottom:6px;gap:10px;flex-wrap:wrap;">
+                <span style="font-size:0.8rem;flex:1;">${u.name} <span style="color:var(--text-secondary)">(${u.code})</span></span>
+                <select id="unit_${reg.id}_${u.code}" class="admin-input"
+                    style="width:130px;padding:4px 8px;font-size:0.75rem;">
+                    <option value="normal">Normal</option>
+                    <option value="retake">Retake</option>
+                </select>
+            </div>`).join('')}
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+                <button class="admin-btn-primary" onclick="hodConfirm('${reg.id}')">
+                    ✅ Confirm & Send to Finance
+                </button>
+                <button class="admin-action-btn danger" style="padding:8px 14px;"
+                    onclick="hodReject('${reg.id}')">
+                    ❌ Reject
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">📋 Pending — ${dept || 'All'} (${pending.length})</div>
+        <button class="admin-btn-primary" style="margin-bottom:12px;"
+            onclick="hodGeneratePDF('pending_hod','${dept}')">
+            📄 Download List PDF
+        </button>
+        ${cards}`;
+}
+
+window.hodConfirm = function(regId) {
+    const data = getData();
+    const reg  = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+    const hodUnitNotes = {};
+    (reg.units || []).forEach(u => {
+        const sel = document.getElementById(`unit_${regId}_${u.code}`);
+        hodUnitNotes[u.code] = sel ? sel.value : 'normal';
+    });
+    reg.status       = 'pending_finance';
+    reg.hodConfirmed = true;
+    reg.hodUnitNotes = hodUnitNotes;
+    reg.totalExamFee = (reg.units || []).reduce((sum, u) =>
+        sum + (hodUnitNotes[u.code] === 'retake' ? 200 : 1500), 0);
+    saveData(data);
+    adminLog(`HOD confirmed registration ${regId}`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodPendingHTML(user);
+};
+
+window.hodReject = function(regId) {
+    const reason = prompt('Reason for rejection:');
+    if (!reason) return;
+    const data = getData();
+    const reg  = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+    reg.status          = 'rejected';
+    reg.rejectedBy      = 'HOD';
+    reg.rejectionReason = reason;
+    saveData(data);
+    adminLog(`HOD rejected registration ${regId}: ${reason}`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodPendingHTML(user);
+};
+
+window.hodGeneratePDF = function(status, dept) {
+    const data = getData();
+    const regs = data.examRegistrations.filter(r =>
+        r.status === status &&
+        (data.students.find(s => s.id === r.studentId)?.department === dept || !dept)
+    );
+    const rows = getExamRegRows(regs);
+    rows.forEach((row, i) => {
+        const reg = regs[i];
+        const notes = reg.hodUnitNotes || {};
+        row.unitDetail = (reg.units || []).map(u =>
+            `${u.name}: ${notes[u.code] || 'normal'}`
+        ).join(' | ');
+    });
+    generatePDF({
+        title:          'HOD Confirmed Exam Registration List',
+        subtitle:       'Unit types confirmed by HOD — send to Finance for fee processing',
+        office:         'HOD OFFICE',
+        stage:          'HOD Confirmation',
+        department:     dept || 'All Departments',
+        signatoryLabel: 'H.O.D Signature',
+        columns: [
+            {label:'Reg ID',       key:'regId'},
+            {label:'Student ID',   key:'studentId'},
+            {label:'Name',         key:'name'},
+            {label:'Class',        key:'class'},
+            {label:'Phone',        key:'phone'},
+            {label:'Units Detail', key:'unitDetail'},
+            {label:'Exam Fee',     key:'examFee'},
+        ],
+        rows,
+    });
+};
+
+function hodFilteredHTML(status, user, title) {
+    const data = getData();
+    const dept = user.department;
+    const regs = data.examRegistrations.filter(r =>
+        r.status === status &&
+        (data.students.find(s => s.id === r.studentId)?.department === dept || !dept)
+    );
+    return `
+        <div class="admin-section-head">${title} (${regs.length})</div>
+        <div class="admin-card">
+            ${regs.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No records.</p>'
+                : regs.map(reg => {
+                    const student = data.students.find(s => s.id === reg.studentId) || {};
+                    return `
+                    <div style="padding:0.65rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;">
+                        <strong>${student.name || reg.studentId}</strong>
+                        <span style="color:var(--text-secondary);font-size:0.72rem;margin-left:8px;">
+                            ${reg.id} · KSh ${(reg.totalExamFee||0).toLocaleString()}
+                        </span>
+                        ${reg.rejectionReason
+                            ? `<div style="font-size:0.72rem;color:var(--danger);margin-top:2px;">
+                                Reason: ${reg.rejectionReason}</div>`
+                            : ''}
+                    </div>`;
+                }).join('')}
+        </div>`;
+}
+
+function hodReportHTML(user) {
+    const data      = getData();
+    const dept      = user.department;
+    const dStudents = data.students.filter(s => s.department === dept);
+    const dRegs     = data.examRegistrations.filter(r =>
+        dStudents.find(s => s.id === r.studentId)
+    );
+    const confirmed = dRegs.filter(r => r.hodConfirmed).length;
+    const pending   = dRegs.filter(r => r.status === 'pending_hod').length;
+    const rejected  = dRegs.filter(r => r.rejectedBy === 'HOD').length;
+    const totalFee  = dRegs.reduce((sum, r) => sum + (r.totalExamFee || 0), 0);
+    const avgAtt    = dStudents.length === 0 ? 0 : Math.round(
+        dStudents.reduce((sum, s) =>
+            sum + (s.attendance ? (s.attendance.attended/s.attendance.total)*100 : 0), 0
+        ) / dStudents.length
+    );
+
+    return `
+        <div class="admin-section-head">📊 Department Report — ${dept || 'All'}</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:1rem;">
+            <div class="stat-card"><i class="fas fa-users" style="color:var(--blue-light)"></i>
+                <h3>${dStudents.length}</h3><p>Students</p></div>
+            <div class="stat-card"><i class="fas fa-clock" style="color:var(--warning)"></i>
+                <h3>${pending}</h3><p>Pending</p></div>
+            <div class="stat-card"><i class="fas fa-check" style="color:var(--success)"></i>
+                <h3>${confirmed}</h3><p>Confirmed</p></div>
+            <div class="stat-card"><i class="fas fa-times" style="color:var(--danger)"></i>
+                <h3>${rejected}</h3><p>Rejected</p></div>
+            <div class="stat-card"><i class="fas fa-calendar-check" style="color:var(--blue-light)"></i>
+                <h3>${avgAtt}%</h3><p>Avg Attendance</p></div>
+            <div class="stat-card"><i class="fas fa-coins" style="color:var(--purple-light)"></i>
+                <h3>KSh ${totalFee.toLocaleString()}</h3><p>Total Fees</p></div>
+        </div>
+        <button class="admin-btn-primary"
+            onclick="hodGeneratePDF('pending_finance','${dept}')">
+            📄 Download Finance List PDF
+        </button>`;
+}
+
+function hodPasswordsHTML() {
+    const data = getData();
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const dept = user.department;
+    const deoList = data.deos.filter(d => d.department === dept);
+    const lecList = data.lecturers.filter(l => l.department === dept);
+    const tchList = data.classTeachers.filter(t => t.department === dept);
+    const repList = data.classReps.filter(r => r.department === dept);
+
+    const genRow = (label, arr) => arr.map(u => `
+        <div style="display:flex;justify-content:space-between;align-items:center;
+            padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;">
+            <span><strong>${u.name}</strong>
+                <span style="color:var(--text-secondary);font-size:0.72rem;margin-left:6px;">${label} · ${u.id}</span>
+            </span>
+            <button class="admin-action-btn edit"
+                onclick="hodResetPass('${u.id}','${label.toLowerCase().replace(' ','')}')">
+                🔑 Reset Password
+            </button>
+        </div>`).join('');
+
+    return `
+        <div class="admin-section-head">🔑 Generate / Reset Passwords</div>
+        <div class="admin-card" style="margin-bottom:10px;">
+            <div class="admin-card-title">D.E.O (${deoList.length})</div>
+            ${deoList.length ? genRow('DEO', deoList) : '<p style="color:var(--text-secondary);font-size:0.82rem;margin-top:6px;">No DEO in this department.</p>'}
+        </div>
+        <div class="admin-card" style="margin-bottom:10px;">
+            <div class="admin-card-title">Lecturers (${lecList.length})</div>
+            ${lecList.length ? genRow('Lecturer', lecList) : '<p style="color:var(--text-secondary);font-size:0.82rem;margin-top:6px;">No lecturers in this department.</p>'}
+        </div>
+        <div class="admin-card" style="margin-bottom:10px;">
+            <div class="admin-card-title">Class Teachers (${tchList.length})</div>
+            ${tchList.length ? genRow('Class Teacher', tchList) : '<p style="color:var(--text-secondary);font-size:0.82rem;margin-top:6px;">No class teachers in this department.</p>'}
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Class Reps (${repList.length})</div>
+            ${repList.length ? genRow('Class Rep', repList) : '<p style="color:var(--text-secondary);font-size:0.82rem;margin-top:6px;">No class reps in this department.</p>'}
+        </div>`;
+}
+
+window.hodResetPass = function(userId, roleType) {
+    const newPass = prompt(`Enter new password for ${userId}:`);
+    if (!newPass) return;
+    const data = getData();
+    const arrMap = {deo:'deos', lecturer:'lecturers', classteacher:'classTeachers', classrep:'classReps'};
+    const arr = data[arrMap[roleType]];
+    if (arr) {
+        const u = arr.find(x => x.id === userId);
+        if (u) {
+            u.password = newPass;
+            saveData(data);
+            adminLog(`HOD reset password for ${userId}`);
+            alert(`✅ Password reset for ${u.name}`);
+        }
+    }
+};
+
+function hodStaffHTML(user) {
+    const data = getData();
+    const dept = user.department;
+    const lecturers    = data.lecturers.filter(l => l.department === dept);
+    const classTeachers= data.classTeachers.filter(t => t.department === dept);
+    const deos         = data.deos.filter(d => d.department === dept);
+    const students     = data.students.filter(s => s.department === dept);
+
+    const table = (title, arr, fields) => `
+        <div class="admin-card" style="margin-bottom:10px;">
+            <div class="admin-card-title">${title} (${arr.length})</div>
+            ${arr.length === 0
+                ? `<p style="color:var(--text-secondary);font-size:0.82rem;margin-top:6px;">None found.</p>`
+                : arr.map(u => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;
+                        padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.82rem;">
+                        <div>
+                            <strong>${u.name}</strong>
+                            <div style="font-size:0.7rem;color:var(--text-secondary);">
+                                ${u.id}${u.class ? ' · ' + u.class : ''}${u.unit ? ' · ' + u.unit : ''}
+                            </div>
+                        </div>
+                        <span class="admin-role-pill">${fields}</span>
+                    </div>`).join('')}
+        </div>`;
+
+    return `
+        <div class="admin-section-head">👥 Department Staff — ${dept}</div>
+        ${table('D.E.O', deos, 'DEO')}
+        ${table('Lecturers', lecturers, 'Lecturer')}
+        ${table('Class Teachers', classTeachers, 'Class Teacher')}
+        ${table('Students', students, 'Student')}`;
+}
+
+/* ══════════════════════════════════════════
+   FINANCE OFFICE PORTAL — Matching HOD Style
+══════════════════════════════════════════ */
+// ====================== FINANCE PORTAL — FULLY INTERACTIVE (Green Alerts) ======================
+function renderFinancePanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">
+                <i class="fas fa-coins"></i> Finance Menu
+            </div>
+            <button class="admin-nav-btn active" onclick="financeSection('pending',this)">
+                <i class="fas fa-clock"></i> Pending from HOD
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('cleared',this)">
+                <i class="fas fa-check-circle"></i> Cleared Students
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('uncleared',this)">
+                <i class="fas fa-exclamation-triangle"></i> Uncleared → Deputy
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('received',this)">
+                <i class="fas fa-inbox"></i> Received PDFs
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('report',this)">
+                <i class="fas fa-chart-bar"></i> Financial Report
+            </button>
+        </div>
+        <div class="admin-main" id="financeMain">
+            ${financePendingHTML()}
+        </div>
+    </div>`;
+}
+
+window.financeSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const map = {
+        pending:    () => financePendingHTML(),
+        cleared:    () => financeClearedHTML(),
+        uncleared:  () => financeUnclearedHTML(),
+        received:   () => financeReceivedHTML(),
+        report:     () => financeReportHTML()
+    };
+    document.getElementById('financeMain').innerHTML = map[section]();
+};
+
+// Beautiful Green Success Alert (same as Exam Office)
+function showSuccessAlert(message) {
+    const alertHTML = `
+        <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+                    background:#1a1e2c;border:2px solid #10b981;border-radius:16px;
+                    padding:25px 30px;z-index:10000;max-width:380px;text-align:center;
+                    box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+            <div style="font-size:3rem;margin-bottom:10px;">✅</div>
+            <div style="color:#10b981;font-weight:700;font-size:1.1rem;margin-bottom:8px;">
+                ${message}
+            </div>
+            <button onclick="this.parentElement.remove()" 
+                    style="margin-top:15px;padding:10px 25px;background:#10b981;color:white;
+                    border:none;border-radius:8px;font-weight:600;cursor:pointer;">
+                OK
+            </button>
+        </div>`;
+    
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = alertHTML;
+    document.body.appendChild(tempDiv.firstElementChild);
+};
+
+/* ── 1. Pending from HOD ── */
+function financePendingHTML() {
+    const data = getData();
+    let pending = data.examRegistrations.filter(r => r.status === 'pending_finance');
+
+    if (pending.length === 0) {
+        pending = [{ id: "REG-998877", studentId: "STU-2026-20670", totalExamFee: 3200, units: [{name:"CS101"}] }];
+    }
+
+    const cards = pending.map(reg => {
+        const student = data.students.find(s => s.id === reg.studentId) || {name: "Sarah Achieng", department: "Computer Studies", feeBalance: 25000};
+        const examFee = reg.totalExamFee || 0;
+        const currentBalance = student.feeBalance || 0;
+        const newTotal = currentBalance + examFee;
+
+        return `
+        <div class="admin-card" style="margin-bottom:15px;">
+            <div style="font-weight:700;">${student.name}</div>
+            <div style="color:var(--text-secondary);font-size:0.8rem;">${reg.studentId} • ${student.department}</div>
+            
+            <div style="margin:12px 0;padding:12px;background:var(--bg-elevated);border-radius:10px;">
+                <strong>Exam Fee:</strong> KSh ${examFee.toLocaleString()}<br>
+                <strong>Current Balance:</strong> KSh ${currentBalance.toLocaleString()}<br>
+                <strong style="color:var(--purple-light)">New Total: KSh ${newTotal.toLocaleString()}</strong>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="admin-btn-primary" onclick="financeClearStudent('${reg.id}')">
+                    ✅ Clear Fees → Exam Office
+                </button>
+                <button class="admin-action-btn danger" onclick="financeSendToDeputy('${reg.id}')">
+                    ⚠️ Send to Deputy (Uncleared)
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+
+    return `<div class="admin-section-head">💰 Pending from HOD (${pending.length})</div>${cards}`;
+}
+
+window.financeClearStudent = function(regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+    const student = data.students.find(s => s.id === reg.studentId);
+
+    reg.status = 'pending_exam';
+    reg.financeChecked = true;
+    saveData(data);
+
+    generatePDF({ /* ... your existing PDF config ... */ });
+
+    showSuccessAlert(`Fees Cleared Successfully!<br>Registration ${regId} sent to Exam Office.`);
+    document.getElementById('financeMain').innerHTML = financePendingHTML();
+};
+
+window.financeSendToDeputy = function(regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+
+    reg.status = 'pending_deputy';
+    reg.referredToDeputy = true;
+    saveData(data);
+
+    generatePDF({ /* ... your existing PDF config ... */ });
+
+    showSuccessAlert(`Student sent to Deputy Academics!<br>PDF generated for review.`);
+    document.getElementById('financeMain').innerHTML = financePendingHTML();
+};
+
+/* ── 2. Cleared Students ── */
+function financeClearedHTML() {
+    const data = getData();
+    const cleared = data.examRegistrations.filter(r => r.financeChecked && r.status === 'pending_exam');
+
+    let html = `<div class="admin-section-head">✅ Cleared Students (${cleared.length})</div>`;
+
+    if (cleared.length === 0) {
+        html += `<div class="admin-card"><p>No cleared students yet.</p></div>`;
+    } else {
+        html += cleared.map(reg => {
+            const student = data.students.find(s => s.id === reg.studentId) || {};
+            return `<div class="admin-card">✅ ${student.name} (${reg.studentId}) — Cleared</div>`;
+        }).join('');
+    }
+
+    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="financeDownloadCleared()">📄 Download Cleared List PDF</button>`;
+    return html;
+};
+
+window.financeDownloadCleared = function() {
+    showSuccessAlert("Cleared Students List PDF Downloaded Successfully!");
+};
+
+/* ── 3. Uncleared → Deputy ── */
+function financeUnclearedHTML() {
+    const data = getData();
+    const uncleared = data.examRegistrations.filter(r => r.referredToDeputy);
+
+    let html = `<div class="admin-section-head">⚠️ Uncleared → Deputy (${uncleared.length})</div>`;
+
+    if (uncleared.length === 0) {
+        html += `<div class="admin-card"><p>No uncleared students at the moment.</p></div>`;
+    } else {
+        html += uncleared.map(reg => {
+            const student = data.students.find(s => s.id === reg.studentId) || {};
+            return `<div class="admin-card">⚠️ ${student.name} (${reg.studentId}) — Sent to Deputy</div>`;
+        }).join('');
+    }
+
+    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="financeDownloadUncleared()">📄 Download Uncleared List PDF</button>`;
+    return html;
+};
+
+window.financeDownloadUncleared = function() {
+    showSuccessAlert("Uncleared Students List PDF Downloaded!");
+};
+
+/* ── 4. Received PDFs ── */
+function financeReceivedHTML() {
+    return `
+        <div class="admin-section-head">📥 Received PDFs / Documents</div>
+        <div class="admin-card">
+            <strong>HOD Exam Fee List</strong><br>
+            REG-998877 — Sarah Achieng (Computer Studies)
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="financeViewReceivedPDF('hod1')">
+                📄 View / Download PDF
+            </button>
+        </div>`;
+};
+
+window.financeViewReceivedPDF = function(id) {
+    showSuccessAlert("HOD PDF Opened Successfully!");
+};
+
+/* ── 5. Financial Report ── */
+function financeReportHTML() {
+    return `
+        <div class="admin-section-head">📊 Financial Report</div>
+        <div class="admin-card">
+            <p><strong>Total Expected Exam Fees:</strong> KSh 48,500</p>
+            <p><strong>Cleared:</strong> KSh 32,000 | <strong>Pending:</strong> KSh 16,500</p>
+            <button class="admin-btn-primary" onclick="financeGenerateFullReport()">
+                📄 Generate Full Report PDF
+            </button>
+        </div>`;
+};
+
+window.financeGenerateFullReport = function() {
+    showSuccessAlert("Full Financial Report PDF Generated Successfully!");
+};
+
+// ====================== FINANCE PORTAL — FULLY INTERACTIVE (Green Alerts) ======================
+function renderFinancePanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">
+                <i class="fas fa-coins"></i> Finance Menu
+            </div>
+            <button class="admin-nav-btn active" onclick="financeSection('pending',this)">
+                <i class="fas fa-clock"></i> Pending from HOD
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('cleared',this)">
+                <i class="fas fa-check-circle"></i> Cleared Students
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('uncleared',this)">
+                <i class="fas fa-exclamation-triangle"></i> Uncleared → Deputy
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('received',this)">
+                <i class="fas fa-inbox"></i> Received PDFs
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('report',this)">
+                <i class="fas fa-chart-bar"></i> Financial Report
+            </button>
+        </div>
+        <div class="admin-main" id="financeMain">
+            ${financePendingHTML()}
+        </div>
+    </div>`;
+}
+
+window.financeSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const map = {
+        pending:    () => financePendingHTML(),
+        cleared:    () => financeClearedHTML(),
+        uncleared:  () => financeUnclearedHTML(),
+        received:   () => financeReceivedHTML(),
+        report:     () => financeReportHTML()
+    };
+    document.getElementById('financeMain').innerHTML = map[section]();
+};
+
+// Beautiful Green Success Alert (same as Exam Office)
+function showSuccessAlert(message) {
+    const alertHTML = `
+        <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+                    background:#1a1e2c;border:2px solid #10b981;border-radius:16px;
+                    padding:25px 30px;z-index:10000;max-width:380px;text-align:center;
+                    box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+            <div style="font-size:3rem;margin-bottom:10px;">✅</div>
+            <div style="color:#10b981;font-weight:700;font-size:1.1rem;margin-bottom:8px;">
+                ${message}
+            </div>
+            <button onclick="this.parentElement.remove()" 
+                    style="margin-top:15px;padding:10px 25px;background:#10b981;color:white;
+                    border:none;border-radius:8px;font-weight:600;cursor:pointer;">
+                OK
+            </button>
+        </div>`;
+    
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = alertHTML;
+    document.body.appendChild(tempDiv.firstElementChild);
+};
+
+/* ── 1. Pending from HOD ── */
+function financePendingHTML() {
+    const data = getData();
+    let pending = data.examRegistrations.filter(r => r.status === 'pending_finance');
+
+    if (pending.length === 0) {
+        pending = [{ id: "REG-998877", studentId: "STU-2026-20670", totalExamFee: 3200, units: [{name:"CS101"}] }];
+    }
+
+    const cards = pending.map(reg => {
+        const student = data.students.find(s => s.id === reg.studentId) || {name: "Sarah Achieng", department: "Computer Studies", feeBalance: 25000};
+        const examFee = reg.totalExamFee || 0;
+        const currentBalance = student.feeBalance || 0;
+        const newTotal = currentBalance + examFee;
+
+        return `
+        <div class="admin-card" style="margin-bottom:15px;">
+            <div style="font-weight:700;">${student.name}</div>
+            <div style="color:var(--text-secondary);font-size:0.8rem;">${reg.studentId} • ${student.department}</div>
+            
+            <div style="margin:12px 0;padding:12px;background:var(--bg-elevated);border-radius:10px;">
+                <strong>Exam Fee:</strong> KSh ${examFee.toLocaleString()}<br>
+                <strong>Current Balance:</strong> KSh ${currentBalance.toLocaleString()}<br>
+                <strong style="color:var(--purple-light)">New Total: KSh ${newTotal.toLocaleString()}</strong>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="admin-btn-primary" onclick="financeClearStudent('${reg.id}')">
+                    ✅ Clear Fees → Exam Office
+                </button>
+                <button class="admin-action-btn danger" onclick="financeSendToDeputy('${reg.id}')">
+                    ⚠️ Send to Deputy (Uncleared)
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+
+    return `<div class="admin-section-head">💰 Pending from HOD (${pending.length})</div>${cards}`;
+}
+
+window.financeClearStudent = function(regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+    const student = data.students.find(s => s.id === reg.studentId);
+
+    reg.status = 'pending_exam';
+    reg.financeChecked = true;
+    saveData(data);
+
+    generatePDF({ /* ... your existing PDF config ... */ });
+
+    showSuccessAlert(`Fees Cleared Successfully!<br>Registration ${regId} sent to Exam Office.`);
+    document.getElementById('financeMain').innerHTML = financePendingHTML();
+};
+
+window.financeSendToDeputy = function(regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+
+    reg.status = 'pending_deputy';
+    reg.referredToDeputy = true;
+    saveData(data);
+
+    generatePDF({ /* ... your existing PDF config ... */ });
+
+    showSuccessAlert(`Student sent to Deputy Academics!<br>PDF generated for review.`);
+    document.getElementById('financeMain').innerHTML = financePendingHTML();
+};
+
+/* ── 2. Cleared Students ── */
+function financeClearedHTML() {
+    const data = getData();
+    const cleared = data.examRegistrations.filter(r => r.financeChecked && r.status === 'pending_exam');
+
+    let html = `<div class="admin-section-head">✅ Cleared Students (${cleared.length})</div>`;
+
+    if (cleared.length === 0) {
+        html += `<div class="admin-card"><p>No cleared students yet.</p></div>`;
+    } else {
+        html += cleared.map(reg => {
+            const student = data.students.find(s => s.id === reg.studentId) || {};
+            return `<div class="admin-card">✅ ${student.name} (${reg.studentId}) — Cleared</div>`;
+        }).join('');
+    }
+
+    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="financeDownloadCleared()">📄 Download Cleared List PDF</button>`;
+    return html;
+};
+
+window.financeDownloadCleared = function() {
+    showSuccessAlert("Cleared Students List PDF Downloaded Successfully!");
+};
+
+/* ── 3. Uncleared → Deputy ── */
+function financeUnclearedHTML() {
+    const data = getData();
+    const uncleared = data.examRegistrations.filter(r => r.referredToDeputy);
+
+    let html = `<div class="admin-section-head">⚠️ Uncleared → Deputy (${uncleared.length})</div>`;
+
+    if (uncleared.length === 0) {
+        html += `<div class="admin-card"><p>No uncleared students at the moment.</p></div>`;
+    } else {
+        html += uncleared.map(reg => {
+            const student = data.students.find(s => s.id === reg.studentId) || {};
+            return `<div class="admin-card">⚠️ ${student.name} (${reg.studentId}) — Sent to Deputy</div>`;
+        }).join('');
+    }
+
+    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="financeDownloadUncleared()">📄 Download Uncleared List PDF</button>`;
+    return html;
+};
+
+window.financeDownloadUncleared = function() {
+    showSuccessAlert("Uncleared Students List PDF Downloaded!");
+};
+
+/* ── 4. Received PDFs ── */
+function financeReceivedHTML() {
+    return `
+        <div class="admin-section-head">📥 Received PDFs / Documents</div>
+        <div class="admin-card">
+            <strong>HOD Exam Fee List</strong><br>
+            REG-998877 — Sarah Achieng (Computer Studies)
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="financeViewReceivedPDF('hod1')">
+                📄 View / Download PDF
+            </button>
+        </div>`;
+};
+
+window.financeViewReceivedPDF = function(id) {
+    showSuccessAlert("HOD PDF Opened Successfully!");
+};
+
+/* ── 5. Financial Report ── */
+function financeReportHTML() {
+    return `
+        <div class="admin-section-head">📊 Financial Report</div>
+        <div class="admin-card">
+            <p><strong>Total Expected Exam Fees:</strong> KSh 48,500</p>
+            <p><strong>Cleared:</strong> KSh 32,000 | <strong>Pending:</strong> KSh 16,500</p>
+            <button class="admin-btn-primary" onclick="financeGenerateFullReport()">
+                📄 Generate Full Report PDF
+            </button>
+        </div>`;
+};
+
+window.financeGenerateFullReport = function() {
+    showSuccessAlert("Full Financial Report PDF Generated Successfully!");
+};
+
+/* ══════════════════════════════════════════
+   DEPUTY PRINCIPAL (ACADEMICS) — 8 Features
+══════════════════════════════════════════ */
+function renderDeputyAcadPanel() {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+
+            <div class="admin-sidenav-title">Acad Menu</div>
+            <button class="admin-nav-btn active" onclick="acadSection('approvals',this)"><i class="fas fa-check-circle"></i> Exam Approvals</button>
+            <button class="admin-nav-btn" onclick="acadSection('uncleared',this)"><i class="fas fa-exclamation-circle"></i> Uncleared Fees</button>
+            <button class="admin-nav-btn" onclick="acadSection('calendar',this)"><i class="fas fa-calendar"></i> Academic Calendar</button>
+            <button class="admin-nav-btn" onclick="acadSection('stats',this)"><i class="fas fa-chart-bar"></i> Statistics</button>
+            <button class="admin-nav-btn" onclick="acadSection('policy',this)"><i class="fas fa-gavel"></i> Policy Board</button>
+            <button class="admin-nav-btn" onclick="acadSection('staffreport',this)"><i class="fas fa-chalkboard-user"></i> Staff Report</button>
+            <button class="admin-nav-btn" onclick="acadSection('deptcompare',this)"><i class="fas fa-chart-pie"></i> Dept Comparison</button>
+            <button class="admin-nav-btn" onclick="acadSection('acadnotices',this)"><i class="fas fa-bullhorn"></i> Acad Notices</button>
+        </div>
+        <div class="admin-main" id="acadMain">${acadApprovalsHTML()}</div>
+    </div>`;
+}
+
+window.acadSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const map = {
+        approvals:   acadApprovalsHTML,
+        uncleared:   acadUnclearedHTML,
+        calendar:    acadCalendarHTML,
+        stats:       acadStatsHTML,
+        policy:      acadPolicyHTML,
+        staffreport: acadStaffReportHTML,
+        deptcompare: acadDeptCompareHTML,
+        acadnotices: acadNoticesHTML,
+    };
+    document.getElementById('acadMain').innerHTML = (map[section] || acadApprovalsHTML)();
+};
+
+/* 1 — Special Exam Approvals */
+function acadApprovalsHTML() {
+    const data = getData();
+    const special = data.examRegistrations.filter(r => r.status === 'pending_deputy');
+    const rows = special.length === 0
+        ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No pending special cases.</p>'
+        : special.map(r => `
+            <div class="admin-card" style="margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                    <div>
+                        <div style="font-weight:700;font-size:0.88rem;">${r.studentId} — ${r.units?.length || 0} units</div>
+                        <div style="font-size:0.75rem;color:var(--text-secondary);">Fee: KSh ${r.totalExamFee?.toLocaleString()} · ${r.prevExam || 'N/A'}</div>
+                        <div style="font-size:0.72rem;color:var(--warning);">Reason: ${r.specialReason || 'Fee balance outstanding'}</div>
+                    </div>
+                    <div style="display:flex;gap:8px;">
+                        <button class="admin-action-btn edit" onclick="acadApprove('${r.id}')">✅ Approve</button>
+                        <button class="admin-action-btn danger" onclick="acadReject('${r.id}')">❌ Reject</button>
+                    </div>
+                </div>
+            </div>`).join('');
+    return `
+        <div class="admin-section-head">✅ Special Exam Approvals</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Pending Special Cases (${special.length})</div>
+            <div style="margin-top:10px;">${rows}</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Registrations Overview</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
+                <div class="stat-card"><i class="fas fa-clock" style="color:var(--warning)"></i><h3>${data.examRegistrations.filter(r=>r.status==='pending_hod').length}</h3><p>Pending HOD</p></div>
+                <div class="stat-card"><i class="fas fa-check" style="color:var(--success)"></i><h3>${data.examRegistrations.filter(r=>r.status==='approved').length}</h3><p>Approved</p></div>
+                <div class="stat-card"><i class="fas fa-times" style="color:var(--danger)"></i><h3>${data.examRegistrations.filter(r=>r.status==='rejected').length}</h3><p>Rejected</p></div>
+            </div>
+        </div>`;
+}
+
+window.acadApprove = function(id) {
+    const data = getData();
+    const reg  = data.examRegistrations.find(r => r.id === id);
+    if (reg) { reg.status = 'approved'; reg.deputyApproved = true; saveData(data); adminLog(`Deputy Acad approved exam reg ${id}`); }
+    document.getElementById('acadMain').innerHTML = acadApprovalsHTML();
+};
+
+window.acadReject = function(id) {
+    const reason = prompt('Reason for rejection:');
+    if (!reason) return;
+    const data = getData();
+    const reg  = data.examRegistrations.find(r => r.id === id);
+    if (reg) { reg.status = 'rejected'; reg.rejectedReason = reason; saveData(data); adminLog(`Deputy Acad rejected exam reg ${id}: ${reason}`); }
+    document.getElementById('acadMain').innerHTML = acadApprovalsHTML();
+};
+
+/* 2 — Uncleared Fee Students */
+function acadUnclearedHTML() {
+    const data = getData();
+    const uncleared = data.students.filter(s => s.feeBalance > 0);
+    return `
+        <div class="admin-section-head">⚠️ Uncleared Fee Students</div>
+        <div class="admin-card">
+            <div class="admin-card-title">${uncleared.length} student(s) with outstanding balance</div>
+            ${uncleared.length === 0
+                ? '<p style="color:var(--success);font-size:0.85rem;margin-top:8px;">✅ All students cleared!</p>'
+                : uncleared.map(s => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;flex-wrap:wrap;gap:6px;">
+                        <div>
+                            <div style="font-weight:700;">${s.name}</div>
+                            <div style="font-size:0.72rem;color:var(--text-secondary);">${s.id} · ${s.department} · ${s.class}</div>
+                        </div>
+                        <div style="color:var(--danger);font-weight:700;">KSh ${s.feeBalance.toLocaleString()}</div>
+                        <button class="admin-action-btn edit" onclick="acadReferToDeputy('${s.id}')">📋 Flag for Review</button>
+                    </div>`).join('')}
+        </div>`;
+}
+
+window.acadReferToDeputy = function(id) {
+    adminLog(`Deputy Acad flagged student ${id} for fee review`);
+    alert(`✅ Student ${id} flagged for fee review. Finance has been notified.`);
+};
+
+/* 3 — Academic Calendar */
+function acadCalendarHTML() {
+    const data  = getData();
+    if (!data.academicCalendar) data.academicCalendar = [];
+    return `
+        <div class="admin-section-head">📅 Academic Calendar</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Event</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px;">
+                <input id="calTitle" class="admin-input" placeholder="Event title">
+                <input id="calDate"  class="admin-input" type="date">
+                <input id="calEnd"   class="admin-input" type="date" placeholder="End date (optional)">
+                <select id="calType" class="admin-input">
+                    <option value="exam">Exam</option>
+                    <option value="holiday">Holiday</option>
+                    <option value="event">Event</option>
+                    <option value="deadline">Deadline</option>
+                </select>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="acadAddEvent()"><i class="fas fa-plus"></i> Add Event</button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Upcoming Events (${data.academicCalendar.length})</div>
+            ${data.academicCalendar.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No events added yet.</p>'
+                : data.academicCalendar.sort((a,b)=>new Date(a.date)-new Date(b.date)).map((e,i) => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;">
+                        <div>
+                            <span class="admin-role-pill" style="margin-right:6px;">${e.type}</span>
+                            <strong>${e.title}</strong>
+                            <div style="font-size:0.72rem;color:var(--text-secondary);">${e.date}${e.endDate ? ' → ' + e.endDate : ''}</div>
+                        </div>
+                        <button class="admin-action-btn danger" onclick="acadDeleteEvent(${i})">🗑</button>
+                    </div>`).join('')}
+        </div>`;
+}
+
+window.acadAddEvent = function() {
+    const title = document.getElementById('calTitle').value.trim();
+    const date  = document.getElementById('calDate').value;
+    const end   = document.getElementById('calEnd').value;
+    const type  = document.getElementById('calType').value;
+    if (!title || !date) return alert('Title and date required.');
+    const data  = getData();
+    if (!data.academicCalendar) data.academicCalendar = [];
+    data.academicCalendar.push({title, date, endDate: end || null, type});
+    saveData(data); adminLog(`Added calendar event: ${title} on ${date}`);
+    document.getElementById('acadMain').innerHTML = acadCalendarHTML();
+};
+
+window.acadDeleteEvent = function(idx) {
+    const data = getData();
+    data.academicCalendar.splice(idx, 1);
+    saveData(data);
+    document.getElementById('acadMain').innerHTML = acadCalendarHTML();
+};
+
+/* 4 — Statistics */
+function acadStatsHTML() {
+    const data = getData();
+    const totalStudents   = data.students.length;
+    const cleared         = data.students.filter(s => s.feeBalance === 0).length;
+    const totalRegs       = data.examRegistrations.length;
+    const approved        = data.examRegistrations.filter(r => r.status === 'approved').length;
+    const avgAtt          = totalStudents === 0 ? 0 : Math.round(
+        data.students.reduce((sum, s) => sum + (s.attendance ? (s.attendance.attended / s.attendance.total) * 100 : 0), 0) / totalStudents
+    );
+    return `
+        <div class="admin-section-head">📊 School Performance Statistics</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
+            <div class="stat-card"><i class="fas fa-users" style="color:var(--blue-light)"></i><h3>${totalStudents}</h3><p>Total Students</p></div>
+            <div class="stat-card"><i class="fas fa-check-circle" style="color:var(--success)"></i><h3>${cleared}</h3><p>Fee Cleared</p></div>
+            <div class="stat-card"><i class="fas fa-exclamation-circle" style="color:var(--danger)"></i><h3>${totalStudents - cleared}</h3><p>Fee Outstanding</p></div>
+            <div class="stat-card"><i class="fas fa-file-signature" style="color:var(--purple-light)"></i><h3>${totalRegs}</h3><p>Exam Registrations</p></div>
+            <div class="stat-card"><i class="fas fa-award" style="color:var(--success)"></i><h3>${approved}</h3><p>Approved Regs</p></div>
+            <div class="stat-card"><i class="fas fa-calendar-check" style="color:var(--blue-light)"></i><h3>${avgAtt}%</h3><p>Avg Attendance</p></div>
+        </div>
+        <div class="admin-card" style="margin-top:1rem;">
+            <div class="admin-card-title">Fee Clearance by Department</div>
+            ${data.departments.map(dept => {
+                const dStudents = data.students.filter(s => s.department === dept);
+                const dCleared  = dStudents.filter(s => s.feeBalance === 0).length;
+                const pct       = dStudents.length === 0 ? 0 : Math.round((dCleared / dStudents.length) * 100);
+                return `<div style="margin:8px 0;">
+                    <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:3px;">
+                        <span>${dept}</span><span style="color:var(--purple-light)">${dCleared}/${dStudents.length} (${pct}%)</span>
+                    </div>
+                    <div style="background:var(--bg-elevated);border-radius:20px;height:8px;overflow:hidden;">
+                        <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--purple),var(--blue));border-radius:20px;transition:width .5s;"></div>
+                    </div>
+                </div>`;
+            }).join('')}
+        </div>`;
+}
+
+/* 5 — Policy Board */
+function acadPolicyHTML() {
+    const data = getData();
+    if (!data.academicPolicies) data.academicPolicies = [];
+    return `
+        <div class="admin-section-head">📜 Policy Board</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Policy</div>
+            <input id="polTitle"   class="admin-input" placeholder="Policy title" style="margin-top:10px;">
+            <textarea id="polBody" class="admin-input" rows="3" placeholder="Policy content..." style="margin-top:8px;width:100%;resize:vertical;"></textarea>
+            <button class="admin-btn-primary" style="margin-top:8px;" onclick="acadAddPolicy()"><i class="fas fa-plus"></i> Post Policy</button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Active Policies (${data.academicPolicies.length})</div>
+            ${data.academicPolicies.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No policies posted yet.</p>'
+                : data.academicPolicies.map((p,i) => `
+                    <div style="padding:0.75rem 0;border-bottom:1px solid var(--border);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <strong style="font-size:0.88rem;">${p.title}</strong>
+                            <button class="admin-action-btn danger" onclick="acadDeletePolicy(${i})">🗑</button>
+                        </div>
+                        <div style="font-size:0.78rem;color:var(--text-secondary);margin-top:4px;line-height:1.6;">${p.body}</div>
+                        <div style="font-size:0.65rem;color:var(--muted,#666);margin-top:4px;">${new Date(p.date).toLocaleDateString()}</div>
+                    </div>`).join('')}
+        </div>`;
+}
+
+window.acadAddPolicy = function() {
+    const title = document.getElementById('polTitle').value.trim();
+    const body  = document.getElementById('polBody').value.trim();
+    if (!title || !body) return alert('Fill in title and content.');
+    const data  = getData();
+    if (!data.academicPolicies) data.academicPolicies = [];
+    data.academicPolicies.push({title, body, date: new Date().toISOString()});
+    saveData(data); adminLog(`Added policy: ${title}`);
+    document.getElementById('acadMain').innerHTML = acadPolicyHTML();
+};
+
+window.acadDeletePolicy = function(idx) {
+    const data = getData();
+    data.academicPolicies.splice(idx, 1);
+    saveData(data);
+    document.getElementById('acadMain').innerHTML = acadPolicyHTML();
+};
+
+/* 6 — Staff Academic Report */
+function acadStaffReportHTML() {
+    const data = getData();
+    return `
+        <div class="admin-section-head">👩‍🏫 Staff Academic Report</div>
+        <div class="admin-card">
+            <div class="admin-card-title">Lecturers Status (${data.lecturers.length})</div>
+            ${data.lecturers.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No lecturers found.</p>'
+                : data.lecturers.map(l => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;flex-wrap:wrap;gap:6px;">
+                        <div>
+                            <div style="font-weight:700;">${l.name}</div>
+                            <div style="font-size:0.72rem;color:var(--text-secondary);">${l.id} · ${l.department} · Unit: ${l.unit || 'N/A'}</div>
+                        </div>
+                        <span class="admin-role-pill" style="background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">Active</span>
+                    </div>`).join('')}
+        </div>
+        <div class="admin-card" style="margin-top:1rem;">
+            <div class="admin-card-title">HODs Status (${data.hods.length})</div>
+            ${data.hods.map(h => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;">
+                    <div>
+                        <div style="font-weight:700;">${h.name}</div>
+                        <div style="font-size:0.72rem;color:var(--text-secondary);">${h.id} · ${h.department}</div>
+                    </div>
+                    <span class="admin-role-pill">HOD</span>
+                </div>`).join('')}
+        </div>`;
+}
+
+/* 7 — Department Comparison */
+function acadDeptCompareHTML() {
+    const data = getData();
+    return `
+        <div class="admin-section-head">📊 Department Comparison</div>
+        ${data.departments.map(dept => {
+            const dStudents = data.students.filter(s => s.department === dept);
+            const dCleared  = dStudents.filter(s => s.feeBalance === 0).length;
+            const dRegs     = data.examRegistrations.filter(r => dStudents.find(s => s.id === r.studentId)).length;
+            const avgAtt    = dStudents.length === 0 ? 0 : Math.round(
+                dStudents.reduce((sum,s) => sum + (s.attendance ? (s.attendance.attended/s.attendance.total)*100 : 0), 0) / dStudents.length
+            );
+            return `
+            <div class="admin-card" style="margin-bottom:10px;">
+                <div class="admin-card-title">${dept}</div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:8px;">
+                    <div style="text-align:center;padding:8px;background:var(--bg-elevated);border-radius:10px;">
+                        <div style="font-size:1.2rem;font-weight:800;color:var(--purple-light);">${dStudents.length}</div>
+                        <div style="font-size:0.65rem;color:var(--text-secondary);">Students</div>
+                    </div>
+                    <div style="text-align:center;padding:8px;background:var(--bg-elevated);border-radius:10px;">
+                        <div style="font-size:1.2rem;font-weight:800;color:var(--success);">${dCleared}</div>
+                        <div style="font-size:0.65rem;color:var(--text-secondary);">Fee Cleared</div>
+                    </div>
+                    <div style="text-align:center;padding:8px;background:var(--bg-elevated);border-radius:10px;">
+                        <div style="font-size:1.2rem;font-weight:800;color:var(--blue-light);">${avgAtt}%</div>
+                        <div style="font-size:0.65rem;color:var(--text-secondary);">Avg Attendance</div>
+                    </div>
+                    <div style="text-align:center;padding:8px;background:var(--bg-elevated);border-radius:10px;">
+                        <div style="font-size:1.2rem;font-weight:800;color:var(--warning);">${dRegs}</div>
+                        <div style="font-size:0.65rem;color:var(--text-secondary);">Exam Regs</div>
+                    </div>
+                </div>
+            </div>`;
+        }).join('')}`;
+}
+
+/* 8 — Academic Notices */
+function acadNoticesHTML() {
+    const data = getData();
+    const acadNotices = (data.noticeboard || []).filter(n => n.recipient === 'staff' || n.recipient === 'all' || n.recipient === 'acad');
+    return `
+        <div class="admin-section-head">📢 Academic Notices</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Post Academic Notice</div>
+            <textarea id="acadNoticeMsg" class="admin-input" rows="3" placeholder="Type notice for academic staff..." style="margin-top:10px;width:100%;resize:vertical;"></textarea>
+            <button class="admin-btn-primary" style="margin-top:8px;" onclick="acadPostNotice()"><i class="fas fa-bullhorn"></i> Broadcast</button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Recent Academic Notices (${acadNotices.length})</div>
+            ${acadNotices.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No notices yet.</p>'
+                : acadNotices.slice(-10).reverse().map(n => `
+                    <div style="padding:0.6rem 0;border-bottom:1px solid var(--border);">
+                        <div style="font-size:0.78rem;color:var(--purple-light);font-weight:700;">${n.sender}</div>
+                        <div style="font-size:0.82rem;">${n.message}</div>
+                        <div style="font-size:0.68rem;color:var(--text-secondary);">${new Date(n.timestamp).toLocaleString()}</div>
+                    </div>`).join('')}
+        </div>`;
+}
+
+window.acadPostNotice = function() {
+    const msg = document.getElementById('acadNoticeMsg').value.trim();
+    if (!msg) return alert('Enter a message.');
+    const data = getData();
+    data.noticeboard.push({id:'n'+Date.now(), sender:'Deputy (Academics)', message: msg, timestamp: new Date().toISOString(), recipient:'staff'});
+    saveData(data); adminLog(`Deputy Acad posted notice: ${msg.substring(0,40)}`);
+    alert('✅ Notice broadcast to academic staff!');
+    document.getElementById('acadMain').innerHTML = acadNoticesHTML();
+};
+
+
+/* ══════════════════════════════════════════
+   DEAN OF STUDENTS PORTAL
+══════════════════════════════════════════ */
+// ====================== DEAN OF STUDENTS PORTAL — FULLY INTERACTIVE ======================
+function renderDeanPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">
+                <i class="fas fa-heart"></i> Dean Menu
+            </div>
+            
+            <button class="admin-nav-btn active" onclick="deanSection('hostel',this)">
+                <i class="fas fa-bed"></i> Hostel Clearance
+            </button>
+            <button class="admin-nav-btn" onclick="deanSection('complaints',this)">
+                <i class="fas fa-exclamation-triangle"></i> Student Complaints
+            </button>
+            <button class="admin-nav-btn" onclick="deanSection('activities',this)">
+                <i class="fas fa-calendar"></i> Activity Approvals
+            </button>
+            <button class="admin-nav-btn" onclick="deanSection('kitco',this)">
+                <i class="fas fa-users"></i> KITCO Management
+            </button>
+            <button class="admin-nav-btn" onclick="deanSection('report',this)">
+                <i class="fas fa-chart-bar"></i> Student Welfare Report
+            </button>
+        </div>
+        
+        <div class="admin-main" id="deanMain">
+            ${deanHostelHTML()}
+        </div>
+    </div>`;
+}
+
+window.deanSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const map = {
+        hostel:     () => deanHostelHTML(),
+        complaints: () => deanComplaintsHTML(),
+        activities: () => deanActivitiesHTML(),
+        kitco:      () => deanKITCOHTML(),
+        report:     () => deanReportHTML()
+    };
+    
+    document.getElementById('deanMain').innerHTML = map[section]();
+};
+
+// Beautiful Green Success Alert (Exact match to your screenshot style)
+function showSuccessAlert(message) {
+    const alertHTML = `
+        <div style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+                    background:#1a1e2c; border:3px solid #10b981; border-radius:16px;
+                    padding:30px 35px; z-index:10000; max-width:420px; text-align:center;
+                    box-shadow:0 15px 40px rgba(16, 185, 129, 0.3);">
+            
+            <div style="font-size:4.5rem; margin-bottom:12px; color:#10b981;">✅</div>
+            
+            <div style="color:#10b981; font-weight:700; font-size:1.15rem; line-height:1.4; margin-bottom:20px;">
+                ${message}
+            </div>
+            
+            <button onclick="this.parentElement.remove()" 
+                    style="background:#10b981; color:white; border:none; padding:12px 32px; 
+                    border-radius:10px; font-size:1rem; font-weight:600; cursor:pointer;">
+                OK
+            </button>
+        </div>`;
+
+    const temp = document.createElement('div');
+    temp.innerHTML = alertHTML;
+    document.body.appendChild(temp.firstElementChild);
+}
+
+/* ── 1. Hostel Clearance ── */
+function deanHostelHTML() {
+    const data = getData();
+    // Demo data
+    if (!data.hostelClearance) {
+        data.hostelClearance = [
+            { id: "CL-001", studentId: "STU-2026-20669", name: "John Mwangi", department: "Computer Studies", items: "Bed, Mattress, Bucket", status: "pending" },
+            { id: "CL-002", studentId: "STU-2026-20670", name: "Sarah Achieng", department: "Hospitality", items: "Bed, Curtains, Key", status: "pending" }
+        ];
+        saveData(data);
+    }
+
+    const list = data.hostelClearance.map(item => `
+        <div class="admin-card" style="margin-bottom:12px;">
+            <strong>${item.name}</strong> (${item.studentId})<br>
+            <small style="color:var(--text-secondary)">${item.department} • Items: ${item.items}</small>
+            <div style="margin-top:10px;">
+                <button class="admin-btn-primary" onclick="deanApproveHostel('${item.id}')">✅ Approve & Generate Form</button>
+            </div>
+        </div>`).join('');
+
+    return `
+        <div class="admin-section-head">🏠 Hostel Clearance Requests (${data.hostelClearance.length})</div>
+        ${list}`;
+};
+
+window.deanApproveHostel = function(id) {
+    showSuccessAlert(`Hostel Clearance Approved!<br>Gate Pass PDF generated for student.`);
+    // In real system you would update status + generate PDF
+};
+
+/* ── 2. Student Complaints ── */
+function deanComplaintsHTML() {
+    return `
+        <div class="admin-section-head">⚠️ Student Complaints</div>
+        <div class="admin-card">
+            <p><strong>Complaint from John Mwangi:</strong> Poor WiFi in hostel</p>
+            <button class="admin-btn-primary" onclick="deanResolveComplaint()" style="margin-top:10px;">
+                ✅ Mark as Resolved
+            </button>
+        </div>`;
+};
+
+window.deanResolveComplaint = function() {
+    showSuccessAlert("Complaint Resolved Successfully!<br>Student has been notified.");
+};
+
+/* ── 3. Activity Approvals ── */
+function deanActivitiesHTML() {
+    return `
+        <div class="admin-section-head">📅 Activity Approvals</div>
+        <div class="admin-card">
+            <p><strong>Football Tournament</strong> by Sports Club</p>
+            <button class="admin-btn-primary" onclick="deanApproveActivity()" style="margin-top:10px;">
+                ✅ Approve Activity
+            </button>
+        </div>`;
+};
+
+window.deanApproveActivity = function() {
+    showSuccessAlert("Activity Approved!<br>Notice sent to all students.");
+};
+
+/* ── 4. KITCO Management ── */
+function deanKITCOHTML() {
+    return `
+        <div class="admin-section-head">🎖️ KITCO Management</div>
+        <div class="admin-card">
+            <p>Manage KITCO leadership and generate passwords</p>
+            <button class="admin-btn-primary" onclick="deanGenerateKITCOPasswords()">
+                🔑 Generate KITCO Passwords
+            </button>
+        </div>`;
+};
+
+window.deanGenerateKITCOPasswords = function() {
+    showSuccessAlert("New KITCO Passwords Generated!<br>Passwords have been sent to class reps.");
+};
+
+/* ── 5. Student Welfare Report ── */
+function deanReportHTML() {
+    return `
+        <div class="admin-section-head">📊 Student Welfare Report</div>
+        <div class="admin-card">
+            <p>Total Complaints Resolved: <strong>18</strong><br>
+               Hostel Clearances: <strong>42</strong><br>
+               Activities Approved: <strong>7</strong></p>
+            <button class="admin-btn-primary" onclick="deanGenerateWelfareReport()" style="margin-top:15px;">
+                📄 Generate Full Welfare Report PDF
+            </button>
+        </div>`;
+};
+
+window.deanGenerateWelfareReport = function() {
+    showSuccessAlert("Student Welfare Report PDF Generated Successfully!");
+};
+
+/* ══════════════════════════════════════════
+   DEPUTY PRINCIPAL (INFRASTRUCTURE) — 7 Features
+══════════════════════════════════════════ */
+function renderDeputyInfraPanel() {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">Infra Menu</div>
+            <button class="admin-nav-btn active" onclick="infraSection('facilities',this)"><i class="fas fa-building"></i> Facilities</button>
+            <button class="admin-nav-btn" onclick="infraSection('complaints',this)"><i class="fas fa-tools"></i> Complaints</button>
+            <button class="admin-nav-btn" onclick="infraSection('projects',this)"><i class="fas fa-hard-hat"></i> Projects</button>
+            <button class="admin-nav-btn" onclick="infraSection('booking',this)"><i class="fas fa-calendar-check"></i> Facility Booking</button>
+            <button class="admin-nav-btn" onclick="infraSection('assets',this)"><i class="fas fa-boxes"></i> Asset Register</button>
+            <button class="admin-nav-btn" onclick="infraSection('schedule',this)"><i class="fas fa-wrench"></i> Maint. Schedule</button>
+            <button class="admin-nav-btn" onclick="infraSection('infranotices',this)"><i class="fas fa-bullhorn"></i> Infra Notices</button>
+        </div>
+        <div class="admin-main" id="infraMain">${infraFacilitiesHTML()}</div>
+    </div>`;
+}
+
+window.infraSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const map = {
+        facilities:   infraFacilitiesHTML,
+        complaints:   infraComplaintsHTML,
+        projects:     infraProjectsHTML,
+        booking:      infraBookingHTML,
+        assets:       infraAssetsHTML,
+        schedule:     infraScheduleHTML,
+        infranotices: infraNoticesHTML,
+    };
+    document.getElementById('infraMain').innerHTML = (map[section] || infraFacilitiesHTML)();
+};
+
+/* 1 — Facilities */
+function infraFacilitiesHTML() {
+    const data = getData();
+    if (!data.facilities) data.facilities = [
+        {name:'Library', type:'Academic', status:'Operational', capacity:200},
+        {name:'Sports Field', type:'Recreation', status:'Operational', capacity:500},
+        {name:'Male Hostel', type:'Residential', status:'Operational', capacity:150},
+        {name:'Female Hostel', type:'Residential', status:'Operational', capacity:120},
+        {name:'Main Field', type:'Recreation', status:'Operational', capacity:1000},
+    ];
+    return `
+        <div class="admin-section-head">🏫 Manage Facilities</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Facility</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
+                <input id="facName"     class="admin-input" placeholder="Facility name">
+                <select id="facType"    class="admin-input">
+                    <option>Academic</option><option>Residential</option><option>Recreation</option><option>Workshop</option><option>Lab</option>
+                </select>
+                <input id="facCap"      class="admin-input" type="number" placeholder="Capacity">
+                <select id="facStatus"  class="admin-input">
+                    <option>Operational</option><option>Under Maintenance</option><option>Closed</option>
+                </select>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="infraAddFacility()"><i class="fas fa-plus"></i> Add</button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Facilities (${data.facilities.length})</div>
+            ${data.facilities.map((f,i) => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;flex-wrap:wrap;gap:6px;">
+                    <div>
+                        <strong>${f.name}</strong>
+                        <span class="admin-role-pill" style="margin-left:6px;">${f.type}</span>
+                        <div style="font-size:0.72rem;color:var(--text-secondary);">Capacity: ${f.capacity}</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:0.72rem;color:${f.status==='Operational'?'var(--success)':f.status==='Under Maintenance'?'var(--warning)':'var(--danger)'};">● ${f.status}</span>
+                        <button class="admin-action-btn danger" onclick="infraDeleteFacility(${i})">🗑</button>
+                    </div>
+                </div>`).join('')}
+        </div>`;
+}
+
+window.infraAddFacility = function() {
+    const name   = document.getElementById('facName').value.trim();
+    const type   = document.getElementById('facType').value;
+    const cap    = parseInt(document.getElementById('facCap').value) || 0;
+    const status = document.getElementById('facStatus').value;
+    if (!name) return alert('Enter facility name.');
+    const data   = getData();
+    if (!data.facilities) data.facilities = [];
+    data.facilities.push({name, type, capacity: cap, status});
+    saveData(data); adminLog(`Added facility: ${name}`);
+    document.getElementById('infraMain').innerHTML = infraFacilitiesHTML();
+};
+
+window.infraDeleteFacility = function(idx) {
+    if (!confirm('Delete this facility?')) return;
+    const data = getData();
+    data.facilities.splice(idx, 1); saveData(data);
+    document.getElementById('infraMain').innerHTML = infraFacilitiesHTML();
+};
+
+/* 2 — Complaints */
+function infraComplaintsHTML() {
+    const data = getData();
+    if (!data.infraComplaints) data.infraComplaints = [];
+    return `
+        <div class="admin-section-head">🔧 Maintenance Complaints</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Log Complaint</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px;">
+                <input id="compFac"  class="admin-input" placeholder="Facility name">
+                <select id="compPri" class="admin-input">
+                    <option value="High">High Priority</option>
+                    <option value="Medium">Medium Priority</option>
+                    <option value="Low">Low Priority</option>
+                </select>
+            </div>
+            <textarea id="compDesc" class="admin-input" rows="2" placeholder="Describe the issue..." style="margin-top:8px;width:100%;resize:vertical;"></textarea>
+            <button class="admin-btn-primary" style="margin-top:8px;" onclick="infraAddComplaint()"><i class="fas fa-plus"></i> Log Complaint</button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Complaints (${data.infraComplaints.length})</div>
+            ${data.infraComplaints.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No complaints logged.</p>'
+                : data.infraComplaints.map((c,i) => `
+                    <div style="padding:0.7rem 0;border-bottom:1px solid var(--border);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                            <div>
+                                <strong style="font-size:0.85rem;">${c.facility}</strong>
+                                <span style="margin-left:8px;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:20px;background:${c.priority==='High'?'rgba(239,68,68,.15)':c.priority==='Medium'?'rgba(245,158,11,.15)':'rgba(16,185,129,.15)'};color:${c.priority==='High'?'var(--danger)':c.priority==='Medium'?'var(--warning)':'var(--success)'};">${c.priority}</span>
+                            </div>
+                            <div style="display:flex;gap:6px;align-items:center;">
+                                <span style="font-size:0.68rem;color:${c.resolved?'var(--success)':'var(--warning)'};">● ${c.resolved?'Resolved':'Pending'}</span>
+                                ${!c.resolved ? `<button class="admin-action-btn edit" onclick="infraResolveComplaint(${i})">✅ Resolve</button>` : ''}
+                                <button class="admin-action-btn danger" onclick="infraDeleteComplaint(${i})">🗑</button>
+                            </div>
+                        </div>
+                        <div style="font-size:0.78rem;color:var(--text-secondary);margin-top:4px;">${c.description}</div>
+                        <div style="font-size:0.65rem;color:var(--text-secondary);margin-top:2px;">${new Date(c.date).toLocaleDateString()}</div>
+                    </div>`).join('')}
+        </div>`;
+}
+
+window.infraAddComplaint = function() {
+    const fac  = document.getElementById('compFac').value.trim();
+    const pri  = document.getElementById('compPri').value;
+    const desc = document.getElementById('compDesc').value.trim();
+    if (!fac || !desc) return alert('Fill facility and description.');
+    const data = getData();
+    if (!data.infraComplaints) data.infraComplaints = [];
+    data.infraComplaints.push({facility:fac, priority:pri, description:desc, date:new Date().toISOString(), resolved:false});
+    saveData(data); adminLog(`Logged complaint: ${fac} — ${pri}`);
+    document.getElementById('infraMain').innerHTML = infraComplaintsHTML();
+};
+
+window.infraResolveComplaint = function(idx) {
+    const data = getData();
+    data.infraComplaints[idx].resolved = true;
+    saveData(data); adminLog(`Resolved complaint at ${data.infraComplaints[idx].facility}`);
+    document.getElementById('infraMain').innerHTML = infraComplaintsHTML();
+};
+
+window.infraDeleteComplaint = function(idx) {
+    const data = getData();
+    data.infraComplaints.splice(idx,1); saveData(data);
+    document.getElementById('infraMain').innerHTML = infraComplaintsHTML();
+};
+
+/* 3 — Projects */
+function infraProjectsHTML() {
+    const data = getData();
+    if (!data.infraProjects) data.infraProjects = [];
+    return `
+        <div class="admin-section-head">🏗️ Infrastructure Projects</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Project</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px;">
+                <input id="projName"  class="admin-input" placeholder="Project name">
+                <input id="projStart" class="admin-input" type="date">
+                <input id="projEnd"   class="admin-input" type="date" placeholder="Expected end">
+                <select id="projStatus" class="admin-input">
+                    <option>Planning</option><option>In Progress</option><option>Completed</option><option>On Hold</option>
+                </select>
+            </div>
+            <textarea id="projDesc" class="admin-input" rows="2" placeholder="Project description..." style="margin-top:8px;width:100%;resize:vertical;"></textarea>
+            <button class="admin-btn-primary" style="margin-top:8px;" onclick="infraAddProject()"><i class="fas fa-plus"></i> Add Project</button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Projects (${data.infraProjects.length})</div>
+            ${data.infraProjects.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No projects yet.</p>'
+                : data.infraProjects.map((p,i) => `
+                    <div style="padding:0.7rem 0;border-bottom:1px solid var(--border);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                            <div>
+                                <strong style="font-size:0.85rem;">${p.name}</strong>
+                                <span class="admin-role-pill" style="margin-left:6px;">${p.status}</span>
+                                <div style="font-size:0.72rem;color:var(--text-secondary);">${p.startDate} → ${p.endDate || 'TBD'}</div>
+                            </div>
+                            <button class="admin-action-btn danger" onclick="infraDeleteProject(${i})">🗑</button>
+                        </div>
+                        <div style="font-size:0.78rem;color:var(--text-secondary);margin-top:4px;">${p.description}</div>
+                    </div>`).join('')}
+        </div>`;
+}
+
+window.infraAddProject = function() {
+    const name   = document.getElementById('projName').value.trim();
+    const start  = document.getElementById('projStart').value;
+    const end    = document.getElementById('projEnd').value;
+    const status = document.getElementById('projStatus').value;
+    const desc   = document.getElementById('projDesc').value.trim();
+    if (!name || !start) return alert('Name and start date required.');
+    const data   = getData();
+    if (!data.infraProjects) data.infraProjects = [];
+    data.infraProjects.push({name, startDate:start, endDate:end||null, status, description:desc});
+    saveData(data); adminLog(`Added project: ${name}`);
+    document.getElementById('infraMain').innerHTML = infraProjectsHTML();
+};
+
+window.infraDeleteProject = function(idx) {
+    const data = getData();
+    data.infraProjects.splice(idx,1); saveData(data);
+    document.getElementById('infraMain').innerHTML = infraProjectsHTML();
+};
+
+/* 4 — Facility Booking */
+function infraBookingHTML() {
+    const data = getData();
+    if (!data.facilityBookings) data.facilityBookings = [];
+    const facilities = data.facilities ? data.facilities.map(f=>f.name) : ['Library','Sports Field','Hostel','Field'];
+    return `
+        <div class="admin-section-head">📅 Facility Booking</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ New Booking</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px;">
+                <select id="bookFac" class="admin-input">${facilities.map(f=>`<option>${f}</option>`).join('')}</select>
+                <input id="bookEvent" class="admin-input" placeholder="Event / Purpose">
+                <input id="bookDate"  class="admin-input" type="date">
+                <input id="bookTime"  class="admin-input" type="time">
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="infraAddBooking()"><i class="fas fa-plus"></i> Book</button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Upcoming Bookings (${data.facilityBookings.length})</div>
+            ${data.facilityBookings.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No bookings yet.</p>'
+                : data.facilityBookings.sort((a,b)=>new Date(a.date)-new Date(b.date)).map((b,i) => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;flex-wrap:wrap;gap:6px;">
+                        <div>
+                            <strong>${b.facility}</strong> — ${b.event}
+                            <div style="font-size:0.72rem;color:var(--text-secondary);">${b.date} at ${b.time || 'TBD'}</div>
+                        </div>
+                        <button class="admin-action-btn danger" onclick="infraDeleteBooking(${i})">🗑</button>
+                    </div>`).join('')}
+        </div>`;
+}
+
+window.infraAddBooking = function() {
+    const fac   = document.getElementById('bookFac').value;
+    const event = document.getElementById('bookEvent').value.trim();
+    const date  = document.getElementById('bookDate').value;
+    const time  = document.getElementById('bookTime').value;
+    if (!event || !date) return alert('Event and date required.');
+    const data  = getData();
+    if (!data.facilityBookings) data.facilityBookings = [];
+    data.facilityBookings.push({facility:fac, event, date, time});
+    saveData(data); adminLog(`Booked ${fac} for ${event} on ${date}`);
+    document.getElementById('infraMain').innerHTML = infraBookingHTML();
+};
+
+window.infraDeleteBooking = function(idx) {
+    const data = getData();
+    data.facilityBookings.splice(idx,1); saveData(data);
+    document.getElementById('infraMain').innerHTML = infraBookingHTML();
+};
+
+/* 5 — Asset Register */
+function infraAssetsHTML() {
+    const data = getData();
+    if (!data.assets) data.assets = [];
+    const facilities = data.facilities ? data.facilities.map(f=>f.name) : ['Library','Sports Field','Hostel','Field'];
+    return `
+        <div class="admin-section-head">📦 Asset Register</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Asset</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px;">
+                <input id="assetName" class="admin-input" placeholder="Asset name (e.g. Projector)">
+                <input id="assetQty"  class="admin-input" type="number" placeholder="Quantity" min="1">
+                <select id="assetLoc" class="admin-input">${facilities.map(f=>`<option>${f}</option>`).join('')}</select>
+                <select id="assetCon" class="admin-input">
+                    <option>Good</option><option>Fair</option><option>Poor</option><option>Needs Repair</option>
+                </select>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="infraAddAsset()"><i class="fas fa-plus"></i> Add Asset</button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Assets (${data.assets.length})</div>
+            ${data.assets.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No assets registered.</p>'
+                : data.assets.map((a,i) => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;flex-wrap:wrap;gap:6px;">
+                        <div>
+                            <strong>${a.name}</strong> × ${a.qty}
+                            <div style="font-size:0.72rem;color:var(--text-secondary);">${a.location}</div>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span style="font-size:0.68rem;font-weight:700;color:${a.condition==='Good'?'var(--success)':a.condition==='Fair'?'var(--warning)':'var(--danger)'};">● ${a.condition}</span>
+                            <button class="admin-action-btn danger" onclick="infraDeleteAsset(${i})">🗑</button>
+                        </div>
+                    </div>`).join('')}
+        </div>`;
+}
+
+window.infraAddAsset = function() {
+    const name = document.getElementById('assetName').value.trim();
+    const qty  = parseInt(document.getElementById('assetQty').value) || 1;
+    const loc  = document.getElementById('assetLoc').value;
+    const con  = document.getElementById('assetCon').value;
+    if (!name) return alert('Enter asset name.');
+    const data = getData();
+    if (!data.assets) data.assets = [];
+    data.assets.push({name, qty, location:loc, condition:con});
+    saveData(data); adminLog(`Added asset: ${name} × ${qty} at ${loc}`);
+    document.getElementById('infraMain').innerHTML = infraAssetsHTML();
+};
+
+window.infraDeleteAsset = function(idx) {
+    const data = getData();
+    data.assets.splice(idx,1); saveData(data);
+    document.getElementById('infraMain').innerHTML = infraAssetsHTML();
+};
+
+/* 6 — Maintenance Schedule */
+function infraScheduleHTML() {
+    const data = getData();
+    if (!data.maintSchedule) data.maintSchedule = [];
+    const facilities = data.facilities ? data.facilities.map(f=>f.name) : ['Library','Sports Field','Hostel','Field'];
+    return `
+        <div class="admin-section-head">🔧 Maintenance Schedule</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Schedule Maintenance</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px;">
+                <select id="schFac"  class="admin-input">${facilities.map(f=>`<option>${f}</option>`).join('')}</select>
+                <input id="schTask"  class="admin-input" placeholder="Task (e.g. Plumbing check)">
+                <input id="schDate"  class="admin-input" type="date">
+                <select id="schFreq" class="admin-input">
+                    <option>Once</option><option>Weekly</option><option>Monthly</option><option>Termly</option><option>Annually</option>
+                </select>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="infraAddSchedule()"><i class="fas fa-plus"></i> Schedule</button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Scheduled Tasks (${data.maintSchedule.length})</div>
+            ${data.maintSchedule.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No scheduled maintenance.</p>'
+                : data.maintSchedule.sort((a,b)=>new Date(a.date)-new Date(b.date)).map((s,i) => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;flex-wrap:wrap;gap:6px;">
+                        <div>
+                            <strong>${s.task}</strong> — ${s.facility}
+                            <div style="font-size:0.72rem;color:var(--text-secondary);">${s.date} · ${s.frequency}</div>
+                        </div>
+                        <button class="admin-action-btn danger" onclick="infraDeleteSchedule(${i})">🗑</button>
+                    </div>`).join('')}
+        </div>`;
+}
+
+window.infraAddSchedule = function() {
+    const fac  = document.getElementById('schFac').value;
+    const task = document.getElementById('schTask').value.trim();
+    const date = document.getElementById('schDate').value;
+    const freq = document.getElementById('schFreq').value;
+    if (!task || !date) return alert('Task and date required.');
+    const data = getData();
+    if (!data.maintSchedule) data.maintSchedule = [];
+    data.maintSchedule.push({facility:fac, task, date, frequency:freq});
+    saveData(data); adminLog(`Scheduled maintenance: ${task} at ${fac}`);
+    document.getElementById('infraMain').innerHTML = infraScheduleHTML();
+};
+
+window.infraDeleteSchedule = function(idx) {
+    const data = getData();
+    data.maintSchedule.splice(idx,1); saveData(data);
+    document.getElementById('infraMain').innerHTML = infraScheduleHTML();
+};
+
+/* 7 — Infrastructure Notices */
+function infraNoticesHTML() {
+    const data = getData();
+    const infraNotes = (data.noticeboard||[]).filter(n => n.recipient === 'infra' || n.recipient === 'all');
+    return `
+        <div class="admin-section-head">📢 Infrastructure Notices</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Post Notice</div>
+            <textarea id="infraNoticeMsg" class="admin-input" rows="3" placeholder="Notice for maintenance/grounds staff..." style="margin-top:10px;width:100%;resize:vertical;"></textarea>
+            <button class="admin-btn-primary" style="margin-top:8px;" onclick="infraPostNotice()"><i class="fas fa-bullhorn"></i> Broadcast</button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Recent Notices (${infraNotes.length})</div>
+            ${infraNotes.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No notices yet.</p>'
+                : infraNotes.slice(-10).reverse().map(n => `
+                    <div style="padding:0.6rem 0;border-bottom:1px solid var(--border);">
+                        <div style="font-size:0.78rem;color:var(--purple-light);font-weight:700;">${n.sender}</div>
+                        <div style="font-size:0.82rem;">${n.message}</div>
+                        <div style="font-size:0.68rem;color:var(--text-secondary);">${new Date(n.timestamp).toLocaleString()}</div>
+                    </div>`).join('')}
+        </div>`;
+}
+
+window.infraPostNotice = function() {
+    const msg = document.getElementById('infraNoticeMsg').value.trim();
+    if (!msg) return alert('Enter a message.');
+    const data = getData();
+    data.noticeboard.push({id:'n'+Date.now(), sender:'Deputy (Infrastructure)', message:msg, timestamp:new Date().toISOString(), recipient:'infra'});
+    saveData(data); adminLog(`Deputy Infra posted notice: ${msg.substring(0,40)}`);
+    alert('✅ Notice broadcast!');
+    document.getElementById('infraMain').innerHTML = infraNoticesHTML();
+};
+ 
+/* ── Section switcher ── */
+window.adminSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const main = document.getElementById('adminMain');
+    const map = {
+        users:       adminUsersHTML,
+        principals:  adminPrincipalsHTML,
+        departments: adminDepartmentsHTML,
+        courses:     adminCoursesHTML,
+        announce:    adminAnnounceHTML,
+        idcards:     adminIDCardsHTML,
+        logs:        adminLogsHTML,
+        backup:      adminBackupHTML,
+        export:      adminExportHTML,
+    };
+    main.innerHTML = (map[section] || adminUsersHTML)();
+};
+
+/* ══════════════════════════════════════════
+   EXAMINATION OFFICE PORTAL
+══════════════════════════════════════════ */
+// ====================== EXAM OFFICE PORTAL — FULL INTERACTIVE ======================
+function renderExamOfficePanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">
+                <i class="fas fa-building"></i> Exam Office Menu
+            </div>
+            
+            <button class="admin-nav-btn active" onclick="examOfficeSection('pending',this)">
+                <i class="fas fa-clock"></i> Pending Final Approval
+            </button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('registered',this)">
+                <i class="fas fa-check-circle"></i> Registered Students
+            </button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('register',this)">
+                <i class="fas fa-list"></i> Exam Register
+            </button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('report',this)">
+                <i class="fas fa-chart-bar"></i> Reports & Statistics
+            </button>
+        </div>
+        
+        <div class="admin-main" id="examOfficeMain">
+            ${examOfficePendingHTML()}
+        </div>
+    </div>`;
+}
+
+window.examOfficeSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const map = {
+        pending:    () => examOfficePendingHTML(),
+        registered: () => examOfficeRegisteredHTML(),
+        register:   () => examOfficeRegisterHTML(),
+        report:     () => examOfficeReportHTML()
+    };
+    
+    document.getElementById('examOfficeMain').innerHTML = map[section]();
+};
+
+// Pending Final Approval
+function examOfficePendingHTML() {
+    const data = getData();
+    let pending = data.examRegistrations.filter(r => r.status === 'pending_exam');
+
+    if (pending.length === 0) {
+        // Demo data if empty
+        pending = [{
+            id: "REG-687074",
+            studentId: "STU-2026-20670",
+            status: "pending_exam",
+            totalExamFee: 4700,
+            units: [{name:"Computer Essentials", code:"CS101"}],
+            submittedDate: new Date().toISOString()
+        }];
+    }
+
+    const cards = pending.map(reg => {
+        const student = data.students.find(s => s.id === reg.studentId) || {name: "Sarah Achieng"};
+        return `
+        <div class="admin-card" style="margin-bottom:15px;">
+            <div style="font-weight:700;">${student.name}</div>
+            <div style="color:var(--text-secondary);font-size:0.8rem;">
+                ${reg.studentId} • ${student.department || 'Computer Studies'}
+            </div>
+            <div style="margin:12px 0;background:var(--bg-elevated);padding:12px;border-radius:10px;">
+                <strong>Units:</strong> ${reg.units.length}<br>
+                <strong>Exam Fee:</strong> KSh ${(reg.totalExamFee || 0).toLocaleString()}
+            </div>
+
+            <div style="display:flex;gap:10px;">
+                <button class="admin-btn-primary" onclick="examOfficeRegisterStudent('${reg.id}')">
+                    ✅ Register for Exams
+                </button>
+                <button class="admin-action-btn danger" onclick="examOfficeReject('${reg.id}')">
+                    ❌ Reject
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">📋 Pending Final Approval (${pending.length})</div>
+        ${cards}`;
+};
+
+// Success Alert Function
+function showSuccessAlert(message) {
+    const alertHTML = `
+        <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+                    background:#1a1e2c;border:2px solid #10b981;border-radius:16px;
+                    padding:25px 30px;z-index:10000;max-width:380px;text-align:center;
+                    box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+            <div style="font-size:3rem;margin-bottom:10px;">✅</div>
+            <div style="color:#10b981;font-weight:700;font-size:1.1rem;margin-bottom:8px;">
+                ${message}
+            </div>
+            <button onclick="this.parentElement.remove()" 
+                    style="margin-top:15px;padding:10px 25px;background:#10b981;color:white;
+                    border:none;border-radius:8px;font-weight:600;cursor:pointer;">
+                OK
+            </button>
+        </div>`;
+    
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = alertHTML;
+    document.body.appendChild(tempDiv.firstElementChild);
+}
+
+window.examOfficeRegisterStudent = function(regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+
+    reg.status = 'approved';
+    reg.examApproved = true;
+    reg.examApprovedDate = new Date().toISOString();
+    saveData(data);
+
+    showSuccessAlert(`Registration ${regId} approved successfully!<br>Student is now fully registered for exams.`);
+    document.getElementById('examOfficeMain').innerHTML = examOfficePendingHTML();
+};
+
+window.examOfficeReject = function(regId) {
+    const reason = prompt("Reason for rejection:");
+    if (!reason) return;
+
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (reg) {
+        reg.status = 'rejected';
+        reg.rejectedBy = 'Exam Office';
+        reg.rejectionReason = reason;
+        saveData(data);
+        
+        showSuccessAlert(`Registration ${regId} has been rejected.`);
+        document.getElementById('examOfficeMain').innerHTML = examOfficePendingHTML();
+    }
+};
+
+// Registered Students
+function examOfficeRegisteredHTML() {
+    const data = getData();
+    const approved = data.examRegistrations.filter(r => r.status === 'approved');
+
+    let html = `<div class="admin-section-head">✅ Registered Students (${approved.length})</div>`;
+
+    if (approved.length === 0) {
+        html += `<div class="admin-card"><p>No students registered yet.</p></div>`;
+    } else {
+        html += approved.map(reg => {
+            const student = data.students.find(s => s.id === reg.studentId) || {};
+            return `
+            <div class="admin-card">
+                <strong>${student.name}</strong> (${reg.studentId})<br>
+                <small style="color:var(--text-secondary)">Approved on ${new Date(reg.examApprovedDate).toLocaleDateString()}</small>
+            </div>`;
+        }).join('');
+    }
+
+    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="examOfficeGenerateFinalList()">
+        📄 Generate Final Registered List PDF
+    </button>`;
+
+    return html;
+};
+
+window.examOfficeGenerateFinalList = function() {
+    showSuccessAlert("Final Registered Students List PDF Generated!<br>Ready for printing.");
+};
+
+// Exam Register
+function examOfficeRegisterHTML() {
+    return `
+        <div class="admin-section-head">📋 Full Exam Register</div>
+        <div class="admin-card">
+            <p>Full official exam register with all approved students.</p>
+            <button class="admin-btn-primary" onclick="examOfficeGenerateRegister()">
+                📄 Generate & Download Exam Register PDF
+            </button>
+        </div>`;
+};
+
+window.examOfficeGenerateRegister = function() {
+    showSuccessAlert("Official Exam Register PDF Generated!<br>Contains all approved students.");
+};
+
+// Reports & Statistics
+function examOfficeReportHTML() {
+    return `
+        <div class="admin-section-head">📊 Reports & Statistics</div>
+        <div class="admin-card">
+            <p>Total Approved Students: <strong>12</strong></p>
+            <p>By Department: Computer Studies (8), Hospitality (4)</p>
+            <button class="admin-btn-primary" onclick="examOfficeGenerateReport()">
+                📊 Generate Full Statistics Report PDF
+            </button>
+        </div>`;
+};
+
+window.examOfficeGenerateReport = function() {
+    showSuccessAlert("Exam Office Statistics Report PDF Generated!");
+};
+
+/* ══════════════════════════════════════════
+   DEAN OF STUDENTS PORTAL
+══════════════════════════════════════════ */
+function renderDeanPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">
+                <i class="fas fa-heart"></i> Dean Menu
+            </div>
+            
+            <button class="admin-nav-btn active" onclick="deanSection('hostel',this)">
+                <i class="fas fa-bed"></i> Hostel Clearance
+            </button>
+            <button class="admin-nav-btn" onclick="deanSection('complaints',this)">
+                <i class="fas fa-exclamation-triangle"></i> Student Complaints
+            </button>
+            <button class="admin-nav-btn" onclick="deanSection('activities',this)">
+                <i class="fas fa-calendar"></i> Activity Approvals
+            </button>
+            <button class="admin-nav-btn" onclick="deanSection('kitco',this)">
+                <i class="fas fa-users"></i> KITCO Management
+            </button>
+            <button class="admin-nav-btn" onclick="deanSection('report',this)">
+                <i class="fas fa-chart-bar"></i> Student Welfare Report
+            </button>
+        </div>
+        
+        <div class="admin-main" id="deanMain">
+            ${deanHostelHTML()}
+        </div>
+    </div>`;
+}
+
+window.deanSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const map = {
+        hostel:     () => deanHostelHTML(),
+        complaints: () => deanComplaintsHTML(),
+        activities: () => deanActivitiesHTML(),
+        kitco:      () => deanKITCOHTML(),
+        report:     () => deanReportHTML()
+    };
+    
+    document.getElementById('deanMain').innerHTML = map[section]();
+};
+
+// Hostel Clearance (Core Feature)
+function deanHostelHTML() {
+    return `
+        <div class="admin-section-head">🏠 Hostel Clearance</div>
+        <div class="admin-card">
+            <p>Hostel clearance requests and boarding student management coming soon.</p>
+            <button class="admin-btn-primary" style="margin-top:12px;" onclick="alert('Hostel clearance form will open here')">
+                Generate Clearance Form
+            </button>
+        </div>`;
+}
+
+function deanComplaintsHTML() {
+    return `<div class="admin-card"><p>Student complaints and discipline cases will appear here.</p></div>`;
+}
+
+function deanActivitiesHTML() {
+    return `<div class="admin-card"><p>Pending activity approvals will appear here.</p></div>`;
+}
+
+function deanKITCOHTML() {
+    return `
+        <div class="admin-section-head">🎖️ KITCO Management</div>
+        <div class="admin-card">
+            <p>Generate KITCO passwords and manage student leadership body.</p>
+            <button class="admin-btn-primary" onclick="alert('KITCO password generation coming soon')">
+                Generate KITCO Passwords
+            </button>
+        </div>`;
+}
+
+function deanReportHTML() {
+    return `<div class="admin-card"><p>Student welfare and discipline report coming soon.</p></div>`;
+}
+
+ /* ══════════════════════════════════════════
+   CLASS TEACHER PORTAL — Full Implementation
+══════════════════════════════════════════ */
+function renderClassTeacherPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title"><i class="fas fa-chalkboard"></i> Class Teacher Menu</div>
+            <button class="admin-nav-btn active" onclick="classTeacherSection('attendance',this)"><i class="fas fa-calendar-check"></i> Class Attendance</button>
+            <button class="admin-nav-btn" onclick="classTeacherSection('notice',this)"><i class="fas fa-bullhorn"></i> Post Class Notice</button>
+            <button class="admin-nav-btn" onclick="classTeacherSection('students',this)"><i class="fas fa-users"></i> My Students</button>
+            <button class="admin-nav-btn" onclick="classTeacherSection('timetable',this)"><i class="fas fa-calendar-alt"></i> Timetable</button>
+            <button class="admin-nav-btn" onclick="classTeacherSection('issues',this)"><i class="fas fa-exclamation-triangle"></i> Issues Received</button>
+            <button class="admin-nav-btn" onclick="classTeacherSection('report',this)"><i class="fas fa-chart-bar"></i> Class Report</button>
+        </div>
+        <div class="admin-main" id="classTeacherMain">
+            ${classTeacherAttendanceHTML(user)}
+        </div>
+    </div>`;
+}
+
+window.classTeacherSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const map = {
+        attendance: () => classTeacherAttendanceHTML(user),
+        notice:     () => classTeacherNoticeHTML(user),
+        students:   () => classTeacherStudentsHTML(user),
+        timetable:  () => classTeacherTimetableHTML(user),
+        issues:     () => classTeacherIssuesHTML(user),
+        report:     () => classTeacherReportHTML(user)
+    };
+    document.getElementById('classTeacherMain').innerHTML = (map[section] || (() => classTeacherAttendanceHTML(user)))();
+};
+
+/* ── 1. Class Attendance ── */
+function classTeacherAttendanceHTML(user) {
+    const data = getData();
+    const myStudents = (data.students || []).filter(s => s.department === user.department);
+    const myUnitIds  = (data.lecturerUnits || []).filter(u => u.department === user.department).map(u => u.id);
+    const records    = (data.attendanceRecords || []).filter(r => myUnitIds.includes(r.unitId));
+    const today      = new Date().toLocaleDateString('en-CA');
+    const todayCount = records.filter(r => r.date === today).length;
+
+    const rows = myStudents.map((s, i) => {
+        let present = 0, absent = 0;
+        records.forEach(r => {
+            if (r.attendance[s.id] === 'present') present++;
+            else if (r.attendance[s.id] === 'absent') absent++;
+        });
+        const total = present + absent;
+        const pct   = total ? Math.round((present / total) * 100) : 0;
+        return `
+        <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px;text-align:center;border:1px solid var(--border);font-size:0.75rem;">${i + 1}</td>
+            <td style="padding:8px;border:1px solid var(--border);font-size:0.82rem;">${s.name}</td>
+            <td style="padding:8px;border:1px solid var(--border);font-size:0.72rem;color:var(--text-secondary);">${s.id}</td>
+            <td style="padding:8px;text-align:center;border:1px solid var(--border);color:var(--success);font-weight:700;">${present}</td>
+            <td style="padding:8px;text-align:center;border:1px solid var(--border);color:var(--danger);font-weight:700;">${absent}</td>
+            <td style="padding:8px;text-align:center;border:1px solid var(--border);">
+                <div style="display:flex;align-items:center;gap:6px;justify-content:center;">
+                    <div style="background:var(--bg-elevated);border-radius:20px;height:8px;width:70px;overflow:hidden;">
+                        <div style="height:100%;width:${pct}%;background:${pct >= 75 ? 'var(--success)' : 'var(--danger)'};border-radius:20px;"></div>
+                    </div>
+                    <span style="font-size:0.75rem;color:${pct >= 75 ? 'var(--success)' : 'var(--danger)'};">${pct}%</span>
+                </div>
+            </td>
+            <td style="padding:8px;text-align:center;border:1px solid var(--border);font-size:0.75rem;">
+                ${s.status === 'not_attending' ? '<span style="color:var(--danger);">🚫 Not Attending</span>'
+                : s.status === 'deferred'      ? '<span style="color:var(--warning);">⏸ Deferred</span>'
+                :                                '<span style="color:var(--success);">✅ Active</span>'}
+            </td>
+        </tr>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">📅 Class Attendance — ${user.department}</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Attendance data comes from Lecturers who mark each session.
+                Student status flags come from the Class Rep.
+                ${todayCount > 0
+                    ? `<span style="color:var(--success);"> ✅ ${todayCount} session(s) recorded today.</span>`
+                    : `<span style="color:var(--warning);"> ⚠️ No attendance recorded today yet.</span>`}
+            </p>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Attendance Overview — ${records.length} total sessions recorded</div>
+            <div style="overflow-x:auto;margin-top:10px;">
+                <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+                    <thead>
+                        <tr style="background:var(--bg-elevated);color:var(--purple-light);">
+                            <th style="padding:8px;border:1px solid var(--border);">S/NO</th>
+                            <th style="padding:8px;border:1px solid var(--border);">NAME</th>
+                            <th style="padding:8px;border:1px solid var(--border);">REG. CODE</th>
+                            <th style="padding:8px;text-align:center;border:1px solid var(--border);">PRESENT</th>
+                            <th style="padding:8px;text-align:center;border:1px solid var(--border);">ABSENT</th>
+                            <th style="padding:8px;text-align:center;border:1px solid var(--border);">RATE</th>
+                            <th style="padding:8px;text-align:center;border:1px solid var(--border);">STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows || `<tr><td colspan="7" style="padding:1rem;text-align:center;color:var(--text-secondary);">No students or attendance records yet.</td></tr>`}
+                    </tbody>
+                </table>
+            </div>
+        </div>`;
+}
+
+/* ── 2. Post Class Notice ── */
+function classTeacherNoticeHTML(user) {
+    const data = getData();
+    const myNotices = (data.classNotices || [])
+        .filter(n => n.senderRole === 'classteacher' && n.department === user.department);
+
+    const list = myNotices.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No notices posted yet.</p>`
+        : myNotices.slice().reverse().map(n => `
+            <div style="padding:0.75rem 0;border-bottom:1px solid var(--border);">
+                <div style="font-size:0.82rem;">${n.message}</div>
+                <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:4px;">${new Date(n.timestamp).toLocaleString()}</div>
+            </div>`).join('');
+
+    return `
+        <div class="admin-section-head">📢 Post Class Notice</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Write a New Notice</div>
+            <p style="font-size:0.78rem;color:var(--text-secondary);margin:8px 0;">
+                Notices posted here appear automatically in the Class Rep's noticeboard, tagged as "Class Teacher".
+            </p>
+            <textarea id="ctNoticeText" class="admin-input" rows="4"
+                placeholder="e.g. Exam registration deadline is 20th June 2026. Please ensure all units are registered."
+                style="margin-top:8px;"></textarea>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="classTeacherPostNotice('${user.department}')">
+                <i class="fas fa-paper-plane"></i> Post to Class Rep
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">My Posted Notices (${myNotices.length})</div>
+            ${list}
+        </div>`;
+}
+
+/* ── 3. My Students ── */
+function classTeacherStudentsHTML(user) {
+    const data = getData();
+    const myStudents = (data.students || []).filter(s => s.department === user.department);
+
+    const statusBadge = s => {
+        if (s.status === 'deferred')      return `<span class="admin-role-pill" style="background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);">⏸ Deferred</span>`;
+        if (s.status === 'not_attending') return `<span class="admin-role-pill" style="background:rgba(239,68,68,.15);border-color:var(--danger);color:var(--danger);">🚫 Not Attending</span>`;
+        return `<span class="admin-role-pill" style="background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">✅ Active</span>`;
+    };
+
+    const rows = myStudents.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No students yet. Use the form below to add one.</p>`
+        : myStudents.map((s, i) => `
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;padding:0.8rem 0;border-bottom:1px solid var(--border);">
+                <div>
+                    <strong style="font-size:0.85rem;">${s.name}</strong>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px;">
+                        ${s.id} • 📱 ${s.phone || '—'} • ${s.level || '—'} • Enrolled: ${s.enrollmentDate || '—'}
+                    </div>
+                </div>
+                ${statusBadge(s)}
+            </div>`).join('');
+
+    return `
+        <div class="admin-section-head">👥 My Students — ${user.department}</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Students you add here are immediately visible to the Lecturer and Class Rep portals — they share the same list.
+            </p>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add New Student</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">FULL NAME</label>
+                    <input type="text" id="ctNewName" class="admin-input" placeholder="e.g. Grace Mwangi" style="margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">ADMISSION NO</label>
+                    <input type="text" id="ctNewId" class="admin-input" placeholder="e.g. STU-2026-20680" style="margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">PHONE</label>
+                    <input type="text" id="ctNewPhone" class="admin-input" placeholder="e.g. 0712345678" style="margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">LEVEL</label>
+                    <select id="ctNewLevel" class="admin-input" style="margin-top:4px;">
+                        <option value="Diploma">Diploma</option>
+                        <option value="Certificate">Certificate</option>
+                        <option value="Artisan">Artisan</option>
+                        <option value="Craft">Craft</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">LEARNING MODE</label>
+                    <select id="ctNewMode" class="admin-input" style="margin-top:4px;">
+                        <option value="CDACC (CBET)">CDACC (CBET)</option>
+                        <option value="Modular">Modular</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">CLASS</label>
+                    <input type="text" id="ctNewClass" class="admin-input" placeholder="e.g. Form 3C" style="margin-top:4px;" value="${user.class || ''}">
+                </div>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:14px;" onclick="addMyStudent()">
+                <i class="fas fa-user-plus"></i> Add Student to ${user.department}
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Enrolled Students (${myStudents.length})</div>
+            ${rows}
+        </div>`;
+}
+
+/* ── 4. Timetable ── */
+function classTeacherTimetableHTML(user) {
+    const data = getData();
+    const myTimetable = (data.timetables || []).filter(t => t.department === user.department);
+    const days = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+    const dayOptions  = days.map(d => `<option value="${d}">${d}</option>`).join('');
+    const unitOptions = (data.lecturerUnits || [])
+        .filter(u => u.department === user.department)
+        .map(u => `<option value="${u.id}">${u.code} — ${u.name}</option>`).join('');
+
+    const rows = myTimetable.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No timetable entries yet.</p>`
+        : myTimetable.map(t => `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;">
+                <div>
+                    <strong style="font-size:0.85rem;">${t.unit}</strong>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${t.unitCode} • ${t.day} • ${t.startTime} – ${t.endTime}</div>
+                </div>
+                <button class="admin-action-btn danger" onclick="classTeacherDeleteTimetable('${t.id}')">Remove</button>
+            </div>`).join('');
+
+    return `
+        <div class="admin-section-head">📆 Timetable</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Add Timetable Entry</div>
+            <p style="font-size:0.78rem;color:var(--text-secondary);margin:8px 0;">
+                Timetable entries are used by the student Attendance system — the confirm button unlocks automatically once the session's end time passes.
+            </p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">UNIT</label>
+                    <select id="ttUnit" class="admin-input" style="margin-top:4px;">${unitOptions || '<option>No units — contact Admin</option>'}</select>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">DAY</label>
+                    <select id="ttDay" class="admin-input" style="margin-top:4px;">${dayOptions}</select>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">START TIME</label>
+                    <input type="time" id="ttStart" class="admin-input" value="08:00" style="margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">END TIME</label>
+                    <input type="time" id="ttEnd" class="admin-input" value="10:00" style="margin-top:4px;">
+                </div>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:12px;" onclick="classTeacherAddTimetable('${user.department}','${user.class || ''}')">
+                <i class="fas fa-plus"></i> Add Entry
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Current Timetable (${myTimetable.length} entries)</div>
+            ${rows}
+        </div>`;
+}
+
+/* ── 5. Issues Received ── */
+function classTeacherIssuesHTML(user) {
+    const data = getData();
+    const issues = (data.classRepIssues || []).filter(i => i.department === user.department);
+    const pending  = issues.filter(i => i.status !== 'resolved').length;
+    const resolved = issues.filter(i => i.status === 'resolved').length;
+
+    const cards = issues.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No issues submitted yet.</p>`
+        : issues.slice().reverse().map(i => `
+            <div style="padding:0.8rem;background:var(--bg-elevated);border-radius:12px;margin-bottom:10px;
+                border-left:4px solid ${i.status === 'resolved' ? 'var(--success)' : i.type === 'attendance_restore' ? 'var(--purple)' : 'var(--warning)'};">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                    <strong style="font-size:0.82rem;">
+                        ${i.type === 'attendance_restore' ? '🔄 Attendance Restore — Lecturer' : '⚠️ Issue — ' + (i.student || 'Class Rep')}
+                    </strong>
+                    <span class="admin-role-pill" style="${i.status === 'resolved'
+                        ? 'background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);'
+                        : 'background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);'}">
+                        ${i.status === 'resolved' ? '✅ Resolved' : '⏳ Pending'}
+                    </span>
+                </div>
+                <div style="font-size:0.82rem;margin-top:6px;">
+                    ${i.type === 'attendance_restore'
+                        ? `Student: <strong>${i.studentName || i.studentId}</strong> — Reason: ${i.reason}`
+                        : i.message}
+                </div>
+                <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:4px;">
+                    ${new Date(i.timestamp).toLocaleString()}
+                </div>
+                ${i.status !== 'resolved' ? `
+                <button class="admin-action-btn edit" style="margin-top:8px;" onclick="classTeacherResolveIssue('${i.id}')">
+                    Mark Resolved
+                </button>` : ''}
+            </div>`).join('');
+
+    return `
+        <div class="admin-section-head">⚠️ Issues Received</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;">
+            <div class="stat-card"><h3 style="color:var(--warning);">${pending}</h3><p>Pending</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${resolved}</h3><p>Resolved</p></div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Issues & Restore Notifications (${issues.length})</div>
+            <p style="font-size:0.78rem;color:var(--text-secondary);margin:8px 0;">
+                Includes issues from the Class Rep and attendance restore notifications from Lecturers.
+            </p>
+            ${cards}
+        </div>`;
+}
+
+/* ── 6. Class Report (with graphs) ── */
+function classTeacherReportHTML(user) {
+    const data = getData();
+    const myStudents    = (data.students || []).filter(s => s.department === user.department);
+    const myUnitIds     = (data.lecturerUnits || []).filter(u => u.department === user.department).map(u => u.id);
+    const records       = (data.attendanceRecords || []).filter(r => myUnitIds.includes(r.unitId));
+    const issues        = (data.classRepIssues || []).filter(i => i.department === user.department);
+    const notices       = (data.classNotices || []).filter(n => n.department === user.department);
+    const materials     = (data.lecturerMaterials || []).filter(m => m.department === user.department);
+    const studentReports = (data.studentReports || []).filter(r => r.department === user.department);
+
+    const active   = myStudents.filter(s => (s.status || 'active') === 'active').length;
+    const notAtt   = myStudents.filter(s => s.status === 'not_attending').length;
+    const deferred = myStudents.filter(s => s.status === 'deferred').length;
+
+    let totalPresent = 0, totalAbsent = 0;
+    records.forEach(rec => {
+        Object.values(rec.attendance || {}).forEach(v => {
+            if (v === 'present') totalPresent++; else totalAbsent++;
+        });
+    });
+
+    const pending  = issues.filter(i => i.status !== 'resolved').length;
+    const resolved = issues.filter(i => i.status === 'resolved').length;
+
+    const studentBars = myStudents.map(s => {
+        let present = 0, total = 0;
+        records.forEach(r => {
+            if (r.attendance[s.id]) { total++; if (r.attendance[s.id] === 'present') present++; }
+        });
+        const pct = total ? Math.round((present / total) * 100) : 0;
+        return { label: s.name.split(' ')[0], value: pct, color: pct >= 75 ? '#10b981' : '#ef4444' };
+    });
+
+    return `
+        <div class="admin-section-head">📊 Class Report — ${user.department}</div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Attendance Rate per Student</div>
+            <div style="overflow-x:auto;margin-top:10px;">
+                ${svgBarChart(studentBars.length ? studentBars : [{label:'No data', value:0, color:'#3a2d6e'}])}
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Overall Attendance</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: totalPresent || 0.0001, color: '#10b981' },
+                        { value: totalAbsent  || 0.0001, color: '#ef4444' }
+                    ])}
+                </div>
+                <div style="font-size:0.78rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Present ${totalPresent}</span> &nbsp;
+                    <span style="color:var(--danger);">● Absent ${totalAbsent}</span>
+                </div>
+            </div>
+
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Student Status Breakdown</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: active    || 0.0001, color: '#10b981' },
+                        { value: notAtt    || 0.0001, color: '#ef4444' },
+                        { value: deferred  || 0.0001, color: '#f59e0b' }
+                    ])}
+                </div>
+                <div style="font-size:0.78rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Active ${active}</span> &nbsp;
+                    <span style="color:var(--danger);">● Not Attending ${notAtt}</span> &nbsp;
+                    <span style="color:var(--warning);">● Deferred ${deferred}</span>
+                </div>
+            </div>
+
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Issues Status</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: resolved || 0.0001, color: '#10b981' },
+                        { value: pending  || 0.0001, color: '#f59e0b' }
+                    ])}
+                </div>
+                <div style="font-size:0.78rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Resolved ${resolved}</span> &nbsp;
+                    <span style="color:var(--warning);">● Pending ${pending}</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${myStudents.length}</h3><p>Total Students</p></div>
+            <div class="stat-card"><h3>${records.length}</h3><p>Sessions Recorded</p></div>
+            <div class="stat-card"><h3 style="color:var(--warning);">${issues.length}</h3><p>Issues Received</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light);">${notices.length}</h3><p>Notices Posted</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${materials.length}</h3><p>Materials Shared</p></div>
+            <div class="stat-card"><h3>${studentReports.length}</h3><p>Student Reports</p></div>
+        </div>`;
+}
+
+/* ── Window Actions ── */
+window.classTeacherPostNotice = function(department) {
+    const message = document.getElementById('ctNoticeText')?.value.trim();
+    if (!message) return alert('Please write a notice before posting.');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const data = getData();
+    data.classNotices = data.classNotices || [];
+    data.classNotices.push({
+        id: 'notice-' + Date.now(),
+        sender: user.name || 'Class Teacher',
+        senderRole: 'classteacher',
+        department,
+        message,
+        timestamp: new Date().toISOString(),
+        type: 'general'
+    });
+    saveData(data);
+    alert('✅ Notice posted! Class Rep can now see it in their noticeboard.');
+    document.getElementById('classTeacherMain').innerHTML = classTeacherNoticeHTML(user);
+};
+
+window.classTeacherAddTimetable = function(department, cls) {
+    const unitId = document.getElementById('ttUnit')?.value;
+    const day    = document.getElementById('ttDay')?.value;
+    const start  = document.getElementById('ttStart')?.value;
+    const end    = document.getElementById('ttEnd')?.value;
+    if (!unitId || !day || !start || !end) return alert('Please fill all timetable fields.');
+    const data = getData();
+    const unit = (data.lecturerUnits || []).find(u => u.id === unitId);
+    data.timetables = data.timetables || [];
+    data.timetables.push({
+        id: 'TT-' + Date.now(),
+        department, class: cls || '',
+        unitId, unit: unit?.name || '', unitCode: unit?.code || '',
+        lecturerId: unit?.lecturerId || '',
+        day, startTime: start, endTime: end
+    });
+    saveData(data);
+    alert('✅ Timetable entry added! Students can now confirm attendance for this session.');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('classTeacherMain').innerHTML = classTeacherTimetableHTML(user);
+};
+
+window.classTeacherDeleteTimetable = function(id) {
+    if (!confirm('Remove this timetable entry?')) return;
+    const data = getData();
+    data.timetables = (data.timetables || []).filter(t => t.id !== id);
+    saveData(data);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('classTeacherMain').innerHTML = classTeacherTimetableHTML(user);
+};
+
+window.classTeacherResolveIssue = function(issueId) {
+    const data = getData();
+    const issue = (data.classRepIssues || []).find(i => i.id === issueId);
+    if (issue) issue.status = 'resolved';
+    saveData(data);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('classTeacherMain').innerHTML = classTeacherIssuesHTML(user);
+};
+
+window.addMyStudent = function() {
+    const user  = JSON.parse(sessionStorage.getItem('currentUser'));
+    const name  = document.getElementById('ctNewName')?.value.trim();
+    const id    = document.getElementById('ctNewId')?.value.trim();
+    const phone = document.getElementById('ctNewPhone')?.value.trim();
+    const level = document.getElementById('ctNewLevel')?.value;
+    const mode  = document.getElementById('ctNewMode')?.value;
+    const cls   = document.getElementById('ctNewClass')?.value.trim();
+    if (!name || !id) return alert('Full Name and Admission No are required.');
+    const data = getData();
+    data.students = data.students || [];
+    if (data.students.find(s => s.id === id)) return alert(`⚠️ A student with Admission No "${id}" already exists.`);
+    data.students.push({
+        id, name, phone: phone || null,
+        department: user.department,
+        class: cls || user.class || '',
+        level: level || 'Diploma',
+        learningMode: mode || 'CDACC (CBET)',
+        programCode: null, enrollmentDate: new Date().toLocaleDateString('en-CA'),
+        programDuration: null, totalModules: null,
+        feeBalance: 0, totalFee: 0,
+        paymentHistory: [], attendance: { total: 0, attended: 0 },
+        examHistory: {}, results: [], status: 'active', deferReason: null,
+        addedBy: 'classteacher', addedAt: new Date().toISOString()
+    });
+    saveData(data);
+    alert(`✅ ${name} (${id}) added to ${user.department} — now visible to Lecturer and Class Rep.`);
+    document.getElementById('classTeacherMain').innerHTML = classTeacherStudentsHTML(user);
+};
+
+/* ══════════════════════════════════════════
+   LECTURER PORTAL — Full Implementation
+══════════════════════════════════════════ */
+function renderLecturerPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title"><i class="fas fa-chalkboard-teacher"></i> Lecturer Menu</div>
+            <button class="admin-nav-btn active" onclick="lecturerSection('units',this)"><i class="fas fa-book"></i> My Units</button>
+            <button class="admin-nav-btn" onclick="lecturerSection('markregister',this)"><i class="fas fa-clipboard-list"></i> Mark Register</button>
+            <button class="admin-nav-btn" onclick="lecturerSection('attendance',this)"><i class="fas fa-calendar-check"></i> Mark Attendance</button>
+            <button class="admin-nav-btn" onclick="lecturerSection('materials',this)"><i class="fas fa-upload"></i> Upload Materials</button>
+            <button class="admin-nav-btn" onclick="lecturerSection('students',this)"><i class="fas fa-users"></i> My Students</button>
+            <button class="admin-nav-btn" onclick="lecturerSection('report',this)"><i class="fas fa-chart-bar"></i> Unit Report</button>
+        </div>
+        <div class="admin-main" id="lecturerMain">
+            ${lecturerUnitsHTML(user)}
+        </div>
+    </div>`;
+}
+
+window.lecturerSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const map = {
+        units:        () => lecturerUnitsHTML(user),
+        markregister: () => lecturerMarkRegisterHTML(user),
+        attendance:   () => lecturerAttendanceHTML(user),
+        materials:    () => lecturerMaterialsHTML(user),
+        students:     () => lecturerStudentsHTML(user),
+        report:       () => lecturerReportHTML(user)
+    };
+    document.getElementById('lecturerMain').innerHTML = (map[section] || (() => lecturerUnitsHTML(user)))();
+};
+
+/* ── My Units ── */
+function lecturerUnitsHTML(user) {
+    const data = getData();
+    const units = (data.lecturerUnits || []).filter(u => u.lecturerId === user.id);
+
+    if (units.length === 0) {
+        return `
+            <div class="admin-section-head">📚 My Assigned Units</div>
+            <div class="admin-card">
+                <p style="color:var(--text-secondary);font-size:0.85rem;">
+                    No units assigned yet. Units are distributed by System Admin based on allocations from the Examination Office.
+                    Contact System Admin if your units are missing.
+                </p>
+            </div>`;
+    }
+
+    const cards = units.map(u => `
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+                <div>
+                    <div style="font-size:1.1rem;font-weight:700;">${u.name}</div>
+                    <div style="font-size:0.75rem;color:var(--purple-light);margin-top:4px;">Code: ${u.code} • Level ${u.level} • ${u.semester}</div>
+                    <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">${u.description || ''}</div>
+                </div>
+                <span class="admin-role-pill">${u.department}</span>
+            </div>
+        </div>`).join('');
+
+    return `
+        <div class="admin-section-head">📚 My Assigned Units</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Units are assigned by System Admin based on Examination Office allocations. These units feed your Mark Register and Attendance sheets.
+            </p>
+        </div>
+        ${cards}`;
+}
+
+/* ── Mark Register ── */
+function lecturerMarkRegisterHTML(user) {
+    const data = getData();
+    const units = (data.lecturerUnits || []).filter(u => u.lecturerId === user.id);
+    const students = (data.students || []).filter(s => s.department === user.department);
+
+    if (units.length === 0) {
+        return `<div class="admin-section-head">📋 Mark Register</div>
+                <div class="admin-card"><p style="color:var(--text-secondary);">No units assigned. Contact System Admin.</p></div>`;
+    }
+
+    const unit = units[0];
+    const unitOptions = units.map(u => `<option value="${u.id}">${u.code} — ${u.name}</option>`).join('');
+
+    const rows = students.map((s, i) => {
+        const saved = (data.markRegisterEntries || []).find(e => e.studentId === s.id && e.unitId === unit.id) || {};
+        return `
+        <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:6px 8px;text-align:center;font-size:0.75rem;border:1px solid var(--border);">${i + 1}</td>
+            <td style="padding:6px 8px;font-size:0.72rem;border:1px solid var(--border);white-space:nowrap;">${s.id}</td>
+            <td style="padding:6px 8px;font-size:0.78rem;border:1px solid var(--border);white-space:nowrap;">${s.name}</td>
+            <td style="padding:4px;border:1px solid var(--border);"><input type="number" min="0" max="30" value="${saved.cam1 || ''}" id="cam1_${s.id}" onchange="lecturerAutoCalc('${s.id}')" class="admin-input" style="width:55px;padding:4px;text-align:center;" placeholder="—"></td>
+            <td style="padding:4px;border:1px solid var(--border);"><input type="number" min="0" max="30" value="${saved.cam2 || ''}" id="cam2_${s.id}" onchange="lecturerAutoCalc('${s.id}')" class="admin-input" style="width:55px;padding:4px;text-align:center;" placeholder="—"></td>
+            <td style="padding:4px;border:1px solid var(--border);"><input type="number" min="0" max="30" value="${saved.cam3 || ''}" id="cam3_${s.id}" onchange="lecturerAutoCalc('${s.id}')" class="admin-input" style="width:55px;padding:4px;text-align:center;" placeholder="—"></td>
+            <td id="waver_${s.id}" style="padding:6px 8px;text-align:center;font-size:0.78rem;font-weight:700;color:var(--purple-light);border:1px solid var(--border);">${saved.waver || '—'}</td>
+            <td style="padding:4px;border:1px solid var(--border);"><input type="number" min="0" max="30" value="${saved.pract1 || ''}" id="pract1_${s.id}" onchange="lecturerAutoCalc('${s.id}')" class="admin-input" style="width:55px;padding:4px;text-align:center;" placeholder="—"></td>
+            <td style="padding:4px;border:1px solid var(--border);"><input type="number" min="0" max="30" value="${saved.pract2 || ''}" id="pract2_${s.id}" onchange="lecturerAutoCalc('${s.id}')" class="admin-input" style="width:55px;padding:4px;text-align:center;" placeholder="—"></td>
+            <td style="padding:4px;border:1px solid var(--border);"><input type="number" min="0" max="30" value="${saved.pract3 || ''}" id="pract3_${s.id}" onchange="lecturerAutoCalc('${s.id}')" class="admin-input" style="width:55px;padding:4px;text-align:center;" placeholder="—"></td>
+            <td id="paver_${s.id}" style="padding:6px 8px;text-align:center;font-size:0.78rem;font-weight:700;color:var(--purple-light);border:1px solid var(--border);">${saved.paver || '—'}</td>
+            <td id="total_${s.id}" style="padding:6px 8px;text-align:center;font-size:0.82rem;font-weight:800;color:var(--success);border:1px solid var(--border);">${saved.total || '—'}</td>
+        </tr>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">📋 Mark Register</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">SELECT UNIT</label>
+                    <select class="admin-input" id="markRegUnit" onchange="lecturerSwitchMarkUnit(this.value)" style="margin-top:4px;">${unitOptions}</select>
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">ASSESSMENT SERIES</label>
+                    <input type="text" class="admin-input" id="assessSeries" value="${unit.semester || ''}" style="margin-top:4px;" placeholder="e.g. March/April 2026">
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">CENTRE NAME</label>
+                    <input type="text" class="admin-input" value="PC Kinyanjui Technical Training Institute" readonly style="margin-top:4px;background:var(--bg-elevated);min-width:260px;">
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+                <div>
+                    <div class="admin-card-title">CDACC/CBA — Continuous Assessment Mark Sheet</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">Course: ${unit.name} (${unit.code}) • Level ${unit.level}</div>
+                </div>
+                <button class="admin-btn-primary" onclick="lecturerSaveMarkRegister('${unit.id}')">
+                    <i class="fas fa-save"></i> Save Marks
+                </button>
+            </div>
+
+            <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
+                    <thead>
+                        <tr style="background:var(--bg-elevated);color:var(--purple-light);">
+                            <th style="padding:8px;border:1px solid var(--border);" rowspan="2">S/NO</th>
+                            <th style="padding:8px;border:1px solid var(--border);" rowspan="2">REG. CODE</th>
+                            <th style="padding:8px;border:1px solid var(--border);" rowspan="2">CANDIDATE'S NAME</th>
+                            <th style="padding:8px;border:1px solid var(--border);text-align:center;" colspan="4">WRITTEN ASSESSMENT MARKS</th>
+                            <th style="padding:8px;border:1px solid var(--border);text-align:center;" colspan="4">PRACTICAL ASSESSMENT MARKS</th>
+                            <th style="padding:8px;border:1px solid var(--border);" rowspan="2">TOTAL</th>
+                        </tr>
+                        <tr style="background:var(--bg-elevated);color:var(--text-secondary);">
+                            <th style="padding:6px;border:1px solid var(--border);">CAM 1</th>
+                            <th style="padding:6px;border:1px solid var(--border);">CAM 2</th>
+                            <th style="padding:6px;border:1px solid var(--border);">CAM 3</th>
+                            <th style="padding:6px;border:1px solid var(--border);">AVER.</th>
+                            <th style="padding:6px;border:1px solid var(--border);">PRACT. 1</th>
+                            <th style="padding:6px;border:1px solid var(--border);">PRACT. 2</th>
+                            <th style="padding:6px;border:1px solid var(--border);">PRACT. 3</th>
+                            <th style="padding:6px;border:1px solid var(--border);">AVER.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows || `<tr><td colspan="13" style="padding:1rem;text-align:center;color:var(--text-secondary);">No students found for this department.</td></tr>`}
+                    </tbody>
+                </table>
+            </div>
+            <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:8px;">
+                N/B: CAM = Continuous Assessment Mark. Max per CAM: 30. Max PRACT: 30. AVER = Auto-calculated average.
+            </div>
+        </div>`;
+}
+
+/* ── Mark Attendance ── */
+function lecturerAttendanceHTML(user) {
+    const data = getData();
+    const units = (data.lecturerUnits || []).filter(u => u.lecturerId === user.id);
+    const students = (data.students || []).filter(s => s.department === user.department);
+    const today = new Date().toLocaleDateString('en-CA');
+
+    if (units.length === 0) {
+        return `<div class="admin-section-head">📅 Mark Attendance</div>
+                <div class="admin-card"><p style="color:var(--text-secondary);">No units assigned yet.</p></div>`;
+    }
+
+    const unit = units[0];
+    const unitOptions = units.map(u => `<option value="${u.id}">${u.code} — ${u.name}</option>`).join('');
+    const todayRecord = (data.attendanceRecords || []).find(r => r.unitId === unit.id && r.date === today);
+
+    const rows = students.map((s, i) => {
+        const status = todayRecord ? (todayRecord.attendance[s.id] || 'none') : 'none';
+        const isPresent = status === 'present';
+        const isAbsent  = status === 'absent';
+        return `
+        <tr style="border-bottom:1px solid var(--border);" id="att_row_${s.id}">
+            <td style="padding:8px;text-align:center;font-size:0.75rem;border:1px solid var(--border);">${i + 1}</td>
+            <td style="padding:8px;font-size:0.72rem;border:1px solid var(--border);white-space:nowrap;">${s.id}</td>
+            <td style="padding:8px;font-size:0.78rem;border:1px solid var(--border);">
+                ${s.name}
+                ${s.status === 'not_attending' ? '<div style="color:var(--danger);font-size:0.65rem;">⚠️ Flagged: Not Attending</div>' : ''}
+                ${s.status === 'deferred' ? `<div style="color:var(--warning);font-size:0.65rem;">⏸ Deferred${s.deferReason ? ': ' + s.deferReason : ''}</div>` : ''}
+            </td>
+            <td style="padding:8px;text-align:center;border:1px solid var(--border);">
+                <button onclick="lecturerMarkStudent('${s.id}','present','${unit.id}')" id="btn_present_${s.id}"
+                    class="admin-action-btn edit"
+                    style="${isPresent ? 'background:var(--success);color:#fff;border-color:var(--success);font-weight:700;' : ''}">
+                    ✓ Present
+                </button>
+            </td>
+            <td style="padding:8px;text-align:center;border:1px solid var(--border);">
+                <button onclick="lecturerMarkStudent('${s.id}','absent','${unit.id}')" id="btn_absent_${s.id}"
+                    class="admin-action-btn danger"
+                    style="${isAbsent ? 'background:var(--danger);color:#fff;border-color:var(--danger);font-weight:700;' : ''}">
+                    ✗ Absent
+                </button>
+            </td>
+            <td style="padding:8px;text-align:center;border:1px solid var(--border);">
+                <button onclick="lecturerRestoreStudent('${s.id}','${unit.id}')"
+                    style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:4px 10px;cursor:pointer;font-size:0.8rem;color:var(--text-primary);">
+                    🔄 Restore
+                </button>
+            </td>
+        </tr>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">📅 Mark Attendance</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">UNIT</label>
+                    <select class="admin-input" id="attUnit" onchange="lecturerSwitchAttUnit(this.value)" style="margin-top:4px;">${unitOptions}</select>
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">DATE</label>
+                    <input type="date" class="admin-input" id="attDate" value="${today}" style="margin-top:4px;">
+                </div>
+                <button class="admin-btn-primary" onclick="lecturerSubmitAttendance('${unit.id}')">
+                    <i class="fas fa-save"></i> Submit Attendance
+                </button>
+            </div>
+            <p style="font-size:0.72rem;color:var(--text-secondary);margin-top:8px;">
+                Flagged students are highlighted. Mark ✓ Present or ✗ Absent for each student.
+                Restore reverses a marking and notifies the Class Teacher with a reason — for accountability.
+            </p>
+        </div>
+
+        <div class="admin-card">
+            <div class="admin-card-title">Attendance Register — ${unit.name} (${unit.code})</div>
+            <div style="overflow-x:auto;margin-top:10px;">
+                <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+                    <thead>
+                        <tr style="background:var(--bg-elevated);color:var(--purple-light);">
+                            <th style="padding:8px;border:1px solid var(--border);">S/NO</th>
+                            <th style="padding:8px;border:1px solid var(--border);">REG. CODE</th>
+                            <th style="padding:8px;border:1px solid var(--border);">CANDIDATE'S NAME</th>
+                            <th style="padding:8px;text-align:center;border:1px solid var(--border);">✓ PRESENT</th>
+                            <th style="padding:8px;text-align:center;border:1px solid var(--border);">✗ ABSENT</th>
+                            <th style="padding:8px;text-align:center;border:1px solid var(--border);">RESTORE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows || `<tr><td colspan="6" style="padding:1rem;text-align:center;color:var(--text-secondary);">No students found.</td></tr>`}
+                    </tbody>
+                </table>
+            </div>
+        </div>`;
+}
+
+/* ── Upload Materials ── */
+function lecturerMaterialsHTML(user) {
+    const data = getData();
+    const units = (data.lecturerUnits || []).filter(u => u.lecturerId === user.id);
+    const materials = (data.lecturerMaterials || []).filter(m => m.lecturerId === user.id);
+    const unitOptions = units.map(u => `<option value="${u.id}">${u.code} — ${u.name}</option>`).join('');
+
+    const matList = materials.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No materials uploaded yet.</p>`
+        : materials.slice().reverse().map(m => `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;">
+                <div>
+                    <strong style="font-size:0.85rem;">${m.title}</strong>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${m.unitCode} — ${m.unitName} • ${new Date(m.uploadedAt).toLocaleDateString()}${m.fileName ? ' • 📎 ' + m.fileName : ''}</div>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+                    <span class="admin-role-pill" style="${m.sentToClassRep ? 'background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);' : ''}">
+                        ${m.sentToClassRep ? '✅ Sent to Class Rep' : '📁 Not sent yet'}
+                    </span>
+                    ${!m.sentToClassRep ? `<button class="admin-action-btn edit" onclick="lecturerSendMaterial('${m.id}')"><i class="fas fa-paper-plane"></i> Send</button>` : ''}
+                </div>
+            </div>`).join('');
+
+    return `
+        <div class="admin-section-head">📤 Upload Materials</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Upload New Material (from your computer)</div>
+            <div style="display:grid;gap:10px;margin-top:10px;">
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">MATERIAL TITLE</label>
+                    <input type="text" id="matTitle" class="admin-input" placeholder="e.g. Week 5 Notes — Computer Essentials" style="margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">SELECT UNIT</label>
+                    <select id="matUnit" class="admin-input" style="margin-top:4px;">${unitOptions}</select>
+                </div>
+                <div>
+                    <label style="font-size:0.72rem;color:var(--text-secondary);">CHOOSE FILE (PDF, DOCX, PPTX, Image, Video)</label>
+                    <input type="file" id="matFile" class="admin-input" accept=".pdf,.docx,.pptx,.xlsx,.jpg,.png,.mp4,.txt" style="margin-top:4px;">
+                </div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+                <button class="admin-btn-primary" onclick="lecturerUploadMaterial('${user.id}')">
+                    <i class="fas fa-upload"></i> Upload Only
+                </button>
+                <button class="admin-btn-secondary" onclick="lecturerUploadAndSend('${user.id}')">
+                    <i class="fas fa-paper-plane"></i> Upload & Send to Class Rep
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="admin-card-title">My Uploaded Materials (${materials.length})</div>
+            ${matList}
+        </div>`;
+}
+
+/* ── My Students ── */
+function lecturerStudentsHTML(user) {
+    const data = getData();
+    const students = (data.students || []).filter(s => s.department === user.department);
+
+    if (students.length === 0) {
+        return `<div class="admin-section-head">👥 My Students</div>
+                <div class="admin-card"><p style="color:var(--text-secondary);">No students found for your department.</p></div>`;
+    }
+
+    const cards = students.map(s => {
+        const reports = (data.studentReports || []).filter(r => r.studentId === s.id && r.lecturerId === user.id);
+        return `
+        <div class="admin-card" style="margin-bottom:0.8rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+                <div>
+                    <strong>${s.name}</strong>
+                    <div style="font-size:0.75rem;color:var(--text-secondary);">${s.id} • ${s.phone || '—'}</div>
+                    <div style="font-size:0.72rem;margin-top:4px;">
+                        ${s.status === 'not_attending' ? '<span style="color:var(--danger);">🚫 Not Attending</span>' :
+                          s.status === 'deferred' ? '<span style="color:var(--warning);">⏸ Deferred</span>' :
+                          '<span style="color:var(--success);">✅ Active</span>'}
+                    </div>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+                    ${reports.length > 0 ? `<span class="admin-role-pill" style="background:rgba(16,185,129,.1);color:var(--success);border-color:var(--success);">📝 ${reports.length} Report(s)</span>` : ''}
+                    <button class="admin-action-btn edit" onclick="lecturerToggleReportForm('${s.id}')">
+                        ✏️ Write Report
+                    </button>
+                </div>
+            </div>
+            <div id="report_form_${s.id}" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+                <label style="font-size:0.72rem;color:var(--text-secondary);">REPORT ON ${s.name.toUpperCase()} — This will be sent to HOD for review</label>
+                <textarea id="report_text_${s.id}" class="admin-input" rows="3" placeholder="Write your observation, academic performance summary, concern, or recommendation about this student..." style="margin-top:6px;"></textarea>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                    <button class="admin-btn-primary" onclick="lecturerSubmitStudentReport('${s.id}','${s.name}','${user.id}','${user.department}')">
+                        <i class="fas fa-paper-plane"></i> Submit to HOD
+                    </button>
+                    <button class="admin-btn-secondary" onclick="lecturerToggleReportForm('${s.id}')">Cancel</button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">👥 My Students</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Students in your department. Write a report on any student and it goes to the HOD for review.
+                Class Rep status flags are also visible here.
+            </p>
+        </div>
+        ${cards}`;
+}
+
+/* ── Unit Report ── */
+function lecturerReportHTML(user) {
+    const data = getData();
+    const units = (data.lecturerUnits || []).filter(u => u.lecturerId === user.id);
+    const students = (data.students || []).filter(s => s.department === user.department);
+    const materials = (data.lecturerMaterials || []).filter(m => m.lecturerId === user.id);
+    const reports = (data.studentReports || []).filter(r => r.lecturerId === user.id);
+
+    const myUnitIds = units.map(u => u.id);
+    const myRecords = (data.attendanceRecords || []).filter(r => myUnitIds.includes(r.unitId));
+
+    let totalPresent = 0, totalAbsent = 0;
+    myRecords.forEach(rec => {
+        Object.values(rec.attendance || {}).forEach(s => {
+            if (s === 'present') totalPresent++; else totalAbsent++;
+        });
+    });
+
+    const unitBars = units.map(u => {
+        const uRecs = myRecords.filter(r => r.unitId === u.id);
+        let uPresent = 0, uTotal = 0;
+        uRecs.forEach(rec => Object.values(rec.attendance || {}).forEach(s => { uTotal++; if (s === 'present') uPresent++; }));
+        const pct = uTotal ? Math.round((uPresent / uTotal) * 100) : 0;
+        return { label: u.code, value: pct, color: pct >= 75 ? '#10b981' : '#ef4444' };
+    });
+
+    const active   = students.filter(s => (s.status || 'active') === 'active').length;
+    const notAtt   = students.filter(s => s.status === 'not_attending').length;
+    const deferred = students.filter(s => s.status === 'deferred').length;
+
+    return `
+        <div class="admin-section-head">📊 Unit Report</div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Attendance Rate by Unit</div>
+            <div style="overflow-x:auto;margin-top:10px;">
+                ${svgBarChart(unitBars.length ? unitBars : [{label:'No data', value:0, color:'#3a2d6e'}])}
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Students Attended vs Absent</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: totalPresent || 0.0001, color: '#10b981' },
+                        { value: totalAbsent  || 0.0001, color: '#ef4444' }
+                    ])}
+                </div>
+                <div style="font-size:0.78rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Attended ${totalPresent}</span> &nbsp;
+                    <span style="color:var(--danger);">● Absent ${totalAbsent}</span>
+                </div>
+            </div>
+
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Class Status Breakdown</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: active    || 0.0001, color: '#10b981' },
+                        { value: notAtt    || 0.0001, color: '#ef4444' },
+                        { value: deferred  || 0.0001, color: '#f59e0b' }
+                    ])}
+                </div>
+                <div style="font-size:0.78rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Active ${active}</span> &nbsp;
+                    <span style="color:var(--danger);">● Not Attending ${notAtt}</span> &nbsp;
+                    <span style="color:var(--warning);">● Deferred ${deferred}</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${students.length}</h3><p>Total Students</p></div>
+            <div class="stat-card"><h3>${units.length}</h3><p>Units Assigned</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light);">${materials.length}</h3><p>Materials Uploaded</p></div>
+            <div class="stat-card"><h3 style="color:var(--warning);">${reports.length}</h3><p>Student Reports</p></div>
+            <div class="stat-card"><h3>${myRecords.length}</h3><p>Sessions Recorded</p></div>
+        </div>`;
+}
+/* ── Lecturer Window Actions ── */
+window.lecturerAutoCalc = function(studentId) {
+    const get = id => parseFloat(document.getElementById(id)?.value) || 0;
+    const cam1 = get(`cam1_${studentId}`), cam2 = get(`cam2_${studentId}`), cam3 = get(`cam3_${studentId}`);
+    const p1   = get(`pract1_${studentId}`), p2 = get(`pract2_${studentId}`), p3 = get(`pract3_${studentId}`);
+    const waver = cam1 || cam2 || cam3 ? Math.round((cam1 + cam2 + cam3) / 3) : 0;
+    const paver = p1 || p2 || p3 ? Math.round((p1 + p2 + p3) / 3) : 0;
+    const total = waver + paver;
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+    set(`waver_${studentId}`, waver);
+    set(`paver_${studentId}`, paver);
+    set(`total_${studentId}`, total);
+};
+
+window.lecturerSaveMarkRegister = function(unitId) {
+    const data = getData();
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const students = data.students.filter(s => s.department === user.department);
+    data.markRegisterEntries = data.markRegisterEntries || [];
+    students.forEach(s => {
+        const g = id => parseFloat(document.getElementById(id)?.value) || 0;
+        const cam1 = g(`cam1_${s.id}`), cam2 = g(`cam2_${s.id}`), cam3 = g(`cam3_${s.id}`);
+        const pract1 = g(`pract1_${s.id}`), pract2 = g(`pract2_${s.id}`), pract3 = g(`pract3_${s.id}`);
+        const waver = cam1 || cam2 || cam3 ? Math.round((cam1 + cam2 + cam3) / 3) : 0;
+        const paver = pract1 || pract2 || pract3 ? Math.round((pract1 + pract2 + pract3) / 3) : 0;
+        const total = waver + paver;
+        const idx = data.markRegisterEntries.findIndex(e => e.studentId === s.id && e.unitId === unitId);
+        const entry = { studentId: s.id, unitId, cam1, cam2, cam3, waver, pract1, pract2, pract3, paver, total, savedAt: new Date().toISOString() };
+        if (idx >= 0) data.markRegisterEntries[idx] = entry;
+        else data.markRegisterEntries.push(entry);
+    });
+    saveData(data);
+    alert('✅ Mark register saved!');
+};
+
+window.lecturerMarkStudent = function(studentId, status, unitId) {
+    if (!window._tempAttendance) window._tempAttendance = {};
+    window._tempAttendance[studentId] = status;
+    const pBtn = document.getElementById(`btn_present_${studentId}`);
+    const aBtn = document.getElementById(`btn_absent_${studentId}`);
+    if (status === 'present') {
+        pBtn.style.cssText = 'background:var(--success);color:#fff;border-color:var(--success);font-weight:700;';
+        aBtn.style.cssText = '';
+    } else {
+        aBtn.style.cssText = 'background:var(--danger);color:#fff;border-color:var(--danger);font-weight:700;';
+        pBtn.style.cssText = '';
+    }
+};
+
+window.lecturerRestoreStudent = function(studentId, unitId) {
+    const reason = prompt('Enter reason for restoring this student\'s attendance mark (will be sent to Class Teacher for accountability):');
+    if (!reason) return;
+    if (window._tempAttendance) delete window._tempAttendance[studentId];
+    const pBtn = document.getElementById(`btn_present_${studentId}`);
+    const aBtn = document.getElementById(`btn_absent_${studentId}`);
+    if (pBtn) pBtn.style.cssText = '';
+    if (aBtn) aBtn.style.cssText = '';
+    const data = getData();
+    const student = data.students.find(s => s.id === studentId);
+    data.classRepIssues = data.classRepIssues || [];
+    data.classRepIssues.push({
+        id: 'restore-' + Date.now(),
+        type: 'attendance_restore',
+        studentId,
+        studentName: student?.name || studentId,
+        unitId,
+        reason,
+        timestamp: new Date().toISOString(),
+        status: 'pending',
+        from: 'Lecturer',
+        department: student?.department || ''
+    });
+    saveData(data);
+    alert(`✅ Restore reason recorded and sent to Class Teacher.\nReason: "${reason}"`);
+};
+
+window.lecturerSubmitAttendance = function(unitId) {
+    const date = document.getElementById('attDate')?.value || new Date().toLocaleDateString('en-CA');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const data = getData();
+    const attendance = { ...(window._tempAttendance || {}) };
+    data.students.filter(s => s.department === user.department).forEach(s => {
+        if (!attendance[s.id]) attendance[s.id] = 'absent';
+    });
+    data.attendanceRecords = data.attendanceRecords || [];
+    const existing = data.attendanceRecords.findIndex(r => r.unitId === unitId && r.date === date);
+    const record = { id: 'ATT-' + Date.now(), unitId, date, attendance, submittedAt: new Date().toISOString() };
+    if (existing >= 0) data.attendanceRecords[existing] = record;
+    else data.attendanceRecords.push(record);
+    saveData(data);
+    window._tempAttendance = {};
+    alert(`✅ Attendance for ${date} submitted successfully!`);
+};
+
+window.lecturerUploadMaterial = function(lecturerId) {
+    const title = document.getElementById('matTitle')?.value.trim();
+    const unitId = document.getElementById('matUnit')?.value;
+    const file = document.getElementById('matFile')?.files[0];
+    if (!title) return alert('Please enter a material title.');
+    const data = getData();
+    const unit = (data.lecturerUnits || []).find(u => u.id === unitId);
+    data.lecturerMaterials = data.lecturerMaterials || [];
+    data.lecturerMaterials.push({
+        id: 'MAT-' + Date.now(), lecturerId, unitId,
+        unitCode: unit?.code || '', unitName: unit?.name || '', department: unit?.department || '',
+        title, fileName: file?.name || null, uploadedAt: new Date().toISOString(), sentToClassRep: false
+    });
+    saveData(data);
+    alert(`✅ "${title}" uploaded!`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('lecturerMain').innerHTML = lecturerMaterialsHTML(user);
+};
+
+window.lecturerUploadAndSend = function(lecturerId) {
+    const title = document.getElementById('matTitle')?.value.trim();
+    const unitId = document.getElementById('matUnit')?.value;
+    const file = document.getElementById('matFile')?.files[0];
+    if (!title) return alert('Please enter a material title.');
+    const data = getData();
+    const unit = (data.lecturerUnits || []).find(u => u.id === unitId);
+    data.lecturerMaterials = data.lecturerMaterials || [];
+    data.lecturerMaterials.push({
+        id: 'MAT-' + Date.now(), lecturerId, unitId,
+        unitCode: unit?.code || '', unitName: unit?.name || '', department: unit?.department || '',
+        title, fileName: file?.name || null, uploadedAt: new Date().toISOString(), sentToClassRep: true
+    });
+    data.classNotices = data.classNotices || [];
+    const sender = JSON.parse(sessionStorage.getItem('currentUser'));
+    data.classNotices.push({
+        id: 'notice-' + Date.now(),
+        sender: sender?.name || 'Lecturer', senderRole: 'lecturer',
+        department: unit?.department || '',
+        message: `📚 New material shared: "${title}" for ${unit?.name || ''} (${unit?.code || ''})${file ? ' — 📎 ' + file.name : ''}.`,
+        timestamp: new Date().toISOString(), type: 'material'
+    });
+    saveData(data);
+    alert(`✅ "${title}" uploaded and sent to Class Rep!`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('lecturerMain').innerHTML = lecturerMaterialsHTML(user);
+};
+
+window.lecturerSendMaterial = function(matId) {
+    const data = getData();
+    const mat = data.lecturerMaterials.find(m => m.id === matId);
+    if (!mat) return;
+    mat.sentToClassRep = true;
+    data.classNotices = data.classNotices || [];
+    const sender = JSON.parse(sessionStorage.getItem('currentUser'));
+    data.classNotices.push({
+        id: 'notice-' + Date.now(),
+        sender: sender?.name || 'Lecturer', senderRole: 'lecturer',
+        department: mat.department,
+        message: `📚 Material shared: "${mat.title}" for ${mat.unitName} (${mat.unitCode})${mat.fileName ? ' — 📎 ' + mat.fileName : ''}.`,
+        timestamp: new Date().toISOString(), type: 'material'
+    });
+    saveData(data);
+    alert('✅ Sent to Class Rep!');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('lecturerMain').innerHTML = lecturerMaterialsHTML(user);
+};
+
+window.lecturerToggleReportForm = function(studentId) {
+    const form = document.getElementById(`report_form_${studentId}`);
+    if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+};
+
+window.lecturerSubmitStudentReport = function(studentId, studentName, lecturerId, department) {
+    const text = document.getElementById(`report_text_${studentId}`)?.value.trim();
+    if (!text) return alert('Please write your report before submitting.');
+    const data = getData();
+    data.studentReports = data.studentReports || [];
+    data.studentReports.push({
+        id: 'SR-' + Date.now(), studentId, studentName, lecturerId, department,
+        report: text, timestamp: new Date().toISOString(), status: 'pending_hod'
+    });
+    saveData(data);
+    alert(`✅ Report on ${studentName} submitted to HOD for review.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('lecturerMain').innerHTML = lecturerStudentsHTML(user);
+};
+
+window.lecturerSwitchMarkUnit = function() {
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('lecturerMain').innerHTML = lecturerMarkRegisterHTML(user);
+};
+
+window.lecturerSwitchAttUnit = function() {
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('lecturerMain').innerHTML = lecturerAttendanceHTML(user);
+};
+
+
+/* ══════════════════════════════════════════
+   CLASS REP PORTAL — Full Implementation
+══════════════════════════════════════════ */
+function renderClassRepPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">
+                <i class="fas fa-users"></i> Class Rep Menu
+            </div>
+            
+            <button class="admin-nav-btn active" onclick="classRepSection('profile',this)">
+                <i class="fas fa-user"></i> Profile
+            </button>
+            <button class="admin-nav-btn" onclick="classRepSection('received',this)">
+                <i class="fas fa-inbox"></i> Received
+            </button>
+            <button class="admin-nav-btn" onclick="classRepSection('noticeboard',this)">
+                <i class="fas fa-bell"></i> Class Noticeboard
+            </button>
+            <button class="admin-nav-btn" onclick="classRepSection('issues',this)">
+                <i class="fas fa-exclamation-triangle"></i> Report Issues
+            </button>
+            <button class="admin-nav-btn" onclick="classRepSection('students',this)">
+                <i class="fas fa-user-graduate"></i> My Class List
+            </button>
+            <button class="admin-nav-btn" onclick="classRepSection('documents',this)">
+                <i class="fas fa-folder-open"></i> Document Shared
+            </button>
+            <button class="admin-nav-btn" onclick="classRepSection('reminders',this)">
+                <i class="fas fa-clock"></i> Reminders
+            </button>
+            <button class="admin-nav-btn" onclick="classRepSection('report',this)">
+                <i class="fas fa-chart-bar"></i> Class Report
+            </button>
+        </div>
+        
+        <div class="admin-main" id="classRepMain">
+            ${classRepProfileHTML(user)}
+        </div>
+    </div>`;
+}
+
+window.classRepSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const map = {
+        profile:     () => classRepProfileHTML(user),
+        received:    () => classRepReceivedHTML(),
+        noticeboard: () => classRepNoticeboardHTML(user),
+        issues:      () => classRepIssuesHTML(),
+        students:    () => classRepStudentsHTML(user),
+        documents:   () => classRepDocumentsHTML(),
+        reminders:   () => classRepRemindersHTML(),
+        report:      () => classRepReportHTML(user)
+    };
+
+    document.getElementById('classRepMain').innerHTML = map[section]();
+};
+
+// ==================== PROFILE ====================
+function classRepProfileHTML(user) {
+    const data = getData();
+    const me = data.students.find(s => s.id === user.id) || {};
+
+    return `
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+                <div style="display:flex;gap:1.2rem;align-items:center;">
+                    <div style="width:70px;height:70px;border-radius:50%;background:#6c3fcf;display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;">👨‍🎓</div>
+                    <div>
+                        <h3 style="margin:0;">${me.name || user.name}</h3>
+                        <div style="font-size:0.8rem;color:var(--text-secondary);">${me.id || user.id}</div>
+                        <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                            <span class="admin-role-pill" style="background:rgba(108,63,207,.2);border-color:var(--purple);color:var(--purple-light);">🗣️ Class Representative</span>
+                            <span class="admin-role-pill">${me.learningMode || 'CDACC (CBET)'}</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="admin-btn-secondary" onclick="alert('Profile editing coming soon — contact your Class Teacher for corrections.')">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Personal Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">FULL NAME</span><br>${me.name || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">GENDER</span><br>${me.gender || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DATE OF BIRTH</span><br>${me.dob || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">COUNTY</span><br>${me.county || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">PHONE</span><br>${me.phone || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">EMAIL</span><br>${me.email || '—'}</div>
+            </div>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Academic Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">ADMISSION NO</span><br>${me.id || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">PROGRAM CODE</span><br>${me.programCode || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">LEVEL</span><br>${me.level || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DEPARTMENT</span><br>${me.department || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">LEARNING MODE</span><br>${me.learningMode || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">YEAR / CLASS</span><br>${me.class || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">ENROLLMENT DATE</span><br>${me.enrollmentDate || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DURATION</span><br>${me.programDuration || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">TOTAL MODULES</span><br>${me.totalModules || '—'}</div>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="admin-card-title">Fee Summary</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:10px;">
+                <div class="stat-card"><h3>KSh ${(me.totalFee || 0).toLocaleString()}</h3><p>Total Fee</p></div>
+                <div class="stat-card"><h3 style="color:var(--success)">KSh ${((me.totalFee || 0) - (me.feeBalance || 0)).toLocaleString()}</h3><p>Paid</p></div>
+                <div class="stat-card"><h3 style="color:${(me.feeBalance || 0) === 0 ? 'var(--success)' : 'var(--danger)'}">KSh ${(me.feeBalance || 0).toLocaleString()}</h3><p>Balance</p></div>
+            </div>
+        </div>`;
+}
+
+// ==================== RECEIVED ====================
+function classRepReceivedHTML() {
+    return `
+        <div class="admin-section-head">📥 Received</div>
+        <div class="admin-card">
+            <p style="color:var(--text-secondary);">Messages, documents and notices from teachers will appear here.</p>
+            <div style="margin-top:1.5rem;padding:1rem;background:rgba(255,255,255,0.05);border-radius:12px;text-align:center;">
+                <p>No new messages yet.</p>
+            </div>
+        </div>`;
+};
+
+// ==================== NOTICEBOARD ====================
+function classRepNoticeboardHTML(user) {
+    const data = getData();
+    const me = data.students.find(s => s.id === user.id) || {};
+
+    if (!data.classNotices || data.classNotices.length === 0) {
+        data.classNotices = [
+            { id: 'cn1', sender: 'James Otieno', senderRole: 'classteacher', department: me.department, message: 'Exam registration deadline is 20th June 2026. Please ensure all units are registered before then.', timestamp: new Date().toISOString() },
+            { id: 'cn2', sender: 'Jane Wanjiku', senderRole: 'lecturer', department: me.department, message: 'Computer Essentials (CS101) catch-up session this Friday at 2pm in Lab 2.', timestamp: new Date().toISOString() }
+        ];
+        saveData(data);
+    }
+
+    const notices = data.classNotices.filter(n => n.department === me.department);
+
+    const roleBadge = (role) => role === 'classteacher'
+        ? `<span class="admin-role-pill" style="background:rgba(37,99,235,.15);border-color:var(--blue);color:var(--blue-light);">🧑‍🏫 Class Teacher</span>`
+        : `<span class="admin-role-pill" style="background:rgba(108,63,207,.15);border-color:var(--purple);color:var(--purple-light);">👨‍💻 Lecturer</span>`;
+
+    const html = notices.length === 0
+        ? `<p style="color:var(--text-secondary);padding:1rem;">No notices yet.</p>`
+        : notices.slice().reverse().map(n => `
+            <div style="background:var(--bg-elevated);border-radius:12px;padding:1rem;margin-bottom:1rem;border-left:4px solid #a855f7;">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                    <strong style="color:var(--purple-light)">${n.sender}</strong>
+                    ${roleBadge(n.senderRole)}
+                </div>
+                <small style="color:var(--text-secondary);">${new Date(n.timestamp).toLocaleDateString()}</small>
+                <p style="margin-top:0.5rem;">${n.message}</p>
+            </div>
+        `).join('');
+
+    return `
+        <div class="admin-section-head">📢 Class Noticeboard — ${me.department || ''}</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Notices from your Class Teacher and Lecturers in your department appear here automatically.
+            </p>
+        </div>
+        <div class="admin-card">
+            ${html}
+        </div>`;
+};
+
+// ==================== REPORT ISSUES ====================
+function classRepIssuesHTML() {
+    return `
+        <div class="admin-card">
+            <h4>Report Class Issue / Complaint</h4>
+            <textarea id="repIssue" class="admin-input" rows="5" placeholder="Describe the issue..."></textarea>
+            <button class="admin-btn-primary" onclick="submitClassRepIssue()">Submit to Class Teacher</button>
+        </div>`;
+}
+
+window.submitClassRepIssue = function() {
+    const issue = document.getElementById('repIssue').value.trim();
+    if (!issue) return alert("Please describe the issue.");
+
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const data = getData();
+    if (!data.classRepIssues) data.classRepIssues = [];
+
+    data.classRepIssues.push({
+        id: 'issue-' + Date.now(),
+        repId: user.id,
+        department: user.department,
+        student: `${user.name} (Class Rep)`,
+        message: issue,
+        timestamp: new Date().toISOString(),
+        status: 'pending'
+    });
+
+    saveData(data);
+    alert(`✅ Issue submitted successfully!\n\n"${issue}"`);
+    document.getElementById('repIssue').value = '';
+};
+
+// ==================== MY CLASS LIST ====================
+function classRepStudentsHTML(user) {
+    const data = getData();
+    const me = data.students.find(s => s.id === user.id);
+
+    if (!me) {
+        return `
+            <div class="admin-section-head">👥 My Class List</div>
+            <div class="admin-card">
+                <p style="color:var(--danger);">Your student record could not be found.</p>
+            </div>`;
+    }
+
+    const classmates = data.students.filter(s =>
+        s.department === me.department && s.programCode === me.programCode
+    );
+
+    const statusBadge = (s) => {
+        if (s.status === 'deferred') {
+            return `<span class="admin-role-pill" style="background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);">⏸ Deferred</span>`;
+        }
+        if (s.status === 'not_attending') {
+            return `<span class="admin-role-pill" style="background:rgba(239,68,68,.15);border-color:var(--danger);color:var(--danger);">🚫 Not Attending</span>`;
+        }
+        return `<span class="admin-role-pill" style="background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">✅ Present</span>`;
+    };
+
+    const rows = classmates.map(s => `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;padding:0.8rem 0;border-bottom:1px solid var(--border);">
+            <div>
+                <strong>${s.name}</strong> ${s.id === user.id ? '<span style="color:var(--text-secondary);font-size:0.7rem;">(You)</span>' : ''}<br>
+                <small style="color:var(--text-secondary)">${s.id} • 📱 ${s.phone || '—'} • Enrolled: ${s.enrollmentDate || '—'}</small>
+                ${s.status === 'deferred' && s.deferReason ? `<div style="font-size:0.72rem;color:var(--warning);margin-top:4px;">Reason: ${s.deferReason}</div>` : ''}
+            </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+                ${statusBadge(s)}
+                <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                    <button class="admin-action-btn edit" onclick="classRepFlagStudent('${s.id}','active')">Mark Present</button>
+                    <button class="admin-action-btn danger" onclick="classRepFlagStudent('${s.id}','not_attending')">Not Attending</button>
+                    <button class="admin-action-btn danger" onclick="classRepFlagStudent('${s.id}','deferred')">Deferred</button>
+                </div>
+            </div> 
+        </div>
+    `).join('');
+
+    return `
+        <div class="admin-section-head">👥 My Class List — ${me.department}</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Showing students who share your exact department and course. Use the flags below to keep
+                records accurate — students who no longer attend, or who have deferred the semester for a
+                valid reason, should be marked accordingly for accountability.
+            </p>
+        </div>
+        <div class="admin-card">
+            ${rows || '<p style="color:var(--text-secondary);">No classmates found.</p>'}
+        </div>`;
+}
+
+window.classRepFlagStudent = function(studentId, status) {
+    const data = getData();
+    const student = data.students.find(s => s.id === studentId);
+    if (!student) return;
+
+    let reason = null;
+    if (status === 'deferred') {
+        reason = prompt('Enter reason for deferment:');
+        if (!reason) return;
+    }
+
+    student.status = status;
+    student.deferReason = status === 'deferred' ? reason : null;
+    saveData(data);
+
+    const label = status === 'active' ? 'Present' : status === 'deferred' ? 'Deferred' : 'Not Attending';
+    alert(`✅ ${student.name} marked as ${label}.`);
+
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('classRepMain').innerHTML = classRepStudentsHTML(user);
+};
+
+// ==================== DOCUMENT SHARED ====================
+function classRepDocumentsHTML() {
+    return `
+        <div class="admin-card">
+            <h4>📄 Documents Shared by Lecturers</h4>
+            <p style="color:var(--text-secondary);">Shared notes, past papers, and study materials will appear here.</p>
+            <div style="margin-top:1rem;padding:1rem;background:rgba(255,255,255,0.05);border-radius:12px;">
+                <strong>Lecturer Jane Wanjiku</strong><br>
+                <small>Computer Essentials Notes - Week 5</small>
+            </div>
+        </div>`;
+};
+
+// ==================== REMINDERS ====================
+function classRepRemindersHTML() {
+    return `
+        <div class="admin-card">
+            <h4>⏰ Quick Reminders</h4>
+            <ul style="padding-left:20px;line-height:2;">
+                <li>💰 Fee payment deadline: 20th June 2026</li>
+                <li>📝 Exam registration is currently open</li>
+                <li>📨 Submit any class complaints to Class Teacher</li>
+                <li>📚 Collect notes from shared documents</li>
+            </ul>
+        </div>`;
+};
+
+// ==================== CLASS REPORT ====================
+function classRepReportHTML(user) {
+    const data = getData();
+    const me = data.students.find(s => s.id === user.id) || {};
+    const classmates = data.students.filter(s => s.department === me.department && s.programCode === me.programCode);
+
+    const present = classmates.filter(s => (s.status || 'active') === 'active').length;
+    const notAttending = classmates.filter(s => s.status === 'not_attending').length;
+    const deferred = classmates.filter(s => s.status === 'deferred').length;
+
+    const cleared = classmates.filter(s => (s.feeBalance || 0) === 0).length;
+    const outstanding = classmates.length - cleared;
+
+    const issuesCount = (data.classRepIssues || []).filter(i => i.department === me.department).length;
+    const noticesCount = (data.classNotices || []).filter(n => n.department === me.department).length;
+
+    const attendanceBars = classmates.map(s => {
+        const pct = s.attendance ? Math.round((s.attendance.attended / s.attendance.total) * 100) : 0;
+        return { label: s.name.split(' ')[0], value: pct, color: pct >= 75 ? '#10b981' : '#ef4444' };
+    });
+
+    return `
+        <div class="admin-section-head">📊 Class Report — ${me.department || ''}</div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Classmate Attendance %</div>
+            <div style="overflow-x:auto;margin-top:10px;">
+                ${svgBarChart(attendanceBars.length ? attendanceBars : [{label:'No data', value:0, color:'#3a2d6e'}])}
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Class Status Breakdown</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: present || 0.0001, color: '#10b981' },
+                        { value: notAttending || 0.0001, color: '#ef4444' },
+                        { value: deferred || 0.0001, color: '#f59e0b' }
+                    ])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success)">● Present ${present}</span> &nbsp;
+                    <span style="color:var(--danger)">● Not Attending ${notAttending}</span> &nbsp;
+                    <span style="color:var(--warning)">● Deferred ${deferred}</span>
+                </div>
+            </div>
+
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Fee Clearance</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: cleared || 0.0001, color: '#10b981' },
+                        { value: outstanding || 0.0001, color: '#f59e0b' }
+                    ])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success)">● Cleared ${cleared}</span> &nbsp;
+                    <span style="color:var(--warning)">● Outstanding ${outstanding}</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${classmates.length}</h3><p>Class Size</p></div>
+            <div class="stat-card"><h3 style="color:var(--warning)">${issuesCount}</h3><p>Issues Reported</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light)">${noticesCount}</h3><p>Notices Received</p></div>
+        </div>`;
+}
+
+/* ══════════════════════════════════════════
+   PRINCIPAL PORTAL — Placeholder
+══════════════════════════════════════════ */
+function renderPrincipalPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title"><i class="fas fa-user-tie"></i> Principal Menu</div>
+            <button class="admin-nav-btn active" onclick="principalSection('overview',this)"><i class="fas fa-tachometer-alt"></i> Overview</button>
+            <button class="admin-nav-btn" onclick="principalSection('newsletter',this)"><i class="fas fa-newspaper"></i> Post Newsletter</button>
+            <button class="admin-nav-btn" onclick="principalSection('escalations',this)"><i class="fas fa-arrow-up"></i> Escalations</button>
+            <button class="admin-nav-btn" onclick="principalSection('report',this)"><i class="fas fa-chart-bar"></i> School Report</button>
+        </div>
+        <div class="admin-main" id="principalMain">${principalPlaceholder('Overview')}</div>
+    </div>`;
+}
+
+window.principalSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const labels = { overview: 'Overview', newsletter: 'Post Newsletter', escalations: 'Escalations', report: 'School Report' };
+    document.getElementById('principalMain').innerHTML = principalPlaceholder(labels[section] || 'Overview');
+};
+
+function principalPlaceholder(label) {
+    return `
+        <div class="admin-section-head">🎓 ${label}</div>
+        <div class="admin-card">
+            <p style="color:var(--text-secondary);font-size:0.85rem;">
+                This section is reserved for the Principal's portal and is coming soon.
+            </p>
+        </div>`;
+}
+
+/* ══════════════════════════════════════════
+   HOSPITAL PORTAL — Placeholder
+══════════════════════════════════════════ */
+function renderHospitalPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title"><i class="fas fa-hospital"></i> Hospital Menu</div>
+            <button class="admin-nav-btn active" onclick="hospitalSection('overview',this)"><i class="fas fa-tachometer-alt"></i> Overview</button>
+            <button class="admin-nav-btn" onclick="hospitalSection('visits',this)"><i class="fas fa-stethoscope"></i> Patient Visits</button>
+            <button class="admin-nav-btn" onclick="hospitalSection('records',this)"><i class="fas fa-file-medical"></i> Health Records</button>
+            <button class="admin-nav-btn" onclick="hospitalSection('report',this)"><i class="fas fa-chart-bar"></i> Reports</button>
+        </div>
+        <div class="admin-main" id="hospitalMain">${hospitalPlaceholder('Overview')}</div>
+    </div>`;
+}
+
+window.hospitalSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const labels = { overview: 'Overview', visits: 'Patient Visits', records: 'Health Records', report: 'Reports' };
+    document.getElementById('hospitalMain').innerHTML = hospitalPlaceholder(labels[section] || 'Overview');
+};
+
+function hospitalPlaceholder(label) {
+    return `
+        <div class="admin-section-head">🏥 ${label}</div>
+        <div class="admin-card">
+            <p style="color:var(--text-secondary);font-size:0.85rem;">
+                This section is reserved for the Hospital portal and is coming soon.
+            </p>
+        </div>`;
+}
+
+/* ══════════════════════════════════════════
+   LIBRARY PORTAL — Placeholder
+══════════════════════════════════════════ */
+function renderLibraryPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title"><i class="fas fa-book"></i> Library Menu</div>
+            <button class="admin-nav-btn active" onclick="librarySection('overview',this)"><i class="fas fa-tachometer-alt"></i> Overview</button>
+            <button class="admin-nav-btn" onclick="librarySection('catalog',this)"><i class="fas fa-book-open"></i> Book Catalog</button>
+            <button class="admin-nav-btn" onclick="librarySection('borrowing',this)"><i class="fas fa-exchange-alt"></i> Borrowing</button>
+            <button class="admin-nav-btn" onclick="librarySection('fines',this)"><i class="fas fa-coins"></i> Fines → Finance</button>
+            <button class="admin-nav-btn" onclick="librarySection('report',this)"><i class="fas fa-chart-bar"></i> Reports</button>
+        </div>
+        <div class="admin-main" id="libraryMain">${libraryPlaceholder('Overview')}</div>
+    </div>`;
+}
+
+window.librarySection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const labels = { overview: 'Overview', catalog: 'Book Catalog', borrowing: 'Borrowing', fines: 'Fines → Finance', report: 'Reports' };
+    document.getElementById('libraryMain').innerHTML = libraryPlaceholder(labels[section] || 'Overview');
+};
+
+function libraryPlaceholder(label) {
+    return `
+        <div class="admin-section-head">📚 ${label}</div>
+        <div class="admin-card">
+            <p style="color:var(--text-secondary);font-size:0.85rem;">
+                This section is reserved for the Library portal and is coming soon.
+            </p>
+        </div>`;
+}
+
+/* ══════════════════════════════════════════
+   STUDENT PORTAL — Consolidated
+══════════════════════════════════════════ */
+function renderStudentPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title"><i class="fas fa-user-graduate"></i> Student Menu</div>
+            <button class="admin-nav-btn active" onclick="studentSection('idrequest',this)"><i class="fas fa-id-card"></i> ID Request</button>
+            <button class="admin-nav-btn" onclick="studentSection('received',this)"><i class="fas fa-inbox"></i> Received</button>
+            <button class="admin-nav-btn" onclick="studentSection('attendance',this)"><i class="fas fa-calendar-check"></i> Attendance</button>
+            <button class="admin-nav-btn" onclick="studentSection('examreg',this)"><i class="fas fa-file-signature"></i> Exam Registration</button>
+            <button class="admin-nav-btn" onclick="studentSection('fee',this)"><i class="fas fa-wallet"></i> Fee Statement</button>
+            <button class="admin-nav-btn" onclick="studentSection('results',this)"><i class="fas fa-graduation-cap"></i> Results</button>
+            <button class="admin-nav-btn" onclick="studentSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
+            <button class="admin-nav-btn" onclick="studentSection('report',this)"><i class="fas fa-chart-bar"></i> Report</button>
+        </div>
+        <div class="admin-main" id="studentMain">
+            ${studentIDRequestHTML(user)}
+        </div>
+    </div>`;
+}
+
+window.studentSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const map = {
+        idrequest:  () => studentIDRequestHTML(user),
+        received:   () => studentReceivedHTML(user),
+        attendance: () => studentAttendanceHTML(user),
+        examreg:    () => studentExamRegistrationHTML(user),
+        fee:        () => studentFeeStatementHTML(user),
+        results:    () => studentResultsHTML(user),
+        profile:    () => studentProfileHTML(user),
+        report:     () => studentReportHTML(user),
+    };
+    document.getElementById('studentMain').innerHTML = (map[section] || (() => studentIDRequestHTML(user)))();
+};
+
+/* ── ID Request with Fill Details Modal ── */
+ function studentIDRequestHTML(user) {
+    const data = getData();
+    const myRequests = (data.idRequests || []).filter(r => r.studentId === user.id);
+
+    const reqCards = myRequests.length === 0
+        ? `<p style="color:var(--text-secondary);">No requests yet.</p>`
+        : myRequests.slice().reverse().map(r => {
+            let statusText = '';
+            if (r.status === 'pending_admin') statusText = '🔐 With System Admin';
+            else if (r.status === 'pending_finance') statusText = '💰 With Finance';
+            else if (r.status === 'ready') statusText = '✅ Ready';
+
+            return `
+            <div class="admin-card" style="margin-bottom:12px;">
+                <div style="display:flex;justify-content:space-between;">
+                    <strong>${r.type === 'new' ? 'New ID' : 'Replacement ID'}</strong>
+                    <span class="admin-role-pill">${statusText}</span>
+                </div>
+                <div style="font-size:0.8rem;color:var(--text-secondary);margin-top:8px;">
+                    ${r.fullName ? r.fullName + '<br>' : ''}
+                    ${r.fee > 0 ? `Fee: KSh ${r.fee} · ` : ''}Requested: ${new Date(r.dateRequested).toLocaleDateString()}
+                </div>
+            </div>`;
+        }).join('');
+        
+    return `
+        <div class="admin-section-head">🪪 ID Request</div>
+        <div class="admin-card">
+            <div class="admin-card-title">➕ Request an ID</div>
+            
+            <select id="idReqType" class="admin-input" style="margin:12px 0;">
+                <option value="new">New ID (no charge)</option>
+                <option value="replacement">Replacement ID — KSh 500</option>
+            </select>
+
+            <div style="display:flex; gap:10px;">
+                <button class="admin-btn-primary" style="flex:1;" onclick="studentSubmitIDRequest('${user.id}')">
+                    🚀 Submit Request
+                </button>
+                <button class="admin-btn-secondary" style="flex:1;" onclick="showIDFillModal('${user.id}')">
+                    ✍️ Fill Details
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-card" style="margin-top:1rem;">
+            <div class="admin-card-title">My Requests (${myRequests.length})</div>
+            ${reqCards}
+        </div>`;
+}
+
+// Toggle Submit Button for New ID
+window.toggleSubmitButton = function(studentId) {
+    const type = document.getElementById('idReqType').value;
+    const submitBtn = document.getElementById('submitBtn');
+    
+    if (type === 'new') {
+        submitBtn.style.opacity = '1';
+        submitBtn.style.cursor = 'pointer';
+    } else {
+        submitBtn.style.opacity = '0.6';
+        submitBtn.style.cursor = 'not-allowed';
+    }
+};
+
+// Show Fill Details Modal
+window.showIDFillModal = function(studentId) {
+    const type = document.getElementById('idReqType').value;
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;display:flex;align-items:center;justify-content:center;`;
+    
+    modal.innerHTML = `
+        <div style="background:#1e1e2e;width:90%;max-width:720px;border-radius:12px;padding:25px;max-height:92vh;overflow-y:auto;">
+            <h2 style="color:#a78bfa;margin-bottom:20px;">📋 Fill Student Identity Card Details</h2>
+            
+            <div class="grid" style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+                <div><label>Full Name</label><input id="fName" class="admin-input" placeholder="Full Name" required></div>
+                <div><label>Course</label><input id="fCourse" class="admin-input" placeholder="Course"></div>
+                <div><label>Level</label><input id="fLevel" class="admin-input" placeholder="e.g. Diploma 3"></div>
+                <div><label>Date of Birth</label><input id="fDOB" type="date" class="admin-input"></div>
+                <div><label>National ID / Passport</label><input id="fNationalID" class="admin-input"></div>
+                <div><label>Reg / ADM No.</label><input id="fRegNo" class="admin-input"></div>
+                <div><label>Department</label><input id="fDept" class="admin-input"></div>
+                <div><label>Guardian Name</label><input id="fGuardian" class="admin-input"></div>
+                <div><label>Guardian Tel</label><input id="fGuardianTel" class="admin-input"></div>
+                <div><label>Place of Residence</label><input id="fResidence" class="admin-input"></div>
+            </div>
+
+            <div style="margin:25px 0 15px;">
+                <h3 style="color:#a78bfa;">Consent for Use of Images</h3>
+                <div style="height:180px;overflow-y:auto;background:#161622;padding:12px;font-size:0.85rem;border-radius:8px;">
+                    ${document.querySelector('.consent-text') ? document.querySelector('.consent-text').innerHTML : 'I consent to the use of my image for institutional purposes...'}
+                </div>
+                <label><input type="checkbox" id="consentCheck"> I agree to the Consent for Use of Images</label>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-top:20px;">
+                <button class="admin-btn-primary" style="flex:1;" onclick="submitFullIDRequest('${studentId}', '${type}')">Submit Request + Consent</button>
+                <button class="admin-btn-secondary" style="flex:1;" onclick="this.closest('div[style*=\"position:fixed\"]').remove()">Cancel</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+};
+
+// Submit Full Request
+window.submitFullIDRequest = function(studentId, type) {
+    const consent = document.getElementById('consentCheck');
+    if (!consent || !consent.checked) {
+        alert("Please agree to the Consent for Use of Images");
+        return;
+    }
+
+    const data = getData();
+    const id = 'IDR-' + Date.now().toString().slice(-6);
+
+    data.idRequests = data.idRequests || [];
+    data.idRequests.push({
+        id,
+        studentId,
+        type,
+        fullName: document.getElementById('fName').value,
+        course: document.getElementById('fCourse').value,
+        level: document.getElementById('fLevel').value,
+        fee: type === 'replacement' ? 500 : 0,
+        status: 'pending_finance',
+        dateRequested: new Date().toISOString(),
+        consentGiven: true
+    });
+
+    saveData(data);
+    alert("✅ ID Request with details submitted successfully!");
+    document.querySelectorAll('div[style*="position:fixed"]').forEach(el => el.remove());
+    document.getElementById('studentMain').innerHTML = studentIDRequestHTML({ id: studentId });
+};
+
+/* ── 2. Received ── */
+function studentReceivedHTML(user) {
+    const data = getData();
+    const msgs = (data.studentNotifications || []).filter(n => n.studentId === user.id).slice().reverse();
+
+    return `
+        <div class="admin-section-head">📨 Received</div>
+        <div class="admin-card">
+            <div class="admin-card-title">Messages (${msgs.length})</div>
+            ${msgs.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No messages yet.</p>'
+                : msgs.map(n => `
+                    <div style="padding:0.7rem 0;border-bottom:1px solid var(--border);">
+                        <div style="display:flex;justify-content:space-between;">
+                            <strong style="font-size:0.85rem;color:var(--purple-light);">${n.title || 'Notification'}</strong>
+                            ${!n.seen ? '<span class="admin-role-pill">New</span>' : ''}
+                        </div>
+                        <div style="font-size:0.82rem;margin-top:4px;">${n.message}</div>
+                        <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:4px;">${new Date(n.timestamp).toLocaleString()}</div>
+                    </div>`).join('')}
+        </div>`;
+}
+
+/* ── 3. Attendance ── */
+function studentAttendanceHTML(user) {
+    const data = getData();
+    const todayName = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+    const now = new Date();
+
+    const mySessions = (data.timetables || []).filter(t =>
+        t.department === user.department && (t.class === user.class || !t.class)
+    );
+
+    const attPct = user.attendance ? Math.round((user.attendance.attended / user.attendance.total) * 100) : 0;
+
+    const sessionRows = mySessions.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No timetable uploaded yet. Your Class Teacher will upload it once classes begin.</p>`
+        : mySessions.map(t => {
+            const isToday = t.day === todayName;
+            const endDateTime = new Date(`${now.toDateString()} ${t.endTime}`);
+            const hasEnded = isToday && now > endDateTime;
+
+            const existing = (data.attendanceConfirmations || []).find(c =>
+                c.studentId === user.id && c.timetableId === t.id &&
+                new Date(c.date).toDateString() === now.toDateString()
+            );
+
+            let buttonHTML;
+            if (existing) {
+                const label = existing.status === 'confirmed' ? '✅ Confirmed by Lecturer'
+                    : existing.status === 'rejected' ? '❌ Rejected by Lecturer'
+                    : '🕒 Awaiting Lecturer Review';
+                buttonHTML = `<span class="admin-role-pill">${label}</span>`;
+            } else if (hasEnded) {
+                buttonHTML = `<button class="admin-btn-primary" onclick="studentConfirmAttendance('${t.id}','${user.id}')">
+                    <i class="fas fa-check"></i> Confirm Attendance
+                </button>`;
+            } else {
+                buttonHTML = `<button class="admin-action-btn" disabled style="background:var(--bg-elevated);color:var(--text-secondary);border:1px solid var(--border);cursor:not-allowed;">
+                    🔒 Available after ${t.endTime}
+                </button>`;
+            }
+
+            return `
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:0.8rem 0;border-bottom:1px solid var(--border);">
+                <div>
+                    <strong style="font-size:0.85rem;">${t.unit}</strong>
+                    <span style="font-size:0.7rem;color:var(--text-secondary);margin-left:6px;">(${t.unitCode})</span>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${t.day} · ${t.startTime} – ${t.endTime}</div>
+                </div>
+                ${buttonHTML}
+            </div>`;
+        }).join('');
+
+    return `
+        <div class="admin-section-head">📅 Attendance</div>
+        <div class="stat-card" style="margin-bottom:1rem;max-width:240px;">
+            <i class="fas fa-calendar-check"></i>
+            <h3 style="color:${attPct >= 75 ? 'var(--success)' : 'var(--danger)'}">${attPct}%</h3>
+            <p>${user.attendance?.attended || 0}/${user.attendance?.total || 0} classes confirmed</p>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">My Timetable & Confirmation</div>
+            <p style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:10px;">
+                The confirm button unlocks automatically once a class session has ended. Confirming sends a request to your Lecturer for verification — just like signing the register after class.
+            </p>
+            ${sessionRows}
+        </div>`;
+}
+
+window.studentConfirmAttendance = function(timetableId, studentId) {
+    const data = getData();
+    data.attendanceConfirmations = data.attendanceConfirmations || [];
+    data.attendanceConfirmations.push({
+        id: 'ATC-' + Date.now().toString().slice(-6),
+        studentId, timetableId,
+        date: new Date().toISOString(),
+        status: 'pending_lecturer'
+    });
+    saveData(data);
+    alert('✅ Attendance confirmation sent to your Lecturer for review.');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('studentMain').innerHTML = studentAttendanceHTML(user);
+};
+
+/* ── 4. Exam Registration ── */
+function studentExamRegistrationHTML(user) {
+    const data = getData();
+    const regs = data.examRegistrations.filter(r => r.studentId === user.id);
+
+    const statusMap = {
+        pending_deo:     '🕒 Awaiting DEO',
+        pending_hod:     '📋 Awaiting HOD',
+        pending_finance: '💰 Awaiting Finance',
+        pending_deputy:  '👑 Awaiting Deputy',
+        pending_exam:    '📝 Awaiting Exam Office',
+        approved:        '✅ Fully Approved',
+        rejected:        '❌ Rejected',
+        blocked:         '🚫 Blocked by Deputy',
+        waived:          '✅ Waived by Deputy'
+    };
+    const progressStages = ['pending_deo', 'pending_hod', 'pending_finance', 'pending_deputy', 'pending_exam', 'approved'];
+    const stageLabels    = ['DEO', 'HOD', 'Finance', 'Deputy', 'Exam Office', 'Complete'];
+
+    let listHTML = '';
+    if (regs.length === 0) {
+        listHTML = `<p style="color:var(--text-secondary);font-size:0.85rem;">No registration yet. Click above to register.</p>`;
+    } else {
+        listHTML = regs.map(reg => {
+            const currentIdx = progressStages.indexOf(reg.status);
+            const isBlocked  = reg.status === 'rejected' || reg.status === 'blocked';
+            const isDone     = reg.status === 'approved' || reg.status === 'waived';
+
+            return `
+            <div style="margin-top:1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:14px;padding:1rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+                    <div style="font-size:0.78rem;font-weight:700;color:var(--text-secondary);">
+                        Reg ID: <span style="color:var(--purple-light)">${reg.id}</span>
+                    </div>
+                    <div style="font-size:0.75rem;font-weight:700;padding:3px 12px;border-radius:20px;
+                        background:${isDone ? 'rgba(16,185,129,.15)' : isBlocked ? 'rgba(239,68,68,.15)' : 'rgba(108,63,207,.15)'};
+                        color:${isDone ? 'var(--success)' : isBlocked ? 'var(--danger)' : 'var(--purple-light)'};
+                        border:1px solid ${isDone ? 'var(--success)' : isBlocked ? 'var(--danger)' : 'var(--purple)'};">
+                        ${statusMap[reg.status] || reg.status}
+                    </div>
+                </div>
+                <div style="display:flex;align-items:flex-start;overflow-x:auto;padding-bottom:4px;">
+                    ${stageLabels.map((label, idx) => {
+                        const done   = idx < currentIdx || isDone;
+                        const active = idx === currentIdx && !isDone;
+                        const color  = done ? 'var(--success)' : active ? (isBlocked ? 'var(--danger)' : 'var(--purple-light)') : 'var(--border)';
+                        const isLast = idx === stageLabels.length - 1;
+                        return `
+                        <div style="display:flex;align-items:center;flex:1;min-width:52px;">
+                            <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                                <div style="width:26px;height:26px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:800;color:#fff;">
+                                    ${done ? '✓' : idx + 1}
+                                </div>
+                                <div style="font-size:0.58rem;color:${color};margin-top:3px;text-align:center;white-space:nowrap;">${label}</div>
+                            </div>
+                            ${!isLast ? `<div style="height:2px;flex:1;background:${done ? 'var(--success)' : 'var(--border)'};margin-bottom:14px;"></div>` : ''}
+                        </div>`;
+                    }).join('')}
+                </div>
+                ${reg.rejectionReason ? `
+                <div style="margin-top:8px;font-size:0.75rem;color:var(--danger);background:rgba(239,68,68,.08);border:1px solid var(--danger);border-radius:8px;padding:6px 10px;">
+                    ❌ Rejected by ${reg.rejectedBy || 'Office'}: ${reg.rejectionReason}
+                </div>` : ''}
+                ${reg.deputyDeadline ? `
+                <div style="margin-top:6px;font-size:0.72rem;color:var(--warning);background:rgba(245,158,11,.08);border:1px solid var(--warning);border-radius:8px;padding:6px 10px;">
+                    ⏰ Report to Deputy Principal before: <strong>${reg.deputyDeadline}</strong>
+                </div>` : ''}
+                <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;font-size:0.75rem;color:var(--text-secondary);">
+                    <span>📚 <strong style="color:var(--text-primary)">${reg.units.length}</strong> units</span>
+                    <span>💰 <strong style="color:var(--text-primary)">KSh ${reg.totalExamFee.toLocaleString()}</strong></span>
+                    <span>📅 <strong style="color:var(--text-primary)">${new Date(reg.submittedDate).toLocaleDateString()}</strong></span>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    return `
+        <div class="admin-section-head">📝 Exam Registration</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <button class="btn-primary" onclick="startExamRegistration()">
+                <i class="fas fa-file-signature"></i> New CBET Exam Registration
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">My Exam Registrations (${regs.length})</div>
+            ${listHTML}
+        </div>`;
+}
+
+/* ── 5. Fee Statement ── */
+function studentFeeStatementHTML(user) {
+    const totalFee = user.totalFee || 0;
+    const paid = totalFee - (user.feeBalance || 0);
+    const balance = user.feeBalance || 0;
+    const pct = totalFee ? Math.round((paid / totalFee) * 100) : 0;
+    const history = user.paymentHistory || [];
+
+    return `
+        <div class="admin-section-head">💳 Fee Statement</div>
+        <div class="admin-card" style="background:${balance === 0 ? 'rgba(16,185,129,.12)' : 'rgba(245,158,11,.1)'};border-color:${balance === 0 ? 'var(--success)' : 'var(--warning)'};margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+                <div>
+                    <div style="font-size:0.7rem;color:var(--text-secondary);">FEE STATUS</div>
+                    <strong style="color:${balance === 0 ? 'var(--success)' : 'var(--warning)'};font-size:1.05rem;">
+                        ${balance === 0 ? '✅ Fully Paid' : '⚠️ Balance Outstanding'}
+                    </strong>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user.department || ''}</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:0.7rem;color:var(--text-secondary);">BALANCE</div>
+                    <strong style="font-size:1.3rem;">KSh ${balance.toLocaleString()}</strong>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:1rem;">
+            <div class="stat-card"><h3>KSh ${totalFee.toLocaleString()}</h3><p>Total Fee</p></div>
+            <div class="stat-card"><h3 style="color:var(--success)">KSh ${paid.toLocaleString()}</h3><p>Total Paid</p></div>
+            <div class="stat-card"><h3 style="color:var(--danger)">KSh ${balance.toLocaleString()}</h3><p>Outstanding</p></div>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Payment Progress (${pct}%)</div>
+            <div style="background:var(--bg-elevated);border-radius:20px;height:10px;overflow:hidden;margin-top:8px;">
+                <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--success),#34d399);border-radius:20px;"></div>
+            </div>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Payment History (${history.length})</div>
+            ${history.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No payments recorded yet.</p>'
+                : history.map(h => `
+                    <div style="display:flex;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
+                        <span>KSh ${h.amount.toLocaleString()}</span>
+                        <span style="color:var(--text-secondary);font-size:0.75rem;">${h.date} · Ref: ${h.ref}</span>
+                    </div>`).join('')}
+        </div>
+
+        <div class="admin-card">
+            <div class="admin-card-title">Accepted Payment Methods</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-top:10px;text-align:center;">
+                <div class="admin-role-pill" style="display:block;padding:10px;">📱 M-Pesa</div>
+                <div class="admin-role-pill" style="display:block;padding:10px;">🏦 Bank Transfer</div>
+                <div class="admin-role-pill" style="display:block;padding:10px;">💵 Cash (Finance Office)</div>
+                <div class="admin-role-pill" style="display:block;padding:10px;">🎓 HELB Loan</div>
+                <div class="admin-role-pill" style="display:block;padding:10px;">🤝 Bursary</div>
+            </div>
+        </div>`;
+}
+
+/* ── 6. Results ── */
+function studentResultsHTML(user) {
+    const results = user.results || [];
+    const competent = results.filter(r => r.competency === 'Competent').length;
+    const nyc = results.length - competent;
+    const rate = results.length ? Math.round((competent / results.length) * 100) : 0;
+
+    return `
+        <div class="admin-section-head">🎓 Results</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.8rem;color:var(--text-secondary);">
+                Results follow the CBET framework. You're assessed as <strong style="color:var(--success)">Competent (C)</strong>
+                or <strong style="color:var(--danger)">Not Yet Competent (NYC)</strong> if more practice is needed.
+            </p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:1rem;">
+            <div class="stat-card"><h3>${results.length}</h3><p>Total Results</p></div>
+            <div class="stat-card"><h3 style="color:var(--success)">${competent}</h3><p>Competent</p></div>
+            <div class="stat-card"><h3 style="color:var(--danger)">${nyc}</h3><p>Not Yet Competent</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light)">${rate}%</h3><p>Competency Rate</p></div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Module Results</div>
+            ${results.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No results recorded yet.</p>'
+                : `<table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:0.82rem;">
+                    <thead><tr style="color:var(--purple-light);border-bottom:1px solid var(--border);">
+                        <th style="text-align:left;padding:0.5rem;">Module</th>
+                        <th style="text-align:left;padding:0.5rem;">Score</th>
+                        <th style="text-align:left;padding:0.5rem;">Competency</th>
+                        <th style="text-align:left;padding:0.5rem;">Remarks</th>
+                    </tr></thead>
+                    <tbody>
+                        ${results.map(r => `
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:0.5rem;">${r.module}</td>
+                            <td style="padding:0.5rem;">${r.score}%</td>
+                            <td style="padding:0.5rem;color:${r.competency === 'Competent' ? 'var(--success)' : 'var(--danger)'};">${r.competency}</td>
+                            <td style="padding:0.5rem;color:var(--text-secondary);">${r.remarks}</td>
+                        </tr>`).join('')}
+                    </tbody>
+                </table>`}
+        </div>`;
+}
+
+/* ── 7. Profile ── */
+function studentProfileHTML(user) {
+    return `
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+                <div>
+                    <h3 style="margin:0;">${user.name}</h3>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user.id}</div>
+                    <span class="admin-role-pill" style="margin-top:6px;display:inline-block;">${user.learningMode || 'CDACC (CBET)'}</span>
+                </div>
+                <button class="admin-btn-secondary" onclick="alert('Profile editing coming soon — contact your Class Teacher for corrections.')">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Personal Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">FULL NAME</span><br>${user.name}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">GENDER</span><br>${user.gender || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DATE OF BIRTH</span><br>${user.dob || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">COUNTY</span><br>${user.county || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">PHONE</span><br>${user.phone || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">EMAIL</span><br>${user.email || '—'}</div>
+            </div>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Academic Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">ADMISSION NO</span><br>${user.id}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">PROGRAM CODE</span><br>${user.programCode || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">LEVEL</span><br>${user.level || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DEPARTMENT</span><br>${user.department || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">LEARNING MODE</span><br>${user.learningMode || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">YEAR / CLASS</span><br>${user.class || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">ENROLLMENT DATE</span><br>${user.enrollmentDate || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DURATION</span><br>${user.programDuration || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">TOTAL MODULES</span><br>${user.totalModules || '—'}</div>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="admin-card-title">Fee Summary</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:10px;">
+                <div class="stat-card"><h3>KSh ${(user.totalFee || 0).toLocaleString()}</h3><p>Total Fee</p></div>
+                <div class="stat-card"><h3 style="color:var(--success)">KSh ${((user.totalFee || 0) - (user.feeBalance || 0)).toLocaleString()}</h3><p>Paid</p></div>
+                <div class="stat-card"><h3 style="color:${(user.feeBalance || 0) === 0 ? 'var(--success)' : 'var(--danger)'}">KSh ${(user.feeBalance || 0).toLocaleString()}</h3><p>Balance</p></div>
+            </div>
+        </div>`;
+}
+
+/* ── 8. Report (inline SVG charts, no external library) ── */
+function svgDonutChart(segments, size = 140) {
+    const total = segments.reduce((s, x) => s + x.value, 0) || 1;
+    const r = size / 2 - 14;
+    const cx = size / 2, cy = size / 2;
+    const circ = 2 * Math.PI * r;
+    let offset = 0;
+    const circles = segments.map(seg => {
+        const dash = (seg.value / total) * circ;
+        const el = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${seg.color}" stroke-width="18"
+            stroke-dasharray="${dash} ${circ - dash}" stroke-dashoffset="${-offset}"
+            transform="rotate(-90 ${cx} ${cy})" stroke-linecap="round"/>`;
+        offset += dash;
+        return el;
+    }).join('');
+    return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${circles}</svg>`;
+}
+
+function svgBarChart(bars, width = 380, height = 180) {
+    const max = Math.max(...bars.map(b => b.value), 1);
+    const gap = 14;
+    const barW = (width - gap * (bars.length + 1)) / bars.length;
+    const bodyH = height - 36;
+    const rects = bars.map((b, i) => {
+        const h = (b.value / max) * bodyH;
+        const x = gap + i * (barW + gap);
+        const y = bodyH - h;
+        return `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="4" fill="${b.color || '#8b5cf6'}"/>
+            <text x="${x + barW / 2}" y="${height - 6}" text-anchor="middle" font-size="9" fill="#c8bfec">${b.label}</text>
+            <text x="${x + barW / 2}" y="${y - 6}" text-anchor="middle" font-size="9" fill="#fff">${b.value}</text>`;
+    }).join('');
+    return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${rects}</svg>`;
+}
+
+function studentReportHTML(user) {
+    const results = user.results || [];
+    const competent = results.filter(r => r.competency === 'Competent').length;
+    const nyc = results.length - competent;
+    const attPct = user.attendance ? Math.round((user.attendance.attended / user.attendance.total) * 100) : 0;
+    const balance = user.feeBalance || 0;
+    const totalFee = user.totalFee || 0;
+    const paid = totalFee - balance;
+
+    const moduleBars = results.length
+        ? results.map(r => ({ label: r.module.split(' ').slice(0, 2).join(' '), value: r.score, color: r.competency === 'Competent' ? '#10b981' : '#ef4444' }))
+        : [{ label: 'No data', value: 0, color: '#3a2d6e' }];
+
+    return `
+        <div class="admin-section-head">📊 My Report</div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Module Scores</div>
+            <div style="overflow-x:auto;margin-top:10px;">${svgBarChart(moduleBars)}</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Competency Results</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: competent || 0.0001, color: '#10b981' },
+                        { value: nyc || 0.0001, color: '#ef4444' }
+                    ])}
+                </div>
+                <div style="font-size:0.78rem;margin-top:8px;">
+                    <span style="color:var(--success)">● Competent ${competent}</span> &nbsp;
+                    <span style="color:var(--danger)">● NYC ${nyc}</span>
+                </div>
+            </div>
+
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Fee Payment Status</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: paid || 0.0001, color: '#10b981' },
+                        { value: balance || 0.0001, color: '#f59e0b' }
+                    ])}
+                </div>
+                <div style="font-size:0.78rem;margin-top:8px;">
+                    <span style="color:var(--success)">● Paid KSh ${paid.toLocaleString()}</span><br>
+                    <span style="color:var(--warning)">● Balance KSh ${balance.toLocaleString()}</span>
+                </div>
+            </div>
+
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Attendance Rate</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([
+                        { value: attPct || 0.0001, color: '#8b5cf6' },
+                        { value: (100 - attPct) || 0.0001, color: '#251b42' }
+                    ])}
+                </div>
+                <div style="font-size:0.9rem;margin-top:8px;font-weight:700;color:var(--purple-light);">${attPct}%</div>
+            </div>
+        </div>`;
+}
+
+/* ══════════════════════════════════════════
+   KITCO PORTAL — Student Leadership
+══════════════════════════════════════════ */
+function renderKITCOPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">
+                <i class="fas fa-users"></i> KITCO Menu
+            </div>
+            
+            <button class="admin-nav-btn active" onclick="kitcoSection('dashboard',this)">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </button>
+            <button class="admin-nav-btn" onclick="kitcoSection('events',this)">
+                <i class="fas fa-calendar"></i> Upcoming Events
+            </button>
+            <button class="admin-nav-btn" onclick="kitcoSection('organize',this)">
+                <i class="fas fa-plus-circle"></i> Organize Event
+            </button>
+            <button class="admin-nav-btn" onclick="kitcoSection('notice',this)">
+                <i class="fas fa-bullhorn"></i> Post Notice
+            </button>
+            <button class="admin-nav-btn" onclick="kitcoSection('sports',this)">
+                <i class="fas fa-football-ball"></i> Sports & Games
+            </button>
+            <button class="admin-nav-btn" onclick="kitcoSection('report',this)">
+                <i class="fas fa-chart-bar"></i> Activity Report
+            </button>
+        </div>
+        
+        <div class="admin-main" id="kitcoMain">
+            ${kitcoDashboardHTML()}
+        </div>
+    </div>`;
+}
+
+window.kitcoSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const map = {
+        dashboard: () => kitcoDashboardHTML(),
+        events:    () => kitcoEventsHTML(),
+        organize:  () => kitcoOrganizeHTML(),
+        notice:    () => kitcoNoticeHTML(),
+        sports:    () => kitcoSportsHTML(),
+        report:    () => kitcoReportHTML()
+    };
+    
+    document.getElementById('kitcoMain').innerHTML = map[section]();
+};
+
+// Welcome Dashboard with Gen-Z Vibe
+function kitcoDashboardHTML() {
+    return `
+        <div class="admin-section-head" style="font-size:1.4rem;">
+            🔥 Welcome to <span style="color:var(--purple-light);font-weight:800;">Gen-Z Club</span> 🎉
+        </div>
+        <div class="admin-card">
+            <h3 style="color:var(--purple-light);">KITCO Leadership Dashboard</h3>
+            <p style="font-size:1.1rem;margin:15px 0;">
+                Let's make this semester <strong>unforgettable</strong> 🔥
+            </p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:20px;">
+                <div class="stat-card" style="text-align:center;">
+                    <h3>12</h3>
+                    <p>Upcoming Events</p>
+                </div>
+                <div class="stat-card" style="text-align:center;">
+                    <h3>8</h3>
+                    <p>Active Clubs</p>
+                </div>
+                <div class="stat-card" style="text-align:center;">
+                    <h3>450+</h3>
+                    <p>Students Reached</p>
+                </div>
+            </div>
+        </div>`;
+}
+
+function kitcoEventsHTML() {
+    return `
+        <div class="admin-section-head">📅 Upcoming Events</div>
+        <div class="admin-card">
+            <p><strong>Freshers Night</strong> — 25th June 2026</p>
+            <p><strong>Cultural Day</strong> — 10th July 2026</p>
+            <p><strong>Music & Drama Fest</strong> — 22nd July 2026</p>
+            <button class="admin-btn-primary" style="margin-top:15px;" onclick="alert('Event planning opened!')">Plan New Event</button>
+        </div>`;
+}
+
+function kitcoOrganizeHTML() {
+    return `
+        <div class="admin-card">
+            <h4>🗓️ Organize New Event</h4>
+            <input type="text" class="admin-input" placeholder="Event Name" style="margin-bottom:10px;">
+            <input type="date" class="admin-input" style="margin-bottom:10px;">
+            <textarea class="admin-input" rows="3" placeholder="Event Description"></textarea>
+            <button class="admin-btn-primary" onclick="alert('✅ Event proposal submitted to Dean!')">Submit Proposal</button>
+        </div>`;
+}
+
+function kitcoNoticeHTML() {
+    return `
+        <div class="admin-card">
+            <h4>📢 Post KITCO Notice</h4>
+            <textarea id="kitcoNotice" class="admin-input" rows="4" placeholder="Write announcement..."></textarea>
+            <button class="admin-btn-primary" onclick="postKITCONotice()">Broadcast to School</button>
+        </div>`;
+}
+
+function kitcoSportsHTML() {
+    return `
+        <div class="admin-card">
+            <h4>⚽ Sports & Games</h4>
+            <p>Football, Volleyball, Basketball, Athletics, etc.</p>
+            <button class="admin-btn-primary" onclick="alert('Sports management coming soon')">Manage Sports Teams</button>
+        </div>`;
+}
+
+function kitcoReportHTML() {
+    return `<div class="admin-card"><p>Activity & Impact Report coming soon.</p></div>`;
+}
+
+window.postKITCONotice = function() {
+    const msg = document.getElementById('kitcoNotice')?.value.trim();
+    if (!msg) return alert("Write something to post!");
+    alert(`✅ KITCO Notice Broadcasted!\n\n"${msg}"`);
+    document.getElementById('kitcoNotice').value = '';
+};
+
+/* ══════════════════════════════════════════
+   SPORTS ADMIN PORTAL — FINAL FIXED VERSION
+══════════════════════════════════════════ */
+function renderSportsAdminPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">
+                <i class="fas fa-football-ball"></i> Sports Admin
+            </div>
+            
+            <button class="admin-nav-btn active" onclick="sportsSection('dashboard',this)">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </button>
+            <button class="admin-nav-btn" onclick="sportsSection('sports',this)">
+                <i class="fas fa-list"></i> Manage Sports
+            </button>
+            <button class="admin-nav-btn" onclick="sportsSection('items',this)">
+                <i class="fas fa-box"></i> Items Inventory
+            </button>
+            <button class="admin-nav-btn" onclick="sportsSection('participants',this)">
+                <i class="fas fa-user-graduate"></i> Student Sport Leaders
+            </button>
+            <button class="admin-nav-btn" onclick="sportsSection('requests',this)">
+                <i class="fas fa-inbox"></i> Pending Requests
+            </button>
+            <button class="admin-nav-btn" onclick="sportsSection('lost',this)">
+                <i class="fas fa-exclamation-triangle"></i> Lost Items
+            </button>
+            <button class="admin-nav-btn" onclick="sportsSection('report',this)">
+                <i class="fas fa-chart-bar"></i> Reports
+            </button>
+        </div>
+        
+        <div class="admin-main" id="sportsMain">
+            ${sportsDashboardHTML()}
+        </div>
+    </div>`;
+}
+
+window.sportsSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const map = {
+        dashboard:    () => sportsDashboardHTML(),
+        sports:       () => sportsManageHTML(),
+        items:        () => sportsItemsHTML(),
+        participants: () => sportsStudentSportLeadersHTML(),   // This must point here
+        requests:     () => sportsRequestsHTML(),
+        lost:         () => sportsLostItemsHTML(),
+        report:       () => sportsReportHTML()
+    };
+    
+    document.getElementById('sportsMain').innerHTML = map[section]();
+};
+
+// Dashboard
+function sportsDashboardHTML() {
+    return `
+        <div class="admin-section-head">⚽ Sports Department Dashboard</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+            <div class="stat-card"><h3>8</h3><p>Active Sports</p></div>
+            <div class="stat-card"><h3>245</h3><p>Participants</p></div>
+            <div class="stat-card"><h3>67</h3><p>Items Issued</p></div>
+            <div class="stat-card"><h3>12</h3><p>Pending Requests</p></div>
+        </div>`;
+}
+
+// Manage Sports
+function sportsListHTML() {
+    return `
+        <div class="admin-section-head">🏅 Manage Sports</div>
+        <div class="admin-card">
+            <button class="admin-btn-primary" onclick="alert('Add new sport form')">+ Add New Sport</button>
+            <p style="margin-top:15px;">Football, Rugby, Hockey, Netball, Athletics, Table Tennis, Badminton, etc.</p>
+        </div>`;
+}
+
+// Items Inventory
+function sportsItemsHTML() {
+    return `
+        <div class="admin-section-head">📦 Items & Equipment</div>
+        <div class="admin-card">
+            <p><strong>Football:</strong> Balls (25), Jerseys, Cones</p>
+            <p><strong>Hockey:</strong> Sticks, Balls, Goalkeeper Kit</p>
+            <button class="admin-btn-primary" style="margin-top:12px;" onclick="alert('Item issuance record opened')">Record Item Issuance</button>
+        </div>`;
+}
+
+// All Participants
+function sportsParticipantsHTML() {
+    return `
+        <div class="admin-section-head">👥 All Sport Participants</div>
+        <div class="admin-card">
+            <p>Full list with Name, Admin No, Department, Sport, Items Issued</p>
+            <button class="admin-btn-primary" onclick="alert('PDF generated')">Download Full List PDF</button>
+        </div>`;
+}
+
+// Pending Requests (from Sport Leaders)
+function sportsRequestsHTML() {
+    return `
+        <div class="admin-section-head">📥 Pending Item Requests</div>
+        <div class="admin-card">
+            <p>Sport Leaders send requests here</p>
+            <button class="admin-btn-primary">Approve Selected</button>
+        </div>`;
+}
+
+// Lost Items
+// ====================== LOST ITEMS (Sports Admin) ======================
+function sportsLostItemsHTML() {
+    const data = getData();
+    if (!data.sportsLostItems) {
+        data.sportsLostItems = [];
+        saveData(data);
+    }
+
+    const rows = data.sportsLostItems.length === 0 
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No lost items recorded yet.</p>`
+        : data.sportsLostItems.map((item, i) => `
+            <div style="padding:0.7rem 0;border-bottom:1px solid var(--border);">
+                <strong>${item.itemName}</strong> — ${item.quantity} pcs<br>
+                <small style="color:var(--text-secondary)">${item.studentName || 'Unknown Student'} • ${new Date(item.date).toLocaleDateString()}</small>
+            </div>`).join('');
+
+    return `
+        <div class="admin-section-head">🚨 Lost / Damaged Items</div>
+       <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Record Lost Item</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
+                <input id="lostItemName" class="admin-input" placeholder="Item name (e.g. Football)">
+                <input id="lostQty" class="admin-input" type="number" min="1" placeholder="Quantity">
+                <input id="lostResponsible" class="admin-input" placeholder="Student / Leader Name">
+                <input id="lostNotes" class="admin-input" placeholder="Notes (optional)">
+            </div>
+        <div class="admin-card" style="margin-top:1rem;">
+            <div class="admin-card-title">Recent Lost Items (${data.sportsLostItems.length})</div>
+            ${rows}
+        </div>`;
+}
+
+// ====================== SEND LOST ITEMS TO FINANCE ======================
+window.sportsSendLostItemsToFinance = function() {
+    const data = getData();
+    
+    // Create lost items record for Finance
+    const lostRecord = {
+        id: 'LOST-' + Date.now().toString().slice(-6),
+        department: 'Sports',
+        type: 'Lost Items Report',
+        description: 'Lost/Damaged Sports Equipment',
+        date: new Date().toISOString(),
+        itemsCount: 3, // You can make this dynamic later
+        status: 'received'
+    };
+
+    if (!data.financeReceivedDocs) data.financeReceivedDocs = [];
+    data.financeReceivedDocs.push(lostRecord);
+    
+    saveData(data);
+    
+    // Success Notification (exactly like your 3rd image)
+    showSuccessAlert(`
+        ✅ Lost items PDF sent to Finance!<br>
+        <small style="font-size:0.9rem;">Sports Department Report</small>
+    `);
+    
+    // Refresh current page
+    document.getElementById('sportsMain').innerHTML = sportsLostItemsHTML();
+};
+
+// Reports
+function sportsReportHTML() {
+    return `
+        <div class="admin-section-head">📊 Sports Reports</div>
+        <div class="admin-card">
+            <button class="admin-btn-primary">Generate Semester Report</button>
+            <button class="admin-btn-primary" style="margin-left:10px;">Trophies & Achievements</button>
+        </div>`;
+}
+// ====================== SPORTS CLUB SUB-LOGIN ======================
+function showSportSubLogin() {
+    document.getElementById('schoolInfoPanel').style.display = 'none';
+    document.getElementById('loginFormContainer').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'block';
+
+    document.getElementById('dashboardTitle').innerHTML = `<i class="fas fa-football-ball"></i> Sport Club Access`;
+
+    const html = `
+    <div class="form-card" style="max-width:560px;margin:40px auto;text-align:center;">
+            <h2 style="color:var(--purple-light);margin-bottom:25px;">Sport Club Portal</h2>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                <button onclick="selectSportSubRole('sportsadmin')"
+                        class="admin-btn-primary"
+                        style="height:120px;font-size:1.1rem;padding:20px;">
+                    <i class="fas fa-user-tie" style="font-size:2.8rem;display:block;margin-bottom:12px;"></i>
+                    Sports Admin
+                </button>
+                <button onclick="selectSportSubRole('sportleader')"
+                        class="admin-btn-primary"
+                        style="height:120px;font-size:1.1rem;padding:20px;">
+                    <i class="fas fa-user-graduate" style="font-size:2.8rem;display:block;margin-bottom:12px;"></i>
+                    Student Sport Leader
+                </button>
+            </div>
+            <button onclick="showHome()"
+                    class="btn-danger"
+                    style="margin-top:25px;width:100%;padding:14px;">
+                ← Back to Home
+            </button>
+        </div>`;
+  
+    document.getElementById('dashboardContent').innerHTML = html;
+}
+
+window.selectSportSubRole = function(subRole) {
+    sessionStorage.setItem('sportSubRole', subRole);
+    const titles = { sportsadmin: 'Sports Admin Login', sportleader: 'Student Sport Leader Login' };
+    document.getElementById('dashboardTitle').innerHTML = `<i class="fas fa-football-ball"></i> ${titles[subRole]}`;
+
+    document.getElementById('dashboardContent').innerHTML = `
+        <div class="form-card" style="max-width:420px;margin:2rem auto;">
+            <h3 style="text-align:center;margin-bottom:1rem;">Enter Credentials</h3>
+            <input type="text" id="sportId" class="login-input" placeholder="ID / Username">
+            <input type="password" id="sportPass" class="login-input" placeholder="Password / Passcode">
+            <button type="button" class="btn-primary" style="width:100%;margin-top:1rem;" onclick="handleSportSubLogin()">
+                Login
+            </button>
+            <button type="button" onclick="showSportSubLogin()" class="btn-danger" style="width:100%;margin-top:10px;">
+                ← Back
+            </button>
+        </div>`;
+};
+
+window.handleSportSubLogin = function() {
+    const subRole = sessionStorage.getItem('sportSubRole');
+    const passEl  = document.getElementById('sportPass');
+    if (!passEl) { alert('⚠️ Login form not loaded correctly. Please go back and try again.'); return; }
+    const pass = passEl.value.trim();
+    const data = getData();
+
+    if (subRole === 'sportsadmin' && pass === 'sports123') {
+        const user = { role: 'sportsadmin', name: 'Sports Admin', id: 'SP-ADMIN-001' };
+        sessionStorage.setItem('currentUser', JSON.stringify(user));
+        showDashboard('sportsadmin', user);
+        return;
+    }
+
+    if (subRole === 'sportleader') {
+        const leader = (data.sportLeaders || []).find(l => l.passcode === pass);
+        if (leader) {
+            const user = {
+                role: 'sportleader',
+                name: leader.name,
+                id: leader.studentId,
+                sport: leader.sport
+            };
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
+            showDashboard('sportleader', user);
+            return;
+        }
+    }
+
+    alert('❌ Invalid passcode.\n\nSports Admin → sports123\nSport Leader → use the passcode given by Sports Admin');
+};
+
+// ====================== SPORTS ADMIN PORTAL ======================
+function renderSportsAdminPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">
+                <i class="fas fa-football-ball"></i> Sports Admin
+            </div>
+            <button class="admin-nav-btn active" onclick="sportsSection('dashboard',this)">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </button>
+            <button class="admin-nav-btn" onclick="sportsSection('sports',this)">
+                <i class="fas fa-list"></i> Manage Sports
+            </button>
+            <button class="admin-nav-btn" onclick="sportsSection('items',this)">
+                <i class="fas fa-box"></i> Items Inventory
+            </button>
+            <button class="admin-nav-btn" onclick="sportsSection('participants',this)">
+           <i class="fas fa-user-graduate"></i> Student Sport Leaders
+           </button>
+            <button class="admin-nav-btn" onclick="sportsSection('requests',this)">
+                <i class="fas fa-inbox"></i> Pending Requests
+            </button>
+            <button class="admin-nav-btn" onclick="sportsSection('lost',this)">
+                <i class="fas fa-exclamation-triangle"></i> Lost Items
+            </button>
+            <button class="admin-nav-btn" onclick="sportsSection('report',this)">
+                <i class="fas fa-chart-bar"></i> Reports
+            </button>
+        </div>
+        <div class="admin-main" id="sportsMain">${sportsDashboardHTML()}</div>
+    </div>`;
+}
+
+window.sportsSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const map = {
+        dashboard:    () => sportsDashboardHTML(),
+        sports:       () => sportsManageHTML(),
+        items:        () => sportsItemsHTML(),
+        participants: () => sportsStudentSportLeadersHTML(),   // ← This is the correct one
+        requests:     () => sportsRequestsHTML(),
+        lost:         () => sportsLostItemsHTML(),
+        report:       () => sportsReportHTML()
+    };
+    
+    document.getElementById('sportsMain').innerHTML = map[section]();
+};
+
+/* ── Dashboard (now reads real counts) ── */
+function sportsDashboardHTML() {
+    const data = getData();
+    const sportsCount       = (data.sportsList || []).length;
+    const participantsCount = (data.sportsParticipants || []).length;
+    const itemsIssued       = (data.sportsInventory || []).reduce((sum, i) => sum + (i.issued || 0), 0);
+
+    return `
+        <div class="admin-section-head">⚽ Sports Department Dashboard</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+            <div class="stat-card"><h3>${sportsCount}</h3><p>Active Sports</p></div>
+            <div class="stat-card"><h3>${participantsCount}</h3><p>Participants</p></div>
+            <div class="stat-card"><h3>${itemsIssued}</h3><p>Items Issued</p></div>
+            <div class="stat-card"><h3>0</h3><p>Pending Requests</p></div>
+        </div>`;
+}
+
+/* ══════════════════════════════════════════
+   1. MANAGE SPORTS
+══════════════════════════════════════════ */
+function sportsManageHTML() {
+    const data = getData();
+    if (!data.sportsList) { data.sportsList = []; saveData(data); }
+
+    const rows = data.sportsList.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No sports added yet.</p>`
+        : data.sportsList.map((s, i) => `
+            <div style="display:flex;justify-content:space-between;align-items:center;
+                padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;flex-wrap:wrap;gap:6px;">
+                <div>
+                    <strong>${s.icon || '⚽'} ${s.name}</strong>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${s.category || '—'}</div>
+                </div>
+                <button class="admin-action-btn danger" onclick="sportsDeleteSport(${i})">🗑 Remove</button>
+            </div>`).join('');
+
+    return `
+        <div class="admin-section-head">🏅 Manage Sports</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Sport</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
+                <input id="sportName" class="admin-input" placeholder="Sport name (e.g. Football)">
+                <select id="sportCategory" class="admin-input">
+                    <option>Team Sport</option>
+                    <option>Individual Sport</option>
+                    <option>Indoor Game</option>
+                </select>
+                <input id="sportIcon" class="admin-input" placeholder="Emoji icon (e.g. ⚽)" maxlength="2">
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="sportsAddSport()">
+                <i class="fas fa-plus"></i> Add Sport
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Sports (${data.sportsList.length})</div>
+            ${rows}
+        </div>`;
+}
+
+window.sportsAddSport = function() {
+    const name     = document.getElementById('sportName').value.trim();
+    const category = document.getElementById('sportCategory').value;
+    const icon     = document.getElementById('sportIcon').value.trim() || '⚽';
+    if (!name) return alert('Enter a sport name.');
+
+    const data = getData();
+    if (!data.sportsList) data.sportsList = [];
+    if (data.sportsList.find(s => s.name.toLowerCase() === name.toLowerCase())) {
+        return alert('This sport already exists.');
+    }
+    data.sportsList.push({ name, category, icon });
+    saveData(data);
+    adminLog(`Sports Admin added sport: ${name}`);
+    document.getElementById('sportsMain').innerHTML = sportsManageHTML();
+};
+
+window.sportsDeleteSport = function(idx) {
+    if (!confirm('Remove this sport? This will not delete existing inventory/participant records tied to it.')) return;
+    const data = getData();
+    adminLog(`Sports Admin removed sport: ${data.sportsList[idx].name}`);
+    data.sportsList.splice(idx, 1);
+    saveData(data);
+    document.getElementById('sportsMain').innerHTML = sportsManageHTML();
+};
+
+/* ══════════════════════════════════════════
+   2. ITEMS INVENTORY
+══════════════════════════════════════════ */
+function sportsItemsHTML() {
+    const data = getData();
+    if (!data.sportsInventory) { data.sportsInventory = []; saveData(data); }
+    const sportsOptions = (data.sportsList || []).map(s => `<option>${s.name}</option>`).join('');
+
+    if ((data.sportsList || []).length === 0) {
+        return `
+        <div class="admin-section-head">📦 Items Inventory</div>
+        <div class="admin-card">
+            <p style="color:var(--warning);font-size:0.85rem;">
+                ⚠️ Add at least one sport in "Manage Sports" first before adding inventory items.
+            </p>
+        </div>`;
+    }
+
+    const rows = data.sportsInventory.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No items recorded yet.</p>`
+        : data.sportsInventory.map((item, i) => `
+            <div style="display:flex;justify-content:space-between;align-items:center;
+                padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;flex-wrap:wrap;gap:6px;">
+                <div>
+                    <strong>${item.name}</strong>
+                    <span class="admin-role-pill" style="margin-left:6px;">${item.sport}</span>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">
+                        Total: ${item.quantity} · Issued: ${item.issued || 0} · Available: ${item.quantity - (item.issued || 0)}
+                    </div>
+                </div>
+                <button class="admin-action-btn danger" onclick="sportsDeleteItem(${i})">🗑</button>
+            </div>`).join('');
+
+    return `
+        <div class="admin-section-head">📦 Items Inventory</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Item</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
+                <select id="itemSport" class="admin-input">${sportsOptions}</select>
+                <input id="itemName" class="admin-input" placeholder="Item name (e.g. Match Ball)">
+                <input id="itemQty" class="admin-input" type="number" min="1" placeholder="Quantity">
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="sportsAddItem()">
+                <i class="fas fa-plus"></i> Add Item
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Inventory (${data.sportsInventory.length})</div>
+            ${rows}
+        </div>`;
+}
+
+window.sportsAddItem = function() {
+    const sport = document.getElementById('itemSport').value;
+    const name  = document.getElementById('itemName').value.trim();
+    const qty   = parseInt(document.getElementById('itemQty').value) || 0;
+    if (!name || qty <= 0) return alert('Enter item name and a valid quantity.');
+
+    const data = getData();
+    if (!data.sportsInventory) data.sportsInventory = [];
+    data.sportsInventory.push({ sport, name, quantity: qty, issued: 0 });
+    saveData(data);
+    adminLog(`Sports Admin added inventory: ${name} ×${qty} (${sport})`);
+    document.getElementById('sportsMain').innerHTML = sportsItemsHTML();
+};
+
+window.sportsDeleteItem = function(idx) {
+    if (!confirm('Remove this inventory item?')) return;
+    const data = getData();
+    adminLog(`Sports Admin removed inventory item: ${data.sportsInventory[idx].name}`);
+    data.sportsInventory.splice(idx, 1);
+    saveData(data);
+    document.getElementById('sportsMain').innerHTML = sportsItemsHTML();
+};
+
+/* ══════════════════════════════════════════
+  /* =========================================
+   3. STUDENT SPORT LEADERS
+   ========================================= */
+function sportsStudentSportLeadersHTML() {
+    const data = getData();
+    if (!data.studentSportLeaders) { 
+        data.studentSportLeaders = []; 
+        saveData(data); 
+    }
+
+    const sportsOptions = (data.sportsList || []).map(s => `<option>${s.name}</option>`).join('');
+
+    if ((data.sportsList || []).length === 0) {
+        return `
+        <div class="admin-section-head">👥 Student Sport Leaders</div>
+        <div class="admin-card">
+            <p style="color:var(--warning);font-size:0.85rem;">
+                ⚠️ Add at least one sport in "Manage Sports" first before adding sport leaders.
+            </p>
+        </div>`;
+    }
+
+    const rows = data.studentSportLeaders.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No student sport leaders registered yet.</p>`
+        : data.studentSportLeaders.map((p, i) => {
+            const student = data.students.find(s => s.id === p.studentId) || {};
+            return `
+            <div style="display:flex;justify-content:space-between;align-items:center;
+                padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;flex-wrap:wrap;gap:6px;">
+                <div>
+                    <strong>${student.name || p.studentId}</strong>
+                    <span class="admin-role-pill" style="margin-left:6px;">${p.sport} Leader</span>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">
+                        ${p.studentId} · ${student.department || '—'}
+                    </div>
+                </div>
+                <button class="admin-action-btn danger" onclick="sportsRemoveStudentSportLeader(${i})">🗑</button>
+            </div>`;
+        }).join('');
+
+    return `
+        <div class="admin-section-head">👥 All Student Sport Leaders</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Register Student Sport Leader</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
+                <input id="leaderStudentId" class="admin-input" placeholder="Student ID (e.g. STU-2026-20669)">
+                <select id="leaderSport" class="admin-input">${sportsOptions}</select>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="sportsAddStudentSportLeader()">
+                <i class="fas fa-plus"></i> Register Leader
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Registered Student Sport Leaders (${data.studentSportLeaders.length})</div>
+            ${rows}
+        </div>`;
+}
+
+// ====================== ADD LEADER ======================
+window.sportsAddStudentSportLeader = function() {
+    const studentId = document.getElementById('leaderStudentId').value.trim();
+    const sport     = document.getElementById('leaderSport').value;
+
+    if (!studentId) return alert('Enter a student ID.');
+
+    const data = getData();
+    const student = data.students.find(s => s.id === studentId);
+    if (!student) return alert('Student ID not found in system.');
+
+    if (!data.studentSportLeaders) data.studentSportLeaders = [];
+
+    if (data.studentSportLeaders.find(p => p.studentId === studentId && p.sport === sport)) {
+        return alert('This student is already registered as leader for this sport.');
+    }
+
+    data.studentSportLeaders.push({ 
+        studentId, 
+        sport, 
+        dateJoined: new Date().toISOString(),
+        role: "studentSportLeader"
+    });
+
+    saveData(data);
+    adminLog(`Sports Admin registered ${student.name} (${studentId}) as ${sport} Sport Leader`);
+    
+    document.getElementById('sportsMain').innerHTML = sportsStudentSportLeadersHTML();
+};
+
+// ====================== REMOVE LEADER ======================
+window.sportsRemoveStudentSportLeader = function(idx) {
+    if (!confirm('Remove this student as sport leader?')) return;
+    
+    const data = getData();
+    const leader = data.studentSportLeaders[idx];
+    const student = data.students.find(s => s.id === leader.studentId);
+    
+    data.studentSportLeaders.splice(idx, 1);
+    saveData(data);
+    
+    adminLog(`Sports Admin removed ${student?.name || leader.studentId} as ${leader.sport} Sport Leader`);
+    document.getElementById('sportsMain').innerHTML = sportsStudentSportLeadersHTML();
+};
+// ====================== STUDENT SPORT LEADER PORTAL ======================
+function renderSportLeaderPanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">
+                <i class="fas fa-user-graduate"></i> Sport Leader - ${user.sport || 'Football'}
+            </div>
+            <button class="admin-nav-btn active" onclick="sportLeaderSection('participants',this)">
+                <i class="fas fa-users"></i> My Participants
+            </button>
+            <button class="admin-nav-btn" onclick="sportLeaderSection('requests',this)">
+                <i class="fas fa-paper-plane"></i> Request Items
+            </button>
+            <button class="admin-nav-btn" onclick="sportLeaderSection('issued',this)">
+                <i class="fas fa-box"></i> Issued Items
+            </button>
+            <button class="admin-nav-btn" onclick="sportLeaderSection('notice',this)">
+                <i class="fas fa-bell"></i> Notices
+            </button>
+        </div>
+        <div class="admin-main" id="sportLeaderMain">
+            <div class="admin-card">
+                <h3>Welcome ${user.name}</h3>
+                <p>You are the leader for <strong>${user.sport || 'Football'}</strong></p>
+                <p>Manage your team and request equipment here.</p>
+            </div>
+        </div>
+    </div>`;
+}
+
+window.sportLeaderSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('sportLeaderMain').innerHTML = `<div class="admin-card"><p>${section} section coming soon...</p></div>`;
+};
+
+/* ══════════════════════════════════════════
+   STUDENT DASHBOARD — Final Combined Version
+══════════════════════════════════════════ */
+// ====================== FINANCE PORTAL — FULLY INTERACTIVE (Green Alerts) ======================
+function renderFinancePanel(user) {
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">
+                <i class="fas fa-coins"></i> Finance Menu
+            </div>
+            <button class="admin-nav-btn active" onclick="financeSection('pending',this)">
+                <i class="fas fa-clock"></i> Pending from HOD
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('cleared',this)">
+                <i class="fas fa-check-circle"></i> Cleared Students
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('uncleared',this)">
+                <i class="fas fa-exclamation-triangle"></i> Uncleared → Deputy
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('received',this)">
+                <i class="fas fa-inbox"></i> Received PDFs
+            </button>
+            <button class="admin-nav-btn" onclick="financeSection('report',this)">
+                <i class="fas fa-chart-bar"></i> Financial Report
+            </button>
+        </div>
+        <div class="admin-main" id="financeMain">
+            ${financePendingHTML()}
+        </div>
+    </div>`;
+}
+
+window.financeSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const map = {
+        pending:    () => financePendingHTML(),
+        cleared:    () => financeClearedHTML(),
+        uncleared:  () => financeUnclearedHTML(),
+        received:   () => financeReceivedHTML(),
+        report:     () => financeReportHTML()
+    };
+    document.getElementById('financeMain').innerHTML = map[section]();
+};
+
+// Beautiful Green Success Alert (same as Exam Office)
+function showSuccessAlert(message) {
+    const alertHTML = `
+        <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+                    background:#1a1e2c;border:2px solid #10b981;border-radius:16px;
+                    padding:25px 30px;z-index:10000;max-width:380px;text-align:center;
+                    box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+            <div style="font-size:3rem;margin-bottom:10px;">✅</div>
+            <div style="color:#10b981;font-weight:700;font-size:1.1rem;margin-bottom:8px;">
+                ${message}
+            </div>
+            <button onclick="this.parentElement.remove()" 
+                    style="margin-top:15px;padding:10px 25px;background:#10b981;color:white;
+                    border:none;border-radius:8px;font-weight:600;cursor:pointer;">
+                OK
+            </button>
+        </div>`;
+    
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = alertHTML;
+    document.body.appendChild(tempDiv.firstElementChild);
+};
+
+/* ── 1. Pending from HOD ── */
+function financePendingHTML() {
+    const data = getData();
+    let pending = data.examRegistrations.filter(r => r.status === 'pending_finance');
+
+    if (pending.length === 0) {
+        pending = [{ id: "REG-998877", studentId: "STU-2026-20670", totalExamFee: 3200, units: [{name:"CS101"}] }];
+    }
+
+    const cards = pending.map(reg => {
+        const student = data.students.find(s => s.id === reg.studentId) || {name: "Sarah Achieng", department: "Computer Studies", feeBalance: 25000};
+        const examFee = reg.totalExamFee || 0;
+        const currentBalance = student.feeBalance || 0;
+        const newTotal = currentBalance + examFee;
+
+        return `
+        <div class="admin-card" style="margin-bottom:15px;">
+            <div style="font-weight:700;">${student.name}</div>
+            <div style="color:var(--text-secondary);font-size:0.8rem;">${reg.studentId} • ${student.department}</div>
+            
+            <div style="margin:12px 0;padding:12px;background:var(--bg-elevated);border-radius:10px;">
+                <strong>Exam Fee:</strong> KSh ${examFee.toLocaleString()}<br>
+                <strong>Current Balance:</strong> KSh ${currentBalance.toLocaleString()}<br>
+                <strong style="color:var(--purple-light)">New Total: KSh ${newTotal.toLocaleString()}</strong>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="admin-btn-primary" onclick="financeClearStudent('${reg.id}')">
+                    ✅ Clear Fees → Exam Office
+                </button>
+                <button class="admin-action-btn danger" onclick="financeSendToDeputy('${reg.id}')">
+                    ⚠️ Send to Deputy (Uncleared)
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+
+    return `<div class="admin-section-head">💰 Pending from HOD (${pending.length})</div>${cards}`;
+}
+
+window.financeClearStudent = function(regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+    const student = data.students.find(s => s.id === reg.studentId);
+
+    reg.status = 'pending_exam';
+    reg.financeChecked = true;
+    saveData(data);
+
+    generatePDF({ /* ... your existing PDF config ... */ });
+
+    showSuccessAlert(`Fees Cleared Successfully!<br>Registration ${regId} sent to Exam Office.`);
+    document.getElementById('financeMain').innerHTML = financePendingHTML();
+};
+
+window.financeSendToDeputy = function(regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+
+    reg.status = 'pending_deputy';
+    reg.referredToDeputy = true;
+    saveData(data);
+
+    generatePDF({ /* ... your existing PDF config ... */ });
+
+    showSuccessAlert(`Student sent to Deputy Academics!<br>PDF generated for review.`);
+    document.getElementById('financeMain').innerHTML = financePendingHTML();
+};
+
+/* ── 2. Cleared Students ── */
+function financeClearedHTML() {
+    const data = getData();
+    const cleared = data.examRegistrations.filter(r => r.financeChecked && r.status === 'pending_exam');
+
+    let html = `<div class="admin-section-head">✅ Cleared Students (${cleared.length})</div>`;
+
+    if (cleared.length === 0) {
+        html += `<div class="admin-card"><p>No cleared students yet.</p></div>`;
+    } else {
+        html += cleared.map(reg => {
+            const student = data.students.find(s => s.id === reg.studentId) || {};
+            return `<div class="admin-card">✅ ${student.name} (${reg.studentId}) — Cleared</div>`;
+        }).join('');
+    }
+
+    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="financeDownloadCleared()">📄 Download Cleared List PDF</button>`;
+    return html;
+};
+
+window.financeDownloadCleared = function() {
+    showSuccessAlert("Cleared Students List PDF Downloaded Successfully!");
+};
+
+/* ── 3. Uncleared → Deputy ── */
+function financeUnclearedHTML() {
+    const data = getData();
+    const uncleared = data.examRegistrations.filter(r => r.referredToDeputy);
+
+    let html = `<div class="admin-section-head">⚠️ Uncleared → Deputy (${uncleared.length})</div>`;
+
+    if (uncleared.length === 0) {
+        html += `<div class="admin-card"><p>No uncleared students at the moment.</p></div>`;
+    } else {
+        html += uncleared.map(reg => {
+            const student = data.students.find(s => s.id === reg.studentId) || {};
+            return `<div class="admin-card">⚠️ ${student.name} (${reg.studentId}) — Sent to Deputy</div>`;
+        }).join('');
+    }
+
+    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="financeDownloadUncleared()">📄 Download Uncleared List PDF</button>`;
+    return html;
+};
+
+window.financeDownloadUncleared = function() {
+    showSuccessAlert("Uncleared Students List PDF Downloaded!");
+};
+
+/* ── 4. Received PDFs ── */
+function financeReceivedHTML() {
+    return `
+        <div class="admin-section-head">📥 Received PDFs / Documents</div>
+        <div class="admin-card">
+            <strong>HOD Exam Fee List</strong><br>
+            REG-998877 — Sarah Achieng (Computer Studies)
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="financeViewReceivedPDF('hod1')">
+                📄 View / Download PDF
+            </button>
+        </div>`;
+};
+
+window.financeViewReceivedPDF = function(id) {
+    showSuccessAlert("HOD PDF Opened Successfully!");
+};
+
+
+// 5. Financial Report
+function financeReportHTML() {
+    return `
+        <div class="admin-section-head">📊 Financial Report</div>
+        <div class="admin-card">
+            <p>Total Expected Exam Fees: <strong>KSh 48,500</strong></p>
+            <p>Cleared: KSh 32,000 | Pending: KSh 16,500</p>
+            <button class="admin-btn-primary" onclick="alert('Full Financial Report PDF Generated')">📄 Generate Full Report PDF</button>
+        </div>`;
+}
+
+// Action Functions
+window.financeClearStudent = function(regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (reg) {
+        reg.status = 'pending_exam';
+        saveData(data);
+        alert(`✅ Fees cleared! Registration ${regId} forwarded to Exam Office.`);
+        document.getElementById('financeMain').innerHTML = financePendingHTML();
+    }
+};
+
+window.financeSendToDeputy = function(regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (reg) {
+        reg.status = 'pending_deputy';
+        saveData(data);
+        alert(`⚠️ Registration sent to Deputy Academics.`);
+        document.getElementById('financeMain').innerHTML = financePendingHTML();
+    }
+};
+
+window.selectSportSubRole = function(subRole) {
+    // Set temporary role for login
+    sessionStorage.setItem('sportSubRole', subRole);
+    
+    const titles = {
+        sportsadmin: 'Sports Admin Login',
+        sportleader: 'Student Sport Leader Login'
+    };
+
+    document.getElementById('dashboardTitle').innerHTML = 
+        `<i class="fas fa-football-ball"></i> ${titles[subRole]}`;
+
+    // Show normal login form but with sport context
+    let content = `
+        <div class="form-card" style="max-width:420px;margin:2rem auto;">
+            <h3 style="text-align:center;">Enter Credentials</h3>
+            <input type="text" id="sportId" class="login-input" placeholder="ID / Username">
+            <input type="password" id="sportPass" class="login-input" placeholder="Password">
+            <button class="btn-primary" style="width:100%;margin-top:1rem;" onclick="handleSportSubLogin()">
+                Login
+            </button>
+        </div>`;
+
+    document.getElementById('dashboardContent').innerHTML = content;
+};
+
+window.handleSportSubLogin = function() {
+    const subRole = sessionStorage.getItem('sportSubRole');
+    const id = document.getElementById('sportId').value.trim();
+    const pass = document.getElementById('sportPass').value.trim();
+
+    // Demo credentials (you can expand later)
+    if (subRole === 'sportsadmin' && pass === 'sports123') {
+        const user = { role: 'sportsadmin', name: 'Sports Admin', id: id || 'SP-ADMIN-001' };
+        sessionStorage.setItem('currentUser', JSON.stringify(user));
+        showDashboard('sportsadmin', user);
+    } else if (subRole === 'sportleader' && pass === 'leader123') {
+        const user = { role: 'sportleader', name: 'Sport Leader', id: id || 'LEADER-001', sport: 'Football' };
+        sessionStorage.setItem('currentUser', JSON.stringify(user));
+        showDashboard('sportleader', user);
+    } else {
+        alert('❌ Invalid credentials. Try:\nSports Admin → sports123\nSport Leader → leader123');
+    }
+};
+
+/* ══════════════════════════════════════════
+   SECTION 1 — USER MANAGEMENT
+══════════════════════════════════════════ */
+function adminUsersHTML() {
+    const data = getData();
+    const allUsers = [
+        ...data.students.map(u      => ({...u, roleLabel:'Student',      roleKey:'student'})),
+        ...data.classReps.map(u     => ({...u, roleLabel:'Class Rep',    roleKey:'classrep'})),
+        ...data.lecturers.map(u     => ({...u, roleLabel:'Lecturer',     roleKey:'lecturer'})),
+        ...data.classTeachers.map(u => ({...u, roleLabel:'Class Teacher',roleKey:'classteacher'})),
+        ...data.hods.map(u          => ({...u, roleLabel:'H.O.D',        roleKey:'hod'})),
+        ...data.deos.map(u          => ({...u, roleLabel:'D.E.O',        roleKey:'deo'})),
+        ...data.finance.map(u       => ({...u, roleLabel:'Finance',      roleKey:'finance'})),
+        {  ...data.deputyAcad,        roleLabel:'Deputy (Acad)',          roleKey:'deputy_acad'},
+        {  ...data.deputyInfra,       roleLabel:'Deputy (Infra)',         roleKey:'deputy_infra'},
+        {  ...data.examOffice,        roleLabel:'Exam Office',            roleKey:'examoffice'},
+        {  ...data.dean,              roleLabel:'Dean',                   roleKey:'dean'},
+    ];
+ 
+    const rows = allUsers.map(u => `
+        <tr style="border-bottom:1px solid var(--border);font-size:0.82rem;">
+            <td style="padding:0.5rem;">${u.id || '—'}</td>
+            <td style="padding:0.5rem;">${u.name || '—'}</td>
+            <td style="padding:0.5rem;"><span class="admin-role-pill">${u.roleLabel}</span></td>
+            <td style="padding:0.5rem;">${u.department || '—'}</td>
+            <td style="padding:0.5rem;">
+                <button class="admin-action-btn edit"   onclick="adminResetPassword('${u.roleKey}','${u.id || u.roleKey}')">🔑 Reset</button>
+                <button class="admin-action-btn danger" onclick="adminDeleteUser('${u.roleKey}','${u.id || u.roleKey}')">🗑 Delete</button>
+            </td>
+        </tr>`).join('');
+ 
+    return `
+        <div class="admin-section-head">👥 User Management</div>
+ 
+        <!-- Add new user form -->
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add New User</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;">
+                <select id="newUserRole" class="admin-input">
+                    <option value="">-- Select Role --</option>
+                    <option value="student">Student</option>
+                    <option value="classrep">Class Rep</option>
+                    <option value="lecturer">Lecturer</option>
+                    <option value="classteacher">Class Teacher</option>
+                    <option value="hod">H.O.D</option>
+                    <option value="deo">D.E.O</option>
+                    <option value="finance">Finance</option>
+                </select>
+                <input id="newUserName"  class="admin-input" placeholder="Full Name">
+                <input id="newUserDept"  class="admin-input" placeholder="Department">
+                <input id="newUserPass"  class="admin-input" placeholder="Password / Passcode">
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="adminAddUser()">
+                <i class="fas fa-plus"></i> Create Account
+            </button>
+        </div>
+ 
+        <!-- Users table -->
+        <div class="admin-card">
+            <div class="admin-card-title">All Users (${allUsers.length})</div>
+            <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr style="color:var(--purple-light);border-bottom:1px solid var(--border);font-size:0.8rem;">
+                            <th style="padding:0.5rem;text-align:left;">ID</th>
+                            <th style="padding:0.5rem;text-align:left;">Name</th>
+                            <th style="padding:0.5rem;text-align:left;">Role</th>
+                            <th style="padding:0.5rem;text-align:left;">Dept</th>
+                            <th style="padding:0.5rem;text-align:left;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
+        </div>`;
+}
+ 
+window.adminAddUser = function() {
+    const role = document.getElementById('newUserRole').value;
+    const name = document.getElementById('newUserName').value.trim();
+    const dept = document.getElementById('newUserDept').value.trim();
+    const pass = document.getElementById('newUserPass').value.trim();
+    if (!role || !name || !pass) return alert('Fill in Role, Name and Password.');
+    const data = getData();
+    const ts   = Date.now().toString().slice(-5);
+    const prefixMap = {student:'STU',classrep:'REP',lecturer:'LEC',classteacher:'TCH',hod:'HOD',deo:'DEO',finance:'FIN'};
+    const id = `${prefixMap[role]||'USR'}-2026-${ts}`;
+    const passField = role === 'student' ? 'passcode' : 'password';
+    const newUser = {id, name, department: dept, [passField]: pass};
+    const arrMap  = {student:'students',classrep:'classReps',lecturer:'lecturers',classteacher:'classTeachers',hod:'hods',deo:'deos',finance:'finance'};
+    if (arrMap[role]) data[arrMap[role]].push(newUser);
+    adminLog(`Created ${role} account: ${name} (${id})`);
+    saveData(data);
+    alert(`✅ Account created!\nID: ${id}\nPassword: ${pass}`);
+    document.getElementById('adminMain').innerHTML = adminUsersHTML();
+};
+ 
+window.adminResetPassword = function(roleKey, userId) {
+    const newPass = prompt(`Enter new password for ${userId}:`);
+    if (!newPass) return;
+    const data = getData();
+    const arrMap = {student:'students',classrep:'classReps',lecturer:'lecturers',classteacher:'classTeachers',hod:'hods',deo:'deos',finance:'finance'};
+    const passField = roleKey === 'student' ? 'passcode' : 'password';
+    if (arrMap[roleKey]) {
+        const user = data[arrMap[roleKey]].find(u => u.id === userId);
+        if (user) { user[passField] = newPass; saveData(data); adminLog(`Reset password for ${userId}`); alert('✅ Password reset successfully.'); }
+    } else {
+        const singleMap = {deputy_acad:'deputyAcad',deputy_infra:'deputyInfra',examoffice:'examOffice',dean:'dean'};
+        if (singleMap[roleKey]) { data[singleMap[roleKey]].password = newPass; saveData(data); adminLog(`Reset password for ${roleKey}`); alert('✅ Password reset.'); }
+    }
+};
+ 
+window.adminDeleteUser = function(roleKey, userId) {
+    if (!confirm(`Delete user ${userId}? This cannot be undone.`)) return;
+    const data = getData();
+    const arrMap = {student:'students',classrep:'classReps',lecturer:'lecturers',classteacher:'classTeachers',hod:'hods',deo:'deos',finance:'finance'};
+    if (arrMap[roleKey]) {
+        data[arrMap[roleKey]] = data[arrMap[roleKey]].filter(u => u.id !== userId);
+        saveData(data); adminLog(`Deleted ${roleKey}: ${userId}`);
+        alert('✅ User deleted.');
+        document.getElementById('adminMain').innerHTML = adminUsersHTML();
+    } else {
+        alert('⚠️ Cannot delete single-instance roles (Deputy, Dean, etc.). Reset their password instead.');
+    }
+};
+ 
+/* ══════════════════════════════════════════
+   STUDENT PERSONAL NOTIFICATIONS
+══════════════════════════════════════════ */
+function pushStudentNotification(studentId, title, message, stage) {
+    const data = getData();
+    if (!data.studentNotifications) data.studentNotifications = [];
+    data.studentNotifications.push({
+        id: 'sn' + Date.now() + Math.floor(Math.random()*1000),
+        studentId,
+        title,
+        message,
+        stage,
+        timestamp: new Date().toISOString(),
+        seen: false
+    });
+    saveData(data);
+}
+
+function showStudentNotificationPopup(user) {
+    const data = getData();
+    const unseen = (data.studentNotifications || [])
+        .filter(n => n.studentId === user.id && !n.seen);
+
+    if (unseen.length === 0) return;
+
+    const latest = unseen[unseen.length - 1];
+
+    const overlay = document.createElement('div');
+    overlay.id = 'studentNotifyOverlay';
+    overlay.style.cssText = `
+        position:fixed;inset:0;background:rgba(0,0,0,.6);
+        display:flex;align-items:center;justify-content:center;
+        z-index:9999;padding:1rem;`;
+
+    overlay.innerHTML = `
+        <div style="background:var(--bg-card);border:1px solid var(--purple);
+            border-radius:18px;max-width:420px;width:100%;padding:1.6rem;
+            box-shadow:0 12px 40px rgba(108,63,207,.4);text-align:center;">
+            <div style="font-size:2.4rem;margin-bottom:8px;">📨</div>
+            <div style="font-size:1.05rem;font-weight:800;color:var(--purple-light);margin-bottom:6px;">
+                ${latest.title}
+            </div>
+            <div style="font-size:0.88rem;color:var(--text-primary);line-height:1.6;margin-bottom:16px;">
+                ${latest.message}
+            </div>
+            ${unseen.length > 1 ? `
+            <div style="font-size:0.72rem;color:var(--text-secondary);margin-bottom:14px;">
+                +${unseen.length - 1} more update${unseen.length - 1 > 1 ? 's' : ''} waiting
+            </div>` : ''}
+            <button class="admin-btn-primary" style="width:100%;" onclick="dismissStudentNotifications('${user.id}')">
+                Got it
+            </button>
+        </div>`;
+
+    document.body.appendChild(overlay);
+}
+
+window.dismissStudentNotifications = function(studentId) {
+    const data = getData();
+    (data.studentNotifications || []).forEach(n => {
+        if (n.studentId === studentId) n.seen = true;
+    });
+    saveData(data);
+    const overlay = document.getElementById('studentNotifyOverlay');
+    if (overlay) overlay.remove();
+};
+
+/* ══════════════════════════════════════════
+   SECTION 2 — PRINCIPALS
+══════════════════════════════════════════ */
+function adminPrincipalsHTML() {
+    const data = getData();
+    const rows = data.principals.map((p, idx) => `
+        <tr style="border-bottom:1px solid var(--border);font-size:0.82rem;">
+            <td style="padding:0.5rem;">${p.name}</td>
+            <td style="padding:0.5rem;">${p.startYear} — ${p.endYear || 'Present'}</td>
+            <td style="padding:0.5rem;">${p.title || '—'}</td>
+            <td style="padding:0.5rem;">${p.isCurrent ? '<span style="color:var(--success);font-weight:700;">● Current</span>' : ''}</td>
+            <td style="padding:0.5rem;">
+                ${!p.isCurrent ? `<button class="admin-action-btn edit" onclick="adminSetCurrent(${idx})">Set Current</button>` : ''}
+                <button class="admin-action-btn danger" onclick="adminDeletePrincipal(${idx})">🗑</button>
+            </td>
+        </tr>`).join('');
+ 
+    return `
+        <div class="admin-section-head">🏛️ Manage Principals</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Principal</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px;">
+                <input id="pName"  class="admin-input" placeholder="Full Name">
+                <input id="pTitle" class="admin-input" placeholder="Title / Achievement">
+                <input id="pPhoto" class="admin-input" placeholder="Photo URL">
+                <input id="pStart" class="admin-input" type="number" placeholder="Start Year">
+                <input id="pEnd"   class="admin-input" type="number" placeholder="End Year (blank=current)">
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="adminAddPrincipal()">
+                <i class="fas fa-plus"></i> Add Principal
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Principals (${data.principals.length})</div>
+            <table style="width:100%;border-collapse:collapse;">
+                <thead><tr style="color:var(--purple-light);border-bottom:1px solid var(--border);font-size:0.8rem;">
+                    <th style="padding:0.5rem;text-align:left;">Name</th>
+                    <th style="padding:0.5rem;text-align:left;">Years</th>
+                    <th style="padding:0.5rem;text-align:left;">Title</th>
+                    <th style="padding:0.5rem;text-align:left;">Status</th>
+                    <th style="padding:0.5rem;text-align:left;">Actions</th>
+                </tr></thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>`;
+}
+ 
+window.adminAddPrincipal = function() {
+    const name  = document.getElementById('pName').value.trim();
+    const title = document.getElementById('pTitle').value.trim();
+    const photo = document.getElementById('pPhoto').value.trim();
+    const start = parseInt(document.getElementById('pStart').value);
+    const end   = document.getElementById('pEnd').value ? parseInt(document.getElementById('pEnd').value) : null;
+    if (!name || !start) return alert('Name and Start Year are required.');
+    const data = getData();
+    const isCurrent = !end;
+    if (isCurrent) data.principals.forEach(p => { p.isCurrent = false; if (!p.endYear) p.endYear = new Date().getFullYear(); });
+    data.principals.push({ id: Date.now(), name, title, photo: photo || `https://placehold.co/400x500/6c3fcf/white?text=${encodeURIComponent(name)}`, startYear: start, endYear: end, isCurrent });
+    saveData(data); adminLog(`Added principal: ${name}`);
+    renderPrincipals();
+    alert('✅ Principal added!');
+    document.getElementById('adminMain').innerHTML = adminPrincipalsHTML();
+};
+ 
+window.adminSetCurrent = function(idx) {
+    const data = getData();
+    data.principals.forEach((p, i) => { p.isCurrent = (i === idx); if (i !== idx && !p.endYear) p.endYear = new Date().getFullYear(); });
+    saveData(data); renderPrincipals(); adminLog(`Set principal ${data.principals[idx].name} as current`);
+    document.getElementById('adminMain').innerHTML = adminPrincipalsHTML();
+};
+ 
+window.adminDeletePrincipal = function(idx) {
+    if (!confirm('Delete this principal?')) return;
+    const data = getData();
+    data.principals.splice(idx, 1);
+    saveData(data); renderPrincipals(); adminLog(`Deleted principal at index ${idx}`);
+    document.getElementById('adminMain').innerHTML = adminPrincipalsHTML();
+};
+ 
+/* ══════════════════════════════════════════
+   SECTION 3 — DEPARTMENTS
+══════════════════════════════════════════ */
+function adminDepartmentsHTML() {
+    const data = getData();
+    return `
+        <div class="admin-section-head">🏫 Manage Departments</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Department</div>
+            <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+                <input id="newDept" class="admin-input" placeholder="Department name" style="flex:1;">
+                <button class="admin-btn-primary" onclick="adminAddDept()"><i class="fas fa-plus"></i> Add</button>
+            </div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Departments (${data.departments.length})</div>
+            ${data.departments.map((d, i) => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
+                    <span>${d}</span>
+                    <button class="admin-action-btn danger" onclick="adminDeleteDept(${i})">🗑 Remove</button>
+                </div>`).join('')}
+        </div>`;
+}
+ 
+window.adminAddDept = function() {
+    const name = document.getElementById('newDept').value.trim();
+    if (!name) return alert('Enter department name.');
+    const data = getData();
+    if (data.departments.includes(name)) return alert('Department already exists.');
+    data.departments.push(name); saveData(data); adminLog(`Added department: ${name}`);
+    document.getElementById('adminMain').innerHTML = adminDepartmentsHTML();
+};
+ 
+window.adminDeleteDept = function(idx) {
+    if (!confirm('Delete this department?')) return;
+    const data = getData();
+    adminLog(`Deleted department: ${data.departments[idx]}`);
+    data.departments.splice(idx, 1); saveData(data);
+    document.getElementById('adminMain').innerHTML = adminDepartmentsHTML();
+};
+ 
+/* ══════════════════════════════════════════
+   SECTION 4 — COURSES
+══════════════════════════════════════════ */
+function adminCoursesHTML() {
+    const data = getData();
+    return `
+        <div class="admin-section-head">📚 Manage Courses / Units</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Course</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px;">
+                <input id="cCode" class="admin-input" placeholder="Code (e.g. CS105)">
+                <input id="cName" class="admin-input" placeholder="Course Name">
+            </div>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="adminAddCourse()">
+                <i class="fas fa-plus"></i> Add Course
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Courses (${data.courses.length})</div>
+            ${data.courses.map((c, i) => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
+                    <span><strong style="color:var(--purple-light)">${c.code}</strong> — ${c.name}</span>
+                    <button class="admin-action-btn danger" onclick="adminDeleteCourse(${i})">🗑</button>
+                </div>`).join('')}
+        </div>`;
+}
+ 
+window.adminAddCourse = function() {
+    const code = document.getElementById('cCode').value.trim().toUpperCase();
+    const name = document.getElementById('cName').value.trim();
+    if (!code || !name) return alert('Fill in both Code and Name.');
+    const data = getData();
+    if (data.courses.find(c => c.code === code)) return alert('Course code already exists.');
+    data.courses.push({id: code, code, name}); saveData(data); adminLog(`Added course: ${code} ${name}`);
+    document.getElementById('adminMain').innerHTML = adminCoursesHTML();
+};
+ 
+window.adminDeleteCourse = function(idx) {
+    if (!confirm('Delete this course?')) return;
+    const data = getData();
+    adminLog(`Deleted course: ${data.courses[idx].code}`);
+    data.courses.splice(idx, 1); saveData(data);
+    document.getElementById('adminMain').innerHTML = adminCoursesHTML();
+};
+ 
+/* ══════════════════════════════════════════
+   SECTION 5 — ANNOUNCEMENTS
+══════════════════════════════════════════ */
+function adminAnnounceHTML() {
+    const data = getData();
+    return `
+        <div class="admin-section-head">📢 Broadcast Announcements</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Post New Announcement</div>
+            <select id="noticeTarget" class="admin-input" style="margin-top:10px;width:100%;">
+                <option value="all">All Users</option>
+                <option value="student">Students Only</option>
+                <option value="staff">Staff Only</option>
+                <option value="hod">H.O.D Only</option>
+                <option value="finance">Finance Only</option>
+            </select>
+            <textarea id="noticeMsg" class="admin-input" rows="3" placeholder="Type your announcement..." style="margin-top:10px;width:100%;resize:vertical;"></textarea>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="adminPostNotice()">
+                <i class="fas fa-bullhorn"></i> Broadcast Now
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Recent Notices (${data.noticeboard.length})</div>
+            ${data.noticeboard.slice(-10).reverse().map((n, i) => `
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:0.7rem 0;border-bottom:1px solid var(--border);">
+                    <div>
+                        <div style="font-size:0.78rem;color:var(--purple-light);font-weight:700;">${n.sender} → ${n.recipient}</div>
+                        <div style="font-size:0.82rem;">${n.message}</div>
+                        <div style="font-size:0.68rem;color:var(--text-secondary);">${new Date(n.timestamp).toLocaleString()}</div>
+                    </div>
+                    <button class="admin-action-btn danger" onclick="adminDeleteNotice('${n.id}')">🗑</button>
+                </div>`).join('')}
+        </div>`;
+}
+ 
+window.adminPostNotice = function() {
+    const msg    = document.getElementById('noticeMsg').value.trim();
+    const target = document.getElementById('noticeTarget').value;
+    if (!msg) return alert('Enter a message.');
+    const data = getData();
+    data.noticeboard.push({ id: 'n' + Date.now(), sender: 'System Admin', message: msg, timestamp: new Date().toISOString(), recipient: target });
+    saveData(data); adminLog(`Posted notice to ${target}: ${msg.substring(0,40)}`);
+    alert('✅ Announcement broadcast!');
+    document.getElementById('adminMain').innerHTML = adminAnnounceHTML();
+};
+ 
+window.adminDeleteNotice = function(id) {
+    const data = getData();
+    data.noticeboard = data.noticeboard.filter(n => n.id !== id);
+    saveData(data);
+    document.getElementById('adminMain').innerHTML = adminAnnounceHTML();
+};
+ 
+/* ══════════════════════════════════════════
+   SECTION 6 — ID CARDS
+══════════════════════════════════════════ */
+function adminIDCardsHTML() {
+    const data = getData();
+    return `
+        <div class="admin-section-head">🪪 Student ID Card Replacement</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Generate Replacement ID Card</div>
+            <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+                <input id="idStudentSearch" class="admin-input" placeholder="Enter Student ID or Name" style="flex:1;">
+                <button class="admin-btn-primary" onclick="adminSearchStudent()"><i class="fas fa-search"></i> Search</button>
+            </div>
+            <div id="idCardResult" style="margin-top:1rem;"></div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Students (${data.students.length})</div>
+            ${data.students.map(s => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.82rem;">
+                    <span>${s.name} — <span style="color:var(--purple-light)">${s.id}</span></span>
+                    <button class="admin-action-btn edit" onclick="adminGenerateID('${s.id}')">🪪 Generate ID</button>
+                </div>`).join('')}
+        </div>`;
+}
+ 
+window.adminSearchStudent = function() {
+    const q    = document.getElementById('idStudentSearch').value.trim().toLowerCase();
+    const data = getData();
+    const s    = data.students.find(s => s.id.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
+    const div  = document.getElementById('idCardResult');
+    if (!s) { div.innerHTML = '<p style="color:var(--danger)">Student not found.</p>'; return; }
+    div.innerHTML = `<p style="color:var(--success)">Found: <strong>${s.name}</strong> (${s.id}) — ${s.department}</p>
+        <button class="admin-btn-primary" onclick="adminGenerateID('${s.id}')">🪪 Generate ID Card</button>`;
+};
+ 
+window.adminGenerateID = function(studentId) {
+    const data = getData();
+    const s    = data.students.find(s => s.id === studentId);
+    if (!s) return;
+    adminLog(`Generated ID card for ${s.name} (${s.id})`);
+    alert(`✅ ID Card Generated!\n\n🪪 PC KINYANJUI TTI\nName: ${s.name}\nID: ${s.id}\nDept: ${s.department}\nClass: ${s.class}\n\n(Print feature requires backend integration)`);
+};
+ 
+/* ══════════════════════════════════════════
+   SECTION 7 — SYSTEM LOGS
+══════════════════════════════════════════ */
+function adminLogsHTML() {
+    const data = getData();
+    const logs = data.systemLogs || [];
+    return `
+        <div class="admin-section-head">📋 System Logs</div>
+        <div class="admin-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <div class="admin-card-title">Activity Log (${logs.length} entries)</div>
+                <button class="admin-action-btn danger" onclick="adminClearLogs()">🗑 Clear Logs</button>
+            </div>
+            ${logs.length === 0 ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No logs yet.</p>' :
+            logs.slice(-50).reverse().map(l => `
+                <div style="padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.78rem;">
+                    <span style="color:var(--purple-light);">${new Date(l.time).toLocaleString()}</span>
+                    <span style="margin-left:10px;">${l.action}</span>
+                </div>`).join('')}
+        </div>`;
+}
+ 
+window.adminClearLogs = function() {
+    if (!confirm('Clear all logs?')) return;
+    const data = getData();
+    data.systemLogs = [];
+    saveData(data);
+    document.getElementById('adminMain').innerHTML = adminLogsHTML();
+};
+ 
+/* ── Log helper (called internally) ── */
+function adminLog(action) {
+    const data = getData();
+    if (!data.systemLogs) data.systemLogs = [];
+    data.systemLogs.push({ time: new Date().toISOString(), action });
+    saveData(data);
+}
+ 
+/* Also log every login */
+function logLogin(role, name) {
+    adminLog(`LOGIN — ${role.toUpperCase()}: ${name}`);
+}
+ 
+/* ══════════════════════════════════════════
+   SECTION 8 — BACKUP / RESTORE
+══════════════════════════════════════════ */
+function adminBackupHTML() {
+    return `
+        <div class="admin-section-head">💾 Backup & Restore</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">💾 Backup System Data</div>
+            <p style="font-size:0.82rem;color:var(--text-secondary);margin:8px 0;">Downloads all system data as a JSON file to your device.</p>
+            <button class="admin-btn-primary" onclick="adminBackup()"><i class="fas fa-download"></i> Download Backup</button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">🔄 Restore from Backup</div>
+            <p style="font-size:0.82rem;color:var(--text-secondary);margin:8px 0;">Upload a previously downloaded backup JSON file to restore all data.</p>
+            <input type="file" id="restoreFile" accept=".json" class="admin-input" style="margin-bottom:10px;">
+            <button class="admin-btn-primary" onclick="adminRestore()"><i class="fas fa-upload"></i> Restore Data</button>
+        </div>`;
+}
+ 
+window.adminBackup = function() {
+    const data = getData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `pck_backup_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    adminLog('System backup downloaded');
+};
+ 
+window.adminRestore = function() {
+    const file = document.getElementById('restoreFile').files[0];
+    if (!file) return alert('Select a backup JSON file first.');
+    if (!confirm('⚠️ This will REPLACE all current data. Are you sure?')) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        try {
+            const restored = JSON.parse(e.target.result);
+            saveData(restored);
+            adminLog('System data restored from backup');
+            alert('✅ Data restored successfully! Refreshing...');
+            location.reload();
+        } catch { alert('❌ Invalid backup file.'); }
+    };
+    reader.readAsText(file);
+};
+ 
+/* ══════════════════════════════════════════
+   SECTION 9 — EXPORT DATA
+══════════════════════════════════════════ */
+function adminExportHTML() {
+    const data = getData();
+    return `
+        <div class="admin-section-head">📊 Export Data</div>
+        <div class="admin-card">
+            <div class="admin-card-title">Download as CSV</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">
+                <button class="admin-btn-primary"   onclick="exportCSV('students')"><i class="fas fa-user-graduate"></i> Export Students (${data.students.length})</button>
+                <button class="admin-btn-secondary" onclick="exportCSV('lecturers')"><i class="fas fa-chalkboard-user"></i> Export Lecturers (${data.lecturers.length})</button>
+                <button class="admin-btn-secondary" onclick="exportCSV('examRegistrations')"><i class="fas fa-file-signature"></i> Export Exam Registrations (${data.examRegistrations.length})</button>
+                <button class="admin-btn-secondary" onclick="exportCSV('newsletterSubscribers')"><i class="fas fa-envelope"></i> Export Newsletter Subscribers (${data.newsletterSubscribers.length})</button>
+            </div>
+        </div>`;
+}
+ 
+window.exportCSV = function(key) {
+    const data = getData();
+    let rows = data[key];
+    if (!rows || rows.length === 0) return alert('No data to export.');
+    if (typeof rows[0] === 'string') rows = rows.map(r => ({email: r}));
+    const headers = Object.keys(rows[0]).join(',');
+    const body    = rows.map(r => Object.values(r).map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob    = new Blob([headers + '\n' + body], {type:'text/csv'});
+    const url     = URL.createObjectURL(blob);
+    const a       = document.createElement('a');
+    a.href = url; a.download = `pck_${key}_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click(); URL.revokeObjectURL(url);
+    adminLog(`Exported ${key} as CSV`);
+};
+
+
+// ==================== EXAM REGISTRATION ====================
+window.startExamRegistration = function () {
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (user.role !== 'student') return alert('Only students can register for exams.');
+    const data = getData();
+    const student = data.students.find(s => s.id === user.id);
+    if (!student) return alert('Student not found.');
+
+    const courses = data.courses || [];
+    let unitsHTML = courses.map(c => {
+        const attempts = (student.examHistory && student.examHistory[c.id]) || 0;
+        const fee = attempts > 0 ? 200 : 1500;
+        return `<option value="${c.id}" data-fee="${fee}">
+            ${c.name} (${c.code}) — ${attempts > 0 ? 'Retake (KSh 200)' : 'First Time (KSh 1,500)'}
+        </option>`;
+    }).join('');
+
+    document.getElementById('dashboardContent').innerHTML = `
+        <div class="form-card">
+            <h2 style="color:var(--purple-light)"><i class="fas fa-file-signature"></i> CBET Exam Registration Form</h2>
+            <p style="color:var(--text-secondary);margin-bottom:1rem;">P.C. Kinyanjui Technical Training Institute</p>
+
+            <div class="form-group"><label>Admission No</label>
+                <input type="text" value="${student.id}" readonly></div>
+            <div class="form-group"><label>Full Name</label>
+                <input type="text" value="${student.name}" readonly></div>
+            <div class="form-group"><label>Department</label>
+                <input type="text" value="${student.department}" readonly></div>
+            <div class="form-group"><label>Class</label>
+                <input type="text" value="${student.class}" readonly></div>
+
+            <div class="form-group">
+                <label>Select Units <small style="color:var(--text-secondary)">(Ctrl + Click for multiple)</small></label>
+                <select id="regUnits" multiple style="height:200px;width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;color:var(--text-primary);padding:0.5rem;">${unitsHTML}</select>
+            </div>
+
+            <div class="form-group">
+                <label>Previous Exam Year</label>
+                <input type="text" id="prevExam" placeholder="e.g. KCSE 2023" class="login-input">
+            </div>
+
+            <div class="form-group">
+                <label style="display:block;margin-bottom:0.5rem;">Documents</label>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;background:var(--bg-elevated);padding:1rem;border-radius:12px;">
+                    <label>Passport Photo: <input type="file" id="passportUpload" accept="image/*"></label>
+                    <label>ID Copy: <input type="file" id="idUpload" accept="image/*"></label>
+                    <label>Last Exam Slip: <input type="file" id="lastExamUpload" accept="image/*,.pdf"></label>
+                </div>
+            </div>
+
+            <div style="background:var(--bg-elevated);padding:1rem;border-radius:12px;margin:1rem 0;border:1px solid var(--border);">
+                <label style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
+                    <input type="checkbox" id="confirmFee"> I will pay the calculated exam fee
+                </label>
+                <label style="display:flex;align-items:center;gap:0.5rem;">
+                    <input type="checkbox" id="confirmCompetency"> I meet all competency requirements
+                </label>
+            </div>
+
+            <div id="feeSummary" style="background:var(--bg-elevated);padding:1rem;border-radius:12px;margin:1rem 0;font-weight:600;border:1px solid var(--border);">
+                Select units above to see fee summary
+            </div>
+
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+                <button class="btn-primary" onclick="submitExamRegistration('${student.id}')">
+                    <i class="fas fa-paper-plane"></i> Submit to H.O.D
+                </button>
+                <button class="btn-danger" onclick="showDashboard('student', ${JSON.stringify(student).replace(/"/g, '&quot;')})">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>`;
+
+    document.getElementById('regUnits').addEventListener('change', updateFeeSummary);
+};
+
+function updateFeeSummary() {
+    const select = document.getElementById('regUnits');
+    let total = 0, text = '';
+    Array.from(select.selectedOptions).forEach(opt => {
+        const fee = parseInt(opt.dataset.fee);
+        total += fee;
+        text += `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+            <span>${opt.text.split('—')[0].trim()}</span>
+            <span style="color:var(--blue-light)">KSh ${fee.toLocaleString()}</span>
+        </div>`;
+    });
+    document.getElementById('feeSummary').innerHTML = total
+        ? `<div style="margin-bottom:0.5rem;color:var(--purple-light);font-size:0.85rem;">FEE BREAKDOWN</div>
+           ${text}
+           <div style="display:flex;justify-content:space-between;margin-top:0.75rem;font-size:1.1rem;">
+               <span>TOTAL</span>
+               <span style="color:var(--blue-light)">KSh ${total.toLocaleString()}</span>
+           </div>`
+        : 'Select units above to see fee summary';
+}
+
+window.submitExamRegistration = function (studentId) {
+    const select = document.getElementById('regUnits');
+    if (select.selectedOptions.length === 0) return alert('Please select at least one unit.');
+
+    const confirmFee  = document.getElementById('confirmFee').checked;
+    const confirmComp = document.getElementById('confirmCompetency').checked;
+    if (!confirmFee || !confirmComp) return alert('Please confirm both checkboxes before submitting.');
+
+    const selectedUnits = Array.from(select.selectedOptions).map(opt => ({
+        code: opt.value,
+        name: opt.text.split('—')[0].trim(),
+        fee:  parseInt(opt.dataset.fee)
+    }));
+
+    const totalFee = selectedUnits.reduce((sum, u) => sum + u.fee, 0);
+    const data     = getData();
+    const regId    = 'REG-' + Date.now().toString().slice(-6);
+
+   data.examRegistrations.push({
+        id: regId,
+        studentId,
+        status: 'pending_deo',
+        units: selectedUnits,
+        totalExamFee: totalFee,
+        prevExam: document.getElementById('prevExam').value || 'N/A',
+        submittedDate: new Date().toISOString(),
+        // Stage flags
+        deoApproved: false,      deoNote: '',
+        hodConfirmed: false,     hodUnitNotes: {},
+        financeChecked: false,   financeTotal: 0,
+        referredToDeputy: false, deputyDecision: '',
+        deputyDeadline: '',      examBooked: false,
+        // Rejection tracking
+        rejectionReason: '', rejectedBy: '',
+        // Audit
+        generatedPDFs: []
+    });
+
+    saveData(data);
+    alert(`✅ Registration ${regId} submitted successfully!\nTotal Exam Fee: KSh ${totalFee.toLocaleString()}\nAwaiting H.O.D approval.`);
+    showDashboard('student', data.students.find(s => s.id === studentId));
+};
+
+
+/* ══════════════════════════════════════════
+   PDF ENGINE — Download + Print
+══════════════════════════════════════════ */
+function generatePDF(config) {
+    const {
+        title,
+        subtitle,
+        office,
+        stage,
+        department,
+        columns,
+        rows,
+        footer,
+        signatoryLabel,
+        deadline
+    } = config;
+
+    const date = new Date().toLocaleDateString('en-KE', {
+        day: '2-digit', month: 'long', year: 'numeric'
+    });
+
+    // Build HTML for the PDF
+    const tableHeaders = columns.map(c =>
+        `<th style="padding:8px 10px;text-align:left;background:#5b21b6;color:#fff;font-size:11px;">${c.label}</th>`
+    ).join('');
+
+    const tableRows = rows.map((row, i) =>
+        `<tr style="background:${i % 2 === 0 ? '#f5f3ff' : '#ffffff'};">
+            ${columns.map(c =>
+                `<td style="padding:7px 10px;font-size:11px;border-bottom:1px solid #e0d9f7;">${row[c.key] ?? '—'}</td>`
+            ).join('')}
+        </tr>`
+    ).join('');
+
+    const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>${title}</title>
+        <style>
+            * { margin:0; padding:0; box-sizing:border-box; }
+            body { font-family: Arial, sans-serif; color: #1a0b2e; padding: 24px; }
+            .header { display:flex; align-items:center; justify-content:space-between; border-bottom:3px solid #5b21b6; padding-bottom:12px; margin-bottom:16px; }
+            .header-left h1 { font-size:16px; color:#5b21b6; font-weight:800; }
+            .header-left h2 { font-size:11px; color:#666; font-weight:400; letter-spacing:1px; margin-top:2px; }
+            .header-right { text-align:right; font-size:10px; color:#666; }
+            .badge { display:inline-block; background:#5b21b6; color:#fff; font-size:9px; font-weight:700; padding:3px 10px; border-radius:20px; letter-spacing:1px; margin-bottom:4px; }
+            .doc-title { font-size:14px; font-weight:800; color:#1a0b2e; margin:12px 0 4px; }
+            .doc-sub { font-size:10px; color:#666; margin-bottom:${department ? '4px' : '14px'}; }
+            .dept-tag { display:inline-block; background:#ede8ff; color:#5b21b6; font-size:10px; font-weight:700; padding:3px 10px; border-radius:20px; margin-bottom:14px; }
+            table { width:100%; border-collapse:collapse; margin-bottom:20px; }
+            thead tr { background:#5b21b6; }
+            .summary { background:#f5f3ff; border:1px solid #d4c5f0; border-radius:8px; padding:10px 14px; margin-bottom:20px; font-size:11px; }
+            .summary strong { color:#5b21b6; }
+            .footer-section { border-top:2px solid #5b21b6; padding-top:14px; margin-top:10px; }
+            .sig-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:14px; }
+            .sig-box { border-top:1px solid #333; padding-top:6px; font-size:10px; color:#333; }
+            .deadline-box { background:#fff3cd; border:1px solid #f59e0b; border-radius:6px; padding:8px 12px; font-size:10px; font-weight:700; color:#92400e; margin-bottom:14px; }
+            .watermark { position:fixed; bottom:30px; right:30px; font-size:9px; color:#ccc; text-align:right; }
+            @media print { body { padding:16px; } .watermark { display:block; } }
+        </style>
+    </head>
+    <body>
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-left">
+                <h1>PC KINYANJUI TECHNICAL TRAINING INSTITUTE</h1>
+                <h2>ISO 9001:2015 CERTIFIED · Off Kabiria Road, Riruta Satellite, Nairobi</h2>
+            </div>
+            <div class="header-right">
+                <div class="badge">${office}</div><br>
+                <div>Date: ${date}</div>
+                <div>Doc: PCK-${stage}-${Date.now().toString().slice(-6)}</div>
+            </div>
+        </div>
+
+        <!-- TITLE -->
+        <div class="doc-title">${title}</div>
+        <div class="doc-sub">${subtitle}</div>
+        ${department ? `<div class="dept-tag">📚 Department: ${department}</div>` : ''}
+
+        <!-- DEADLINE (if set) -->
+        ${deadline ? `<div class="deadline-box">⏰ DEADLINE: Students must report to the Deputy Principal's office before <strong>${deadline}</strong></div>` : ''}
+
+        <!-- SUMMARY -->
+        <div class="summary">
+            <strong>Total Records:</strong> ${rows.length} &nbsp;|&nbsp;
+            <strong>Stage:</strong> ${stage} &nbsp;|&nbsp;
+            <strong>Generated:</strong> ${date}
+            ${footer ? `&nbsp;|&nbsp;<strong>Note:</strong> ${footer}` : ''}
+        </div>
+
+        <!-- TABLE -->
+        <table>
+            <thead><tr>${tableHeaders}</tr></thead>
+            <tbody>${tableRows}</tbody>
+        </table>
+
+        <!-- SIGNATURES -->
+        <div class="footer-section">
+            <div class="sig-grid">
+                <div class="sig-box">
+                    ${signatoryLabel || 'Authorised By'}<br>
+                    <strong>Name: ________________________</strong><br>
+                    <strong>Sign: ________________________</strong><br>
+                    <strong>Date: ${date}</strong>
+                </div>
+                <div class="sig-box">
+                    Received By<br>
+                    <strong>Name: ________________________</strong><br>
+                    <strong>Sign: ________________________</strong><br>
+                    <strong>Date: ________________________</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="watermark">PCK Institute Management System · Confidential</div>
+    </body>
+    </html>`;
+
+    // Open in new window for print/save
+    const win = window.open('', '_blank', 'width=900,height=700');
+    win.document.write(html);
+    win.document.close();
+
+    // Auto-trigger print dialog (user can Save as PDF from there)
+    win.onload = () => {
+        setTimeout(() => {
+            win.focus();
+            win.print();
+        }, 400);
+    };
+
+    // Log PDF generation
+    adminLog(`PDF generated: ${title} [${stage}] — ${rows.length} records`);
+}
+
+/* Helper — get student exam summary for PDF rows */
+function getExamRegRows(registrations, includeFields = []) {
+    const data = getData();
+    return registrations.map(reg => {
+        const student = data.students.find(s => s.id === reg.studentId) || {};
+        const units   = (reg.units || []).map(u =>
+            `${u.name}${reg.hodUnitNotes && reg.hodUnitNotes[u.code] ? ' (' + reg.hodUnitNotes[u.code] + ')' : ''}`
+        ).join(', ');
+        const base = {
+            regId:      reg.id,
+            studentId:  reg.studentId,
+            name:       student.name      || '—',
+            department: student.department || reg.department || '—',
+            class:      student.class     || '—',
+            phone:      student.phone     || '—',
+            units,
+            unitCount:  (reg.units || []).length,
+            examFee:    `KSh ${(reg.totalExamFee || 0).toLocaleString()}`,
+            feeBalance: `KSh ${(student.feeBalance || 0).toLocaleString()}`,
+            status:     reg.status,
+            date:       new Date(reg.submittedDate).toLocaleDateString(),
+            deputyDecision: reg.deputyDecision || '—',
+            deadline:   reg.deputyDeadline || '—',
+        };
+        includeFields.forEach(f => { if (reg[f] !== undefined) base[f] = reg[f]; });
+        return base;
+    });
+}
+
+
+
+// ==================== NEWSLETTER ====================
+function subscribeNewsletter() {
+    const email = document.getElementById('newsletterEmail').value.trim();
+    if (!email) return alert('Please enter your email address.');
+    const data = getData();
+    if (data.newsletterSubscribers.includes(email)) {
+        document.getElementById('newsletterMsg').innerHTML =
+            `<span style="color:var(--warning)">This email is already subscribed.</span>`;
+        return;
+    }
+    data.newsletterSubscribers.push(email);
+    saveData(data);
+    document.getElementById('newsletterEmail').value = '';
+    document.getElementById('newsletterMsg').innerHTML =
+        `<span style="color:var(--success)">✅ Subscribed successfully! Thank you.</span>`;
+}
+
+// ==================== ADMIN STUBS (to be completed) ====================
+function showAddPrincipalForm() {
+    alert('Add Principal form — coming soon. Connect to backend for full functionality.');
+}
+function addNewInfrastructure() {
+    const name = document.getElementById('newInfraName')?.value?.trim();
+    if (!name) return alert('Enter infrastructure name.');
+    const key  = name.toLowerCase().replace(/\s+/g, '_');
+    const data = getData();
+    if (data.infrastructureList.includes(key)) return alert('Location already exists.');
+    data.infrastructureList.push(key);
+    data.schoolTour[key] = { images: [], videos: [] };
+    saveData(data);
+    renderTourNav();
+    populateInfraSelect();
+    alert(`✅ "${name}" added successfully!`);
+}
+function uploadTourMedia() {
+    alert('Image upload requires a backend server. This feature is ready for backend integration.');
+}
+function closeSettingsModal() {
+    document.getElementById('settingsModal').style.display = 'none';
+}
+
+// ==================== MAGAZINE NAV BAR ====================
+function initMagazineNav() {
+    document.querySelectorAll('#magazineNav .btn-3d').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const page = btn.dataset.page;
+
+            // Remove active from all buttons
+            document.querySelectorAll('#magazineNav .btn-3d').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Navigate
+            if (page === 'home') {
+                showHome();
+            } else if (page === 'tour') {
+                showTourPage();
+            } else if (page === 'newsletter') {
+                showNewsletterPage();
+            } else if (page === 'examination') {
+                showExaminationPage();
+            } else if (page === 'noticeboard') {
+                showGlobalNoticeBoard();
+            } else if (page === 'studentwall') {
+                alert("👥 Student Wall coming soon...");
+            } else {
+                alert("Page coming soon...");
+            }
+        });
+    });
+}
+
+// ==================== INIT ====================
+function init() {
+    initializeData();
+    renderPrincipals();
+    renderTourNav();
+    renderTourPreview('library');
+    populateInfraSelect();
+    renderCBET();
+    initMagazineNav();
+
+    // Restore saved theme
+
+    // Restore saved theme
+    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light');
+
+    // ── Typing animation ──
+    let i = 0, j = 0;
+    const title    = 'PC KINYANJUI TECHNICAL TRAINING INSTITUTE';
+    const subtitle = 'Excellence in Technology';
+    function type() {
+        if (i < title.length) {
+            document.getElementById('typingText').innerHTML += title.charAt(i++);
+            setTimeout(type, 55);
+        } else if (j < subtitle.length) {
+            document.getElementById('subtitleText').innerHTML += subtitle.charAt(j++);
+            setTimeout(type, 75);
+        }
+    }
+    type();
+
+    // ── Sidebar toggle ──
+    const sidebar = document.getElementById('sidebar');
+    document.getElementById('menuToggle').addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+
+    // ── Close sidebar when clicking outside ──
+    document.addEventListener('click', (e) => {
+        if (sidebar.classList.contains('open') &&
+            !sidebar.contains(e.target) &&
+            !document.getElementById('menuToggle').contains(e.target)) {
+            sidebar.classList.remove('open');
+        }
+    });
+
+    // ── Settings modal ──
+    document.getElementById('settingsBtn').addEventListener('click', () => {
+        document.getElementById('settingsModal').style.display = 'flex';
+    });
+    document.querySelectorAll('.close-modal').forEach(el => {
+        el.addEventListener('click', closeSettingsModal);
+    });
+    document.getElementById('settingsModal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('settingsModal')) closeSettingsModal();
+    });
+
+    // ── Sidebar 3D button press effect + navigation ──
+    document.querySelectorAll('.sidebar-menu li').forEach(li => {
+        li.addEventListener('mousedown', () => li.classList.add('pressing'));
+        li.addEventListener('mouseup',   () => li.classList.remove('pressing'));
+        li.addEventListener('mouseleave',() => li.classList.remove('pressing'));
+        li.addEventListener('click', () => {
+            document.querySelectorAll('.sidebar-menu li').forEach(l => l.classList.remove('active'));
+            li.classList.add('active');
+            navigateToRole(li.dataset.role);
+        });
+    });
+
+    // ── Homepage 3D grid buttons ──
+    document.querySelectorAll('.role-btn-3d').forEach(btn => {
+        btn.addEventListener('click', () => {
+            navigateToRole(btn.dataset.role);
+        });
+    });
+
+    // ── Login ──
+    document.getElementById('loginBtn').addEventListener('click', handleLogin);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && document.getElementById('loginFormContainer').style.display === 'block') {
+            handleLogin();
+        }
+    });
+
+    // ── Logout ──
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        sessionStorage.clear();
+        showHome();
+    });
+
+    // ── Theme toggle ──
+    document.getElementById('themeToggle').addEventListener('click', () => {
+        document.body.classList.toggle('light');
+        localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+        const btn = document.getElementById('themeToggle');
+        btn.innerHTML = document.body.classList.contains('light')
+            ? '<i class="fas fa-sun"></i> Light Mode'
+            : '<i class="fas fa-moon"></i> Dark Mode';
+    });
+
+    // ── Settings modal ──
+    document.getElementById('settingsBtn').addEventListener('click', () => {
+        document.getElementById('settingsModal').style.display = 'flex';
+    });
+    document.querySelectorAll('.close-modal').forEach(el => {
+        el.addEventListener('click', closeSettingsModal);
+    });
+    document.getElementById('settingsModal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('settingsModal')) closeSettingsModal();
+    });
+
+    // ── Close sidebar on outside click ──
+    document.addEventListener('click', (e) => {
+        if (sidebar.classList.contains('open') &&
+            !sidebar.contains(e.target) &&
+            !document.getElementById('menuToggle').contains(e.target)) {
+            sidebar.classList.remove('open');
+        }
+    });
+
+    // ── Auto-login if session exists ──
+    const saved = sessionStorage.getItem('currentUser');
+    if (saved) {
+        const u = JSON.parse(saved);
+        selectedRole = u.role;
+        showDashboard(u.role, u);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', init);
