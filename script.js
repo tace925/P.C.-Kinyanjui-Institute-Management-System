@@ -136,7 +136,10 @@ function initializeData() {
             attendanceRecords: [],
             markRegisterEntries: [],
             lecturerMaterials: [],
-            studentReports: [],
+           studentReports: [
+                { id: 'SR-HOD-001', studentId: 'STU-2026-20673', studentName: 'Peter Njoroge', lecturerId: 'LEC-2026-001', lecturerName: 'Jane Wanjiku', department: 'Computer Studies', report: 'Student has been absent for 5 consecutive sessions without notifying me. Performance has dropped significantly in CAM 2. Recommend HOD intervention and parent/guardian contact.', timestamp: '2026-06-18T09:00:00.000Z', status: 'pending_hod' },
+                { id: 'SR-HOD-002', studentId: 'STU-2026-20675', studentName: 'Kevin Oduya', lecturerId: 'LEC-2026-001', lecturerName: 'Jane Wanjiku', department: 'Computer Studies', report: 'Student frequently disrupts the class and has refused to take practical assessments. Academic performance is at risk. Recommend formal disciplinary action.', timestamp: '2026-06-19T11:30:00.000Z', status: 'pending_hod' }
+            ], 
             timetables: [
                 { id: 'TT-001', department: 'Computer Studies', class: 'Form 3C', unit: 'Computer Essentials', unitCode: 'CS101', lecturerId: 'LEC-2026-001', day: new Date().toLocaleDateString('en-US', { weekday: 'long' }), startTime: '08:00', endTime: '10:00' },
                 { id: 'TT-002', department: 'Computer Studies', class: 'Form 3C', unit: 'Computer Operations', unitCode: 'CS102', lecturerId: 'LEC-2026-001', day: new Date().toLocaleDateString('en-US', { weekday: 'long' }), startTime: '10:15', endTime: '12:15' }
@@ -1203,367 +1206,602 @@ window.deoGeneratePDF = function(status, dept) {
 };
 
 /* ══════════════════════════════════════════
-   HOD PORTAL — Improved with Better Sidebar
+   HOD PORTAL — Full Implementation
 ══════════════════════════════════════════ */
 function renderHODPanel(user) {
+    const pendingCount = getHODPendingCount(user.department);
     return `
     <div class="admin-layout">
         <div class="admin-sidenav">
-            <div class="admin-sidenav-title">
-                <i class="fas fa-user-tie"></i> H.O.D Menu
-            </div>
-            
+            <div class="admin-sidenav-title"><i class="fas fa-user-tie"></i> HOD Menu</div>
+            <button class="admin-nav-btn" onclick="hodSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
             <button class="admin-nav-btn active" onclick="hodSection('pending',this)">
-                <i class="fas fa-clock"></i> Pending Approvals
+                <i class="fas fa-inbox"></i> Pending
+                ${pendingCount > 0 ? `<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${pendingCount}</span>` : ''}
             </button>
-            <button class="admin-nav-btn" onclick="hodSection('confirmed',this)">
-                <i class="fas fa-check-circle"></i> Confirmed
-            </button>
-            <button class="admin-nav-btn" onclick="hodSection('rejected',this)">
-                <i class="fas fa-times-circle"></i> Rejected
-            </button>
-            
-            <div class="admin-sidenav-divider"></div>
-            
-            <button class="admin-nav-btn" onclick="hodSection('passwords',this)">
-                <i class="fas fa-key"></i> Generate Passwords
-            </button>
-            <button class="admin-nav-btn" onclick="hodSection('staff',this)">
-                <i class="fas fa-users"></i> Department Staff
-            </button>
-            <button class="admin-nav-btn" onclick="hodSection('report',this)">
-                <i class="fas fa-chart-bar"></i> Department Report
-            </button>
+            <button class="admin-nav-btn" onclick="hodSection('confirmed',this)"><i class="fas fa-check-circle"></i> Confirmed</button>
+            <button class="admin-nav-btn" onclick="hodSection('rejected',this)"><i class="fas fa-times-circle"></i> Rejected</button>
+            <button class="admin-nav-btn" onclick="hodSection('staff',this)"><i class="fas fa-chalkboard-teacher"></i> Staff Management</button>
+            <button class="admin-nav-btn" onclick="hodSection('units',this)"><i class="fas fa-book-open"></i> Units</button>
+            <button class="admin-nav-btn" onclick="hodSection('report',this)"><i class="fas fa-chart-bar"></i> Department Report</button>
         </div>
-        
         <div class="admin-main" id="hodMain">
             ${hodPendingHTML(user)}
         </div>
     </div>`;
 }
 
-// Keep your existing hodSection, hodPendingHTML, hodConfirm, hodReject, etc.
-// Just add these new sections:
-
-function hodPasswordsHTML() {
-    return `
-        <div class="admin-section-head">🔑 Generate Passwords</div>
-        <div class="admin-card">
-            <p>Coming soon: Generate passwords for DEO, Lecturers, Class Teachers & Class Reps.</p>
-        </div>`;
+function getHODPendingCount(department) {
+    const data = getData();
+    return (data.examRegistrations || []).filter(r => r.department === department && r.status === 'pending_hod').length
+         + (data.studentReports || []).filter(r => r.department === department && r.status === 'pending_hod').length
+         + (data.deputyFeeFlags || []).filter(f => f.department === department && f.status === 'pending_hod').length
+         + (data.students || []).filter(s => s.department === department && (s.status === 'not_attending' || s.status === 'deferred')).length;
 }
 
-function hodStaffHTML(user) {
-    return `
-        <div class="admin-section-head">👥 Department Staff</div>
-        <div class="admin-card">
-            <p>Staff management for ${user.department || 'Department'} will appear here.</p>
-        </div>`;
-}
-
-// Update hodSection function to include new tabs
 window.hodSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    
     const user = JSON.parse(sessionStorage.getItem('currentUser'));
     const map = {
-        pending:    () => hodPendingHTML(user),
-        confirmed:  () => hodFilteredHTML('pending_finance', user, 'Confirmed — Sent to Finance'),
-        rejected:   () => hodFilteredHTML('rejected', user, 'Rejected by HOD'),
-        passwords:  () => hodPasswordsHTML(),
-        staff:      () => hodStaffHTML(user),
-        report:     () => hodReportHTML(user)
+        profile:   () => hodProfileHTML(user),
+        pending:   () => hodPendingHTML(user),
+        confirmed: () => hodConfirmedHTML(user),
+        rejected:  () => hodRejectedHTML(user),
+        staff:     () => hodStaffHTML(user),
+        units:     () => hodUnitsHTML(user),
+        report:    () => hodReportHTML(user)
     };
-    
-    document.getElementById('hodMain').innerHTML = map[section] ? map[section]() : hodPendingHTML(user);
+    document.getElementById('hodMain').innerHTML = (map[section] || (() => hodPendingHTML(user)))();
 };
 
-
-function hodPendingHTML(user) {
-    const data    = getData();
-    const dept    = user.department;
-    const pending = data.examRegistrations.filter(r =>
-        r.status === 'pending_hod' &&
-        (data.students.find(s => s.id === r.studentId)?.department === dept || !dept)
-    );
-
-    if (pending.length === 0) return `
-        <div class="admin-section-head">✅ Pending Confirmations</div>
-        <div class="admin-card">
-            <p style="color:var(--text-secondary);font-size:0.85rem;">
-                ✅ No pending registrations for your department.
-            </p>
-        </div>`;
-
-    const cards = pending.map(reg => {
-        const student = data.students.find(s => s.id === reg.studentId) || {};
-        return `
-        <div class="admin-card" style="margin-bottom:12px;">
-            <div style="font-weight:700;font-size:0.92rem;">${student.name || '—'}</div>
-            <div style="font-size:0.75rem;color:var(--text-secondary);margin:2px 0 10px;">
-                ${reg.studentId} · ${student.class || '—'} · 📱 ${student.phone || '—'}
-            </div>
-            ${(reg.units || []).map(u => `
-            <div style="display:flex;align-items:center;justify-content:space-between;
-                padding:6px 10px;background:var(--bg-elevated);border-radius:8px;
-                margin-bottom:6px;gap:10px;flex-wrap:wrap;">
-                <span style="font-size:0.8rem;flex:1;">${u.name} <span style="color:var(--text-secondary)">(${u.code})</span></span>
-                <select id="unit_${reg.id}_${u.code}" class="admin-input"
-                    style="width:130px;padding:4px 8px;font-size:0.75rem;">
-                    <option value="normal">Normal</option>
-                    <option value="retake">Retake</option>
-                </select>
-            </div>`).join('')}
-            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
-                <button class="admin-btn-primary" onclick="hodConfirm('${reg.id}')">
-                    ✅ Confirm & Send to Finance
-                </button>
-                <button class="admin-action-btn danger" style="padding:8px 14px;"
-                    onclick="hodReject('${reg.id}')">
-                    ❌ Reject
-                </button>
-            </div>
-        </div>`;
-    }).join('');
+/* ── Profile ── */
+function hodProfileHTML(user) {
+    const data = getData();
+    const myStudents = (data.students || []).filter(s => s.department === user.department).length;
+    const myUnits    = (data.lecturerUnits || []).filter(u => u.department === user.department).length;
+    const deptStaff  = data.departmentStaff?.[user.department] || { lecturers: [] };
 
     return `
-        <div class="admin-section-head">📋 Pending — ${dept || 'All'} (${pending.length})</div>
-        <button class="admin-btn-primary" style="margin-bottom:12px;"
-            onclick="hodGeneratePDF('pending_hod','${dept}')">
-            📄 Download List PDF
-        </button>
-        ${cards}`;
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+                <div style="display:flex;gap:1.2rem;align-items:center;">
+                    <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#6c3fcf,#a855f7);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;flex-shrink:0;">👨‍💼</div>
+                    <div>
+                        <h3 style="margin:0;">${user.name || 'HOD'}</h3>
+                        <div style="font-size:0.8rem;color:var(--text-secondary);">${user.id || '—'}</div>
+                        <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                            <span class="admin-role-pill" style="background:rgba(108,63,207,.2);border-color:var(--purple);color:var(--purple-light);">🏛️ Head of Department</span>
+                            <span class="admin-role-pill">${user.department}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Personal Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">FULL NAME</span><br>${user.name || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">EMAIL</span><br>${user.email || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">PHONE</span><br>${user.phone || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">OFFICE</span><br>${user.officeNo || '—'}</div>
+            </div>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Academic Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DEPARTMENT</span><br>${user.department || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">QUALIFICATION</span><br>${user.qualification || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">SPECIALIZATION</span><br>${user.specialization || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">YEARS OF SERVICE</span><br>${user.yearsOfService ? user.yearsOfService + ' years' : '—'}</div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${myStudents}</h3><p>Total Students</p></div>
+            <div class="stat-card"><h3>${(deptStaff.lecturers || []).length + 1}</h3><p>Staff Under HOD</p></div>
+            <div class="stat-card"><h3>${myUnits}</h3><p>Units in Dept</p></div>
+        </div>`;
 }
 
-window.hodConfirm = function(regId) {
+/* ── Pending ── */
+function hodPendingHTML(user) {
     const data = getData();
-    const reg  = data.examRegistrations.find(r => r.id === regId);
-    if (!reg) return;
-    const hodUnitNotes = {};
-    (reg.units || []).forEach(u => {
-        const sel = document.getElementById(`unit_${regId}_${u.code}`);
-        hodUnitNotes[u.code] = sel ? sel.value : 'normal';
-    });
-    reg.status       = 'pending_finance';
-    reg.hodConfirmed = true;
-    reg.hodUnitNotes = hodUnitNotes;
-    reg.totalExamFee = (reg.units || []).reduce((sum, u) =>
-        sum + (hodUnitNotes[u.code] === 'retake' ? 200 : 1500), 0);
-    saveData(data);
-    adminLog(`HOD confirmed registration ${regId}`);
-    const user = JSON.parse(sessionStorage.getItem('currentUser'));
-    document.getElementById('hodMain').innerHTML = hodPendingHTML(user);
-};
+    const examPending  = (data.examRegistrations || []).filter(r => r.department === user.department && r.status === 'pending_hod');
+    const repPending   = (data.studentReports || []).filter(r => r.department === user.department && r.status === 'pending_hod');
+    const feeFlags     = (data.deputyFeeFlags || []).filter(f => f.department === user.department && f.status === 'pending_hod');
+    const attAlerts    = (data.students || []).filter(s => s.department === user.department && (s.status === 'not_attending' || s.status === 'deferred'));
+    const total        = examPending.length + repPending.length + feeFlags.length + attAlerts.length;
 
-window.hodReject = function(regId) {
-    const reason = prompt('Reason for rejection:');
-    if (!reason) return;
-    const data = getData();
-    const reg  = data.examRegistrations.find(r => r.id === regId);
-    if (!reg) return;
-    reg.status          = 'rejected';
-    reg.rejectedBy      = 'HOD';
-    reg.rejectionReason = reason;
-    saveData(data);
-    adminLog(`HOD rejected registration ${regId}: ${reason}`);
-    const user = JSON.parse(sessionStorage.getItem('currentUser'));
-    document.getElementById('hodMain').innerHTML = hodPendingHTML(user);
-};
+    const examCards = examPending.map(r => `
+        <div style="padding:1rem;background:var(--bg-elevated);border-radius:14px;border-left:4px solid var(--purple);margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;">
+                <div>
+                    <span class="admin-role-pill" style="background:rgba(108,63,207,.15);border-color:var(--purple);color:var(--purple-light);">📝 Exam Registration — from DEO</span>
+                    <div style="font-weight:700;margin-top:6px;">${r.studentName}</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${r.studentId}</div>
+                </div>
+                <div style="font-size:0.72rem;color:var(--text-secondary);">${new Date(r.submittedDate).toLocaleDateString()}</div>
+            </div>
+            <div style="font-size:0.8rem;margin-top:8px;">
+                Units: ${(r.units || []).map(u => `<span class="admin-role-pill" style="font-size:0.65rem;">${u.code}</span>`).join(' ')} &nbsp;
+                Fee: <strong>KSh ${(r.totalExamFee || 0).toLocaleString()}</strong>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+                <button class="admin-action-btn edit" onclick="hodApproveExam('${r.id}')">✅ Approve → Finance</button>
+                <button class="admin-action-btn danger" onclick="hodRejectExam('${r.id}','${r.studentName}')">❌ Reject</button>
+            </div>
+        </div>`).join('');
 
-window.hodGeneratePDF = function(status, dept) {
-    const data = getData();
-    const regs = data.examRegistrations.filter(r =>
-        r.status === status &&
-        (data.students.find(s => s.id === r.studentId)?.department === dept || !dept)
-    );
-    const rows = getExamRegRows(regs);
-    rows.forEach((row, i) => {
-        const reg = regs[i];
-        const notes = reg.hodUnitNotes || {};
-        row.unitDetail = (reg.units || []).map(u =>
-            `${u.name}: ${notes[u.code] || 'normal'}`
-        ).join(' | ');
-    });
-    generatePDF({
-        title:          'HOD Confirmed Exam Registration List',
-        subtitle:       'Unit types confirmed by HOD — send to Finance for fee processing',
-        office:         'HOD OFFICE',
-        stage:          'HOD Confirmation',
-        department:     dept || 'All Departments',
-        signatoryLabel: 'H.O.D Signature',
-        columns: [
-            {label:'Reg ID',       key:'regId'},
-            {label:'Student ID',   key:'studentId'},
-            {label:'Name',         key:'name'},
-            {label:'Class',        key:'class'},
-            {label:'Phone',        key:'phone'},
-            {label:'Units Detail', key:'unitDetail'},
-            {label:'Exam Fee',     key:'examFee'},
-        ],
-        rows,
-    });
-};
+    const repCards = repPending.map(r => `
+        <div style="padding:1rem;background:var(--bg-elevated);border-radius:14px;border-left:4px solid var(--warning);margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;">
+                <div>
+                    <span class="admin-role-pill" style="background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);">⚠️ Lecturer Report</span>
+                    <div style="font-weight:700;margin-top:6px;">${r.studentName}</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">From: ${r.lecturerName || 'Lecturer'}</div>
+                </div>
+                <div style="font-size:0.72rem;color:var(--text-secondary);">${new Date(r.timestamp).toLocaleDateString()}</div>
+            </div>
+            <div style="font-size:0.82rem;margin-top:8px;padding:8px;background:rgba(255,255,255,.03);border-radius:8px;">${r.report}</div>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+                <button class="admin-action-btn edit" onclick="hodAcknowledgeReport('${r.id}')">✅ Acknowledge</button>
+                <button class="admin-action-btn danger" onclick="hodDismissReport('${r.id}')">Dismiss</button>
+            </div>
+        </div>`).join('');
 
-function hodFilteredHTML(status, user, title) {
-    const data = getData();
-    const dept = user.department;
-    const regs = data.examRegistrations.filter(r =>
-        r.status === status &&
-        (data.students.find(s => s.id === r.studentId)?.department === dept || !dept)
-    );
+    const feeCards = feeFlags.map(f => `
+        <div style="padding:1rem;background:var(--bg-elevated);border-radius:14px;border-left:4px solid var(--danger);margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;">
+                <div>
+                    <span class="admin-role-pill" style="background:rgba(239,68,68,.15);border-color:var(--danger);color:var(--danger);">💰 Deputy Fee Flag</span>
+                    <div style="font-weight:700;margin-top:6px;">${f.studentName}</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">Flagged by: ${f.flaggedBy}</div>
+                </div>
+                <div style="font-size:0.72rem;color:var(--text-secondary);">${new Date(f.timestamp).toLocaleDateString()}</div>
+            </div>
+            <div style="font-size:0.82rem;margin-top:8px;">${f.reason}</div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="admin-action-btn edit" onclick="hodAcknowledgeFeeFlag('${f.id}','${f.studentName}')">✅ Acknowledge & Notify Student</button>
+            </div>
+        </div>`).join('');
+
+    const attCards = attAlerts.map(s => `
+        <div style="padding:1rem;background:var(--bg-elevated);border-radius:14px;border-left:4px solid ${s.status === 'deferred' ? 'var(--warning)' : 'var(--danger)'};margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;">
+                <div>
+                    <span class="admin-role-pill" style="${s.status === 'deferred' ? 'background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);' : 'background:rgba(239,68,68,.15);border-color:var(--danger);color:var(--danger);'}">
+                        ${s.status === 'deferred' ? '⏸ Deferred Student' : '🚫 Not Attending'} — from Class Rep
+                    </span>
+                    <div style="font-weight:700;margin-top:6px;">${s.name}</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${s.id}</div>
+                </div>
+            </div>
+            ${s.deferReason ? `<div style="font-size:0.82rem;margin-top:6px;color:var(--text-secondary);">Reason: ${s.deferReason}</div>` : ''}
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="admin-action-btn edit" onclick="hodNoteAttendance('${s.id}','${s.name}')">📝 Note & Take Action</button>
+            </div>
+        </div>`).join('');
+
     return `
-        <div class="admin-section-head">${title} (${regs.length})</div>
+        <div class="admin-section-head">📥 Pending — ${user.department} (${total})</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Unified inbox: exam registrations from DEO, student reports from Lecturers, fee flags from Deputy, and attendance alerts from Class Rep.
+            </p>
+        </div>
+        ${examPending.length ? `<div class="admin-card" style="margin-bottom:1rem;"><div class="admin-card-title">📝 Exam Registrations from DEO (${examPending.length})</div><div style="margin-top:10px;">${examCards}</div></div>` : ''}
+        ${repPending.length  ? `<div class="admin-card" style="margin-bottom:1rem;"><div class="admin-card-title">⚠️ Student Reports from Lecturers (${repPending.length})</div><div style="margin-top:10px;">${repCards}</div></div>` : ''}
+        ${feeFlags.length    ? `<div class="admin-card" style="margin-bottom:1rem;"><div class="admin-card-title">💰 Fee Flags from Deputy (${feeFlags.length})</div><div style="margin-top:10px;">${feeCards}</div></div>` : ''}
+        ${attAlerts.length   ? `<div class="admin-card" style="margin-bottom:1rem;"><div class="admin-card-title">🚨 Attendance Alerts from Class Rep (${attAlerts.length})</div><div style="margin-top:10px;">${attCards}</div></div>` : ''}
+        ${total === 0 ? `<div class="admin-card"><p style="color:var(--success);text-align:center;padding:1rem;">✅ All caught up! No pending items.</p></div>` : ''}`;
+}
+
+/* ── Confirmed ── */
+function hodConfirmedHTML(user) {
+    const data = getData();
+    const confirmed = (data.hodDecisions || []).filter(d => d.department === user.department && d.status === 'approved');
+    const demo = [
+        { id:'dc1', type:'exam_registration', studentName:'Brian Otieno', studentId:'STU-2026-20671', notes:'All requirements met. Forwarded to Finance.', decidedAt:'2026-06-10T10:00:00.000Z' },
+        { id:'dc2', type:'student_report',    studentName:'Faith Kamau',   studentId:'STU-2026-20674', notes:'Student counselled. Performance improving.', decidedAt:'2026-06-12T14:00:00.000Z' }
+    ];
+    const items = confirmed.length ? confirmed : demo;
+    return `
+        <div class="admin-section-head">✅ Confirmed (${items.length})</div>
         <div class="admin-card">
-            ${regs.length === 0
-                ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No records.</p>'
-                : regs.map(reg => {
-                    const student = data.students.find(s => s.id === reg.studentId) || {};
+            <div class="admin-card-title">Approved Items</div>
+            <div style="margin-top:10px;">
+                ${items.map(d => `
+                <div style="padding:0.9rem;background:var(--bg-elevated);border-radius:12px;border-left:4px solid var(--success);margin-bottom:10px;">
+                    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                        <div>
+                            <span class="admin-role-pill" style="background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">✅ Approved</span>
+                            <div style="font-weight:700;margin-top:6px;">${d.studentName}</div>
+                            <div style="font-size:0.72rem;color:var(--text-secondary);">${d.type === 'exam_registration' ? '📝 Exam Registration' : '📋 Student Report'} • ${d.studentId || ''}</div>
+                        </div>
+                        <div style="font-size:0.72rem;color:var(--text-secondary);">${new Date(d.decidedAt).toLocaleDateString()}</div>
+                    </div>
+                    ${d.notes ? `<div style="font-size:0.78rem;margin-top:6px;color:var(--text-secondary);">Note: ${d.notes}</div>` : ''}
+                </div>`).join('')}
+            </div>
+        </div>`;
+}
+
+/* ── Rejected ── */
+function hodRejectedHTML(user) {
+    const data = getData();
+    const rejected = (data.hodDecisions || []).filter(d => d.department === user.department && d.status === 'rejected');
+    const demo = [
+        { id:'dr1', type:'exam_registration', studentName:'Kevin Oduya', studentId:'STU-2026-20675', reason:'Incomplete fee payment. Student must clear balance before registration can proceed.', decidedAt:'2026-06-11T09:00:00.000Z' }
+    ];
+    const items = rejected.length ? rejected : demo;
+    return `
+        <div class="admin-section-head">❌ Rejected (${items.length})</div>
+        <div class="admin-card">
+            <div class="admin-card-title">Rejected Items</div>
+            <div style="margin-top:10px;">
+                ${items.map(d => `
+                <div style="padding:0.9rem;background:var(--bg-elevated);border-radius:12px;border-left:4px solid var(--danger);margin-bottom:10px;">
+                    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                        <div>
+                            <span class="admin-role-pill" style="background:rgba(239,68,68,.15);border-color:var(--danger);color:var(--danger);">❌ Rejected</span>
+                            <div style="font-weight:700;margin-top:6px;">${d.studentName}</div>
+                            <div style="font-size:0.72rem;color:var(--text-secondary);">${d.type === 'exam_registration' ? '📝 Exam Registration' : '📋 Student Report'} • ${d.studentId || ''}</div>
+                        </div>
+                        <div style="font-size:0.72rem;color:var(--text-secondary);">${new Date(d.decidedAt).toLocaleDateString()}</div>
+                    </div>
+                    ${d.reason ? `<div style="font-size:0.78rem;margin-top:6px;padding:6px 8px;background:rgba(239,68,68,.06);border-radius:8px;">Reason: ${d.reason}</div>` : ''}
+                </div>`).join('')}
+            </div>
+        </div>`;
+}
+
+/* ── Staff Management ── */
+function hodStaffHTML(user) {
+    const data = getData();
+    const deptStaff  = data.departmentStaff?.[user.department] || { classTeacher: null, lecturers: [] };
+    const ct         = deptStaff.classTeacher;
+    const lecturers  = deptStaff.lecturers || [];
+
+    return `
+        <div class="admin-section-head">👩‍🏫 Staff Management — ${user.department}</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Register your Class Teacher (one only) and Lecturers for this department.
+                When adding a lecturer, enter their System ID (assigned by System Admin) so unit assignments link correctly.
+                Login credentials are managed by System Admin.
+            </p>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">🧑‍🏫 Class Teacher ${ct ? '✅' : '<span style="color:var(--warning);">⚠️ Not assigned</span>'}</div>
+            ${ct ? `
+            <div style="margin-top:10px;padding:0.8rem;background:rgba(16,185,129,.08);border:1px solid var(--success);border-radius:12px;">
+                <strong>${ct.name}</strong>
+                <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">${ct.email || '—'} • ${ct.phone || '—'}</div>
+                <button class="admin-action-btn danger" style="margin-top:8px;" onclick="hodRemoveClassTeacher('${user.department}')">Remove</button>
+            </div>` : `
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;">
+                <div><label style="font-size:0.7rem;color:var(--text-secondary);">FULL NAME</label><input type="text" id="ctName" class="admin-input" placeholder="e.g. James Otieno" style="margin-top:4px;"></div>
+                <div><label style="font-size:0.7rem;color:var(--text-secondary);">EMAIL</label><input type="text" id="ctEmail" class="admin-input" placeholder="e.g. j.otieno@pck.ac.ke" style="margin-top:4px;"></div>
+                <div><label style="font-size:0.7rem;color:var(--text-secondary);">PHONE</label><input type="text" id="ctPhone" class="admin-input" placeholder="e.g. 0722111222" style="margin-top:4px;"></div>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:12px;" onclick="hodAddClassTeacher('${user.department}')"><i class="fas fa-plus"></i> Assign Class Teacher</button>`}
+        </div>
+
+        <div class="admin-card">
+            <div class="admin-card-title">👨‍💻 Lecturers (${lecturers.length})</div>
+            ${lecturers.map(l => `
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;padding:0.8rem 0;border-bottom:1px solid var(--border);">
+                <div>
+                    <strong>${l.name}</strong>
+                    <div style="font-size:0.7rem;color:var(--text-secondary);">ID: ${l.id} • ${l.email || '—'} • ${l.phone || '—'}</div>
+                    <div style="font-size:0.7rem;color:var(--purple-light);margin-top:2px;">${l.specialization || '—'}</div>
+                </div>
+                <button class="admin-action-btn danger" onclick="hodRemoveLecturer('${user.department}','${l.id}')">Remove</button>
+            </div>`).join('') || '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No lecturers added yet.</p>'}
+            <div style="border-top:1px solid var(--border);margin-top:1rem;padding-top:1rem;">
+                <div class="admin-card-title">Add Lecturer</div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:10px;">
+                    <div><label style="font-size:0.7rem;color:var(--text-secondary);">FULL NAME</label><input type="text" id="lecName" class="admin-input" placeholder="e.g. Jane Wanjiku" style="margin-top:4px;"></div>
+                    <div><label style="font-size:0.7rem;color:var(--text-secondary);">SYSTEM LOGIN ID</label><input type="text" id="lecSysId" class="admin-input" placeholder="e.g. LEC-2026-002" style="margin-top:4px;"></div>
+                    <div><label style="font-size:0.7rem;color:var(--text-secondary);">EMAIL</label><input type="text" id="lecEmail" class="admin-input" placeholder="e.g. j.wanjiku@pck.ac.ke" style="margin-top:4px;"></div>
+                    <div><label style="font-size:0.7rem;color:var(--text-secondary);">PHONE</label><input type="text" id="lecPhone" class="admin-input" placeholder="e.g. 0733222333" style="margin-top:4px;"></div>
+                    <div><label style="font-size:0.7rem;color:var(--text-secondary);">SPECIALIZATION</label><input type="text" id="lecSpec" class="admin-input" placeholder="e.g. Digital Literacy" style="margin-top:4px;"></div>
+                </div>
+                <button class="admin-btn-primary" style="margin-top:12px;" onclick="hodAddLecturer('${user.department}')"><i class="fas fa-plus"></i> Add Lecturer</button>
+            </div>
+        </div>`;
+}
+
+/* ── Units ── */
+function hodUnitsHTML(user) {
+    const data       = getData();
+    const units      = (data.lecturerUnits || []).filter(u => u.department === user.department);
+    const deptStaff  = data.departmentStaff?.[user.department] || { lecturers: [] };
+    const lecOptions = (deptStaff.lecturers || []).map(l => `<option value="${l.id}">${l.name}</option>`).join('');
+
+    return `
+        <div class="admin-section-head">📚 Units — ${user.department}</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Units come from System Admin (who receives them from the Examination Office). As HOD, you assign each unit to a specific Lecturer.
+                Once assigned, the Lecturer sees it in their portal. Inform the Class Teacher to build the timetable accordingly.
+            </p>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Unit (from System Admin allocation)</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:10px;">
+                <div><label style="font-size:0.7rem;color:var(--text-secondary);">UNIT NAME</label><input type="text" id="uName" class="admin-input" placeholder="e.g. Computer Essentials" style="margin-top:4px;"></div>
+                <div><label style="font-size:0.7rem;color:var(--text-secondary);">UNIT CODE</label><input type="text" id="uCode" class="admin-input" placeholder="e.g. CS101" style="margin-top:4px;"></div>
+                <div><label style="font-size:0.7rem;color:var(--text-secondary);">LEVEL</label><input type="number" id="uLevel" class="admin-input" placeholder="e.g. 5" min="1" max="8" style="margin-top:4px;"></div>
+                <div><label style="font-size:0.7rem;color:var(--text-secondary);">ASSESSMENT SERIES</label><input type="text" id="uSemester" class="admin-input" placeholder="e.g. March/April 2026" style="margin-top:4px;"></div>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:12px;" onclick="hodAddUnit('${user.department}')"><i class="fas fa-plus"></i> Add Unit</button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Units (${units.length})</div>
+            ${units.length === 0
+                ? `<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No units yet.</p>`
+                : units.map(u => {
+                    const lec = (deptStaff.lecturers || []).find(l => l.id === u.lecturerId);
                     return `
-                    <div style="padding:0.65rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;">
-                        <strong>${student.name || reg.studentId}</strong>
-                        <span style="color:var(--text-secondary);font-size:0.72rem;margin-left:8px;">
-                            ${reg.id} · KSh ${(reg.totalExamFee||0).toLocaleString()}
-                        </span>
-                        ${reg.rejectionReason
-                            ? `<div style="font-size:0.72rem;color:var(--danger);margin-top:2px;">
-                                Reason: ${reg.rejectionReason}</div>`
-                            : ''}
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;padding:0.9rem;background:var(--bg-elevated);border-radius:12px;margin-top:10px;">
+                        <div>
+                            <strong>${u.name}</strong><span class="admin-role-pill" style="margin-left:8px;">${u.code}</span>
+                            <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:4px;">Level ${u.level || '—'} • ${u.semester || '—'}</div>
+                            <div style="font-size:0.75rem;margin-top:4px;">${lec ? `<span style="color:var(--success);">👨‍💻 ${lec.name}</span>` : `<span style="color:var(--warning);">⚠️ No lecturer assigned</span>`}</div>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <select class="admin-input" id="lec_for_${u.id}" style="font-size:0.78rem;padding:4px 8px;">
+                                <option value="">-- Assign Lecturer --</option>${lecOptions}
+                            </select>
+                            <button class="admin-action-btn edit" onclick="hodAssignLecturer('${u.id}')">Assign</button>
+                        </div>
                     </div>`;
                 }).join('')}
         </div>`;
 }
 
+/* ── Department Report ── */
 function hodReportHTML(user) {
-    const data      = getData();
-    const dept      = user.department;
-    const dStudents = data.students.filter(s => s.department === dept);
-    const dRegs     = data.examRegistrations.filter(r =>
-        dStudents.find(s => s.id === r.studentId)
-    );
-    const confirmed = dRegs.filter(r => r.hodConfirmed).length;
-    const pending   = dRegs.filter(r => r.status === 'pending_hod').length;
-    const rejected  = dRegs.filter(r => r.rejectedBy === 'HOD').length;
-    const totalFee  = dRegs.reduce((sum, r) => sum + (r.totalExamFee || 0), 0);
-    const avgAtt    = dStudents.length === 0 ? 0 : Math.round(
-        dStudents.reduce((sum, s) =>
-            sum + (s.attendance ? (s.attendance.attended/s.attendance.total)*100 : 0), 0
-        ) / dStudents.length
-    );
+    const data         = getData();
+    const students     = (data.students || []).filter(s => s.department === user.department);
+    const units        = (data.lecturerUnits || []).filter(u => u.department === user.department);
+    const examRegs     = (data.examRegistrations || []).filter(r => r.department === user.department);
+    const repReports   = (data.studentReports || []).filter(r => r.department === user.department);
+    const decisions    = (data.hodDecisions || []).filter(d => d.department === user.department);
+    const deptStaff    = data.departmentStaff?.[user.department] || { lecturers: [] };
+    const myUnitIds    = units.map(u => u.id);
+    const attRecords   = (data.attendanceRecords || []).filter(r => myUnitIds.includes(r.unitId));
+
+    const active    = students.filter(s => (s.status || 'active') === 'active').length;
+    const notAtt    = students.filter(s => s.status === 'not_attending').length;
+    const deferred  = students.filter(s => s.status === 'deferred').length;
+
+    const approved  = examRegs.filter(r => ['pending_finance','pending_deputy','pending_exam','approved'].includes(r.status)).length;
+    const pending   = examRegs.filter(r => r.status === 'pending_hod').length;
+    const rejected  = examRegs.filter(r => r.status === 'rejected').length;
+
+    let totalPresent = 0, totalAbsent = 0;
+    attRecords.forEach(rec => {
+        Object.values(rec.attendance || {}).forEach(v => { if (v === 'present') totalPresent++; else totalAbsent++; });
+    });
+
+    const studentBars = students.map(s => {
+        let present = 0, total = 0;
+        attRecords.forEach(r => { if (r.attendance[s.id] !== undefined) { total++; if (r.attendance[s.id] === 'present') present++; } });
+        const pct = total ? Math.round((present / total) * 100) : 0;
+        return { label: s.name.split(' ')[0], value: pct, color: pct >= 75 ? '#10b981' : '#ef4444' };
+    });
 
     return `
-        <div class="admin-section-head">📊 Department Report — ${dept || 'All'}</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:1rem;">
-            <div class="stat-card"><i class="fas fa-users" style="color:var(--blue-light)"></i>
-                <h3>${dStudents.length}</h3><p>Students</p></div>
-            <div class="stat-card"><i class="fas fa-clock" style="color:var(--warning)"></i>
-                <h3>${pending}</h3><p>Pending</p></div>
-            <div class="stat-card"><i class="fas fa-check" style="color:var(--success)"></i>
-                <h3>${confirmed}</h3><p>Confirmed</p></div>
-            <div class="stat-card"><i class="fas fa-times" style="color:var(--danger)"></i>
-                <h3>${rejected}</h3><p>Rejected</p></div>
-            <div class="stat-card"><i class="fas fa-calendar-check" style="color:var(--blue-light)"></i>
-                <h3>${avgAtt}%</h3><p>Avg Attendance</p></div>
-            <div class="stat-card"><i class="fas fa-coins" style="color:var(--purple-light)"></i>
-                <h3>KSh ${totalFee.toLocaleString()}</h3><p>Total Fees</p></div>
+        <div class="admin-section-head">📊 Department Report — ${user.department}</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Student Attendance Rates</div>
+            <div style="overflow-x:auto;margin-top:10px;">
+                ${svgBarChart(studentBars.length ? studentBars : [{label:'No data',value:0,color:'#3a2d6e'}])}
+            </div>
         </div>
-        <button class="admin-btn-primary"
-            onclick="hodGeneratePDF('pending_finance','${dept}')">
-            📄 Download Finance List PDF
-        </button>`;
-}
-
-function hodPasswordsHTML() {
-    const data = getData();
-    const user = JSON.parse(sessionStorage.getItem('currentUser'));
-    const dept = user.department;
-    const deoList = data.deos.filter(d => d.department === dept);
-    const lecList = data.lecturers.filter(l => l.department === dept);
-    const tchList = data.classTeachers.filter(t => t.department === dept);
-    const repList = data.classReps.filter(r => r.department === dept);
-
-    const genRow = (label, arr) => arr.map(u => `
-        <div style="display:flex;justify-content:space-between;align-items:center;
-            padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;">
-            <span><strong>${u.name}</strong>
-                <span style="color:var(--text-secondary);font-size:0.72rem;margin-left:6px;">${label} · ${u.id}</span>
-            </span>
-            <button class="admin-action-btn edit"
-                onclick="hodResetPass('${u.id}','${label.toLowerCase().replace(' ','')}')">
-                🔑 Reset Password
-            </button>
-        </div>`).join('');
-
-    return `
-        <div class="admin-section-head">🔑 Generate / Reset Passwords</div>
-        <div class="admin-card" style="margin-bottom:10px;">
-            <div class="admin-card-title">D.E.O (${deoList.length})</div>
-            ${deoList.length ? genRow('DEO', deoList) : '<p style="color:var(--text-secondary);font-size:0.82rem;margin-top:6px;">No DEO in this department.</p>'}
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Student Status</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([{value:active||0.0001,color:'#10b981'},{value:notAtt||0.0001,color:'#ef4444'},{value:deferred||0.0001,color:'#f59e0b'}])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Active ${active}</span> &nbsp;
+                    <span style="color:var(--danger);">● Not Attending ${notAtt}</span> &nbsp;
+                    <span style="color:var(--warning);">● Deferred ${deferred}</span>
+                </div>
+            </div>
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Exam Registrations</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([{value:approved||0.0001,color:'#10b981'},{value:pending||0.0001,color:'#f59e0b'},{value:rejected||0.0001,color:'#ef4444'}])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Approved ${approved}</span> &nbsp;
+                    <span style="color:var(--warning);">● Pending ${pending}</span> &nbsp;
+                    <span style="color:var(--danger);">● Rejected ${rejected}</span>
+                </div>
+            </div>
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Overall Attendance</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([{value:totalPresent||0.0001,color:'#10b981'},{value:totalAbsent||0.0001,color:'#ef4444'}])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Present ${totalPresent}</span> &nbsp;
+                    <span style="color:var(--danger);">● Absent ${totalAbsent}</span>
+                </div>
+            </div>
         </div>
-        <div class="admin-card" style="margin-bottom:10px;">
-            <div class="admin-card-title">Lecturers (${lecList.length})</div>
-            ${lecList.length ? genRow('Lecturer', lecList) : '<p style="color:var(--text-secondary);font-size:0.82rem;margin-top:6px;">No lecturers in this department.</p>'}
-        </div>
-        <div class="admin-card" style="margin-bottom:10px;">
-            <div class="admin-card-title">Class Teachers (${tchList.length})</div>
-            ${tchList.length ? genRow('Class Teacher', tchList) : '<p style="color:var(--text-secondary);font-size:0.82rem;margin-top:6px;">No class teachers in this department.</p>'}
-        </div>
-        <div class="admin-card">
-            <div class="admin-card-title">Class Reps (${repList.length})</div>
-            ${repList.length ? genRow('Class Rep', repList) : '<p style="color:var(--text-secondary);font-size:0.82rem;margin-top:6px;">No class reps in this department.</p>'}
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${students.length}</h3><p>Total Students</p></div>
+            <div class="stat-card"><h3>${units.length}</h3><p>Units</p></div>
+            <div class="stat-card"><h3>${(deptStaff.lecturers||[]).length}</h3><p>Lecturers</p></div>
+            <div class="stat-card"><h3 style="color:var(--warning);">${pending}</h3><p>Pending Exams</p></div>
+            <div class="stat-card"><h3 style="color:var(--danger);">${repReports.filter(r=>r.status==='pending_hod').length}</h3><p>Pending Reports</p></div>
+            <div class="stat-card"><h3>${decisions.length}</h3><p>Decisions Made</p></div>
         </div>`;
 }
 
-window.hodResetPass = function(userId, roleType) {
-    const newPass = prompt(`Enter new password for ${userId}:`);
-    if (!newPass) return;
+/* ── HOD Window Actions ── */
+window.hodApproveExam = function(regId) {
     const data = getData();
-    const arrMap = {deo:'deos', lecturer:'lecturers', classteacher:'classTeachers', classrep:'classReps'};
-    const arr = data[arrMap[roleType]];
-    if (arr) {
-        const u = arr.find(x => x.id === userId);
-        if (u) {
-            u.password = newPass;
-            saveData(data);
-            adminLog(`HOD reset password for ${userId}`);
-            alert(`✅ Password reset for ${u.name}`);
-        }
-    }
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+    reg.status = 'pending_finance';
+    data.hodDecisions = data.hodDecisions || [];
+    data.hodDecisions.push({ id:'HD-'+Date.now(), type:'exam_registration', itemId:regId, studentName:reg.studentName, studentId:reg.studentId, department:reg.department, status:'approved', notes:'Approved by HOD. Forwarded to Finance.', decidedAt:new Date().toISOString() });
+    saveData(data);
+    alert(`✅ ${reg.studentName}'s registration approved and forwarded to Finance.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodPendingHTML(user);
 };
 
-function hodStaffHTML(user) {
+window.hodRejectExam = function(regId, studentName) {
+    const reason = prompt(`Reason for rejecting ${studentName}'s registration:`);
+    if (!reason) return;
     const data = getData();
-    const dept = user.department;
-    const lecturers    = data.lecturers.filter(l => l.department === dept);
-    const classTeachers= data.classTeachers.filter(t => t.department === dept);
-    const deos         = data.deos.filter(d => d.department === dept);
-    const students     = data.students.filter(s => s.department === dept);
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+    reg.status = 'rejected'; reg.rejectedBy = 'HOD'; reg.rejectionReason = reason;
+    data.hodDecisions = data.hodDecisions || [];
+    data.hodDecisions.push({ id:'HD-'+Date.now(), type:'exam_registration', itemId:regId, studentName:reg.studentName, studentId:reg.studentId, department:reg.department, status:'rejected', reason, decidedAt:new Date().toISOString() });
+    saveData(data);
+    alert(`❌ ${studentName}'s registration rejected. Reason: "${reason}"`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodPendingHTML(user);
+};
 
-    const table = (title, arr, fields) => `
-        <div class="admin-card" style="margin-bottom:10px;">
-            <div class="admin-card-title">${title} (${arr.length})</div>
-            ${arr.length === 0
-                ? `<p style="color:var(--text-secondary);font-size:0.82rem;margin-top:6px;">None found.</p>`
-                : arr.map(u => `
-                    <div style="display:flex;justify-content:space-between;align-items:center;
-                        padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.82rem;">
-                        <div>
-                            <strong>${u.name}</strong>
-                            <div style="font-size:0.7rem;color:var(--text-secondary);">
-                                ${u.id}${u.class ? ' · ' + u.class : ''}${u.unit ? ' · ' + u.unit : ''}
-                            </div>
-                        </div>
-                        <span class="admin-role-pill">${fields}</span>
-                    </div>`).join('')}
-        </div>`;
+window.hodAcknowledgeReport = function(reportId) {
+    const data = getData();
+    const rep = data.studentReports.find(r => r.id === reportId);
+    if (!rep) return;
+    rep.status = 'reviewed_hod';
+    data.hodDecisions = data.hodDecisions || [];
+    data.hodDecisions.push({ id:'HD-'+Date.now(), type:'student_report', itemId:reportId, studentName:rep.studentName, studentId:rep.studentId, department:rep.department, status:'approved', notes:'Acknowledged by HOD.', decidedAt:new Date().toISOString() });
+    saveData(data);
+    alert(`✅ Report on ${rep.studentName} acknowledged.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodPendingHTML(user);
+};
 
-    return `
-        <div class="admin-section-head">👥 Department Staff — ${dept}</div>
-        ${table('D.E.O', deos, 'DEO')}
-        ${table('Lecturers', lecturers, 'Lecturer')}
-        ${table('Class Teachers', classTeachers, 'Class Teacher')}
-        ${table('Students', students, 'Student')}`;
-}
+window.hodDismissReport = function(reportId) {
+    const data = getData();
+    const rep = (data.studentReports || []).find(r => r.id === reportId);
+    if (rep) rep.status = 'dismissed_hod';
+    saveData(data);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodPendingHTML(user);
+};
+
+window.hodAcknowledgeFeeFlag = function(flagId, studentName) {
+    const data = getData();
+    const flag = (data.deputyFeeFlags || []).find(f => f.id === flagId);
+    if (flag) flag.status = 'acknowledged_hod';
+    saveData(data);
+    alert(`✅ Fee flag for ${studentName} acknowledged. Student will be notified.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodPendingHTML(user);
+};
+
+window.hodNoteAttendance = function(studentId, studentName) {
+    const action = prompt(`Action taken for ${studentName} (recorded for accountability):`);
+    if (!action) return;
+    const data = getData();
+    const student = (data.students || []).find(s => s.id === studentId);
+    data.hodDecisions = data.hodDecisions || [];
+    data.hodDecisions.push({ id:'HD-'+Date.now(), type:'attendance_note', studentId, studentName, department:student?.department||'', status:'approved', notes:action, decidedAt:new Date().toISOString() });
+    saveData(data);
+    alert(`✅ Note recorded for ${studentName}: "${action}"`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodPendingHTML(user);
+};
+
+window.hodAddClassTeacher = function(department) {
+    const name  = document.getElementById('ctName')?.value.trim();
+    const email = document.getElementById('ctEmail')?.value.trim();
+    const phone = document.getElementById('ctPhone')?.value.trim();
+    if (!name) return alert('Class Teacher name is required.');
+    const data = getData();
+    data.departmentStaff = data.departmentStaff || {};
+    data.departmentStaff[department] = data.departmentStaff[department] || { lecturers:[] };
+    data.departmentStaff[department].classTeacher = { id:'CT-'+Date.now(), name, email:email||null, phone:phone||null, assignedAt:new Date().toISOString() };
+    saveData(data);
+    alert(`✅ ${name} assigned as Class Teacher for ${department}.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodStaffHTML(user);
+};
+
+window.hodRemoveClassTeacher = function(department) {
+    if (!confirm('Remove Class Teacher assignment?')) return;
+    const data = getData();
+    if (data.departmentStaff?.[department]) data.departmentStaff[department].classTeacher = null;
+    saveData(data);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodStaffHTML(user);
+};
+
+window.hodAddLecturer = function(department) {
+    const name  = document.getElementById('lecName')?.value.trim();
+    const sysId = document.getElementById('lecSysId')?.value.trim();
+    const email = document.getElementById('lecEmail')?.value.trim();
+    const phone = document.getElementById('lecPhone')?.value.trim();
+    const spec  = document.getElementById('lecSpec')?.value.trim();
+    if (!name) return alert('Lecturer name is required.');
+    const data = getData();
+    data.departmentStaff = data.departmentStaff || {};
+    data.departmentStaff[department] = data.departmentStaff[department] || { classTeacher:null, lecturers:[] };
+    data.departmentStaff[department].lecturers.push({ id:sysId||('LEC-HOD-'+Date.now()), name, email:email||null, phone:phone||null, specialization:spec||null });
+    saveData(data);
+    alert(`✅ ${name} added as Lecturer for ${department}.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodStaffHTML(user);
+};
+
+window.hodRemoveLecturer = function(department, lecId) {
+    if (!confirm('Remove this lecturer?')) return;
+    const data = getData();
+    if (data.departmentStaff?.[department]) data.departmentStaff[department].lecturers = (data.departmentStaff[department].lecturers||[]).filter(l=>l.id!==lecId);
+    saveData(data);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodStaffHTML(user);
+};
+
+window.hodAddUnit = function(department) {
+    const name = document.getElementById('uName')?.value.trim();
+    const code = document.getElementById('uCode')?.value.trim();
+    const level = document.getElementById('uLevel')?.value;
+    const semester = document.getElementById('uSemester')?.value.trim();
+    if (!name || !code) return alert('Unit name and code are required.');
+    const data = getData();
+    data.lecturerUnits = data.lecturerUnits || [];
+    if (data.lecturerUnits.find(u => u.code===code && u.department===department)) return alert(`⚠️ Unit ${code} already exists for ${department}.`);
+    data.lecturerUnits.push({ id:'LU-'+Date.now(), code, name, level:parseInt(level)||5, department, semester:semester||'', lecturerId:null, description:'', addedBy:'hod', addedAt:new Date().toISOString() });
+    saveData(data);
+    alert(`✅ Unit "${name}" (${code}) added.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodUnitsHTML(user);
+};
+
+window.hodAssignLecturer = function(unitId) {
+    const lecId = document.getElementById(`lec_for_${unitId}`)?.value;
+    if (!lecId) return alert('Please select a lecturer.');
+    const data = getData();
+    const unit = data.lecturerUnits.find(u => u.id === unitId);
+    if (!unit) return;
+    const lec = (data.departmentStaff?.[unit.department]?.lecturers||[]).find(l=>l.id===lecId);
+    unit.lecturerId = lecId;
+    unit.lecturerName = lec?.name || '';
+    saveData(data);
+    alert(`✅ ${lec?.name||lecId} assigned to ${unit.name}. They will see this unit in their portal.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hodMain').innerHTML = hodUnitsHTML(user);
+};
+
 
 /* ══════════════════════════════════════════
    FINANCE OFFICE PORTAL — Matching HOD Style
@@ -3283,7 +3521,8 @@ function renderClassTeacherPanel(user) {
             <button class="admin-nav-btn" onclick="classTeacherSection('students',this)"><i class="fas fa-users"></i> My Students</button>
             <button class="admin-nav-btn" onclick="classTeacherSection('timetable',this)"><i class="fas fa-calendar-alt"></i> Timetable</button>
             <button class="admin-nav-btn" onclick="classTeacherSection('issues',this)"><i class="fas fa-exclamation-triangle"></i> Issues Received</button>
-            <button class="admin-nav-btn" onclick="classTeacherSection('report',this)"><i class="fas fa-chart-bar"></i> Class Report</button>
+            <button class="admin-nav-btn" onclick="classTeacherSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
+            <button class="admin-nav-btn" onclick="classTeacherSection('report',this)"><i class="fas fa-chart-bar"></i> Class Report</button>  
         </div>
         <div class="admin-main" id="classTeacherMain">
             ${classTeacherAttendanceHTML(user)}
@@ -3301,6 +3540,7 @@ window.classTeacherSection = function(section, btn) {
         students:   () => classTeacherStudentsHTML(user),
         timetable:  () => classTeacherTimetableHTML(user),
         issues:     () => classTeacherIssuesHTML(user),
+        profile:    () => classTeacherProfileHTML(user),
         report:     () => classTeacherReportHTML(user)
     };
     document.getElementById('classTeacherMain').innerHTML = (map[section] || (() => classTeacherAttendanceHTML(user)))();
@@ -3719,6 +3959,47 @@ window.classTeacherPostNotice = function(department) {
     document.getElementById('classTeacherMain').innerHTML = classTeacherNoticeHTML(user);
 };
 
+/* ── Class Teacher Profile ── */
+function classTeacherProfileHTML(user) {
+    const data = getData();
+    const myStudents = (data.students || []).filter(s => s.department === user.department);
+    const notices    = (data.classNotices || []).filter(n => n.senderRole === 'classteacher' && n.department === user.department);
+    const issues     = (data.classRepIssues || []).filter(i => i.department === user.department);
+    const timetables = (data.timetables || []).filter(t => t.department === user.department);
+
+    return `
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">
+                <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#6c3fcf,#a855f7);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;flex-shrink:0;">🧑‍🏫</div>
+                <div>
+                    <h3 style="margin:0;">${user.name || 'Class Teacher'}</h3>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user.id || '—'}</div>
+                    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                        <span class="admin-role-pill" style="background:rgba(108,63,207,.2);border-color:var(--purple);color:var(--purple-light);">🧑‍🏫 Class Teacher</span>
+                        <span class="admin-role-pill">${user.department || '—'}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Personal Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">FULL NAME</span><br>${user.name || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">STAFF ID</span><br>${user.id || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DEPARTMENT</span><br>${user.department || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">CLASS</span><br>${user.class || '—'}</div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${myStudents.length}</h3><p>Total Students</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${myStudents.filter(s=>(s.status||'active')==='active').length}</h3><p>Active</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light);">${notices.length}</h3><p>Notices Posted</p></div>
+            <div class="stat-card"><h3 style="color:var(--warning);">${issues.filter(i=>i.status!=='resolved').length}</h3><p>Pending Issues</p></div>
+            <div class="stat-card"><h3>${timetables.length}</h3><p>Timetable Entries</p></div>
+        </div>`;
+}
+
 window.classTeacherAddTimetable = function(department, cls) {
     const unitId = document.getElementById('ttUnit')?.value;
     const day    = document.getElementById('ttDay')?.value;
@@ -3802,6 +4083,7 @@ function renderLecturerPanel(user) {
             <button class="admin-nav-btn" onclick="lecturerSection('attendance',this)"><i class="fas fa-calendar-check"></i> Mark Attendance</button>
             <button class="admin-nav-btn" onclick="lecturerSection('materials',this)"><i class="fas fa-upload"></i> Upload Materials</button>
             <button class="admin-nav-btn" onclick="lecturerSection('students',this)"><i class="fas fa-users"></i> My Students</button>
+           <button class="admin-nav-btn" onclick="lecturerSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
             <button class="admin-nav-btn" onclick="lecturerSection('report',this)"><i class="fas fa-chart-bar"></i> Unit Report</button>
         </div>
         <div class="admin-main" id="lecturerMain">
@@ -3820,6 +4102,7 @@ window.lecturerSection = function(section, btn) {
         attendance:   () => lecturerAttendanceHTML(user),
         materials:    () => lecturerMaterialsHTML(user),
         students:     () => lecturerStudentsHTML(user),
+        profile:      () => lecturerProfileHTML(user),
         report:       () => lecturerReportHTML(user)
     };
     document.getElementById('lecturerMain').innerHTML = (map[section] || (() => lecturerUnitsHTML(user)))();
@@ -4281,6 +4564,57 @@ window.lecturerSaveMarkRegister = function(unitId) {
     saveData(data);
     alert('✅ Mark register saved!');
 };
+
+/* ── Lecturer Profile ── */
+function lecturerProfileHTML(user) {
+    const data      = getData();
+    const myUnits   = (data.lecturerUnits || []).filter(u => u.lecturerId === user.id);
+    const students  = (data.students || []).filter(s => s.department === user.department).length;
+    const materials = (data.lecturerMaterials || []).filter(m => m.lecturerId === user.id).length;
+    const reports   = (data.studentReports || []).filter(r => r.lecturerId === user.id).length;
+
+    return `
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">
+                <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#6c3fcf,#a855f7);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;flex-shrink:0;">👨‍💻</div>
+                <div>
+                    <h3 style="margin:0;">${user.name || 'Lecturer'}</h3>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user.id || '—'}</div>
+                    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                        <span class="admin-role-pill" style="background:rgba(108,63,207,.2);border-color:var(--purple);color:var(--purple-light);">👨‍💻 Lecturer</span>
+                        <span class="admin-role-pill">${user.department || '—'}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Personal Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">FULL NAME</span><br>${user.name || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DEPARTMENT</span><br>${user.department || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">STAFF ID</span><br>${user.id || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">UNITS ASSIGNED</span><br>${myUnits.length}</div>
+            </div>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Assigned Units</div>
+            ${myUnits.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No units assigned yet — contact your HOD.</p>'
+                : myUnits.map(u => `
+                <div style="padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
+                    <strong>${u.name}</strong>
+                    <span class="admin-role-pill" style="margin-left:8px;">${u.code}</span>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px;">Level ${u.level || '—'} • ${u.semester || '—'}</div>
+                </div>`).join('')}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${students}</h3><p>Dept Students</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light);">${materials}</h3><p>Materials Uploaded</p></div>
+            <div class="stat-card"><h3 style="color:var(--warning);">${reports}</h3><p>Student Reports</p></div>
+        </div>`;
+}
+
 
 window.lecturerMarkStudent = function(studentId, status, unitId) {
     if (!window._tempAttendance) window._tempAttendance = {};
