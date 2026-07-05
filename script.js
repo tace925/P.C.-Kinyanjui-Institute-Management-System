@@ -22,7 +22,45 @@ function initializeData() {
             },
             infrastructureList: ["library", "sports", "hostel_m", "hostel_f", "field"],
             departments: ['Computer Studies', 'Hospitality', 'Automotive Engineering', 'Electrical Engineering', 'Civil Engineering', 'Business'],
-           
+            hospitalVisits: [
+                { id: 'HV-001', studentId: 'STU-2026-20669', studentName: 'John Mwangi', department: 'Computer Studies', purpose: 'Persistent headache and fever since morning — possible malaria', requestedAt: '2026-06-22T10:00:00.000Z', status: 'pending' },
+                { id: 'HV-002', studentId: 'STU-2026-20673', studentName: 'Peter Njoroge', department: 'Computer Studies', purpose: 'Severe stomach ache after lunch. Vomiting twice since noon.', requestedAt: '2026-06-23T13:00:00.000Z', status: 'pending' }
+            ],
+            medicalRecords: [
+                { id: 'MR-001', visitId: 'HV-DEMO', studentId: 'STU-2026-20675', studentName: 'Kevin Oduya', department: 'Computer Studies', phone: '0778901234', complaint: 'Ankle sprain from football practice', diagnosis: 'Grade 1 lateral ankle sprain', treatment: 'Bandage applied. Anti-inflammatory administered.', drugsAvailable: 'yes', referral: false, referralReason: null, doctorRemarks: 'Rest foot for 3 days. Return if swelling worsens.', cost: 200, billedToFinance: true, recordedAt: '2026-06-20T14:00:00.000Z' }
+            ],
+            hospitalBills: [
+                { id: 'HB-001', recordId: 'MR-001', studentId: 'STU-2026-20675', studentName: 'Kevin Oduya', department: 'Computer Studies', amount: 200, description: 'Medical treatment — Grade 1 ankle sprain', sentToFinance: true, timestamp: '2026-06-20T15:00:00.000Z' }
+            ],
+            financeReceived: [
+                { id: 'FIN-001', from: 'Hospital', fromRole: 'hospital', subject: 'Medical Bill — Kevin Oduya', message: 'Student: Kevin Oduya (STU-2026-20675), Department: Computer Studies. Treatment cost: KSh 200. Description: Medical treatment — Grade 1 ankle sprain. Please add to student fee account.', amount: 200, studentId: 'STU-2026-20675', studentName: 'Kevin Oduya', timestamp: '2026-06-20T15:00:00.000Z', read: false, addedToFees: false }
+            ], 
+            disciplineRecords: [
+                { id: 'DR-001', studentId: 'STU-2026-20669', studentName: 'John Mwangi', department: 'Computer Studies', offense: 'Unauthorized absence from examination hall', date: '2026-05-10', severity: 'minor', action: 'Written warning issued. Student counselled by Dean.', recordedBy: 'Dean of Students', status: 'active', sentToAdmin: false, timestamp: '2026-05-10T09:00:00.000Z' },
+                { id: 'DR-002', studentId: 'STU-2026-20675', studentName: 'Kevin Oduya', department: 'Computer Studies', offense: 'Repeated disruption of class and insubordination to Lecturer', date: '2026-06-01', severity: 'moderate', action: 'Suspended 3 days. Parents notified. On probation for rest of semester.', recordedBy: 'Dean of Students', status: 'active', sentToAdmin: true, timestamp: '2026-06-01T11:00:00.000Z' }
+            ],
+            hostelResidents: [
+                { id: 'HR-001', studentId: 'STU-2026-20670', studentName: 'Sarah Achieng', gender: 'Female', room: 'Room 14B', wing: 'Female Wing', admittedDate: '2024-01-10', status: 'resident', clearedForExit: false },
+                { id: 'HR-002', studentId: 'STU-2026-20674', studentName: 'Faith Kamau', gender: 'Female', room: 'Room 22A', wing: 'Female Wing', admittedDate: '2024-01-10', status: 'resident', clearedForExit: false },
+                { id: 'HR-003', studentId: 'STU-2026-20673', studentName: 'Peter Njoroge', gender: 'Male', room: 'Room 8C', wing: 'Male Wing', admittedDate: '2024-01-10', status: 'resident', clearedForExit: false },
+                { id: 'HR-004', studentId: 'STU-2026-20675', studentName: 'Kevin Oduya', gender: 'Male', room: 'Room 12A', wing: 'Male Wing', admittedDate: '2024-01-10', status: 'resident', clearedForExit: false }
+            ],
+            hostelClearances: [
+                { id: 'HC-001', studentId: 'STU-2026-20674', studentName: 'Faith Kamau', gender: 'Female', room: 'Room 22A', clearedBy: 'hostel_matron', clearedByName: 'Mrs. Grace Njeri', clearanceDate: '2026-06-21', sentToDean: true, timestamp: '2026-06-21T15:00:00.000Z' },
+                { id: 'HC-002', studentId: 'STU-2026-20673', studentName: 'Peter Njoroge', gender: 'Male', room: 'Room 8C', clearedBy: 'hostel_patron', clearedByName: 'Mr. James Kamau', clearanceDate: '2026-06-19', sentToDean: true, timestamp: '2026-06-19T14:00:00.000Z' }
+            ],
+            deanReceived: [
+                { id: 'DRV-001', from: 'Finance Office', fromRole: 'finance', subject: 'Fee Clearance Update', message: 'Students who have fully cleared fees as of 20th June 2026: John Mwangi (STU-2026-20669), Faith Kamau (STU-2026-20674). These students are eligible for end-term processing.', timestamp: '2026-06-20T09:00:00.000Z', read: false },
+                { id: 'DRV-002', from: 'Hostel — Matron', fromRole: 'hostel_matron', subject: 'Female Wing Clearance List', message: 'The following female students have been cleared from the hostel: Faith Kamau (Room 22A). Room keys returned and inspection completed.', timestamp: '2026-06-21T15:00:00.000Z', read: false },
+                { id: 'DRV-003', from: 'Hostel — Patron', fromRole: 'hostel_patron', subject: 'Male Wing Clearance List', message: 'The following male students have been cleared: Peter Njoroge (Room 8C). Room inspection done, clearance granted.', timestamp: '2026-06-19T14:00:00.000Z', read: false }
+            ],
+            sysAdminReceived: [
+                { id: 'SAR-001', from: 'Dean of Students', fromRole: 'dean', subject: 'Weekly Discipline Report — Week ending 7 June 2026', message: 'Discipline record: Kevin Oduya (STU-2026-20675) — Repeated disruption and insubordination. Suspended 3 days. Parents notified.', timestamp: '2026-06-07T17:00:00.000Z', read: false }
+            ],
+              // In initializeData(), add passcode field:
+             hostel_matron: { id: 'MATRON-001', name: 'Mama Rose', password: 'matron123', passcode: null, gender: 'Female' },
+             hostel_patron: { id: 'PATRON-001', name: 'Baba John', password: 'patron123', passcode: null, gender: 'Male' },
+
             students: [
                 {
                     id: 'STU-2026-20669', name: 'John Mwangi', department: 'Computer Studies', class: 'Form 3C',
@@ -288,6 +326,27 @@ function populateInfraSelect() {
     ).join('');
 }
 
+function repairMissingFields() {
+    const data = getData();
+    if (!data) return;
+    let changed = false;
+    const requiredSingles = {
+        hospital: { id:'HOSP-001', name:'School Nurse', password:'hospital123' },
+        library: { id:'LIB-001', name:'Librarian', password:'library123' },
+        dean: { id:'DEAN-001', name:'Dean of Students', password:'dean123', kitcoPasswords:[] },
+        principal: { id:'PRINCIPAL-001', name:'Dr. Elizabeth Wanjiku', password:'principal123' },
+        deputyAcad: { id:'DEP-ACAD-001', name:'Dr. Charles Otieno', password:'deputyacad123' },
+        deputyInfra: { id:'DEP-INFRA-001', name:'Eng. Peter Maina', password:'deputyinfra123' },
+        examOffice: { id:'EXAM-001', name:'Exam Officer', password:'exam123' },
+        admin: { id:'ADMIN-001', password:'Admin@2026' },
+        hostel_matron: { id:'MATRON-001', name:'Mama Rose', password:'matron123', gender:'Female' },
+        hostel_patron: { id:'PATRON-001', name:'Baba John', password:'patron123', gender:'Male' },
+    };
+    Object.keys(requiredSingles).forEach(key => {
+        if (!data[key]) { data[key] = requiredSingles[key]; changed = true; }
+    });
+    if (changed) { saveData(data); console.log('✅ Repaired missing login data.'); }
+}
 // ==================== CBET CURRICULUM — Design B: Step Progress ====================
 function renderCBET() {
     const stepsEl = document.getElementById('cbetSteps');
@@ -326,6 +385,7 @@ function renderCBET() {
         </div>
     `).join('');
 }
+
 
 // ==================== NAVIGATE TO ROLE ====================
 // ==================== HOME ====================
@@ -647,11 +707,9 @@ function showGlobalNoticeBoard() {
 }
 
 // ==================== NAVIGATE TO ROLE ====================
-function navigateToRole(role) {
-    if (role === 'home') {
-        showHome();
-        return;
-    }
+ function navigateToRole(role) {
+    if (role === 'home') { showHome(); return; }
+    if (role === 'hostels') { showHostelSubLogin(); return; }
     if (role === 'tour') {
         showTourPage();
         return;
@@ -706,13 +764,16 @@ const loginTitles = {
     deputy_infra: '🏗️ Deputy (Infrastructure) Login',
     examoffice:   '📋 Exam Office Login',
    dean:         '💛 Dean of Students Login',
-    principal:    '🎓 Principal Login',
-    hospital:     '🏥 Hospital Login',
-    library:      '📚 Library Login',
-    admin:        '🔐 System Admin Login'
+   principal:      '🎓 Principal Login',
+    hospital:       '🏥 Hospital Login',
+    library:        '📚 Library Login',
+    hostel_matron:  '👩 Matron Login — Female Wing',
+    hostel_patron:  '👨 Patron Login — Male Wing',
+    admin:          '🔐 System Admin Login'
 };
 
 function showLoginForm(role) {
+    if (role === 'hostels') { showHostelSubLogin(); return; }
     selectedRole = role;
     document.getElementById('schoolInfoPanel').style.display = 'none';
     document.getElementById('loginFormContainer').style.display = 'block';
@@ -724,7 +785,7 @@ function showLoginForm(role) {
     const fields = document.getElementById('loginFields');
 
     // Roles that only need password (no separate ID field)
-  const passOnlyRoles = ['deputy_acad', 'deputy_infra', 'admin', 'dean', 'examoffice', 'principal', 'hospital', 'library'];  
+  const passOnlyRoles = ['deputy_acad', 'deputy_infra', 'admin', 'dean', 'examoffice', 'principal', 'hospital', 'library', 'hostel_matron', 'hostel_patron'];
 
     if (passOnlyRoles.includes(role)) {
         fields.innerHTML = `<input type="password" id="loginPass" placeholder="Password" class="login-input">`;
@@ -737,6 +798,7 @@ function showLoginForm(role) {
 }
 
 function handleLogin() {
+    if (!selectedRole) return;   // ← add this guard at the very top
     const data = getData();
     const role = selectedRole;
     const id   = document.getElementById('loginId')?.value?.trim();
@@ -781,14 +843,35 @@ function handleLogin() {
             if (pass === data.principal.password) user = data.principal;
             break;
         case 'hospital':
-            if (pass === data.hospital.password) user = data.hospital;
-            break;
-        case 'library':
-            if (pass === data.library.password) user = data.library;
-            break;
-        case 'admin':
-            if (pass === data.admin.password) user = { role: 'admin', name: 'System Admin' };
-            break;
+    if (data.hospital && pass === data.hospital.password) user = data.hospital;
+    break;
+case 'library':
+    if (data.library && pass === data.library.password) user = data.library;
+    break;
+case 'hostel_matron':
+    if (data.hostel_matron && pass === data.hostel_matron.password) user = data.hostel_matron;
+    break;
+case 'hostel_patron':
+    if (data.hostel_patron && pass === data.hostel_patron.password) user = data.hostel_patron;
+    break;
+case 'deputy_acad':
+    if (data.deputyAcad && pass === data.deputyAcad.password) user = data.deputyAcad;
+    break;
+case 'deputy_infra':
+    if (data.deputyInfra && pass === data.deputyInfra.password) user = data.deputyInfra;
+    break;
+case 'examoffice':
+    if (data.examOffice && pass === data.examOffice.password) user = data.examOffice;
+    break;
+case 'dean':
+    if (data.dean && pass === data.dean.password) user = data.dean;
+    break;
+case 'principal':
+    if (data.principal && pass === data.principal.password) user = data.principal;
+    break;
+case 'admin':
+    if (data.admin && pass === data.admin.password) user = { role: 'admin', name: 'System Admin' };
+    break;
         default:
             alert('Unknown role. Please try again.');
             return;
@@ -882,6 +965,8 @@ function showDashboard(role, user) {
         content += renderHospitalPanel(user);
     } else if (role === 'library') {
         content += renderLibraryPanel(user);
+    } else if (role === 'hostel_matron' || role === 'hostel_patron') {
+    content += renderHostelPanel(user);
     } else if (role === 'sportsadmin') {
         content += renderSportsAdminPanel(user);
     } else if (role === 'sportleader') {
@@ -952,49 +1037,6 @@ function renderFinanceSummary() {
                 </div>
             `).join('')}
         </div>`;
-}
-
-function renderAdminPanel() {
-    return `
-    <div class="admin-layout">
- 
-        <!-- MINI SIDEBAR NAV -->
-        <div class="admin-sidenav">
-            <div class="admin-sidenav-title">Admin Menu</div>
-            <button class="admin-nav-btn active" onclick="adminSection('users',this)">
-                <i class="fas fa-users-cog"></i> User Management
-            </button>
-            <button class="admin-nav-btn" onclick="adminSection('principals',this)">
-                <i class="fas fa-landmark"></i> Principals
-            </button>
-            <button class="admin-nav-btn" onclick="adminSection('departments',this)">
-                <i class="fas fa-building"></i> Departments
-            </button>
-            <button class="admin-nav-btn" onclick="adminSection('courses',this)">
-                <i class="fas fa-book"></i> Courses
-            </button>
-            <button class="admin-nav-btn" onclick="adminSection('announce',this)">
-                <i class="fas fa-bullhorn"></i> Announcements
-            </button>
-            <button class="admin-nav-btn" onclick="adminSection('idcards',this)">
-                <i class="fas fa-id-card"></i> ID Cards
-            </button>
-            <button class="admin-nav-btn" onclick="adminSection('logs',this)">
-                <i class="fas fa-list-alt"></i> System Logs
-            </button>
-            <button class="admin-nav-btn" onclick="adminSection('backup',this)">
-                <i class="fas fa-database"></i> Backup / Restore
-            </button>
-            <button class="admin-nav-btn" onclick="adminSection('export',this)">
-                <i class="fas fa-file-export"></i> Export Data
-            </button>
-        </div>
- 
-        <!-- MAIN CONTENT AREA -->
-        <div class="admin-main" id="adminMain">
-            ${adminUsersHTML()}
-        </div>
-    </div>`;
 }
 
 /* ══════════════════════════════════════════
@@ -2606,179 +2648,6 @@ window.acadPostNotice = function() {
 
 
 /* ══════════════════════════════════════════
-   DEAN OF STUDENTS PORTAL
-══════════════════════════════════════════ */
-// ====================== DEAN OF STUDENTS PORTAL — FULLY INTERACTIVE ======================
-function renderDeanPanel(user) {
-    return `
-    <div class="admin-layout">
-        <div class="admin-sidenav">
-            <div class="admin-sidenav-title">
-                <i class="fas fa-heart"></i> Dean Menu
-            </div>
-            
-            <button class="admin-nav-btn active" onclick="deanSection('hostel',this)">
-                <i class="fas fa-bed"></i> Hostel Clearance
-            </button>
-            <button class="admin-nav-btn" onclick="deanSection('complaints',this)">
-                <i class="fas fa-exclamation-triangle"></i> Student Complaints
-            </button>
-            <button class="admin-nav-btn" onclick="deanSection('activities',this)">
-                <i class="fas fa-calendar"></i> Activity Approvals
-            </button>
-            <button class="admin-nav-btn" onclick="deanSection('kitco',this)">
-                <i class="fas fa-users"></i> KITCO Management
-            </button>
-            <button class="admin-nav-btn" onclick="deanSection('report',this)">
-                <i class="fas fa-chart-bar"></i> Student Welfare Report
-            </button>
-        </div>
-        
-        <div class="admin-main" id="deanMain">
-            ${deanHostelHTML()}
-        </div>
-    </div>`;
-}
-
-window.deanSection = function(section, btn) {
-    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    const map = {
-        hostel:     () => deanHostelHTML(),
-        complaints: () => deanComplaintsHTML(),
-        activities: () => deanActivitiesHTML(),
-        kitco:      () => deanKITCOHTML(),
-        report:     () => deanReportHTML()
-    };
-    
-    document.getElementById('deanMain').innerHTML = map[section]();
-};
-
-// Beautiful Green Success Alert (Exact match to your screenshot style)
-function showSuccessAlert(message) {
-    const alertHTML = `
-        <div style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
-                    background:#1a1e2c; border:3px solid #10b981; border-radius:16px;
-                    padding:30px 35px; z-index:10000; max-width:420px; text-align:center;
-                    box-shadow:0 15px 40px rgba(16, 185, 129, 0.3);">
-            
-            <div style="font-size:4.5rem; margin-bottom:12px; color:#10b981;">✅</div>
-            
-            <div style="color:#10b981; font-weight:700; font-size:1.15rem; line-height:1.4; margin-bottom:20px;">
-                ${message}
-            </div>
-            
-            <button onclick="this.parentElement.remove()" 
-                    style="background:#10b981; color:white; border:none; padding:12px 32px; 
-                    border-radius:10px; font-size:1rem; font-weight:600; cursor:pointer;">
-                OK
-            </button>
-        </div>`;
-
-    const temp = document.createElement('div');
-    temp.innerHTML = alertHTML;
-    document.body.appendChild(temp.firstElementChild);
-}
-
-/* ── 1. Hostel Clearance ── */
-function deanHostelHTML() {
-    const data = getData();
-    // Demo data
-    if (!data.hostelClearance) {
-        data.hostelClearance = [
-            { id: "CL-001", studentId: "STU-2026-20669", name: "John Mwangi", department: "Computer Studies", items: "Bed, Mattress, Bucket", status: "pending" },
-            { id: "CL-002", studentId: "STU-2026-20670", name: "Sarah Achieng", department: "Hospitality", items: "Bed, Curtains, Key", status: "pending" }
-        ];
-        saveData(data);
-    }
-
-    const list = data.hostelClearance.map(item => `
-        <div class="admin-card" style="margin-bottom:12px;">
-            <strong>${item.name}</strong> (${item.studentId})<br>
-            <small style="color:var(--text-secondary)">${item.department} • Items: ${item.items}</small>
-            <div style="margin-top:10px;">
-                <button class="admin-btn-primary" onclick="deanApproveHostel('${item.id}')">✅ Approve & Generate Form</button>
-            </div>
-        </div>`).join('');
-
-    return `
-        <div class="admin-section-head">🏠 Hostel Clearance Requests (${data.hostelClearance.length})</div>
-        ${list}`;
-};
-
-window.deanApproveHostel = function(id) {
-    showSuccessAlert(`Hostel Clearance Approved!<br>Gate Pass PDF generated for student.`);
-    // In real system you would update status + generate PDF
-};
-
-/* ── 2. Student Complaints ── */
-function deanComplaintsHTML() {
-    return `
-        <div class="admin-section-head">⚠️ Student Complaints</div>
-        <div class="admin-card">
-            <p><strong>Complaint from John Mwangi:</strong> Poor WiFi in hostel</p>
-            <button class="admin-btn-primary" onclick="deanResolveComplaint()" style="margin-top:10px;">
-                ✅ Mark as Resolved
-            </button>
-        </div>`;
-};
-
-window.deanResolveComplaint = function() {
-    showSuccessAlert("Complaint Resolved Successfully!<br>Student has been notified.");
-};
-
-/* ── 3. Activity Approvals ── */
-function deanActivitiesHTML() {
-    return `
-        <div class="admin-section-head">📅 Activity Approvals</div>
-        <div class="admin-card">
-            <p><strong>Football Tournament</strong> by Sports Club</p>
-            <button class="admin-btn-primary" onclick="deanApproveActivity()" style="margin-top:10px;">
-                ✅ Approve Activity
-            </button>
-        </div>`;
-};
-
-window.deanApproveActivity = function() {
-    showSuccessAlert("Activity Approved!<br>Notice sent to all students.");
-};
-
-/* ── 4. KITCO Management ── */
-function deanKITCOHTML() {
-    return `
-        <div class="admin-section-head">🎖️ KITCO Management</div>
-        <div class="admin-card">
-            <p>Manage KITCO leadership and generate passwords</p>
-            <button class="admin-btn-primary" onclick="deanGenerateKITCOPasswords()">
-                🔑 Generate KITCO Passwords
-            </button>
-        </div>`;
-};
-
-window.deanGenerateKITCOPasswords = function() {
-    showSuccessAlert("New KITCO Passwords Generated!<br>Passwords have been sent to class reps.");
-};
-
-/* ── 5. Student Welfare Report ── */
-function deanReportHTML() {
-    return `
-        <div class="admin-section-head">📊 Student Welfare Report</div>
-        <div class="admin-card">
-            <p>Total Complaints Resolved: <strong>18</strong><br>
-               Hostel Clearances: <strong>42</strong><br>
-               Activities Approved: <strong>7</strong></p>
-            <button class="admin-btn-primary" onclick="deanGenerateWelfareReport()" style="margin-top:15px;">
-                📄 Generate Full Welfare Report PDF
-            </button>
-        </div>`;
-};
-
-window.deanGenerateWelfareReport = function() {
-    showSuccessAlert("Student Welfare Report PDF Generated Successfully!");
-};
-
-/* ══════════════════════════════════════════
    DEPUTY PRINCIPAL (INFRASTRUCTURE) — 7 Features
 ══════════════════════════════════════════ */
 function renderDeputyInfraPanel() {
@@ -3425,35 +3294,28 @@ window.examOfficeGenerateReport = function() {
 };
 
 /* ══════════════════════════════════════════
-   DEAN OF STUDENTS PORTAL
+   DEAN OF STUDENTS PORTAL — Full Implementation
 ══════════════════════════════════════════ */
 function renderDeanPanel(user) {
+    const unread = (getData().deanReceived || []).filter(m => !m.read).length;
     return `
     <div class="admin-layout">
         <div class="admin-sidenav">
-            <div class="admin-sidenav-title">
-                <i class="fas fa-heart"></i> Dean Menu
-            </div>
-            
-            <button class="admin-nav-btn active" onclick="deanSection('hostel',this)">
-                <i class="fas fa-bed"></i> Hostel Clearance
+            <div class="admin-sidenav-title"><i class="fas fa-heart"></i> Dean Menu</div>
+            <button class="admin-nav-btn" onclick="deanSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
+            <button class="admin-nav-btn active" onclick="deanSection('received',this)">
+                <i class="fas fa-inbox"></i> Received
+                ${unread > 0 ? `<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${unread}</span>` : ''}
             </button>
-            <button class="admin-nav-btn" onclick="deanSection('complaints',this)">
-                <i class="fas fa-exclamation-triangle"></i> Student Complaints
-            </button>
-            <button class="admin-nav-btn" onclick="deanSection('activities',this)">
-                <i class="fas fa-calendar"></i> Activity Approvals
-            </button>
-            <button class="admin-nav-btn" onclick="deanSection('kitco',this)">
-                <i class="fas fa-users"></i> KITCO Management
-            </button>
-            <button class="admin-nav-btn" onclick="deanSection('report',this)">
-                <i class="fas fa-chart-bar"></i> Student Welfare Report
-            </button>
+            <button class="admin-nav-btn" onclick="deanSection('discipline',this)"><i class="fas fa-gavel"></i> Discipline Records</button>
+            <button class="admin-nav-btn" onclick="deanSection('clearance',this)"><i class="fas fa-home"></i> Hostel Clearance</button>
+            <button class="admin-nav-btn" onclick="deanSection('complaints',this)"><i class="fas fa-exclamation-triangle"></i> Student Complaints</button>
+            <button class="admin-nav-btn" onclick="deanSection('activities',this)"><i class="fas fa-calendar-alt"></i> Activity Approvals</button>
+            <button class="admin-nav-btn" onclick="deanSection('kitco',this)"><i class="fas fa-users"></i> KITCO Management</button>
+            <button class="admin-nav-btn" onclick="deanSection('report',this)"><i class="fas fa-chart-bar"></i> Student Welfare Report</button>
         </div>
-        
         <div class="admin-main" id="deanMain">
-            ${deanHostelHTML()}
+            ${deanReceivedHTML(user)}
         </div>
     </div>`;
 }
@@ -3461,52 +3323,701 @@ function renderDeanPanel(user) {
 window.deanSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
     const map = {
-        hostel:     () => deanHostelHTML(),
-        complaints: () => deanComplaintsHTML(),
-        activities: () => deanActivitiesHTML(),
-        kitco:      () => deanKITCOHTML(),
-        report:     () => deanReportHTML()
+        profile:    () => deanProfileHTML(user),
+        received:   () => deanReceivedHTML(user),
+        discipline: () => deanDisciplineHTML(user),
+        clearance:  () => deanClearanceHTML(user),
+        complaints: () => deanComplaintsHTML(user),
+        activities: () => deanActivitiesHTML(user),
+        kitco:      () => deanKitcoHTML(user),
+        report:     () => deanReportHTML(user)
     };
-    
-    document.getElementById('deanMain').innerHTML = map[section]();
+    document.getElementById('deanMain').innerHTML = (map[section] || (() => deanReceivedHTML(user)))();
 };
 
-// Hostel Clearance (Core Feature)
-function deanHostelHTML() {
+/* ── Profile ── */
+function deanProfileHTML(user) {
+    const data      = getData();
+    const complaints = (data.deanComplaints || []).length;
+    const discipline = (data.disciplineRecords || []).length;
+    const clearances = (data.hostelClearances || []).filter(c => c.sentToDean).length;
+    return `
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">
+                <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#a855f7);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;flex-shrink:0;">💛</div>
+                <div>
+                    <h3 style="margin:0;">${user.name || 'Dean of Students'}</h3>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user.id || 'DEAN-001'}</div>
+                    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                        <span class="admin-role-pill" style="background:rgba(236,72,153,.15);border-color:#ec4899;color:#ec4899;">💛 Dean of Students</span>
+                        <span class="admin-role-pill">Student Welfare</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Office Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">FULL NAME</span><br>${user.name || 'Dean of Students'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">STAFF ID</span><br>${user.id || 'DEAN-001'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DEPARTMENT</span><br>Student Affairs</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">ROLE</span><br>Dean of Students</div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${discipline}</h3><p>Discipline Records</p></div>
+            <div class="stat-card"><h3>${complaints}</h3><p>Complaints</p></div>
+            <div class="stat-card"><h3>${clearances}</h3><p>Hostel Clearances</p></div>
+        </div>`;
+}
+
+/* ── Received ── */
+function deanReceivedHTML(user) {
+    const data   = getData();
+    const msgs   = data.deanReceived || [];
+    const unread = msgs.filter(m => !m.read).length;
+
+    const roleBadge = role => {
+        const map = {
+            finance:       ['💰 Finance Office',  '#10b981'],
+            hostel_matron: ['👩 Hostel — Matron', '#a855f7'],
+            hostel_patron: ['👨 Hostel — Patron',  '#3b82f6'],
+            hospital:      ['🏥 Hospital',          '#ef4444']
+        };
+        const [label, color] = map[role] || ['📨 System', '#6c3fcf'];
+        return `<span class="admin-role-pill" style="background:${color}20;border-color:${color};color:${color};">${label}</span>`;
+    };
+
+    return `
+        <div class="admin-section-head">📥 Received (${msgs.length}) ${unread > 0 ? `<span style="color:var(--danger);font-size:0.75rem;">${unread} unread</span>` : ''}</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Inbox from Finance (fee clearance), Hostel Matron/Patron (clearance lists), and Hospital.
+            </p>
+        </div>
+        <div class="admin-card">
+            ${msgs.length === 0
+                ? '<p style="color:var(--text-secondary);">No messages yet.</p>'
+                : msgs.slice().reverse().map(m => `
+                <div style="padding:1rem;background:var(--bg-elevated);border-radius:12px;margin-bottom:10px;border-left:4px solid ${m.read ? 'var(--border)' : 'var(--purple)'};" onclick="deanMarkRead('${m.id}')">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;">
+                        <div>
+                            ${roleBadge(m.fromRole)}
+                            <div style="font-weight:700;margin-top:6px;font-size:0.88rem;">${m.subject}</div>
+                        </div>
+                        <div style="font-size:0.68rem;color:var(--text-secondary);">${new Date(m.timestamp).toLocaleString()}${!m.read ? ' <span style="color:var(--purple-light);">● New</span>' : ''}</div>
+                    </div>
+                    <div style="font-size:0.82rem;margin-top:8px;color:var(--text-secondary);">${m.message}</div>
+                </div>`).join('')}
+        </div>`;
+}
+
+/* ── Discipline Records ── */
+function deanDisciplineHTML(user) {
+    const data    = getData();
+    const records = data.disciplineRecords || [];
+
+    const severityBadge = s => {
+        const map = { minor:['⚠️ Minor','#f59e0b'], moderate:['🔶 Moderate','#ef4444'], severe:['🚨 Severe','#dc2626'] };
+        const [label, color] = map[s] || ['📋 General','#6c3fcf'];
+        return `<span class="admin-role-pill" style="background:${color}20;border-color:${color};color:${color};">${label}</span>`;
+    };
+
+    const cards = records.map(r => {
+        const student = (data.students || []).find(s => s.id === r.studentId);
+        return `
+        <div style="padding:1rem;background:var(--bg-elevated);border-radius:14px;border-left:4px solid ${r.severity==='severe'?'#dc2626':r.severity==='moderate'?'var(--danger)':'var(--warning)'};margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;">
+                <div>
+                    ${severityBadge(r.severity)}
+                    <div style="font-weight:700;margin-top:6px;">${r.studentName}</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">
+                        ${r.studentId} • ${r.department}
+                        ${student ? ` • 📱 ${student.phone || '—'}` : ''}
+                        ${student?.status === 'active' ? ' • <span style="color:var(--success);">✅ Active</span>' : student?.status === 'not_attending' ? ' • <span style="color:var(--danger);">🚫 Not Attending</span>' : ''}
+                    </div>
+                </div>
+                <div style="font-size:0.72rem;color:var(--text-secondary);">${r.date}</div>
+            </div>
+            <div style="font-size:0.82rem;margin-top:8px;"><strong>Offense:</strong> ${r.offense}</div>
+            <div style="font-size:0.82rem;margin-top:4px;"><strong>Action Taken:</strong> ${r.action}</div>
+            ${r.sentToAdmin
+                ? `<div style="font-size:0.7rem;color:var(--success);margin-top:6px;">✅ Sent to System Admin</div>`
+                : `<button class="admin-action-btn edit" style="margin-top:8px;" onclick="deanSendRecordToAdmin('${r.id}')">📤 Send to System Admin</button>`}
+        </div>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">⚖️ Discipline Records</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Every record is tied to a student's profile by name and admission number — like a school police record.
+                When a student's name is entered, all their details auto-populate. Records are sent to System Admin weekly.
+            </p>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">📝 Add New Discipline Record</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">STUDENT ADMISSION NO (auto-fills details)</label>
+                    <input type="text" id="drStudentId" class="admin-input" placeholder="e.g. STU-2026-20669" style="margin-top:4px;" oninput="deanAutoFillStudent(this.value)">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">FULL NAME (auto-filled)</label>
+                    <input type="text" id="drStudentName" class="admin-input" placeholder="Auto-filled" readonly style="margin-top:4px;background:var(--bg-elevated);">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">DEPARTMENT (auto-filled)</label>
+                    <input type="text" id="drDept" class="admin-input" placeholder="Auto-filled" readonly style="margin-top:4px;background:var(--bg-elevated);">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">SEVERITY</label>
+                    <select id="drSeverity" class="admin-input" style="margin-top:4px;">
+                        <option value="minor">⚠️ Minor</option>
+                        <option value="moderate">🔶 Moderate</option>
+                        <option value="severe">🚨 Severe</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">DATE</label>
+                    <input type="date" id="drDate" class="admin-input" value="${new Date().toLocaleDateString('en-CA')}" style="margin-top:4px;">
+                </div>
+            </div>
+            <div style="margin-top:10px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">OFFENSE DESCRIPTION</label>
+                <textarea id="drOffense" class="admin-input" rows="2" placeholder="Describe the offense in detail..." style="margin-top:4px;"></textarea>
+            </div>
+            <div style="margin-top:10px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">ACTION TAKEN</label>
+                <textarea id="drAction" class="admin-input" rows="2" placeholder="What action was taken (warning, suspension, counselling...)..." style="margin-top:4px;"></textarea>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:12px;" onclick="deanAddRecord()">
+                <i class="fas fa-gavel"></i> Add Discipline Record
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Records (${records.length})</div>
+            ${cards || '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No discipline records yet.</p>'}
+        </div>`;
+}
+
+/* ── Hostel Clearance ── */
+function deanClearanceHTML(user) {
+    const data       = getData();
+    const clearances = (data.hostelClearances || []).filter(c => c.sentToDean);
+    const allStudents = data.students || [];
+
+    const grouped = { Female: clearances.filter(c => c.gender === 'Female'), Male: clearances.filter(c => c.gender === 'Male') };
+
+    const buildWingSection = (wing, list) => {
+        if (list.length === 0) return `<p style="color:var(--text-secondary);font-size:0.85rem;margin:8px 0;">No ${wing.toLowerCase()} wing clearances received yet.</p>`;
+        return list.map(c => {
+            const stu = allStudents.find(s => s.id === c.studentId);
+            return `
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:0.8rem;background:var(--bg-elevated);border-radius:12px;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+                <div>
+                    <strong>${c.studentName}</strong>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px;">
+                        ${c.studentId} • ${c.room} • ${stu?.phone || '—'}
+                        ${stu?.department ? ` • ${stu.department}` : ''}
+                    </div>
+                    <div style="font-size:0.7rem;color:var(--success);margin-top:2px;">✅ Cleared by ${c.clearedByName} on ${c.clearanceDate}</div>
+                </div>
+                <button class="admin-action-btn edit" onclick="deanGenerateClearanceSlip('${c.studentId}','${c.studentName}','${c.room}')">
+                    📄 Generate Clearance Slip
+                </button>
+            </div>`;
+        }).join('');
+    };
+
     return `
         <div class="admin-section-head">🏠 Hostel Clearance</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Lists sent by Matron (female wing) and Patron (male wing) after they confirm each student has vacated their room.
+                Generate clearance slips per student from here.
+            </p>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">👩 Female Wing — Cleared by Matron (${grouped.Female.length})</div>
+            <div style="margin-top:10px;">${buildWingSection('Female', grouped.Female)}</div>
+        </div>
         <div class="admin-card">
-            <p>Hostel clearance requests and boarding student management coming soon.</p>
-            <button class="admin-btn-primary" style="margin-top:12px;" onclick="alert('Hostel clearance form will open here')">
-                Generate Clearance Form
-            </button>
+            <div class="admin-card-title">👨 Male Wing — Cleared by Patron (${grouped.Male.length})</div>
+            <div style="margin-top:10px;">${buildWingSection('Male', grouped.Male)}</div>
         </div>`;
 }
 
-function deanComplaintsHTML() {
-    return `<div class="admin-card"><p>Student complaints and discipline cases will appear here.</p></div>`;
-}
+/* ── Student Complaints ── */
+function deanComplaintsHTML(user) {
+    const data = getData();
+    const complaints = data.deanComplaints || [];
+    const demo = [
+        { id:'dc1', studentName:'Sarah Achieng', studentId:'STU-2026-20670', department:'Computer Studies', complaint:'Lecturer frequently arrives late and sometimes does not show up for scheduled sessions.', timestamp:'2026-06-18T09:00:00.000Z', status:'pending' },
+        { id:'dc2', studentName:'Peter Njoroge', studentId:'STU-2026-20673', department:'Computer Studies', complaint:'Hostel room has a leaking roof that has not been repaired despite reporting 2 weeks ago.', timestamp:'2026-06-19T14:00:00.000Z', status:'pending' }
+    ];
+    const items = complaints.length ? complaints : demo;
 
-function deanActivitiesHTML() {
-    return `<div class="admin-card"><p>Pending activity approvals will appear here.</p></div>`;
-}
-
-function deanKITCOHTML() {
     return `
-        <div class="admin-section-head">🎖️ KITCO Management</div>
+        <div class="admin-section-head">⚠️ Student Complaints</div>
         <div class="admin-card">
-            <p>Generate KITCO passwords and manage student leadership body.</p>
-            <button class="admin-btn-primary" onclick="alert('KITCO password generation coming soon')">
-                Generate KITCO Passwords
-            </button>
+            <div class="admin-card-title">Complaints Received (${items.length})</div>
+            ${items.map(c => `
+            <div style="padding:1rem;background:var(--bg-elevated);border-radius:12px;border-left:4px solid ${c.status==='resolved'?'var(--success)':'var(--warning)'};margin-bottom:10px;margin-top:10px;">
+                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                    <div>
+                        <strong>${c.studentName}</strong>
+                        <div style="font-size:0.72rem;color:var(--text-secondary);">${c.studentId} • ${c.department}</div>
+                    </div>
+                    <span class="admin-role-pill" style="${c.status==='resolved'?'background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);':'background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);'}">${c.status==='resolved'?'✅ Resolved':'⏳ Pending'}</span>
+                </div>
+                <div style="font-size:0.82rem;margin-top:8px;">${c.complaint}</div>
+                <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:4px;">${new Date(c.timestamp).toLocaleString()}</div>
+                ${c.status!=='resolved' ? `<button class="admin-action-btn edit" style="margin-top:8px;" onclick="deanResolveComplaint('${c.id}')">Mark Resolved</button>` : ''}
+            </div>`).join('')}
         </div>`;
 }
 
-function deanReportHTML() {
-    return `<div class="admin-card"><p>Student welfare and discipline report coming soon.</p></div>`;
+/* ── Activity Approvals ── */
+function deanActivitiesHTML(user) {
+    const demo = [
+        { id:'aa1', activityName:'Inter-Department Football Tournament', organizer:'KITCO', date:'2026-07-10', venue:'School Grounds', status:'pending', timestamp:'2026-06-25T10:00:00.000Z' },
+        { id:'aa2', activityName:'Computer Studies End-Term Dinner', organizer:'Computer Studies Class Rep', date:'2026-07-08', venue:'School Cafeteria', status:'approved', timestamp:'2026-06-20T14:00:00.000Z' }
+    ];
+    return `
+        <div class="admin-section-head">📅 Activity Approvals</div>
+        <div class="admin-card">
+            <div class="admin-card-title">Activity Requests (${demo.length})</div>
+            ${demo.map(a => `
+            <div style="padding:1rem;background:var(--bg-elevated);border-radius:12px;border-left:4px solid ${a.status==='approved'?'var(--success)':'var(--warning)'};margin-bottom:10px;margin-top:10px;">
+                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                    <div>
+                        <strong>${a.activityName}</strong>
+                        <div style="font-size:0.72rem;color:var(--text-secondary);">By: ${a.organizer} • Venue: ${a.venue} • Date: ${a.date}</div>
+                    </div>
+                    <span class="admin-role-pill" style="${a.status==='approved'?'background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);':'background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);'}">${a.status==='approved'?'✅ Approved':'⏳ Pending'}</span>
+                </div>
+                ${a.status!=='approved' ? `
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                    <button class="admin-action-btn edit" onclick="alert('Activity approved!')">✅ Approve</button>
+                    <button class="admin-action-btn danger" onclick="alert('Activity rejected.')">❌ Reject</button>
+                </div>` : ''}
+            </div>`).join('')}
+        </div>`;
 }
+
+/* ── KITCO Management ── */
+function deanKitcoHTML(user) {
+    const data = getData();
+    const events = data.kitcoEvents || [];
+    const demo = [
+        { id:'ke1', title:'Annual Cultural Festival 2026', date:'2026-07-15', venue:'School Hall', status:'upcoming', organizer:'KITCO President' },
+        { id:'ke2', title:'Sports Day — Athletics & Football', date:'2026-07-20', venue:'School Grounds', status:'upcoming', organizer:'Sports Department' }
+    ];
+    const items = events.length ? events : demo;
+    return `
+        <div class="admin-section-head">🎓 KITCO Management</div>
+        <div class="admin-card">
+            <div class="admin-card-title">Upcoming KITCO Events (${items.length})</div>
+            ${items.map(e => `
+            <div style="padding:0.9rem;background:var(--bg-elevated);border-radius:12px;margin-bottom:8px;margin-top:10px;">
+                <strong>${e.title}</strong>
+                <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:4px;">📅 ${e.date} • 📍 ${e.venue} • By: ${e.organizer}</div>
+                <span class="admin-role-pill" style="margin-top:6px;display:inline-block;">🗓️ ${e.status}</span>
+            </div>`).join('')}
+        </div>`;
+}
+
+/* ── Student Welfare Report ── */
+function deanReportHTML(user) {
+    const data       = getData();
+    const students   = data.students || [];
+    const discipline = data.disciplineRecords || [];
+    const clearances = (data.hostelClearances || []).filter(c => c.sentToDean);
+    const hostelMale = (data.hostelResidents || []).filter(r => r.gender === 'Male').length;
+    const hostelFem  = (data.hostelResidents || []).filter(r => r.gender === 'Female').length;
+    const complaints = data.deanComplaints || [];
+    const received   = data.deanReceived || [];
+
+    const active   = students.filter(s => (s.status||'active') === 'active').length;
+    const notAtt   = students.filter(s => s.status === 'not_attending').length;
+    const deferred = students.filter(s => s.status === 'deferred').length;
+
+    const minor    = discipline.filter(d => d.severity === 'minor').length;
+    const moderate = discipline.filter(d => d.severity === 'moderate').length;
+    const severe   = discipline.filter(d => d.severity === 'severe').length;
+
+    const cleared = clearances.length;
+    const pending = (data.hostelResidents || []).length - cleared;
+
+    const discBars = discipline.map(d => ({
+        label: d.studentName.split(' ')[0],
+        value: d.severity === 'minor' ? 1 : d.severity === 'moderate' ? 2 : 3,
+        color: d.severity === 'minor' ? '#f59e0b' : d.severity === 'moderate' ? '#ef4444' : '#dc2626'
+    }));
+
+    return `
+        <div class="admin-section-head">📊 Student Welfare Report</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Discipline Records by Student</div>
+            <div style="overflow-x:auto;margin-top:10px;">
+                ${svgBarChart(discBars.length ? discBars : [{label:'No records',value:0,color:'#3a2d6e'}])}
+            </div>
+            <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:4px;">Bar height: 1=Minor, 2=Moderate, 3=Severe</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Student Status</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([{value:active||0.0001,color:'#10b981'},{value:notAtt||0.0001,color:'#ef4444'},{value:deferred||0.0001,color:'#f59e0b'}])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Active ${active}</span>&nbsp;
+                    <span style="color:var(--danger);">● Not Attending ${notAtt}</span>&nbsp;
+                    <span style="color:var(--warning);">● Deferred ${deferred}</span>
+                </div>
+            </div>
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Discipline Breakdown</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([{value:minor||0.0001,color:'#f59e0b'},{value:moderate||0.0001,color:'#ef4444'},{value:severe||0.0001,color:'#dc2626'}])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:#f59e0b;">● Minor ${minor}</span>&nbsp;
+                    <span style="color:var(--danger);">● Moderate ${moderate}</span>&nbsp;
+                    <span style="color:#dc2626;">● Severe ${severe}</span>
+                </div>
+            </div>
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Hostel Clearance Status</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([{value:cleared||0.0001,color:'#10b981'},{value:pending||0.0001,color:'#f59e0b'}])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Cleared ${cleared}</span>&nbsp;
+                    <span style="color:var(--warning);">● Pending ${pending}</span>
+                </div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${students.length}</h3><p>Total Students</p></div>
+            <div class="stat-card"><h3 style="color:var(--danger);">${discipline.length}</h3><p>Discipline Records</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${cleared}</h3><p>Hostel Cleared</p></div>
+            <div class="stat-card"><h3>${hostelMale + hostelFem}</h3><p>Hostel Residents</p></div>
+            <div class="stat-card"><h3 style="color:var(--warning);">${received.filter(m=>!m.read).length}</h3><p>Unread Messages</p></div>
+            <div class="stat-card"><h3>${complaints.length}</h3><p>Complaints</p></div>
+        </div>`;
+}
+
+/* ── Dean Window Actions ── */
+window.deanMarkRead = function(msgId) {
+    const data = getData();
+    const msg  = (data.deanReceived || []).find(m => m.id === msgId);
+    if (msg) msg.read = true;
+    saveData(data);
+};
+
+window.deanAutoFillStudent = function(admNo) {
+    const data    = getData();
+    const student = (data.students || []).find(s => s.id === admNo.trim());
+    if (student) {
+        document.getElementById('drStudentName').value = student.name;
+        document.getElementById('drDept').value         = student.department;
+    } else {
+        document.getElementById('drStudentName').value = '';
+        document.getElementById('drDept').value         = '';
+    }
+};
+
+window.deanAddRecord = function() {
+    const studentId   = document.getElementById('drStudentId')?.value.trim();
+    const studentName = document.getElementById('drStudentName')?.value.trim();
+    const department  = document.getElementById('drDept')?.value.trim();
+    const severity    = document.getElementById('drSeverity')?.value;
+    const date        = document.getElementById('drDate')?.value;
+    const offense     = document.getElementById('drOffense')?.value.trim();
+    const action      = document.getElementById('drAction')?.value.trim();
+    if (!studentId || !offense || !action) return alert('Please fill in all required fields.');
+    const data = getData();
+    data.disciplineRecords = data.disciplineRecords || [];
+    data.disciplineRecords.push({ id:'DR-'+Date.now(), studentId, studentName, department, offense, date, severity, action, recordedBy:'Dean of Students', status:'active', sentToAdmin:false, timestamp:new Date().toISOString() });
+    saveData(data);
+    alert(`✅ Discipline record for ${studentName} added.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('deanMain').innerHTML = deanDisciplineHTML(user);
+};
+
+window.deanSendRecordToAdmin = function(recordId) {
+    const data   = getData();
+    const record = (data.disciplineRecords || []).find(r => r.id === recordId);
+    if (!record) return;
+    record.sentToAdmin = true;
+    data.sysAdminReceived = data.sysAdminReceived || [];
+    data.sysAdminReceived.push({ id:'SAR-'+Date.now(), from:'Dean of Students', fromRole:'dean', subject:`Discipline Record — ${record.studentName}`, message:`Offense: ${record.offense}. Action: ${record.action}. Severity: ${record.severity}. Date: ${record.date}.`, timestamp:new Date().toISOString(), read:false });
+    saveData(data);
+    alert(`✅ Record for ${record.studentName} sent to System Admin.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('deanMain').innerHTML = deanDisciplineHTML(user);
+};
+
+window.deanGenerateClearanceSlip = function(studentId, studentName, room) {
+    alert(`📄 Clearance Slip Generated\n\n${studentName} (${studentId})\nRoom: ${room}\nStatus: ✅ Fully Cleared\nDate: ${new Date().toLocaleDateString()}\n\nHostel clearance confirmed by Matron/Patron.`);
+};
+
+window.deanResolveComplaint = function(id) {
+    const data = getData();
+    const c    = (data.deanComplaints || []).find(c => c.id === id);
+    if (c) { c.status = 'resolved'; saveData(data); }
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('deanMain').innerHTML = deanComplaintsHTML(user);
+};
+
+// ==================== HOSTEL SUB-LOGIN ====================
+function showHostelSubLogin() {
+    document.getElementById('schoolInfoPanel').style.display = 'none';
+    document.getElementById('loginFormContainer').style.display = 'block';
+    document.getElementById('dashboardContainer').style.display = 'none';
+
+    document.getElementById('loginTitle').innerHTML = '🏠 Hostel — Select Your Role';
+    document.getElementById('loginFields').innerHTML = `
+        <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:16px;">Select your wing to log in:</p>
+        <div style="display:grid;gap:12px;">
+            <button class="btn-3d" onclick="hostelSubSelect('hostel_matron')" style="background:linear-gradient(135deg,#a855f7,#6c3fcf);border:none;padding:1rem;border-radius:14px;color:#fff;font-weight:700;cursor:pointer;font-size:1rem;">
+                👩 Matron — Female Wing
+            </button>
+            <button class="btn-3d" onclick="hostelSubSelect('hostel_patron')" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:none;padding:1rem;border-radius:14px;color:#fff;font-weight:700;cursor:pointer;font-size:1rem;">
+                👨 Patron — Male Wing
+            </button>
+        </div>
+    `;
+    document.getElementById('loginBtn').style.display = 'none';
+}
+
+window.hostelSubSelect = function(role) {
+    selectedRole = null;   // ← add this line
+    window._hostelSubRole = role;
+    document.getElementById('loginTitle').innerHTML = role === 'hostel_matron' 
+        ? '👩 Matron Login — Female Wing' 
+        : '👨 Patron Login — Male Wing';
+
+    document.getElementById('loginFields').innerHTML = `
+        <input type="password" id="loginPass" class="admin-input" placeholder="Enter Password">
+    `;
+
+    document.getElementById('loginBtn').style.display = 'block';
+    document.getElementById('loginBtn').onclick = () => handleHostelLogin(role);
+};
+
+window.handleHostelLogin = function(role) {
+    const pass = document.getElementById('loginPass').value.trim();
+    const data = getData();
+
+    let staff = null;
+    if (role === 'hostel_matron') {
+        staff = data.hostel_matron;
+    } else if (role === 'hostel_patron') {
+        staff = data.hostel_patron;
+    }
+
+    if (!staff) {
+        return alert('❌ Staff data not found. Please check initializeData().');
+    }
+
+    if (pass !== staff.password) {
+        return alert('❌ Invalid credentials. Please try again.');
+    }
+
+    const user = { 
+        ...staff, 
+        role: role 
+    };
+
+    sessionStorage.setItem('currentUser', JSON.stringify(user));
+    showDashboard(role, user);
+};
+
+/* ══════════════════════════════════════════
+   HOSTEL PORTAL — Matron & Patron
+══════════════════════════════════════════ */
+function renderHostelPanel(user) {
+    const isMatron = user.role === 'hostel_matron' || user.gender === 'Female';
+    const wing     = isMatron ? 'Female Wing' : 'Male Wing';
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title"><i class="fas fa-home"></i> ${isMatron ? 'Matron' : 'Patron'} Menu</div>
+            <button class="admin-nav-btn active" onclick="hostelSection('residents',this)"><i class="fas fa-users"></i> My Residents</button>
+            <button class="admin-nav-btn" onclick="hostelSection('clearance',this)"><i class="fas fa-check-circle"></i> Clearance</button>
+            <button class="admin-nav-btn" onclick="hostelSection('report',this)"><i class="fas fa-chart-bar"></i> Hostel Report</button>
+        </div>
+        <div class="admin-main" id="hostelMain">
+            ${hostelResidentsHTML(user)}
+        </div>
+    </div>`;
+}
+
+window.hostelSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const map = {
+        residents: () => hostelResidentsHTML(user),
+        clearance: () => hostelClearanceHTML(user),
+        report:    () => hostelReportHTML(user)
+    };
+    document.getElementById('hostelMain').innerHTML = (map[section] || (() => hostelResidentsHTML(user)))();
+};
+
+/* ── Residents ── */
+function hostelResidentsHTML(user) {
+    const data      = getData();
+    const isMatron  = user.role === 'hostel_matron' || user.gender === 'Female';
+    const gender    = isMatron ? 'Female' : 'Male';
+    const residents = (data.hostelResidents || []).filter(r => r.gender === gender);
+
+    const rows = residents.map((r, i) => {
+        const stu      = (data.students || []).find(s => s.id === r.studentId);
+        const cleared  = (data.hostelClearances || []).some(c => c.studentId === r.studentId);
+        return `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;padding:1rem;background:var(--bg-elevated);border-radius:12px;margin-bottom:8px;border-left:4px solid ${cleared?'var(--success)':'var(--border)'};">
+            <div>
+                <strong>${r.studentName}</strong>
+                <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px;">
+                    ${r.studentId} • ${r.room} • ${r.wing}
+                    ${stu ? ` • 📱 ${stu.phone || '—'}` : ''}
+                    ${stu ? ` • ${stu.department || ''}` : ''}
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+                <span class="admin-role-pill" style="${cleared?'background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);':''}">
+                    ${cleared ? '✅ Cleared' : '🏠 Resident'}
+                </span>
+                ${!cleared ? `<button class="admin-action-btn edit" onclick="hostelClearResident('${r.studentId}','${r.studentName}','${r.room}','${gender}')">✅ Mark Cleared</button>` : ''}
+            </div>
+        </div>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">🏠 My Residents — ${gender} Wing (${residents.length})</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                All students in the ${gender.toLowerCase()} wing. Mark a student as cleared once they have vacated their room — the list will be sent to the Dean.
+            </p>
+        </div>
+        <div class="admin-card">
+            ${rows || '<p style="color:var(--text-secondary);">No residents in this wing yet.</p>'}
+        </div>`;
+}
+
+/* ── Clearance ── */
+function hostelClearanceHTML(user) {
+    const data      = getData();
+    const isMatron  = user.role === 'hostel_matron' || user.gender === 'Female';
+    const gender    = isMatron ? 'Female' : 'Male';
+    const myRole    = isMatron ? 'hostel_matron' : 'hostel_patron';
+    const clearances = (data.hostelClearances || []).filter(c => c.gender === gender);
+    const unsent     = clearances.filter(c => !c.sentToDean);
+    const sent       = clearances.filter(c => c.sentToDean);
+
+    return `
+        <div class="admin-section-head">📋 Clearance Management — ${gender} Wing</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Students you mark as cleared appear here. Send the batch to Dean of Students when ready.
+            </p>
+            ${unsent.length > 0 ? `
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="hostelSendClearanceToDean('${gender}','${user.name}','${myRole}')">
+                <i class="fas fa-paper-plane"></i> Send ${unsent.length} Clearance(s) to Dean
+            </button>` : ''}
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">✅ Cleared Students (${clearances.length})</div>
+            ${clearances.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No clearances yet. Go to Residents to mark students.</p>'
+                : clearances.map(c => `
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:0.8rem 0;border-bottom:1px solid var(--border);">
+                    <div>
+                        <strong>${c.studentName}</strong>
+                        <div style="font-size:0.72rem;color:var(--text-secondary);">${c.studentId} • ${c.room} • Cleared: ${c.clearanceDate}</div>
+                    </div>
+                    <span class="admin-role-pill" style="${c.sentToDean?'background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);':'background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);'}">
+                        ${c.sentToDean ? '✅ Sent to Dean' : '⏳ Not sent yet'}
+                    </span>
+                </div>`).join('')}
+        </div>`;
+}
+
+/* ── Hostel Report ── */
+function hostelReportHTML(user) {
+    const data       = getData();
+    const isMatron   = user.role === 'hostel_matron' || user.gender === 'Female';
+    const gender     = isMatron ? 'Female' : 'Male';
+    const residents  = (data.hostelResidents || []).filter(r => r.gender === gender);
+    const clearances = (data.hostelClearances || []).filter(c => c.gender === gender && c.sentToDean);
+    const cleared    = clearances.length;
+    const pending    = residents.length - cleared;
+
+    return `
+        <div class="admin-section-head">📊 Hostel Report — ${gender} Wing</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Clearance Status</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([{value:cleared||0.0001,color:'#10b981'},{value:pending||0.0001,color:'#f59e0b'}])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Cleared ${cleared}</span>&nbsp;
+                    <span style="color:var(--warning);">● Still Resident ${pending}</span>
+                </div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${residents.length}</h3><p>Total Residents</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${cleared}</h3><p>Cleared</p></div>
+            <div class="stat-card"><h3 style="color:var(--warning);">${pending}</h3><p>Still In Hostel</p></div>
+        </div>`;
+}
+
+/* ── Hostel Window Actions ── */
+window.hostelClearResident = function(studentId, studentName, room, gender) {
+    if (!confirm(`Mark ${studentName} (${room}) as cleared from the hostel?`)) return;
+    const data     = getData();
+    const user     = JSON.parse(sessionStorage.getItem('currentUser'));
+    const isMatron = user.role === 'hostel_matron' || user.gender === 'Female';
+    data.hostelClearances = data.hostelClearances || [];
+    if (data.hostelClearances.find(c => c.studentId === studentId)) return alert('⚠️ Already cleared.');
+    data.hostelClearances.push({
+        id: 'HC-'+Date.now(), studentId, studentName, gender,
+        room, clearedBy: user.role || (isMatron ? 'hostel_matron' : 'hostel_patron'),
+        clearedByName: user.name, clearanceDate: new Date().toLocaleDateString('en-CA'),
+        sentToDean: false, timestamp: new Date().toISOString()
+    });
+    saveData(data);
+    alert(`✅ ${studentName} marked as cleared.`);
+    document.getElementById('hostelMain').innerHTML = hostelResidentsHTML(user);
+};
+
+window.hostelSendClearanceToDean = function(gender, senderName, senderRole) {
+    const data       = getData();
+    const unsent     = (data.hostelClearances || []).filter(c => c.gender === gender && !c.sentToDean);
+    if (!unsent.length) return alert('No new clearances to send.');
+    unsent.forEach(c => { c.sentToDean = true; });
+    const names = unsent.map(c => `${c.studentName} (${c.room})`).join(', ');
+    data.deanReceived = data.deanReceived || [];
+    data.deanReceived.push({
+        id: 'DRV-'+Date.now(), from: `Hostel — ${gender === 'Female' ? 'Matron' : 'Patron'}`,
+        fromRole: senderRole, subject: `${gender} Wing Clearance List`,
+        message: `The following ${gender.toLowerCase()} students have been cleared from the hostel: ${names}.`,
+        timestamp: new Date().toISOString(), read: false
+    });
+    saveData(data);
+    alert(`✅ ${unsent.length} clearance(s) sent to Dean of Students.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hostelMain').innerHTML = hostelClearanceHTML(user);
+};
 
  /* ══════════════════════════════════════════
    CLASS TEACHER PORTAL — Full Implementation
@@ -5199,39 +5710,555 @@ function principalPlaceholder(label) {
         </div>`;
 }
 
-/* ══════════════════════════════════════════
-   HOSPITAL PORTAL — Placeholder
-══════════════════════════════════════════ */
 function renderHospitalPanel(user) {
+    const unread = (getData().hospitalVisits || []).filter(v => v.status === 'pending').length;
     return `
     <div class="admin-layout">
         <div class="admin-sidenav">
-            <div class="admin-sidenav-title"><i class="fas fa-hospital"></i> Hospital Menu</div>
-            <button class="admin-nav-btn active" onclick="hospitalSection('overview',this)"><i class="fas fa-tachometer-alt"></i> Overview</button>
-            <button class="admin-nav-btn" onclick="hospitalSection('visits',this)"><i class="fas fa-stethoscope"></i> Patient Visits</button>
-            <button class="admin-nav-btn" onclick="hospitalSection('records',this)"><i class="fas fa-file-medical"></i> Health Records</button>
-            <button class="admin-nav-btn" onclick="hospitalSection('report',this)"><i class="fas fa-chart-bar"></i> Reports</button>
+            <div class="admin-sidenav-title"><i class="fas fa-hospital-alt"></i> Hospital Menu</div>
+            <button class="admin-nav-btn" onclick="hospitalSection('profile',this)"><i class="fas fa-user-md"></i> Profile</button>
+            <button class="admin-nav-btn active" onclick="hospitalSection('received',this)">
+                <i class="fas fa-inbox"></i> Received
+                ${unread > 0 ? `<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${unread}</span>` : ''}
+            </button>
+            <button class="admin-nav-btn" onclick="hospitalSection('records',this)"><i class="fas fa-file-medical"></i> Medical Records</button>
+            <button class="admin-nav-btn" onclick="hospitalSection('billing',this)"><i class="fas fa-coins"></i> Billing → Finance</button>
+            <button class="admin-nav-btn" onclick="hospitalSection('report',this)"><i class="fas fa-chart-bar"></i> Report</button>
         </div>
-        <div class="admin-main" id="hospitalMain">${hospitalPlaceholder('Overview')}</div>
+        <div class="admin-main" id="hospitalMain">
+            ${hospitalReceivedHTML(user)}
+        </div>
     </div>`;
 }
-
+ 
+/* ══════════════════════════════════════════
+   LOGIN — this is the function your login
+   button's HTML MUST call. If your button
+   currently has onclick="handleLogin()",
+   change it to onclick="handleHospitalLogin()"
+   (or add the alias at the bottom of this file).
+══════════════════════════════════════════ */
+window.handleHospitalLogin = function() {
+    const passInput = document.getElementById('loginPass');
+    if (!passInput) {
+        console.error("❌ Login input not found! Check #loginPass ID");
+        return alert("Login field not found. Please refresh.");
+    }
+ 
+    const pass = passInput.value.trim();
+    const data = getData() || {};
+ 
+    console.log("🔍 Debug - Hospital data:", data.hospital); // ← Helpful for debugging
+ 
+    const staff = data.hospital;
+    if (!staff) {
+        console.error("❌ No hospital staff data found in getData()");
+        return alert("Hospital account not configured yet.");
+    }
+ 
+    if (!staff.password) {
+        console.error("❌ Hospital staff record has no password set");
+        return alert("Hospital account is missing a password. Contact system admin.");
+    }
+ 
+    if (pass !== staff.password) {
+        return alert('❌ Invalid credentials. Please try again.');
+    }
+ 
+    const user = { ...staff, role: 'hospital' };
+    sessionStorage.setItem('currentUser', JSON.stringify(user));
+    showDashboard('hospital', user);
+};
+ 
 window.hospitalSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const labels = { overview: 'Overview', visits: 'Patient Visits', records: 'Health Records', report: 'Reports' };
-    document.getElementById('hospitalMain').innerHTML = hospitalPlaceholder(labels[section] || 'Overview');
+    if (btn) btn.classList.add('active');
+    const user = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
+    if (!user) {
+        console.error("❌ No currentUser in sessionStorage — user not logged in");
+        return alert("Session expired. Please log in again.");
+    }
+    const map = {
+        profile:  () => hospitalProfileHTML(user),
+        received: () => hospitalReceivedHTML(user),
+        records:  () => hospitalRecordsHTML(user),
+        billing:  () => hospitalBillingHTML(user),
+        report:   () => hospitalReportHTML(user)
+    };
+    const target = document.getElementById('hospitalMain');
+    if (target) target.innerHTML = (map[section] || (() => hospitalReceivedHTML(user)))();
 };
-
-function hospitalPlaceholder(label) {
+ 
+/* ── Profile ── */
+function hospitalProfileHTML(user) {
+    const data    = getData() || {};
+    const visits  = data.hospitalVisits || [];
+    const records = data.medicalRecords || [];
+    const bills   = data.hospitalBills || [];
     return `
-        <div class="admin-section-head">🏥 ${label}</div>
-        <div class="admin-card">
-            <p style="color:var(--text-secondary);font-size:0.85rem;">
-                This section is reserved for the Hospital portal and is coming soon.
-            </p>
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">
+                <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;flex-shrink:0;">🏥</div>
+                <div>
+                    <h3 style="margin:0;">${user?.name || 'School Nurse'}</h3>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user?.id || 'HOSP-001'}</div>
+                    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                        <span class="admin-role-pill" style="background:rgba(239,68,68,.15);border-color:var(--danger);color:var(--danger);">🏥 School Medical Clinic</span>
+                        <span class="admin-role-pill">PC Kinyanjui TTI</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Office Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">FULL NAME</span><br>${user?.name || 'School Nurse'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">STAFF ID</span><br>${user?.id || 'HOSP-001'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DEPARTMENT</span><br>School Medical Clinic</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">LOCATION</span><br>Block C, Ground Floor</div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3 style="color:var(--warning);">${visits.filter(v=>v.status==='pending').length}</h3><p>Awaiting Attention</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${records.length}</h3><p>Medical Records</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light);">${bills.length}</h3><p>Bills Issued</p></div>
         </div>`;
 }
+ 
+/* ── Received ── */
+function hospitalReceivedHTML(user) {
+    const data    = getData() || {};
+    const visits  = data.hospitalVisits || [];
+    const pending = visits.filter(v => v.status === 'pending');
+    const seen    = visits.filter(v => v.status !== 'pending');
+ 
+    const buildCard = (v, isPending) => {
+        const stu = (data.students || []).find(s => s.id === v.studentId);
+        return `
+        <div style="padding:1rem;background:var(--bg-elevated);border-radius:14px;border-left:4px solid ${isPending?'var(--warning)':'var(--success)'};margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;">
+                <div>
+                    <span class="admin-role-pill" style="${isPending
+                        ?'background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);'
+                        :'background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);'}">
+                        ${isPending ? '⏳ Awaiting Attention' : '✅ Attended'}
+                    </span>
+                    <div style="font-weight:700;margin-top:6px;">${v.studentName}</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">
+                        ${v.studentId} • ${v.department}
+                        ${stu ? ` • 📱 ${stu.phone||'—'}` : ''}
+                    </div>
+                </div>
+                <div style="font-size:0.68rem;color:var(--text-secondary);">${v.requestedAt ? new Date(v.requestedAt).toLocaleString() : '—'}</div>
+            </div>
+            <div style="font-size:0.82rem;margin-top:8px;padding:8px;background:rgba(255,255,255,.03);border-radius:8px;">
+                <strong>Complaint:</strong> ${v.purpose}
+            </div>
+            ${isPending ? `
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="hospitalOpenMedicalForm('${v.id}')">
+                <i class="fas fa-file-medical"></i> Open Medical Form
+            </button>` : ''}
+        </div>`;
+    };
+ 
+    return `
+        <div class="admin-section-head">📥 Received — Student Visit Requests</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Student visit requests arrive here automatically. Click "Open Medical Form" to attend to the student,
+                fill in both sections, and save their record.
+            </p>
+        </div>
+        ${pending.length > 0 ? `
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">⏳ Awaiting Attention (${pending.length})</div>
+            <div style="margin-top:10px;">${pending.map(v => buildCard(v, true)).join('')}</div>
+        </div>` : ''}
+        <div class="admin-card">
+            <div class="admin-card-title">✅ Already Attended (${seen.length})</div>
+            <div style="margin-top:10px;">
+                ${seen.length === 0
+                    ? '<p style="color:var(--text-secondary);font-size:0.85rem;">None yet.</p>'
+                    : seen.map(v => buildCard(v, false)).join('')}
+            </div>
+        </div>`;
+}
+ 
+/* ── Medical Form (full page) ── */
+function hospitalMedicalFormHTML(visitId) {
+    const data  = getData() || {};
+    const visit = (data.hospitalVisits || []).find(v => v.id === visitId);
+    if (!visit) return `<div class="admin-card"><p style="color:var(--danger);">Visit not found.</p></div>`;
+    const stu = (data.students || []).find(s => s.id === visit.studentId);
+ 
+    return `
+        <div class="admin-section-head">📋 Medical Form — ${visit.studentName}</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                <div class="admin-card-title" style="color:var(--danger);">🏥 PC Kinyanjui TTI — School Medical Clinic</div>
+                <button class="admin-btn-secondary" onclick="hospitalBackToReceived()">← Back to Received</button>
+            </div>
+        </div>
+ 
+        <!-- Section 1: Student Details (Confidential) -->
+        <div class="admin-card" style="margin-bottom:1rem;border:2px solid var(--purple);">
+            <div class="admin-card-title" style="color:var(--purple-light);">📋 Section 1 — Student Details & Complaint (Auto-filled)</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:12px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">FULL NAME</span><br><strong>${visit.studentName}</strong></div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">ADMISSION NO</span><br><strong>${visit.studentId}</strong></div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DEPARTMENT</span><br><strong>${visit.department}</strong></div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">PHONE NO</span><br><strong>${stu?.phone || '—'}</strong></div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DATE OF VISIT</span><br><strong>${new Date().toLocaleDateString()}</strong></div>
+            </div>
+            <div style="margin-top:12px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">STUDENT'S COMPLAINT (CONFIDENTIAL — as submitted by student)</label>
+                <div style="margin-top:4px;padding:10px;background:var(--bg-elevated);border-radius:8px;font-size:0.82rem;border:1px solid var(--border);">
+                    ${visit.purpose}
+                </div>
+            </div>
+        </div>
+ 
+        <!-- Section 2: Doctor Section -->
+        <div class="admin-card" style="margin-bottom:1rem;border:2px solid var(--success);">
+            <div class="admin-card-title" style="color:var(--success);">🩺 Section 2 — Doctor's Assessment (Filled by Medical Staff)</div>
+            <div style="display:grid;gap:12px;margin-top:12px;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">DIAGNOSIS</label>
+                    <textarea id="mfDiagnosis" class="admin-input" rows="2" placeholder="Enter clinical diagnosis..." style="margin-top:4px;"></textarea>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">TREATMENT PROVIDED</label>
+                    <textarea id="mfTreatment" class="admin-input" rows="2" placeholder="Describe what treatment was administered..." style="margin-top:4px;"></textarea>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+                    <div>
+                        <label style="font-size:0.7rem;color:var(--text-secondary);">DRUGS / SUPPLEMENTS AVAILABLE?</label>
+                        <select id="mfDrugs" class="admin-input" style="margin-top:4px;">
+                            <option value="yes">✅ Yes — Fully administered here</option>
+                            <option value="partial">⚠️ Partial — Some given, rest prescribed</option>
+                            <option value="no">❌ No — Student to acquire externally</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:0.7rem;color:var(--text-secondary);">REFER TO EXTERNAL HOSPITAL?</label>
+                        <select id="mfReferral" class="admin-input" style="margin-top:4px;" onchange="hospitalToggleReferral(this.value)">
+                            <option value="no">✅ No — Fully treated here</option>
+                            <option value="yes">⚠️ Yes — Needs specialist / external care</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="mfReferralReasonWrap" style="display:none;">
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">REFERRAL HOSPITAL & REASON</label>
+                    <input type="text" id="mfReferralReason" class="admin-input" placeholder="e.g. Kenyatta National Hospital — requires surgical review of fracture" style="margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">DOCTOR'S REMARKS & RECOMMENDATIONS</label>
+                    <textarea id="mfRemarks" class="admin-input" rows="2" placeholder="Rest period, follow-up date, dietary advice, etc..." style="margin-top:4px;"></textarea>
+                </div>
+                <div style="max-width:300px;">
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">TREATMENT COST (KSh) — 0 if no charge</label>
+                    <input type="number" id="mfCost" class="admin-input" placeholder="0" min="0" value="0" style="margin-top:4px;">
+                </div>
+            </div>
+        </div>
+        <button class="admin-btn-primary" style="width:100%;padding:1rem;" onclick="hospitalSubmitMedicalRecord('${visitId}','${visit.studentId}','${visit.studentName}','${visit.department}')">
+            <i class="fas fa-save"></i> Complete & Save Medical Record
+        </button>`;
+}
+ 
+/* Small dedicated helper — replaces the fragile nth-child(3) DOM lookup
+   that pointed at the wrong nav button (was landing on "Medical Records"
+   instead of "Received"). */
+window.hospitalBackToReceived = function() {
+    const navBtns = document.querySelectorAll('.admin-nav-btn');
+    // Received is the 2nd button: Profile(1), Received(2), Records(3), Billing(4), Report(5)
+    const receivedBtn = navBtns[1] || null;
+    hospitalSection('received', receivedBtn);
+};
+ 
+/* ── Medical Records ── */
+function hospitalRecordsHTML(user) {
+    const data    = getData() || {};
+    const records = data.medicalRecords || [];
+ 
+    return `
+        <div class="admin-section-head">📂 Medical Records (${records.length})</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                All completed medical forms. Each record is confidential and tied to the student's admission number.
+                Use "Create Bill" to send treatment costs to Finance.
+            </p>
+        </div>
+        <div class="admin-card">
+            ${records.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No records yet. Attend to students from the Received section.</p>'
+                : records.slice().reverse().map(r => `
+                <div style="padding:1rem;background:var(--bg-elevated);border-radius:14px;border-left:4px solid ${r.referral?'var(--danger)':'var(--success)'};margin-bottom:10px;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;">
+                        <div>
+                            <strong>${r.studentName}</strong>
+                            <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px;">
+                                ${r.studentId} • ${r.department} • 📱 ${r.phone||'—'}
+                            </div>
+                        </div>
+                        <div style="font-size:0.68rem;color:var(--text-secondary);">${r.recordedAt ? new Date(r.recordedAt).toLocaleDateString() : '—'}</div>
+                    </div>
+                    <div style="display:grid;gap:4px;margin-top:10px;font-size:0.8rem;">
+                        <div><strong>Complaint:</strong> <em style="color:var(--text-secondary);">${r.complaint}</em></div>
+                        <div><strong>Diagnosis:</strong> ${r.diagnosis}</div>
+                        <div><strong>Treatment:</strong> ${r.treatment}</div>
+                        <div><strong>Drugs/Supplements:</strong> ${r.drugsAvailable==='yes'?'✅ Administered here':r.drugsAvailable==='partial'?'⚠️ Partial — rest prescribed':'❌ Student to acquire externally'}</div>
+                        ${r.referral ? `<div style="color:var(--danger);"><strong>🚨 Referred:</strong> ${r.referralReason}</div>` : '<div style="color:var(--success);">✅ Fully treated on-site</div>'}
+                        <div><strong>Doctor Remarks:</strong> ${r.doctorRemarks}</div>
+                        <div><strong>Treatment Cost:</strong> <span style="color:var(--success);font-weight:700;">KSh ${(r.cost||0).toLocaleString()}</span></div>
+                    </div>
+                    <div style="margin-top:10px;">
+                        ${r.billedToFinance
+                            ? `<span class="admin-role-pill" style="background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">💰 Bill sent to Finance</span>`
+                            : r.cost > 0
+                                ? `<button class="admin-action-btn edit" onclick="hospitalCreateBill('${r.id}','${r.studentId}','${r.studentName}','${r.department}',${r.cost},'${r.diagnosis}')">💰 Create Bill → Finance</button>`
+                                : `<span class="admin-role-pill">No charge</span>`}
+                    </div>
+                </div>`).join('')}
+        </div>`;
+}
+ 
+/* ── Billing ── */
+function hospitalBillingHTML(user) {
+    const data   = getData() || {};
+    const bills  = data.hospitalBills || [];
+    const unsent = bills.filter(b => !b.sentToFinance);
+    const sent   = bills.filter(b => b.sentToFinance);
+    const total  = bills.reduce((s,b) => s+(b.amount||0), 0);
+ 
+    return `
+        <div class="admin-section-head">💰 Billing → Finance</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Bills created from medical records. Once sent, Finance receives them in their inbox and adds the amount to the student's fee account.
+            </p>
+            ${unsent.length > 0 ? `
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="hospitalSendAllBillsToFinance()">
+                <i class="fas fa-paper-plane"></i> Send All ${unsent.length} Pending Bill(s) to Finance
+            </button>` : ''}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:1rem;">
+            <div class="stat-card"><h3>${bills.length}</h3><p>Total Bills</p></div>
+            <div class="stat-card"><h3 style="color:var(--warning);">${unsent.length}</h3><p>Pending</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${sent.length}</h3><p>Sent to Finance</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light);">KSh ${total.toLocaleString()}</h3><p>Total Billed</p></div>
+        </div>
+        ${unsent.length > 0 ? `
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">⏳ Pending Bills (${unsent.length})</div>
+            ${unsent.map(b => `
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:1rem;background:var(--bg-elevated);border-radius:12px;margin-top:10px;border-left:4px solid var(--warning);">
+                <div>
+                    <strong>${b.studentName}</strong>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${b.studentId} • ${b.department}</div>
+                    <div style="font-size:0.78rem;margin-top:4px;color:var(--text-secondary);">${b.description}</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:1.15rem;font-weight:800;color:var(--success);">KSh ${(b.amount||0).toLocaleString()}</div>
+                    <button class="admin-action-btn edit" style="margin-top:6px;" onclick="hospitalSendSingleBill('${b.id}')">
+                        <i class="fas fa-paper-plane"></i> Send
+                    </button>
+                </div>
+            </div>`).join('')}
+        </div>` : ''}
+        <div class="admin-card">
+            <div class="admin-card-title">✅ Sent to Finance (${sent.length})</div>
+            ${sent.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">None sent yet.</p>'
+                : sent.map(b => `
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:0.75rem 0;border-bottom:1px solid var(--border);">
+                    <div>
+                        <strong>${b.studentName}</strong>
+                        <div style="font-size:0.7rem;color:var(--text-secondary);">${b.studentId} • ${b.description}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-weight:700;color:var(--success);">KSh ${(b.amount||0).toLocaleString()}</div>
+                        <span class="admin-role-pill" style="background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">✅ Received by Finance</span>
+                    </div>
+                </div>`).join('')}
+        </div>`;
+}
+ 
+/* ── Report ── */
+function hospitalReportHTML(user) {
+    const data    = getData() || {};
+    const visits  = data.hospitalVisits || [];
+    const records = data.medicalRecords || [];
+    const bills   = data.hospitalBills || [];
+ 
+    const pending    = visits.filter(v => v.status === 'pending').length;
+    const seen       = visits.filter(v => v.status !== 'pending').length;
+    const referred   = records.filter(r => r.referral).length;
+    const treatedHere = records.filter(r => !r.referral).length;
+    const totalBilled = bills.reduce((s,b) => s+(b.amount||0), 0);
+ 
+    const visitBars = records.map(r => ({
+        label: (r.studentName || '?').split(' ')[0],
+        value: r.cost || 0,
+        color: r.referral ? '#ef4444' : '#10b981'
+    }));
+ 
+    return `
+        <div class="admin-section-head">📊 Hospital Report</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Treatment Cost by Student</div>
+            <div style="overflow-x:auto;margin-top:10px;">
+                ${svgBarChart(visitBars.length ? visitBars : [{label:'No data',value:0,color:'#3a2d6e'}])}
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Visit Status</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([{value:seen||0.0001,color:'#10b981'},{value:pending||0.0001,color:'#f59e0b'}])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Attended ${seen}</span>&nbsp;
+                    <span style="color:var(--warning);">● Pending ${pending}</span>
+                </div>
+            </div>
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Treatment Outcome</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([{value:treatedHere||0.0001,color:'#10b981'},{value:referred||0.0001,color:'#ef4444'}])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Treated here ${treatedHere}</span>&nbsp;
+                    <span style="color:var(--danger);">● Referred ${referred}</span>
+                </div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${visits.length}</h3><p>Total Requests</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${records.length}</h3><p>Records Created</p></div>
+            <div class="stat-card"><h3 style="color:var(--danger);">${referred}</h3><p>Referred Out</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light);">${bills.length}</h3><p>Bills Issued</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">KSh ${totalBilled.toLocaleString()}</h3><p>Total Billed</p></div>
+        </div>`;
+}
+ 
+/* ── Hospital Window Actions ── */
+window.hospitalOpenMedicalForm = function(visitId) {
+    const target = document.getElementById('hospitalMain');
+    if (target) target.innerHTML = hospitalMedicalFormHTML(visitId);
+};
+ 
+window.hospitalToggleReferral = function(val) {
+    const wrap = document.getElementById('mfReferralReasonWrap');
+    if (wrap) wrap.style.display = val === 'yes' ? 'block' : 'none';
+};
+ 
+window.hospitalSubmitMedicalRecord = function(visitId, studentId, studentName, department) {
+    const diagnosis = document.getElementById('mfDiagnosis')?.value.trim();
+    const treatment = document.getElementById('mfTreatment')?.value.trim();
+    const drugs     = document.getElementById('mfDrugs')?.value;
+    const referral  = document.getElementById('mfReferral')?.value === 'yes';
+    const refReason = document.getElementById('mfReferralReason')?.value.trim();
+    const remarks   = document.getElementById('mfRemarks')?.value.trim();
+    const cost      = parseFloat(document.getElementById('mfCost')?.value) || 0;
+    if (!diagnosis || !treatment) return alert('Please fill in Diagnosis and Treatment fields.');
+    const data = getData() || {};
+    const stu  = (data.students || []).find(s => s.id === studentId);
+    data.medicalRecords = data.medicalRecords || [];
+    data.medicalRecords.push({
+        id: 'MR-'+Date.now(), visitId, studentId, studentName, department,
+        phone: stu?.phone || null,
+        complaint: (data.hospitalVisits||[]).find(v=>v.id===visitId)?.purpose || '',
+        diagnosis, treatment, drugsAvailable: drugs,
+        referral, referralReason: refReason || null,
+        doctorRemarks: remarks, cost, billedToFinance: false,
+        recordedAt: new Date().toISOString()
+    });
+    const visit = (data.hospitalVisits||[]).find(v => v.id === visitId);
+    if (visit) visit.status = 'seen';
+    saveData(data);
+    alert(`✅ Medical record for ${studentName} saved successfully.${cost > 0 ? ' Go to Medical Records to create a bill.' : ''}`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
+    const target = document.getElementById('hospitalMain');
+    if (target) target.innerHTML = hospitalRecordsHTML(user);
+};
+ 
+window.hospitalCreateBill = function(recordId, studentId, studentName, department, cost, diagnosis) {
+    if (!confirm(`Create a bill for ${studentName}?\n\nAmount: KSh ${Number(cost).toLocaleString()}\nFor: ${diagnosis}`)) return;
+    const data = getData() || {};
+    data.hospitalBills = data.hospitalBills || [];
+    data.hospitalBills.push({
+        id: 'HB-'+Date.now(), recordId, studentId, studentName, department,
+        amount: Number(cost),
+        description: `Medical treatment — ${diagnosis}`,
+        sentToFinance: false,
+        timestamp: new Date().toISOString()
+    });
+    const record = (data.medicalRecords||[]).find(r => r.id === recordId);
+    if (record) record.billedToFinance = true;
+    saveData(data);
+    alert('✅ Bill created! Go to Billing to send it to Finance.');
+    const user = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
+    const target = document.getElementById('hospitalMain');
+    if (target) target.innerHTML = hospitalBillingHTML(user);
+};
+ 
+window.hospitalSendSingleBill = function(billId) {
+    const data = getData() || {};
+    const bill = (data.hospitalBills||[]).find(b => b.id === billId);
+    if (!bill) return;
+    bill.sentToFinance = true;
+    data.financeReceived = data.financeReceived || [];
+    data.financeReceived.push({
+        id: 'FIN-'+Date.now(),
+        from: 'Hospital', fromRole: 'hospital',
+        subject: `Medical Bill — ${bill.studentName}`,
+        message: `Student: ${bill.studentName} (${bill.studentId}), Department: ${bill.department}. Treatment cost: KSh ${bill.amount.toLocaleString()}. ${bill.description}. Please add to student fee account.`,
+        amount: bill.amount, studentId: bill.studentId, studentName: bill.studentName,
+        timestamp: new Date().toISOString(), read: false, addedToFees: false
+    });
+    saveData(data);
+    alert(`✅ Bill for ${bill.studentName} (KSh ${bill.amount.toLocaleString()}) sent to Finance.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
+    const target = document.getElementById('hospitalMain');
+    if (target) target.innerHTML = hospitalBillingHTML(user);
+};
+ 
+window.hospitalSendAllBillsToFinance = function() {
+    const data   = getData() || {};
+    const unsent = (data.hospitalBills||[]).filter(b => !b.sentToFinance);
+    if (!unsent.length) return;
+    data.financeReceived = data.financeReceived || [];
+    unsent.forEach(b => {
+        b.sentToFinance = true;
+        data.financeReceived.push({
+            id: 'FIN-'+Date.now(),
+            from: 'Hospital', fromRole: 'hospital',
+            subject: `Medical Bill — ${b.studentName}`,
+            message: `Student: ${b.studentName} (${b.studentId}), Department: ${b.department}. Treatment cost: KSh ${b.amount.toLocaleString()}. ${b.description}. Please add to student fee account.`,
+            amount: b.amount, studentId: b.studentId, studentName: b.studentName,
+            timestamp: new Date().toISOString(), read: false, addedToFees: false
+        });
+    });
+    saveData(data);
+    alert(`✅ ${unsent.length} bill(s) sent to Finance successfully.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
+    const target = document.getElementById('hospitalMain');
+    if (target) target.innerHTML = hospitalBillingHTML(user);
+};
+ 
+/* ══════════════════════════════════════════
+   OPTIONAL SAFETY NET
+   If your login <button> in the HTML calls
+   handleLogin() (generic name) instead of
+   handleHospitalLogin(), uncomment this alias
+   so it won't crash while you update the HTML:
+ 
+   window.handleLogin = window.handleLogin || window.handleHospitalLogin;
+══════════════════════════════════════════ */
+ 
+
 
 /* ══════════════════════════════════════════
    LIBRARY PORTAL — Placeholder
@@ -5283,6 +6310,7 @@ function renderStudentPanel(user) {
             <button class="admin-nav-btn" onclick="studentSection('fee',this)"><i class="fas fa-wallet"></i> Fee Statement</button>
             <button class="admin-nav-btn" onclick="studentSection('results',this)"><i class="fas fa-graduation-cap"></i> Results</button>
             <button class="admin-nav-btn" onclick="studentSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
+            <button class="admin-nav-btn" onclick="studentSection('hospital',this)"><i class="fas fa-hospital"></i> Hospital</button>
             <button class="admin-nav-btn" onclick="studentSection('report',this)"><i class="fas fa-chart-bar"></i> Report</button>
         </div>
         <div class="admin-main" id="studentMain">
@@ -5303,7 +6331,8 @@ window.studentSection = function(section, btn) {
         fee:        () => studentFeeStatementHTML(user),
         results:    () => studentResultsHTML(user),
         profile:    () => studentProfileHTML(user),
-        report:     () => studentReportHTML(user),
+        hospital:   () => studentHospitalHTML(user),
+        report:     () => studentReportHTML(user), 
     };
     document.getElementById('studentMain').innerHTML = (map[section] || (() => studentIDRequestHTML(user)))();
 };
@@ -6934,6 +7963,49 @@ window.handleSportSubLogin = function() {
     }
 };
 
+function renderAdminPanel() {
+    return `
+    <div class="admin-layout">
+ 
+        <!-- MINI SIDEBAR NAV -->
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title">Admin Menu</div>
+            <button class="admin-nav-btn active" onclick="adminSection('users',this)">
+                <i class="fas fa-users-cog"></i> User Management
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('principals',this)">
+                <i class="fas fa-landmark"></i> Principals
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('departments',this)">
+                <i class="fas fa-building"></i> Departments
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('courses',this)">
+                <i class="fas fa-book"></i> Courses
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('announce',this)">
+                <i class="fas fa-bullhorn"></i> Announcements
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('idcards',this)">
+                <i class="fas fa-id-card"></i> ID Cards
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('logs',this)">
+                <i class="fas fa-list-alt"></i> System Logs
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('backup',this)">
+                <i class="fas fa-database"></i> Backup / Restore
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('export',this)">
+                <i class="fas fa-file-export"></i> Export Data
+            </button>
+        </div>
+ 
+        <!-- MAIN CONTENT AREA -->
+        <div class="admin-main" id="adminMain">
+            ${adminUsersHTML()}
+        </div>
+    </div>`;
+}
+
 /* ══════════════════════════════════════════
    SECTION 1 — USER MANAGEMENT
 ══════════════════════════════════════════ */
@@ -6981,6 +8053,14 @@ function adminUsersHTML() {
                     <option value="hod">H.O.D</option>
                     <option value="deo">D.E.O</option>
                     <option value="finance">Finance</option>
+                    <option value="deputy_acad">Deputy (Acad)</option>
+                    <option value="deputy_infra">Deputy (Infra)</option>
+                    <option value="examoffice">Exam Office</option>
+                    <option value="dean">Dean</option>
+                    <option value="sportsadmin">Sports Admin</option>
+                    <option value="sportleader">Student Sport Leader</option>
+                    <option value="hospital">hospital</option>
+                    <option value="library">library</option>
                 </select>
                 <input id="newUserName"  class="admin-input" placeholder="Full Name">
                 <input id="newUserDept"  class="admin-input" placeholder="Department">
@@ -7894,8 +8974,64 @@ function initMagazineNav() {
     });
 }
 
+// ==================== DATA MIGRATION ====================
+function migrateData() {
+    const raw = localStorage.getItem('pck_institute_v3');
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    let changed = false;
+
+    const defaults = {
+        hospital:      { id: 'HOSP-001', name: 'School Nurse', password: 'hospital123' },
+        hostel_matron: { id: 'MATRON-001', name: 'Mrs. Grace Njeri', wing: 'Female Wing', gender: 'Female', password: 'matron123' },
+        hostel_patron: { id: 'PATRON-001', name: 'Mr. James Kamau', wing: 'Male Wing', gender: 'Male', password: 'patron123' },
+        principal:     { id: 'PRINCIPAL-001', name: 'Dr. Elizabeth Wanjiku', password: 'principal123' },
+        library:       { id: 'LIB-001', name: 'Librarian', password: 'library123' }
+    };
+
+    Object.entries(defaults).forEach(([key, val]) => {
+        if (!data[key]) { data[key] = val; changed = true; }
+    });
+
+    if (!data.hospitalVisits)    { data.hospitalVisits    = []; changed = true; }
+    if (!data.medicalRecords)    { data.medicalRecords     = []; changed = true; }
+    if (!data.hospitalBills)     { data.hospitalBills      = []; changed = true; }
+    if (!data.hostelResidents)   { data.hostelResidents    = [
+        { id:'HR-001', studentId:'STU-2026-20670', studentName:'Sarah Achieng',  gender:'Female', room:'Room 14B', wing:'Female Wing', admittedDate:'2024-01-10', status:'resident', clearedForExit:false },
+        { id:'HR-002', studentId:'STU-2026-20674', studentName:'Faith Kamau',    gender:'Female', room:'Room 22A', wing:'Female Wing', admittedDate:'2024-01-10', status:'resident', clearedForExit:false },
+        { id:'HR-003', studentId:'STU-2026-20673', studentName:'Peter Njoroge',  gender:'Male',   room:'Room 8C',  wing:'Male Wing',   admittedDate:'2024-01-10', status:'resident', clearedForExit:false },
+        { id:'HR-004', studentId:'STU-2026-20675', studentName:'Kevin Oduya',    gender:'Male',   room:'Room 12A', wing:'Male Wing',   admittedDate:'2024-01-10', status:'resident', clearedForExit:false }
+    ]; changed = true; }
+    if (!data.hostelClearances)  { data.hostelClearances   = []; changed = true; }
+    if (!data.disciplineRecords) { data.disciplineRecords  = []; changed = true; }
+    if (!data.deanReceived)      { data.deanReceived        = []; changed = true; }
+    if (!data.sysAdminReceived)  { data.sysAdminReceived    = []; changed = true; }
+    if (!data.financeReceived)   { data.financeReceived     = []; changed = true; }
+    if (!data.departmentStaff)   { data.departmentStaff     = {}; changed = true; }
+    if (!data.hodDecisions)      { data.hodDecisions         = []; changed = true; }
+    if (!data.deputyFeeFlags)    { data.deputyFeeFlags       = []; changed = true; }
+    if (!data.attendanceRecords) { data.attendanceRecords    = []; changed = true; }
+    if (!data.lecturerMaterials) { data.lecturerMaterials    = []; changed = true; }
+    if (!data.studentReports)    { data.studentReports       = []; changed = true; }
+    if (!data.classRepIssues)    { data.classRepIssues       = []; changed = true; }
+    if (!data.classNotices)      { data.classNotices         = []; changed = true; }
+    if (!data.idRequests)        { data.idRequests            = []; changed = true; }
+    if (!data.attendanceConfirmations) { data.attendanceConfirmations = []; changed = true; }
+    if (!data.timetables)        { data.timetables            = []; changed = true; }
+    if (!data.lecturerUnits)     { data.lecturerUnits         = [
+        { id:'LU-001', code:'CS101', name:'Computer Essentials',          level:5, department:'Computer Studies', lecturerId:'LEC-2026-001', semester:'March/April 2026', description:'Introduction to computers and digital literacy' },
+        { id:'LU-002', code:'CS102', name:'Computer Operations',          level:5, department:'Computer Studies', lecturerId:'LEC-2026-001', semester:'March/April 2026', description:'Practical computer operations and software use' }
+    ]; changed = true; }
+
+    if (changed) {
+        localStorage.setItem('pck_institute_v3', JSON.stringify(data));
+        console.log('✅ Data migration complete — missing keys added without wiping existing data.');
+    }
+}
+
 // ==================== INIT ====================
 function init() {
+    migrateData();
     initializeData();
     renderPrincipals();
     renderTourNav();
@@ -7903,6 +9039,7 @@ function init() {
     populateInfraSelect();
     renderCBET();
     initMagazineNav();
+
 
     // Restore saved theme
 
