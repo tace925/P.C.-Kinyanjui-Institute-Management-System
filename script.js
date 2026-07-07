@@ -791,9 +791,7 @@ const loginTitles = {
     hospital:       '🏥 Hospital Login',
     library:        '📚 Library Login',
     hostel_matron:  '👩 Matron Login — Female Wing',
-    hostel_patron:  '👨 Patron Login — Male Wing',
-    admin:          '🔐 System Admin Login',
-    mess:           '🍽️ Mess/Canteen Login'
+  
 
 };
 
@@ -822,90 +820,118 @@ function showLoginForm(role) {
 }
 
 function handleLogin() {
-    if (!selectedRole) return;   // ← add this guard at the very top
+    if (!selectedRole) return;   // Guard at the very top
+
     const data = getData();
     const role = selectedRole;
     const id   = document.getElementById('loginId')?.value?.trim();
     const pass = document.getElementById('loginPass')?.value?.trim();
-    let user   = null;
+
+    let user = null;
 
     switch (role) {
+        // Array-based users (require ID + password)
         case 'student':
             user = data.students.find(s => s.id === id && s.passcode === pass);
             break;
+
         case 'classrep':
             user = data.classReps.find(r => r.id === id && r.passcode === pass);
             break;
+
         case 'lecturer':
             user = data.lecturers.find(l => l.id === id && l.password === pass);
             break;
+
         case 'classteacher':
             user = data.classTeachers.find(t => t.id === id && t.password === pass);
             break;
+
         case 'hod':
             user = data.hods.find(h => h.id === id && h.password === pass);
             break;
+
         case 'deo':
             user = data.deos.find(d => d.id === id && d.password === pass);
             break;
+
         case 'finance':
             user = data.finance.find(f => f.id === id && f.password === pass);
             break;
+
+        // Single-object users (password only)
         case 'deputy_acad':
-            if (pass === data.deputyAcad.password) user = data.deputyAcad;
+            if (data.deputyAcad && pass === data.deputyAcad.password) {
+                user = data.deputyAcad;
+            }
             break;
+
         case 'deputy_infra':
-            if (pass === data.deputyInfra.password) user = data.deputyInfra;
+            if (data.deputyInfra && pass === data.deputyInfra.password) {
+                user = data.deputyInfra;
+            }
             break;
+
         case 'examoffice':
-            if (pass === data.examOffice.password) user = data.examOffice;
+            if (data.examOffice && pass === data.examOffice.password) {
+                user = data.examOffice;
+            }
             break;
+
         case 'dean':
-            if (pass === data.dean.password) user = data.dean;
+            if (data.dean && pass === data.dean.password) {
+                user = data.dean;
+            }
             break;
+
         case 'principal':
-            if (pass === data.principal.password) user = data.principal;
+            if (data.principal && pass === data.principal.password) {
+                user = data.principal;
+            }
             break;
+
         case 'hospital':
-    if (data.hospital && pass === data.hospital.password) user = data.hospital;
-    break;
-case 'library':
-    if (data.library && pass === data.library.password) user = data.library;
-    break;
-case 'hostel_matron':
-    if (data.hostel_matron && pass === data.hostel_matron.password) user = data.hostel_matron;
-    break;
-case 'hostel_patron':
-    if (data.hostel_patron && pass === data.hostel_patron.password) user = data.hostel_patron;
-    break;
-case 'deputy_acad':
-    if (data.deputyAcad && pass === data.deputyAcad.password) user = data.deputyAcad;
-    break;
-case 'deputy_infra':
-    if (data.deputyInfra && pass === data.deputyInfra.password) user = data.deputyInfra;
-    break;
-case 'examoffice':
-    if (data.examOffice && pass === data.examOffice.password) user = data.examOffice;
-    break;
-case 'dean':
-    if (data.dean && pass === data.dean.password) user = data.dean;
-    break;
-case 'principal':
-    if (data.principal && pass === data.principal.password) user = data.principal;
-    break;
-case 'admin':
-    if (data.admin && pass === data.admin.password) user = { role: 'admin', name: 'System Admin' };
-    break;
-    case 'mess':
-    if (pass === 'mess-4321') {
-        user = { id: 'MESS-001', name: 'Mess Supervisor', role: 'mess' };
-    }
-    break;
+            if (data.hospital && pass === data.hospital.password) {
+                user = data.hospital;
+            }
+            break;
+
+        case 'library':
+            if (data.library && pass === data.library.password) {
+                user = data.library;
+            }
+            break;
+
+        case 'hostel_matron':
+            if (data.hostel_matron && pass === data.hostel_matron.password) {
+                user = data.hostel_matron;
+            }
+            break;
+
+        case 'hostel_patron':
+            if (data.hostel_patron && pass === data.hostel_patron.password) {
+                user = data.hostel_patron;
+            }
+            break;
+
+        case 'mess':
+            // Support both data-driven password and hardcoded fallback
+            if (pass === data.mess?.password || pass === 'mess-4321') {
+                user = data.mess || { id: 'MESS-001', name: 'Mess Supervisor', role: 'mess' };
+            }
+            break;
+
+        case 'admin':
+            if (data.admin && pass === data.admin.password) {
+                user = { role: 'admin', name: 'System Admin' };
+            }
+            break;
+
         default:
             alert('Unknown role. Please try again.');
             return;
     }
-
+    
     if (user) {
         sessionStorage.setItem('currentUser', JSON.stringify({ role, ...user }));
         showDashboard(role, user);
@@ -3918,16 +3944,21 @@ window.deanResolveComplaint = function(id) {
     document.getElementById('deanMain').innerHTML = deanComplaintsHTML(user);
 };
 
-// ==================== MESS DEPARTMENT ====================
-function showMessDashboard() {
-    const user = { id: 'MESS-001', name: 'Mess Supervisor', role: 'mess' };
-    sessionStorage.setItem('currentUser', JSON.stringify(user));
+/* ══════════════════════════════════════════
+   MESS DEPARTMENT PORTAL
+══════════════════════════════════════════ */
+function getTodayMenu() {
+    const today = new Date().toLocaleDateString('en-CA');
+    return (getData().dailyMenus || []).find(m => m.date === today) || null;
+}
 
-    document.getElementById('schoolInfoPanel').style.display = 'none';
-    document.getElementById('loginFormContainer').style.display = 'none';
-    document.getElementById('dashboardContainer').style.display = 'block';
-
-    document.getElementById('dashboardContent').innerHTML = renderMessPanel(user);
+function messSessionIsOpen(session) {
+    const menu = getTodayMenu();
+    if (!menu || !menu[session]?.isSet) return false;
+    const closeTimes = { morning:'07:30', afternoon:'12:00', evening:'18:30' };
+    const [h, m] = closeTimes[session].split(':').map(Number);
+    const close = new Date(); close.setHours(h, m, 0, 0);
+    return new Date() < close;
 }
 
 function renderMessPanel(user) {
@@ -3935,243 +3966,484 @@ function renderMessPanel(user) {
     <div class="admin-layout">
         <div class="admin-sidenav">
             <div class="admin-sidenav-title"><i class="fas fa-utensils"></i> Mess Menu</div>
-            <button class="admin-nav-btn active" onclick="messSection('menu',this)"><i class="fas fa-list"></i> Categories & Menu</button>
-            <button class="admin-nav-btn" onclick="messSection('orders',this)"><i class="fas fa-clipboard-list"></i> Orders Received</button>
-            <button class="admin-nav-btn" onclick="messSection('boarders',this)"><i class="fas fa-user-friends"></i> Boarders List</button>
-            <button class="admin-nav-btn" onclick="messSection('window',this)"><i class="fas fa-door-open"></i> Window Control</button>
-            <button class="admin-nav-btn" onclick="messSection('complaints',this)"><i class="fas fa-exclamation-triangle"></i> Complaint to Dean</button>
+            <button class="admin-nav-btn" onclick="messSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
+            <button class="admin-nav-btn active" onclick="messSection('setmenu',this)"><i class="fas fa-clipboard-list"></i> Set Menu</button>
+            <button class="admin-nav-btn" onclick="messSection('orders',this)"><i class="fas fa-list-check"></i> Orders & Marking</button>
+            <button class="admin-nav-btn" onclick="messSection('summary',this)"><i class="fas fa-calculator"></i> Kitchen Summary</button>
+            <button class="admin-nav-btn" onclick="messSection('complaints',this)"><i class="fas fa-exclamation-triangle"></i> Complaints</button>
+            <button class="admin-nav-btn" onclick="messSection('report',this)"><i class="fas fa-chart-bar"></i> Report</button>
         </div>
-        <div class="admin-main" id="messMain">${messMenuHTML()}</div>
+        <div class="admin-main" id="messMain">
+            ${messSetMenuHTML(user)}
+        </div>
     </div>`;
 }
 
 window.messSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
     const map = {
-        menu: messMenuHTML, orders: messOrdersHTML, boarders: messBoardersHTML,
-        window: messWindowHTML, complaints: messComplaintsHTML
+        profile:    () => messProfileHTML(user),
+        setmenu:    () => messSetMenuHTML(user),
+        orders:     () => messOrdersHTML(user, 'morning'),
+        summary:    () => messKitchenSummaryHTML(user),
+        complaints: () => messComplaintsHTML(user),
+        report:     () => messReportHTML(user)
     };
-    document.getElementById('messMain').innerHTML = (map[section] || messMenuHTML)();
+    document.getElementById('messMain').innerHTML = (map[section] || (() => messSetMenuHTML(user)))();
 };
 
-/* ── Categories & Menu ── */
-function messMenuHTML() {
+/* ── Profile ── */
+function messProfileHTML(user) {
     const data = getData();
-    const cats = data.mealCategories || [];
-    const bySession = s => cats.filter(c => c.session === s);
-
-    const renderSession = (session, label, icon) => `
-        <div class="admin-card" style="margin-bottom:1rem;">
-            <div class="admin-card-title">${icon} ${label}</div>
-            ${bySession(session).map(cat => `
-                <div style="margin-top:10px;padding:0.8rem;background:var(--bg-elevated);border-radius:12px;">
-                    <div style="display:flex;justify-content:space-between;">
-                        <strong>${cat.name}</strong>
-                        <button class="admin-action-btn danger" onclick="messDeleteCategory('${cat.id}')">🗑 Remove Category</button>
-                    </div>
-                    <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;">
-                        ${cat.meals.map(m => `
-                            <span class="admin-role-pill">${m.name}
-                                <span onclick="messDeleteMeal('${cat.id}','${m.id}')" style="cursor:pointer;color:var(--danger);margin-left:6px;">✕</span>
-                            </span>`).join('')}
-                    </div>
-                    <div style="display:flex;gap:6px;margin-top:8px;">
-                        <input id="newMeal_${cat.id}" class="admin-input" placeholder="Add meal (e.g. Sausages)" style="flex:1;">
-                        <button class="admin-action-btn edit" onclick="messAddMeal('${cat.id}')">Add</button>
-                    </div>
-                </div>`).join('') || '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No categories yet for this session.</p>'}
-            <div style="display:flex;gap:6px;margin-top:10px;">
-                <input id="newCat_${session}" class="admin-input" placeholder="New category name (e.g. Vegetables)" style="flex:1;">
-                <button class="admin-btn-primary" onclick="messAddCategory('${session}')">+ Category</button>
-            </div>
-        </div>`;
-
-    return `
-        <div class="admin-section-head">📋 Categories & Menu</div>
-        ${renderSession('morning', 'Morning (6:00–8:00 AM)', '🌅')}
-        ${renderSession('afternoon', 'Afternoon (12:00–1:30 PM)', '☀️')}
-        ${renderSession('evening', 'Evening (6:00–8:00 PM)', '🌙')}`;
-}
-
-window.messAddCategory = function(session) {
-    const input = document.getElementById(`newCat_${session}`);
-    const name  = input.value.trim();
-    if (!name) return alert('Enter a category name.');
-    const data = getData();
-    data.mealCategories.push({ id: 'MC-' + Date.now(), session, name, meals: [] });
-    saveData(data);
-    document.getElementById('messMain').innerHTML = messMenuHTML();
-};
-
-window.messDeleteCategory = function(catId) {
-    if (!confirm('Remove this category and all its meals?')) return;
-    const data = getData();
-    data.mealCategories = data.mealCategories.filter(c => c.id !== catId);
-    saveData(data);
-    document.getElementById('messMain').innerHTML = messMenuHTML();
-};
-
-window.messAddMeal = function(catId) {
-    const input = document.getElementById(`newMeal_${catId}`);
-    const name  = input.value.trim();
-    if (!name) return alert('Enter a meal name.');
-    const data = getData();
-    const cat = data.mealCategories.find(c => c.id === catId);
-    cat.meals.push({ id: 'M-' + Date.now(), name });
-    saveData(data);
-    document.getElementById('messMain').innerHTML = messMenuHTML();
-};
-
-window.messDeleteMeal = function(catId, mealId) {
-    const data = getData();
-    const cat = data.mealCategories.find(c => c.id === catId);
-    cat.meals = cat.meals.filter(m => m.id !== mealId);
-    saveData(data);
-    document.getElementById('messMain').innerHTML = messMenuHTML();
-};
-
-/* ── Orders Received ── */
-function messOrdersHTML() {
-    const data = getData();
-    const orders = (data.mealOrders || []).slice().reverse();
     const today = new Date().toLocaleDateString('en-CA');
-    const todayOrders = orders.filter(o => o.date === today);
-
-    // Tally counts per meal for prep planning
-    const tally = {};
-    todayOrders.forEach(o => Object.values(o.selections).forEach(mealName => {
-        tally[mealName] = (tally[mealName] || 0) + 1;
-    }));
-
+    const todayOrders = (data.messOrders || []).filter(o => o.date === today);
+    const activated = (data.messActivatedStudents || []).length;
     return `
-        <div class="admin-section-head">📥 Orders Received — Today (${todayOrders.length})</div>
+        <div class="admin-section-head">👤 Mess Department Profile</div>
         <div class="admin-card" style="margin-bottom:1rem;">
-            <div class="admin-card-title">Prep Tally</div>
-            ${Object.keys(tally).length === 0 ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No orders today yet.</p>' :
-            Object.entries(tally).map(([meal, count]) => `
-                <div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
-                    <span>${meal}</span><strong style="color:var(--purple-light);">${count}</strong>
-                </div>`).join('')}
-        </div>
-        <div class="admin-card">
-            <div class="admin-card-title">Individual Orders (${orders.length} total)</div>
-            ${orders.length === 0 ? '<p style="color:var(--text-secondary);font-size:0.85rem;">None yet.</p>' :
-            orders.map(o => `
-                <div style="padding:0.7rem 0;border-bottom:1px solid var(--border);font-size:0.82rem;">
-                    <strong>${o.studentName}</strong> — <span class="admin-role-pill">${o.session}</span> · ${o.date}
-                    <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">
-                        ${Object.values(o.selections).join(', ')}
+            <div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">
+                <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;flex-shrink:0;">🍽️</div>
+                <div>
+                    <h3 style="margin:0;">${user.name || 'Mess Department'}</h3>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user.id || 'MESS-001'}</div>
+                    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                        <span class="admin-role-pill" style="background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);">🍽️ Mess Department</span>
+                        <span class="admin-role-pill">PC Kinyanjui TTI</span>
                     </div>
-                </div>`).join('')}
+                </div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${activated}</h3><p>Boarding Students</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${todayOrders.length}</h3><p>Today's Orders</p></div>
+            <div class="stat-card"><h3 style="color:var(--warning);">${todayOrders.filter(o => o.receivedFood === null).length}</h3><p>Awaiting Marking</p></div>
         </div>`;
 }
 
-/* ── Boarders (view only, from Dean) ── */
-function messBoardersHTML() {
-    const data = getData();
-    const boarders = (data.messBoarders || []).filter(b => b.sentToMess);
-    return `
-        <div class="admin-section-head">👥 Registered Boarders (${boarders.length})</div>
-        <div class="admin-card">
-            <p style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:10px;">
-                This list is managed by the Dean of Students. Only these students can place meal orders.
-            </p>
-            ${boarders.length === 0 ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No boarders sent yet.</p>' :
-            boarders.map(b => `
-                <div style="padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;">
-                    <strong>${b.studentName}</strong> <span style="color:var(--text-secondary);">(${b.studentId})</span>
-                    ${b.reason ? `<div style="font-size:0.7rem;color:var(--warning);">Added — Reason: ${b.reason}</div>` : ''}
-                </div>`).join('')}
-        </div>`;
-}
+/* ── Set Menu ── */
+function messSetMenuHTML(user) {
+    const today   = new Date().toLocaleDateString('en-CA');
+    const dayName = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    const menu    = getTodayMenu();
 
-/* ── Window Control ── */
-function messWindowHTML() {
-    const data = getData();
-    const sessions = [
-        { key:'morning', label:'Morning (6:00–8:00 AM)' },
-        { key:'afternoon', label:'Afternoon (12:00–1:30 PM)' },
-        { key:'evening', label:'Evening (6:00–8:00 PM)' }
-    ];
+    const sessionStatus = s => !menu?.[s]?.isSet
+        ? `<span style="color:var(--warning);">⚠️ Not set</span>`
+        : `<span style="color:var(--success);">✅ Set</span>`;
+
+    const chk = (id, val) => menu ? (Array.isArray(menu[id.split('_')[0]]?.[id.split('_')[1]]) ? menu[id.split('_')[0]][id.split('_')[1]]?.includes(val) : false) : false;
+
     return `
-        <div class="admin-section-head">🚪 Window Control</div>
+        <div class="admin-section-head">📋 Set Today's Menu — ${dayName}</div>
         <div class="admin-card" style="margin-bottom:1rem;">
             <p style="font-size:0.78rem;color:var(--text-secondary);">
-                Ordering normally closes automatically once a session starts being served. Use this to manually
-                force-open (e.g. extend ordering due to late ingredients) or force-close (e.g. duplicate/late orders) — with a reason shown to students.
+                Set the menu before students wake up. Close times are automatic:
+                <strong>Morning 7:30 AM • Afternoon 12:00 PM • Evening 6:30 PM</strong>.
             </p>
+            <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;font-size:0.85rem;">
+                <span>🌅 Morning: ${sessionStatus('morning')}</span>
+                <span>☀️ Afternoon: ${sessionStatus('afternoon')}</span>
+                <span>🌙 Evening: ${sessionStatus('evening')}</span>
+            </div>
         </div>
-        ${sessions.map(s => {
-            const override = data.messWindowOverrides[s.key];
-            return `
-            <div class="admin-card" style="margin-bottom:10px;">
-                <div class="admin-card-title">${s.label}</div>
-                <div style="margin-top:8px;font-size:0.82rem;">
-                    Current override: ${override ? `<strong style="color:${override.status==='open'?'var(--success)':'var(--danger)'};">${override.status.toUpperCase()}</strong> — ${override.reason}` : '<span style="color:var(--text-secondary);">None (automatic schedule)</span>'}
+
+        <!-- MORNING -->
+        <div class="admin-card" style="margin-bottom:1rem;border-left:4px solid #f59e0b;">
+            <div class="admin-card-title">🌅 Morning — closes at 7:30 AM</div>
+            <p style="font-size:0.75rem;color:var(--text-secondary);margin:8px 0;">Bread is always included. Select tea options to offer:</p>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;">
+                <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;cursor:pointer;">
+                    <input type="checkbox" id="tea_milk"    ${menu?.morning?.teaOptions?.includes('Tea with milk') ? 'checked' : ''}> Tea with milk
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;cursor:pointer;">
+                    <input type="checkbox" id="tea_nomilk"  ${menu?.morning?.teaOptions?.includes('Tea without milk') ? 'checked' : ''}> Tea without milk
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;cursor:pointer;">
+                    <input type="checkbox" id="tea_nosugar" ${menu?.morning?.teaOptions?.includes('Tea without sugar') ? 'checked' : ''}> Tea without sugar
+                </label>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:12px;" onclick="messSetSession('morning','${today}')">
+                <i class="fas fa-save"></i> ${menu?.morning?.isSet ? 'Update' : 'Set'} Morning Menu
+            </button>
+        </div>
+
+        <!-- AFTERNOON -->
+        <div class="admin-card" style="margin-bottom:1rem;border-left:4px solid #10b981;">
+            <div class="admin-card-title">☀️ Afternoon — closes at 12:00 PM</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:10px;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">STARCH (student picks one)</label>
+                    <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="aft_rice"  ${menu?.afternoon?.starchOptions?.includes('Rice')  ? 'checked' : ''}> Rice</label>
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="aft_ugali" ${menu?.afternoon?.starchOptions?.includes('Ugali') ? 'checked' : ''}> Ugali</label>
+                    </div>
                 </div>
-                <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
-                    <input id="reason_${s.key}" class="admin-input" placeholder="Reason (required)" style="flex:1;min-width:160px;">
-                    <button class="admin-btn-primary" onclick="messSetOverride('${s.key}','open')">Force Open</button>
-                    <button class="admin-action-btn danger" onclick="messSetOverride('${s.key}','closed')">Force Close</button>
-                    ${override ? `<button class="admin-btn-secondary" onclick="messClearOverride('${s.key}')">Clear Override</button>` : ''}
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">ACCOMPANIMENT (student picks one)</label>
+                    <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="aft_beans"  ${menu?.afternoon?.accompaniments?.includes('Beans with Cabbage') ? 'checked' : ''}> Beans with Cabbage</label>
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="aft_greens" ${menu?.afternoon?.accompaniments?.includes('Green Grams with Sukuma Wiki') ? 'checked' : ''}> Green Grams with Sukuma Wiki</label>
+                    </div>
                 </div>
-            </div>`;
-        }).join('')}`;
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">PROTEIN (same for all)</label>
+                    <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="aft_prot" value="Meat"    ${menu?.afternoon?.protein==='Meat'    ? 'checked' : ''}> Meat</label>
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="aft_prot" value="Matumbo" ${menu?.afternoon?.protein==='Matumbo' ? 'checked' : ''}> Matumbo</label>
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="aft_prot" value="Fruit"   ${menu?.afternoon?.protein==='Fruit'   ? 'checked' : ''}> 🍊 Fruit (no meat day)</label>
+                    </div>
+                </div>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:12px;" onclick="messSetSession('afternoon','${today}')">
+                <i class="fas fa-save"></i> ${menu?.afternoon?.isSet ? 'Update' : 'Set'} Afternoon Menu
+            </button>
+        </div>
+
+        <!-- EVENING -->
+        <div class="admin-card" style="border-left:4px solid #6c3fcf;">
+            <div class="admin-card-title">🌙 Evening — closes at 6:30 PM</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:10px;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">STARCH (student picks one)</label>
+                    <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="eve_rice"  ${menu?.evening?.starchOptions?.includes('Rice')  ? 'checked' : ''}> Rice</label>
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="eve_ugali" ${menu?.evening?.starchOptions?.includes('Ugali') ? 'checked' : ''}> Ugali</label>
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">ACCOMPANIMENT (student picks one)</label>
+                    <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="eve_beans"  ${menu?.evening?.accompaniments?.includes('Beans with Cabbage') ? 'checked' : ''}> Beans with Cabbage</label>
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="eve_greens" ${menu?.evening?.accompaniments?.includes('Green Grams with Sukuma Wiki') ? 'checked' : ''}> Green Grams with Sukuma Wiki</label>
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">PROTEIN (same for all)</label>
+                    <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="eve_prot" value="Meat"    ${menu?.evening?.protein==='Meat'    ? 'checked' : ''}> Meat</label>
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="eve_prot" value="Matumbo" ${menu?.evening?.protein==='Matumbo' ? 'checked' : ''}> Matumbo</label>
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="eve_prot" value="Fruit"   ${menu?.evening?.protein==='Fruit'   ? 'checked' : ''}> 🍊 Fruit (no meat day)</label>
+                    </div>
+                </div>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:12px;" onclick="messSetSession('evening','${today}')">
+                <i class="fas fa-save"></i> ${menu?.evening?.isSet ? 'Update' : 'Set'} Evening Menu
+            </button>
+        </div>`;
 }
 
-window.messSetOverride = function(session, status) {
-    const reason = document.getElementById(`reason_${session}`).value.trim();
-    if (!reason) return alert('A reason is required.');
-    const data = getData();
-    data.messWindowOverrides[session] = { status, reason, timestamp: new Date().toISOString() };
-    saveData(data);
-    alert(`✅ ${session} ordering manually set to ${status.toUpperCase()}.`);
-    document.getElementById('messMain').innerHTML = messWindowHTML();
-};
+/* ── Orders & Marking ── */
+function messOrdersHTML(user, activeSession) {
+    activeSession = activeSession || 'morning';
+    const data      = getData();
+    const today     = new Date().toLocaleDateString('en-CA');
+    const menu      = getTodayMenu();
+    const allOrders = (data.messOrders || []).filter(o => o.date === today);
+    const allergies = data.studentAllergies || [];
+    const closeTimes = { morning:'07:30', afternoon:'12:00', evening:'18:30' };
+    const emoji      = { morning:'🌅', afternoon:'☀️', evening:'🌙' };
 
-window.messClearOverride = function(session) {
-    const data = getData();
-    data.messWindowOverrides[session] = null;
-    saveData(data);
-    document.getElementById('messMain').innerHTML = messWindowHTML();
-};
+    const buildList = (session) => {
+        const orders = allOrders.filter(o => o.session === session);
+        if (!menu?.[session]?.isSet) return `<p style="color:var(--text-secondary);font-size:0.85rem;">Menu not set for this session.</p>`;
+        if (!orders.length) return `<p style="color:var(--text-secondary);font-size:0.85rem;">No orders yet.</p>`;
 
-/* ── Complaint to Dean ── */
-function messComplaintsHTML() {
-    const data = getData();
-    const mine = (data.deanComplaints || []).filter(c => c.source === 'mess_department');
+        return orders.map(o => {
+            const allergy = allergies.find(a => a.studentId === o.studentId);
+            const selText = session === 'morning'
+                ? o.selections?.tea || '—'
+                : `${o.selections?.starch} + ${o.selections?.accompaniment} + ${menu[session]?.protein}`;
+
+            return `
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;padding:0.9rem;background:var(--bg-elevated);border-radius:12px;margin-bottom:8px;
+                border-left:4px solid ${o.receivedFood===true?'var(--success)':o.receivedFood===false?'var(--danger)':'var(--border)'};">
+                <div>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <strong>${o.studentName}</strong>
+                        ${allergy ? `<span style="color:var(--danger);font-size:0.68rem;" title="${allergy.allergies.join(', ')}">⚠️ Allergy</span>` : ''}
+                    </div>
+                    <div style="font-size:0.7rem;color:var(--text-secondary);">${o.studentId}</div>
+                    <div style="font-size:0.78rem;color:var(--purple-light);margin-top:4px;">🍽️ ${selText}</div>
+                    ${allergy ? `<div style="font-size:0.68rem;color:var(--danger);margin-top:2px;">⚠️ ${allergy.allergies.join(' • ')}</div>` : ''}
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+                    ${o.receivedFood === true
+                        ? `<span class="admin-role-pill" style="background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">✅ Got Food</span>`
+                        : o.receivedFood === false
+                            ? `<span class="admin-role-pill" style="background:rgba(239,68,68,.15);border-color:var(--danger);color:var(--danger);">❌ Didn't Get</span>`
+                            : `<div style="display:flex;gap:4px;">
+                                <button class="admin-action-btn edit"   onclick="messMarkOrder('${o.id}',true,'${session}')">✓ Got</button>
+                                <button class="admin-action-btn danger" onclick="messMarkOrder('${o.id}',false,'${session}')">✗ Didn't</button>
+                               </div>`}
+                </div>
+            </div>`;
+        }).join('');
+    };
+
+    const tabs = ['morning','afternoon','evening'].map(s => `
+        <button onclick="messOrdersTab('${s}')"
+            style="padding:8px 16px;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.82rem;
+            background:${activeSession===s?'var(--purple)':'var(--bg-elevated)'};
+            color:${activeSession===s?'#fff':'var(--text-secondary)'};">
+            ${emoji[s]} ${s.charAt(0).toUpperCase()+s.slice(1)} (${allOrders.filter(o=>o.session===s).length})
+        </button>`).join('');
+
     return `
-        <div class="admin-section-head">⚠️ Send Complaint to Dean of Students</div>
+        <div class="admin-section-head">📋 Orders & Marking — ${today}</div>
         <div class="admin-card" style="margin-bottom:1rem;">
-            <textarea id="messComplaintText" class="admin-input" rows="4" placeholder="Describe the issue (e.g. shortage of ingredients, student misconduct at mess, etc.)..."></textarea>
-            <button class="admin-btn-primary" style="margin-top:10px;" onclick="messSubmitComplaint()">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Mark each student after serving. ⚠️ Allergy flags appear in red — verify before serving.
+            </p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">${tabs}</div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">${emoji[activeSession]} ${activeSession.charAt(0).toUpperCase()+activeSession.slice(1)} — closes at ${closeTimes[activeSession]}</div>
+            <div style="margin-top:10px;">${buildList(activeSession)}</div>
+        </div>`;
+}
+
+/* ── Kitchen Summary ── */
+function messKitchenSummaryHTML(user) {
+    const data  = getData();
+    const today = new Date().toLocaleDateString('en-CA');
+    const menu  = getTodayMenu();
+    const orders = (data.messOrders || []).filter(o => o.date === today);
+
+    const count = (session, field) => {
+        const counts = {};
+        orders.filter(o => o.session === session).forEach(o => {
+            const val = field === 'protein' ? menu?.[session]?.protein : o.selections?.[field];
+            if (val) counts[val] = (counts[val] || 0) + 1;
+        });
+        return counts;
+    };
+
+    const renderBar = (counts) => Object.keys(counts).length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No orders.</p>`
+        : Object.entries(counts).map(([item, n]) => `
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="font-size:0.85rem;">${item}</span>
+                <strong style="color:var(--purple-light);">${n} students</strong>
+            </div>`).join('');
+
+    const buildSession = (s, emoji, label) => {
+        if (!menu?.[s]?.isSet) return `<div class="admin-card" style="margin-bottom:1rem;opacity:0.5;"><div class="admin-card-title">${emoji} ${label} — not set</div></div>`;
+        const sOrders = orders.filter(o => o.session === s);
+        const got     = sOrders.filter(o => o.receivedFood === true).length;
+        const didnt   = sOrders.filter(o => o.receivedFood === false).length;
+        const pending = sOrders.filter(o => o.receivedFood === null).length;
+        
+        const body = s === 'morning' ? renderBar(count('morning','tea')) : `
+            <div style="margin-bottom:10px;"><div style="font-size:0.7rem;color:var(--text-secondary);margin-bottom:4px;">STARCH</div>${renderBar(count(s,'starch'))}</div>
+            <div style="margin-bottom:10px;"><div style="font-size:0.7rem;color:var(--text-secondary);margin-bottom:4px;">ACCOMPANIMENT</div>${renderBar(count(s,'accompaniment'))}</div>
+            <div><div style="font-size:0.7rem;color:var(--text-secondary);margin-bottom:4px;">PROTEIN (all students)</div>
+                <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                    <span>${menu[s]?.protein}</span><strong style="color:var(--purple-light);">${sOrders.length} students</strong>
+                </div></div>`;
+
+        return `
+        <div class="admin-card" style="margin-bottom:1rem;border-left:4px solid var(--purple);">
+            <div class="admin-card-title">${emoji} ${label} — ${sOrders.length} total orders</div>
+            <div style="display:flex;gap:16px;font-size:0.78rem;margin:8px 0;flex-wrap:wrap;">
+                <span style="color:var(--success);">✅ Got food: ${got}</span>
+                <span style="color:var(--danger);">❌ Didn't get: ${didnt}</span>
+                <span style="color:var(--warning);">⏳ Unmarked: ${pending}</span>
+            </div>
+            <div style="border-top:1px solid var(--border);padding-top:10px;">${body}</div>
+        </div>`;
+    };
+
+    return `
+        <div class="admin-section-head">🍳 Kitchen Summary — ${today}</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">Exact food counts per item. Shows who got food and who didn't per session.</p>
+        </div>
+        ${buildSession('morning','🌅','Morning')}
+        ${buildSession('afternoon','☀️','Afternoon')}
+        ${buildSession('evening','🌙','Evening')}`;
+}
+
+/* ── Complaints → Dean ── */
+function messComplaintsHTML(user) {
+    const data = getData();
+    const complaints = data.messComplaints || [];
+    return `
+        <div class="admin-section-head">⚠️ Complaints → Dean</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                If food ran out and students who ordered did not receive meals, report it here.
+                Goes directly to Dean of Students.
+            </p>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">📝 New Complaint</div>
+            <div style="display:grid;gap:10px;margin-top:10px;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">SESSION AFFECTED</label>
+                    <select id="cmpSess" class="admin-input" style="margin-top:4px;">
+                        <option value="morning">🌅 Morning</option>
+                        <option value="afternoon">☀️ Afternoon</option>
+                        <option value="evening">🌙 Evening</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">NUMBER OF STUDENTS AFFECTED</label>
+                    <input type="number" id="cmpCount" class="admin-input" placeholder="e.g. 15" min="1" style="margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">DESCRIPTION OF ISSUE</label>
+                    <textarea id="cmpDesc" class="admin-input" rows="3" placeholder="Food ran out before all students who ordered were served..." style="margin-top:4px;"></textarea>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">PROPOSED SOLUTION (if any)</label>
+                    <textarea id="cmpSol" class="admin-input" rows="2" placeholder="e.g. Bread given as alternative. Supplier contacted." style="margin-top:4px;"></textarea>
+                </div>
+            </div>
+            <button class="admin-btn-primary" style="margin-top:12px;" onclick="messSendComplaint()">
                 <i class="fas fa-paper-plane"></i> Send to Dean
             </button>
         </div>
         <div class="admin-card">
-            <div class="admin-card-title">Previously Sent (${mine.length})</div>
-            ${mine.length === 0 ? '<p style="color:var(--text-secondary);font-size:0.85rem;">None yet.</p>' :
-            mine.slice().reverse().map(c => `
-                <div style="padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.82rem;">
-                    ${c.complaint}
-                    <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:4px;">${new Date(c.timestamp).toLocaleString()} · ${c.status}</div>
+            <div class="admin-card-title">History (${complaints.length})</div>
+            ${complaints.length === 0
+                ? '<p style="color:var(--success);font-size:0.85rem;margin-top:8px;">✅ No complaints yet — great service!</p>'
+                : complaints.slice().reverse().map(c => `
+                <div style="padding:0.9rem;background:var(--bg-elevated);border-radius:12px;border-left:4px solid var(--danger);margin-top:10px;">
+                    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                        <strong>${c.session.charAt(0).toUpperCase()+c.session.slice(1)} — ${c.affectedCount} students</strong>
+                        <span style="font-size:0.68rem;color:var(--text-secondary);">${new Date(c.timestamp).toLocaleString()}</span>
+                    </div>
+                    <div style="font-size:0.82rem;margin-top:6px;">${c.description}</div>
+                    ${c.solution ? `<div style="font-size:0.78rem;color:var(--text-secondary);margin-top:4px;">Solution: ${c.solution}</div>` : ''}
+                    <span class="admin-role-pill" style="margin-top:6px;display:inline-block;background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">✅ Sent to Dean</span>
                 </div>`).join('')}
         </div>`;
 }
 
-window.messSubmitComplaint = function() {
-    const text = document.getElementById('messComplaintText').value.trim();
-    if (!text) return alert('Please describe the issue.');
+/* ── Report ── */
+function messReportHTML(user) {
+    const data      = getData();
+    const today     = new Date().toLocaleDateString('en-CA');
+    const allOrders = data.messOrders || [];
+    const todayOrds = allOrders.filter(o => o.date === today);
+    const got    = allOrders.filter(o => o.receivedFood === true).length;
+    const didnt  = allOrders.filter(o => o.receivedFood === false).length;
+    const unmarked = allOrders.filter(o => o.receivedFood === null).length;
+    const activated = (data.messActivatedStudents || []).length;
+    const complaints = (data.messComplaints || []).length;
+
+    const bars = [
+        { label:'🌅 Morning',   value: todayOrds.filter(o=>o.session==='morning').length,   color:'#f59e0b' },
+        { label:'☀️ Afternoon', value: todayOrds.filter(o=>o.session==='afternoon').length, color:'#10b981' },
+        { label:'🌙 Evening',   value: todayOrds.filter(o=>o.session==='evening').length,   color:'#6c3fcf' }
+    ];
+
+    return `
+        <div class="admin-section-head">📊 Mess Report</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Today's Orders by Session</div>
+            <div style="overflow-x:auto;margin-top:10px;">${svgBarChart(bars)}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Food Received Status (All Time)</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([{value:got||0.0001,color:'#10b981'},{value:didnt||0.0001,color:'#ef4444'},{value:unmarked||0.0001,color:'#f59e0b'}])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Got Food ${got}</span>&nbsp;
+                    <span style="color:var(--danger);">● Didn't Get ${didnt}</span>&nbsp;
+                    <span style="color:var(--warning);">● Unmarked ${unmarked}</span>
+                </div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${activated}</h3><p>Boarding Students</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${todayOrds.length}</h3><p>Today's Orders</p></div>
+            <div class="stat-card"><h3 style="color:var(--danger);">${complaints}</h3><p>Complaints Sent</p></div>
+            <div class="stat-card"><h3>${allOrders.length}</h3><p>Total Orders All Time</p></div>
+        </div>`;
+}
+
+/* ── Mess Window Actions ── */
+window.messSetSession = function(session, date) {
     const data = getData();
-    data.deanComplaints = data.deanComplaints || [];
-    data.deanComplaints.push({
-        id: 'DC-' + Date.now(), source: 'mess_department', category: 'Mess Department',
-        complaint: text, timestamp: new Date().toISOString(), status: 'pending'
+    data.dailyMenus = data.dailyMenus || [];
+    let menu = data.dailyMenus.find(m => m.date === date);
+    if (!menu) { menu = { id:'MENU-'+Date.now(), date }; data.dailyMenus.push(menu); }
+
+    if (session === 'morning') {
+        const teas = [];
+        if (document.getElementById('tea_milk')?.checked)    teas.push('Tea with milk');
+        if (document.getElementById('tea_nomilk')?.checked)  teas.push('Tea without milk');
+        if (document.getElementById('tea_nosugar')?.checked) teas.push('Tea without sugar');
+        if (!teas.length) return alert('Select at least one tea option.');
+        menu.morning = { isSet:true, closeTime:'07:30', teaOptions:teas, bread:true };
+
+    } else if (session === 'afternoon') {
+        const starch = [], acc = [];
+        if (document.getElementById('aft_rice')?.checked)   starch.push('Rice');
+        if (document.getElementById('aft_ugali')?.checked)  starch.push('Ugali');
+        if (document.getElementById('aft_beans')?.checked)  acc.push('Beans with Cabbage');
+        if (document.getElementById('aft_greens')?.checked) acc.push('Green Grams with Sukuma Wiki');
+        const protein = document.querySelector('input[name="aft_prot"]:checked')?.value;
+        if (!starch.length || !acc.length || !protein) return alert('Fill all afternoon fields.');
+        menu.afternoon = { isSet:true, closeTime:'12:00', starchOptions:starch, accompaniments:acc, protein };
+
+    } else if (session === 'evening') {
+        const starch = [], acc = [];
+        if (document.getElementById('eve_rice')?.checked)   starch.push('Rice');
+        if (document.getElementById('eve_ugali')?.checked)  starch.push('Ugali');
+        if (document.getElementById('eve_beans')?.checked)  acc.push('Beans with Cabbage');
+        if (document.getElementById('eve_greens')?.checked) acc.push('Green Grams with Sukuma Wiki');
+        const protein = document.querySelector('input[name="eve_prot"]:checked')?.value;
+        if (!starch.length || !acc.length || !protein) return alert('Fill all evening fields.');
+        menu.evening = { isSet:true, closeTime:'18:30', starchOptions:starch, accompaniments:acc, protein };
+    }
+
+    saveData(data);
+    alert(`✅ ${session.charAt(0).toUpperCase()+session.slice(1)} menu set! Students can now order.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('messMain').innerHTML = messSetMenuHTML(user);
+};
+
+window.messMarkOrder = function(orderId, received, session) {
+    const data  = getData();
+    const order = (data.messOrders || []).find(o => o.id === orderId);
+    if (!order) return;
+    order.receivedFood = received;
+    order.markedAt = new Date().toISOString();
+    saveData(data);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('messMain').innerHTML = messOrdersHTML(user, session);
+};
+
+window.messOrdersTab = function(session) {
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('messMain').innerHTML = messOrdersHTML(user, session);
+};
+
+window.messSendComplaint = function() {
+    const session = document.getElementById('cmpSess')?.value;
+    const count   = parseInt(document.getElementById('cmpCount')?.value) || 0;
+    const desc    = document.getElementById('cmpDesc')?.value.trim();
+    const sol     = document.getElementById('cmpSol')?.value.trim();
+    if (!desc) return alert('Please describe the issue.');
+    const data = getData();
+    data.messComplaints = data.messComplaints || [];
+    data.messComplaints.push({ id:'MC-'+Date.now(), session, affectedCount:count, description:desc, solution:sol||null, timestamp:new Date().toISOString() });
+    data.deanReceived = data.deanReceived || [];
+    data.deanReceived.push({
+        id:'DRV-'+Date.now(), from:'Mess Department', fromRole:'mess',
+        subject:`Food Shortage — ${session.charAt(0).toUpperCase()+session.slice(1)} Session`,
+        message:`${count} student(s) who ordered did not receive food. ${desc}${sol?' Solution: '+sol:''}`,
+        timestamp:new Date().toISOString(), read:false
     });
     saveData(data);
     alert('✅ Complaint sent to Dean of Students.');
-    document.getElementById('messMain').innerHTML = messComplaintsHTML();
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('messMain').innerHTML = messComplaintsHTML(user);
 };
 
 // ==================== HOSTEL SUB-LOGIN ====================
@@ -9749,9 +10021,17 @@ function migrateData() {
         { id:'LU-002', code:'CS102', name:'Computer Operations',          level:5, department:'Computer Studies', lecturerId:'LEC-2026-001', semester:'March/April 2026', description:'Practical computer operations and software use' }
     ]; changed = true; }
 
+  if (!data.mess)               { data.mess               = { id:'MESS-001', name:'Mess Department', password:'mess123' }; changed = true; }
+    if (!data.messActivatedStudents) { data.messActivatedStudents = ['STU-2026-20669','STU-2026-20670']; changed = true; }
+    if (!data.dailyMenus)         { data.dailyMenus          = []; changed = true; }
+    if (!data.messOrders)         { data.messOrders           = []; changed = true; }
+    if (!data.messComplaints)     { data.messComplaints       = []; changed = true; }
+    if (!data.studentAllergies)   { data.studentAllergies     = [
+        { id:'SA-001', studentId:'STU-2026-20670', studentName:'Sarah Achieng', allergies:['Lactose intolerant — avoid cow milk products'], dietaryRestrictions:['No red meat'], medicalConditions:'Mild anaemia — needs iron-rich foods', recordedBy:'Hospital', recordedAt:'2026-01-15T09:00:00.000Z' }
+    ]; changed = true; }
+
     if (changed) {
-        localStorage.setItem('pck_institute_v3', JSON.stringify(data));
-        console.log('✅ Data migration complete — missing keys added without wiping existing data.');
+        localStorage.setItem('pck_institute_v3', JSON.stringify(data)); 
     }
 }
 
