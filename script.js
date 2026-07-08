@@ -13,6 +13,19 @@ function initializeData() {
                 { id: 3, name: "Dr. Peter Omondi",     photo: "https://randomuser.me/api/portraits/men/45.jpg",   startYear: 2020, endYear: 2024, isCurrent: false },
                 { id: 4, name: "Dr. Elizabeth Wanjiku",photo: "https://randomuser.me/api/portraits/women/89.jpg", startYear: 2024, endYear: null, isCurrent: true  }
             ],
+            examOfficeReceived: [
+    { id:'EOR-DEMO-01', from:'System Admin', fromRole:'admin', subject:'New Unit Allocation — CS105', message:'Please review and confirm intake for CS105 for Computer Studies students.', fileName:'unit_allocation_cs105.pdf', studentId:null, studentName:null, department:'Computer Studies', course:null, timestamp:'2026-06-20T09:00:00.000Z', status:'pending', read:false },
+    { id:'EOR-DEMO-02', from:'Deputy (Academics)', fromRole:'deputy_acad', subject:'Special Exam Approval — Brian Otieno', message:'Approved special sitting for Brian Otieno. Please book accordingly.', fileName:null, studentId:'STU-2026-20671', studentName:'Brian Otieno', department:'Computer Studies', course:'Diploma in Computer Studies', timestamp:'2026-06-21T09:00:00.000Z', status:'pending', read:false },
+    { id:'EOR-DEMO-03', from:'Principal', fromRole:'principal', subject:'Directive — Priority Booking for Finalists', message:'Kindly prioritize booking of final-year students this week.', fileName:null, studentId:null, studentName:null, department:null, course:null, timestamp:'2026-06-19T09:00:00.000Z', status:'confirmed', read:true },
+    { id:'EOR-DEMO-04', from:'Registrar', fromRole:'register', subject:'Updated Course List', message:'Attached the updated official course list for this term.', fileName:'course_list_2026.pdf', studentId:null, studentName:null, department:null, course:null, timestamp:'2026-06-18T09:00:00.000Z', status:'rejected', rejectionReason:'Duplicate of previous submission', read:true }
+],
+examOfficeBookings: [],
+examOfficeStore: [],
+examOfficeSentItems: [],
+deputyAcadReceived: [],
+registrarReceived: [],
+principalReceived: [],
+
             schoolTour: {
                 library:  { images: ["https://placehold.co/400x300/6c3fcf/white?text=Library"], videos: [] },
                 sports:   { images: ["https://placehold.co/400x300/2563eb/white?text=Sports+Field"], videos: [] },
@@ -48,6 +61,12 @@ deanComplaints: [],
             hospitalBills: [
                 { id: 'HB-001', recordId: 'MR-001', studentId: 'STU-2026-20675', studentName: 'Kevin Oduya', department: 'Computer Studies', amount: 200, description: 'Medical treatment — Grade 1 ankle sprain', sentToFinance: true, timestamp: '2026-06-20T15:00:00.000Z' }
             ],
+            hospitalStorage: [
+               { id:'HS-DEMO-001', category:'Visit Request', studentId:'STU-2026-20669', studentName:'John Mwangi', department:'Computer Studies', description:'Visit requested — Persistent headache and fever since morning', timestamp:'2026-06-22T10:00:00.000Z' },
+                { id:'HS-DEMO-002', category:'Medical Record', studentId:'STU-2026-20675', studentName:'Kevin Oduya', department:'Computer Studies', description:'Diagnosis: Grade 1 lateral ankle sprain. Treatment: Bandage applied.', amount:200, timestamp:'2026-06-20T14:00:00.000Z' },
+                  { id:'HS-DEMO-003', category:'Bill Sent to Finance', studentId:'STU-2026-20675', studentName:'Kevin Oduya', department:'Computer Studies', description:'Medical treatment — Grade 1 ankle sprain', amount:200, timestamp:'2026-06-20T15:00:00.000Z' },
+                    { id:'HS-DEMO-004', category:'Rejected Visit', studentId:'STU-2026-20673', studentName:'Peter Njoroge', department:'Computer Studies', description:'Visit rejected — Reason: Student did not show up for consultation', timestamp:'2026-06-23T13:30:00.000Z' }
+],
             financeReceived: [
                 { id: 'FIN-001', from: 'Hospital', fromRole: 'hospital', subject: 'Medical Bill — Kevin Oduya', message: 'Student: Kevin Oduya (STU-2026-20675), Department: Computer Studies. Treatment cost: KSh 200. Description: Medical treatment — Grade 1 ankle sprain. Please add to student fee account.', amount: 200, studentId: 'STU-2026-20675', studentName: 'Kevin Oduya', timestamp: '2026-06-20T15:00:00.000Z', read: false, addedToFees: false }
             ], 
@@ -203,7 +222,29 @@ deanComplaints: [],
             noticeboard: [
                 { id: 'n1', sender: 'System', message: 'Welcome to PCK Institute Management System', timestamp: new Date().toISOString(), recipient: 'all' }
             ],
-            newsletterSubscribers: []
+            newsletterSubscribers: [],
+
+            // Finance inboxes for departments that don't have one yet
+
+hodReceived: [],
+deputyInfraReceived: [],
+procurementReceived: [],
+
+// Finance's own archive & sent log
+financeStore: [],
+financeSentItems: [],
+
+// Demo received items across every category so the workflow is visible immediately
+financeReceived: [
+    { id:'FIN-DEMO-01', from:'Hospital', fromRole:'hospital', subject:'Medical Bill — Kevin Oduya', message:'Treatment cost: KSh 200. Please add to student fee account.', amount:200, studentId:'STU-2026-20675', studentName:'Kevin Oduya', timestamp:'2026-06-20T15:00:00.000Z', read:false, addedToFees:false },
+    { id:'FIN-DEMO-02', from:'System Admin', fromRole:'admin', subject:'New Fee Structure Circular', message:'Attached the revised fee structure for the new intake.', fileName:'fee_structure_2026.pdf', studentId:null, studentName:null, timestamp:'2026-06-18T09:00:00.000Z', read:false },
+    { id:'FIN-DEMO-03', from:'Library', fromRole:'library', subject:'Overdue Book Fine — Faith Kamau', message:'Student has an outstanding fine of KSh 150 for an overdue book. Please add to fee account.', amount:150, studentId:'STU-2026-20674', studentName:'Faith Kamau', timestamp:'2026-06-19T10:00:00.000Z', read:false },
+    { id:'FIN-DEMO-04', from:'Sports Admin', fromRole:'sportsadmin', subject:'Damaged Equipment Charge — Peter Njoroge', message:'Student damaged a football during practice. Replacement cost KSh 800.', amount:800, studentId:'STU-2026-20673', studentName:'Peter Njoroge', timestamp:'2026-06-17T14:00:00.000Z', read:false },
+    { id:'FIN-DEMO-05', from:'Deputy (Academics)', fromRole:'deputy_acad', subject:'Special Case — Fee Waiver Consideration', message:'Please review Sarah Achieng for a partial fee waiver due to bursary approval.', studentId:'STU-2026-20670', studentName:'Sarah Achieng', timestamp:'2026-06-16T09:00:00.000Z', read:false },
+    { id:'FIN-DEMO-06', from:'Exam Office', fromRole:'examoffice', subject:'Retake Fee Notice', message:'John Mwangi requires a retake fee of KSh 200 for CS102.', amount:200, studentId:'STU-2026-20669', studentName:'John Mwangi', timestamp:'2026-06-15T09:00:00.000Z', read:false },
+    { id:'FIN-DEMO-07', from:'Dean of Students', fromRole:'dean', subject:'Disciplinary Fine — Kevin Oduya', message:'Student fined KSh 500 for damage to hostel property.', amount:500, studentId:'STU-2026-20675', studentName:'Kevin Oduya', timestamp:'2026-06-14T09:00:00.000Z', read:false }
+],
+
         };
         localStorage.setItem('pck_institute_v3', JSON.stringify(demoData));
     }
@@ -1901,54 +1942,69 @@ window.hodAssignLecturer = function(unitId) {
     document.getElementById('hodMain').innerHTML = hodUnitsHTML(user);
 };
 
-
 /* ══════════════════════════════════════════
-   FINANCE OFFICE PORTAL — Matching HOD Style
+   FINANCE OFFICE PORTAL — CENTRAL COMMAND HUB
 ══════════════════════════════════════════ */
-// ====================== FINANCE PORTAL — FULLY INTERACTIVE (Green Alerts) ======================
+
+const financeSenders = [
+    { key:'hod',          label:'HOD',                    icon:'🏛️', category:'Academic' },
+    { key:'student',      label:'Students',                icon:'🎓', category:'Academic' },
+    { key:'deputy_acad',  label:'Deputy (Academics)',      icon:'👑', category:'Academic' },
+    { key:'examoffice',   label:'Exam Office',             icon:'📋', category:'Academic' },
+    { key:'dean',         label:'Dean of Students',        icon:'💛', category:'Academic' },
+    { key:'admin',        label:'System Admin',            icon:'🔐', category:'Administrative' },
+    { key:'deputy_infra', label:'Deputy (Infrastructure)', icon:'🏗️', category:'Administrative' },
+    { key:'procurement',  label:'Procurement Office',      icon:'📦', category:'Administrative' },
+    { key:'library',      label:'Library',                 icon:'📚', category:'Support' },
+    { key:'sportsadmin',  label:'Sports',                  icon:'⚽', category:'Support' },
+    { key:'hospital',     label:'Hospital',                icon:'🏥', category:'Health' }
+];
+const financeCategoryColors = { Academic:'#3b82f6', Administrative:'#a855f7', Support:'#10b981', Health:'#ef4444' };
+
+function financeUnreadCount() {
+    const data = getData();
+    const genericUnread = (data.financeReceived || []).filter(f => !f.read).length;
+    const hodPending = (data.examRegistrations || []).filter(r => r.status === 'pending_finance').length;
+    return genericUnread + hodPending;
+}
+
 function renderFinancePanel(user) {
+    const unread = financeUnreadCount();
     return `
     <div class="admin-layout">
         <div class="admin-sidenav">
-            <div class="admin-sidenav-title">
-                <i class="fas fa-coins"></i> Finance Menu
-            </div>
-            <button class="admin-nav-btn active" onclick="financeSection('pending',this)">
-                <i class="fas fa-clock"></i> Pending from HOD
-            </button>
-            <button class="admin-nav-btn" onclick="financeSection('cleared',this)">
-                <i class="fas fa-check-circle"></i> Cleared Students
-            </button>
-            <button class="admin-nav-btn" onclick="financeSection('uncleared',this)">
-                <i class="fas fa-exclamation-triangle"></i> Uncleared → Deputy
-            </button>
+            <div class="admin-sidenav-title"><i class="fas fa-coins"></i> Finance Menu</div>
+            <button class="admin-nav-btn active" onclick="financeSection('dashboard',this)"><i class="fas fa-gauge"></i> Dashboard</button>
             <button class="admin-nav-btn" onclick="financeSection('received',this)">
-                <i class="fas fa-inbox"></i> Received PDFs
+                <i class="fas fa-bell"></i> Received
+                ${unread > 0 ? `<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${unread}</span>` : ''}
             </button>
-            <button class="admin-nav-btn" onclick="financeSection('report',this)">
-                <i class="fas fa-chart-bar"></i> Financial Report
-            </button>
+            <button class="admin-nav-btn" onclick="financeSection('send',this)"><i class="fas fa-paper-plane"></i> Send</button>
+            <button class="admin-nav-btn" onclick="financeSection('students',this)"><i class="fas fa-user-graduate"></i> All Students</button>
+            <button class="admin-nav-btn" onclick="financeSection('store',this)"><i class="fas fa-box-archive"></i> My Store</button>
+            <button class="admin-nav-btn" onclick="financeSection('report',this)"><i class="fas fa-chart-bar"></i> Report</button>
+            <button class="admin-nav-btn" onclick="financeSection('noticeboard',this)"><i class="fas fa-bullhorn"></i> Post Notice</button>
         </div>
-        <div class="admin-main" id="financeMain">
-            ${financePendingHTML()}
-        </div>
+        <div class="admin-main" id="financeMain">${financeDashboardHTML()}</div>
     </div>`;
 }
 
 window.financeSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    if (btn) btn.classList.add('active');
     const map = {
-        pending:    () => financePendingHTML(),
-        cleared:    () => financeClearedHTML(),
-        uncleared:  () => financeUnclearedHTML(),
-        received:   () => financeReceivedHTML(),
-        report:     () => financeReportHTML()
+        dashboard:   financeDashboardHTML,
+        received:    financeReceivedHTML,
+        send:        financeSendHTML,
+        students:    () => financeStudentsHTML(window._financeStudentFilters || {}),
+        store:       () => financeStoreHTML(window._financeStoreFilters || {}),
+        report:      financeReportHTML,
+        noticeboard: financeNoticeboardHTML
     };
-    document.getElementById('financeMain').innerHTML = map[section]();
+    document.getElementById('financeMain').innerHTML = (map[section] || financeDashboardHTML)();
 };
 
-// Beautiful Green Success Alert (same as Exam Office)
+/* Success alert (kept, reused everywhere) */
 function showSuccessAlert(message) {
     const alertHTML = `
         <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
@@ -1956,151 +2012,137 @@ function showSuccessAlert(message) {
                     padding:25px 30px;z-index:10000;max-width:380px;text-align:center;
                     box-shadow:0 10px 30px rgba(0,0,0,0.5);">
             <div style="font-size:3rem;margin-bottom:10px;">✅</div>
-            <div style="color:#10b981;font-weight:700;font-size:1.1rem;margin-bottom:8px;">
-                ${message}
-            </div>
-            <button onclick="this.parentElement.remove()" 
-                    style="margin-top:15px;padding:10px 25px;background:#10b981;color:white;
-                    border:none;border-radius:8px;font-weight:600;cursor:pointer;">
-                OK
-            </button>
+            <div style="color:#10b981;font-weight:700;font-size:1.1rem;margin-bottom:8px;">${message}</div>
+            <button onclick="this.parentElement.remove()" style="margin-top:15px;padding:10px 25px;background:#10b981;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">OK</button>
         </div>`;
-    
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = alertHTML;
     document.body.appendChild(tempDiv.firstElementChild);
-};
+}
 
-/* ── 1. Pending from HOD ── */
-function financePendingHTML() {
+/* ══════════════════ DASHBOARD ══════════════════ */
+function financeDashboardHTML() {
     const data = getData();
-    let pending = data.examRegistrations.filter(r => r.status === 'pending_finance');
+    const totalOutstanding = (data.students || []).reduce((s, x) => s + (x.feeBalance || 0), 0);
+    const totalStudents = (data.students || []).length;
+    const clearedCount = (data.students || []).filter(s => (s.feeBalance || 0) === 0).length;
+    const unread = financeUnreadCount();
 
-    if (pending.length === 0) {
-        pending = [{ id: "REG-998877", studentId: "STU-2026-20670", totalExamFee: 3200, units: [{name:"CS101"}] }];
-    }
+    const byCategory = {};
+    financeSenders.forEach(s => {
+        const count = (data.financeReceived || []).filter(f => f.fromRole === s.key && !f.read).length
+            + (s.key === 'hod' ? (data.examRegistrations || []).filter(r => r.status === 'pending_finance').length : 0);
+        byCategory[s.category] = (byCategory[s.category] || 0) + count;
+    });
 
-    const cards = pending.map(reg => {
-        const student = data.students.find(s => s.id === reg.studentId) || {name: "Sarah Achieng", department: "Computer Studies", feeBalance: 25000};
-        const examFee = reg.totalExamFee || 0;
-        const currentBalance = student.feeBalance || 0;
-        const newTotal = currentBalance + examFee;
+    return `
+        <div class="admin-section-head">💰 Finance Dashboard</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.2rem;">
+            <div class="stat-card"><h3 style="color:var(--warning);">${unread}</h3><p>New Items Received</p></div>
+            <div class="stat-card"><h3>${totalStudents}</h3><p>Total Students</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${clearedCount}</h3><p>Fully Cleared</p></div>
+            <div class="stat-card"><h3 style="color:var(--danger);">KSh ${totalOutstanding.toLocaleString()}</h3><p>Total Outstanding</p></div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Pending Items by Category</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
+                ${Object.entries(financeCategoryColors).map(([cat, color]) => `
+                    <div style="text-align:center;padding:1rem;background:${color}15;border:1px solid ${color}55;border-radius:12px;">
+                        <div style="font-size:1.4rem;font-weight:800;color:${color};">${byCategory[cat] || 0}</div>
+                        <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">${cat}</div>
+                    </div>`).join('')}
+            </div>
+        </div>`;
+}
+
+/* ══════════════════ RECEIVED — categorized 3D cards ══════════════════ */
+function financeReceivedHTML() {
+    const data = getData();
+    const categories = ['Academic', 'Administrative', 'Support', 'Health'];
+
+    const sectionsHTML = categories.map(cat => {
+        const senders = financeSenders.filter(s => s.category === cat);
+        const color = financeCategoryColors[cat];
+        const cards = senders.map(s => {
+            const items = (data.financeReceived || []).filter(f => f.fromRole === s.key);
+            let pendingCount = items.filter(f => !f.read).length;
+            if (s.key === 'hod') pendingCount += (data.examRegistrations || []).filter(r => r.status === 'pending_finance').length;
+            return `
+            <div onclick="financeOpenSenderInbox('${s.key}')" style="cursor:pointer;background:linear-gradient(135deg, ${color}22, ${color}11); border:1px solid ${color}55; border-radius:16px; padding:1.2rem; text-align:center; transition:transform .25s, box-shadow .25s;"
+                 onmouseover="this.style.transform='translateY(-6px) scale(1.02)'; this.style.boxShadow='0 12px 24px ${color}33';"
+                 onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+                <div style="font-size:2.2rem;">${s.icon}</div>
+                <div style="font-weight:700;margin-top:6px;font-size:0.88rem;">${s.label}</div>
+                ${pendingCount > 0
+                    ? `<span class="admin-role-pill" style="margin-top:8px;display:inline-block;background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);">🔔 ${pendingCount} new</span>`
+                    : `<span class="admin-role-pill" style="margin-top:8px;display:inline-block;">✅ Clear</span>`}
+            </div>`;
+        }).join('');
 
         return `
-        <div class="admin-card" style="margin-bottom:15px;">
-            <div style="font-weight:700;">${student.name}</div>
-            <div style="color:var(--text-secondary);font-size:0.8rem;">${reg.studentId} • ${student.department}</div>
-            
-            <div style="margin:12px 0;padding:12px;background:var(--bg-elevated);border-radius:10px;">
-                <strong>Exam Fee:</strong> KSh ${examFee.toLocaleString()}<br>
-                <strong>Current Balance:</strong> KSh ${currentBalance.toLocaleString()}<br>
-                <strong style="color:var(--purple-light)">New Total: KSh ${newTotal.toLocaleString()}</strong>
-            </div>
-
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <button class="admin-btn-primary" onclick="financeClearStudent('${reg.id}')">
-                    ✅ Clear Fees → Exam Office
-                </button>
-                <button class="admin-action-btn danger" onclick="financeSendToDeputy('${reg.id}')">
-                    ⚠️ Send to Deputy (Uncleared)
-                </button>
-            </div>
+        <div class="admin-card" style="margin-bottom:1rem;border-left:4px solid ${color};">
+            <div class="admin-card-title" style="color:${color};">${cat}</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-top:12px;">${cards}</div>
         </div>`;
     }).join('');
 
-    return `<div class="admin-section-head">💰 Pending from HOD (${pending.length})</div>${cards}`;
+    return `
+        <div class="admin-section-head">📥 Received</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Items from every department are grouped by category. Click a department card to review what
+                was sent, then use that information in All Students to update fee records.
+            </p>
+        </div>
+        ${sectionsHTML}
+        <div id="financeSenderInboxArea" style="margin-top:1.2rem;"></div>`;
 }
 
-window.financeClearStudent = function(regId) {
+window.financeOpenSenderInbox = function(key) {
     const data = getData();
-    const reg = data.examRegistrations.find(r => r.id === regId);
-    if (!reg) return;
-    const student = data.students.find(s => s.id === reg.studentId);
+    const meta = financeSenders.find(s => s.key === key);
+    const area = document.getElementById('financeSenderInboxArea');
 
-    reg.status = 'pending_exam';
-    reg.financeChecked = true;
+    (data.financeReceived || []).forEach(f => { if (f.fromRole === key) f.read = true; });
     saveData(data);
 
-    generatePDF({ /* ... your existing PDF config ... */ });
-
-    showSuccessAlert(`Fees Cleared Successfully!<br>Registration ${regId} sent to Exam Office.`);
-    document.getElementById('financeMain').innerHTML = financePendingHTML();
-};
-
-window.financeSendToDeputy = function(regId) {
-    const data = getData();
-    const reg = data.examRegistrations.find(r => r.id === regId);
-    if (!reg) return;
-
-    reg.status = 'pending_deputy';
-    reg.referredToDeputy = true;
-    saveData(data);
-
-    generatePDF({ /* ... your existing PDF config ... */ });
-
-    showSuccessAlert(`Student sent to Deputy Academics!<br>PDF generated for review.`);
-    document.getElementById('financeMain').innerHTML = financePendingHTML();
-};
-
-/* ── 2. Cleared Students ── */
-function financeClearedHTML() {
-    const data = getData();
-    const cleared = data.examRegistrations.filter(r => r.financeChecked && r.status === 'pending_exam');
-
-    let html = `<div class="admin-section-head">✅ Cleared Students (${cleared.length})</div>`;
-
-    if (cleared.length === 0) {
-        html += `<div class="admin-card"><p>No cleared students yet.</p></div>`;
-    } else {
-        html += cleared.map(reg => {
-            const student = data.students.find(s => s.id === reg.studentId) || {};
-            return `<div class="admin-card">✅ ${student.name} (${reg.studentId}) — Cleared</div>`;
-        }).join('');
+    if (key === 'hod') {
+        const pending = (data.examRegistrations || []).filter(r => r.status === 'pending_finance');
+        const genericItems = (data.financeReceived || []).filter(f => f.fromRole === 'hod');
+        const pendingCards = pending.length === 0 && genericItems.length === 0
+            ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No items from HOD right now.</p>`
+            : pending.map(reg => {
+                const student = data.students.find(s => s.id === reg.studentId) || {};
+                const examFee = reg.totalExamFee || 0;
+                const currentBalance = student.feeBalance || 0;
+                return `
+                <div class="admin-card" style="margin-bottom:10px;">
+                    <div style="font-weight:700;">${student.name || reg.studentId}</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${reg.studentId} • ${student.department || '—'}</div>
+                    <div style="margin:10px 0;padding:10px;background:var(--bg-elevated);border-radius:10px;font-size:0.85rem;">
+                        <strong>Exam Fee:</strong> KSh ${examFee.toLocaleString()}<br>
+                        <strong>Current Balance:</strong> KSh ${currentBalance.toLocaleString()}<br>
+                        <strong style="color:var(--purple-light);">New Total: KSh ${(currentBalance + examFee).toLocaleString()}</strong>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="admin-btn-primary" onclick="financeClearStudent('${reg.id}')">✅ Clear Fees → Exam Office</button>
+                        <button class="admin-action-btn danger" onclick="financeSendToDeputy('${reg.id}')">⚠️ Send to Deputy (Uncleared)</button>
+                    </div>
+                </div>`;
+            }).join('') + genericItems.map(financeGenericItemCard).join('');
+        area.innerHTML = `<div class="admin-card"><div class="admin-card-title">🏛️ From HOD</div><div style="margin-top:10px;">${pendingCards}</div></div>`;
+        return;
     }
 
-    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="financeDownloadCleared()">📄 Download Cleared List PDF</button>`;
-    return html;
-};
-
-window.financeDownloadCleared = function() {
-    showSuccessAlert("Cleared Students List PDF Downloaded Successfully!");
-};
-
-/* ── 3. Uncleared → Deputy ── */
-function financeUnclearedHTML() {
-    const data = getData();
-    const uncleared = data.examRegistrations.filter(r => r.referredToDeputy);
-
-    let html = `<div class="admin-section-head">⚠️ Uncleared → Deputy (${uncleared.length})</div>`;
-
-    if (uncleared.length === 0) {
-        html += `<div class="admin-card"><p>No uncleared students at the moment.</p></div>`;
-    } else {
-        html += uncleared.map(reg => {
-            const student = data.students.find(s => s.id === reg.studentId) || {};
-            return `<div class="admin-card">⚠️ ${student.name} (${reg.studentId}) — Sent to Deputy</div>`;
-        }).join('');
-    }
-
-    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="financeDownloadUncleared()">📄 Download Uncleared List PDF</button>`;
-    return html;
-};
-
-window.financeDownloadUncleared = function() {
-    showSuccessAlert("Uncleared Students List PDF Downloaded!");
-};
-
-/* ── 4. Received PDFs ── */
-function financeReceivedHTML() {
-    const data = getData();
-    const received = (data.financeReceived || []).filter(f => f.fromRole === 'hospital' || f.from === 'Hospital');
-    return `
-        <div class="admin-section-head">📥 Received Bills — Hospital</div>
+    if (key === 'hospital') {
+        const bills = (data.financeReceived || []).filter(f => f.fromRole === 'hospital');
+        area.innerHTML = `
         <div class="admin-card">
-            ${received.length === 0
-                ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No bills received yet.</p>'
-                : received.slice().reverse().map(f => `
-                <div style="padding:1rem;background:var(--bg-elevated);border-radius:12px;margin-bottom:10px;border-left:4px solid ${f.addedToFees ? 'var(--success)' : 'var(--warning)'};">
+            <div class="admin-card-title">🏥 From Hospital</div>
+            <div style="margin-top:10px;">
+                ${bills.length === 0 ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No bills yet.</p>' :
+                bills.slice().reverse().map(f => `
+                <div style="padding:1rem;background:var(--bg-elevated);border-radius:12px;margin-bottom:10px;border-left:4px solid ${f.addedToFees?'var(--success)':'var(--warning)'};">
                     <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
                         <strong>${f.studentName}</strong>
                         <span style="font-weight:800;color:var(--success);">KSh ${f.amount.toLocaleString()}</span>
@@ -2110,259 +2152,563 @@ function financeReceivedHTML() {
                         ? `<span class="admin-role-pill" style="margin-top:8px;background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">✅ Added to Fees — Student Notified</span>`
                         : `<button class="admin-btn-primary" style="margin-top:8px;" onclick="financeAddBillToFees('${f.id}')">💰 Add to Student Fees & Notify</button>`}
                 </div>`).join('')}
-        </div>`;
-}
-
-window.financeAddBillToFees = function(finId) {
-    const data = getData();
-    const f = (data.financeReceived || []).find(x => x.id === finId);
-    if (!f || f.addedToFees) return;
-    const student = data.students.find(s => s.id === f.studentId);
-    if (student) student.feeBalance = (student.feeBalance || 0) + f.amount;
-    f.addedToFees = true;
-    f.read = true;
-    pushStudentNotification(f.studentId, '🏥 Hospital Bill Added',
-        `You were billed KSh ${f.amount.toLocaleString()} for hospital treatment. This has been added to your fee balance.`, 'hospital_bill');
-    saveData(data);
-    showSuccessAlert(`KSh ${f.amount.toLocaleString()} added to ${f.studentName}'s fees. Student notified.`);
-    document.getElementById('financeMain').innerHTML = financeReceivedHTML();
-};
-
-
-/* ── 5. Financial Report ── */
-function financeReportHTML() {
-    return `
-        <div class="admin-section-head">📊 Financial Report</div>
-        <div class="admin-card">
-            <p><strong>Total Expected Exam Fees:</strong> KSh 48,500</p>
-            <p><strong>Cleared:</strong> KSh 32,000 | <strong>Pending:</strong> KSh 16,500</p>
-            <button class="admin-btn-primary" onclick="financeGenerateFullReport()">
-                📄 Generate Full Report PDF
-            </button>
-        </div>`;
-};
-
-window.financeGenerateFullReport = function() {
-    showSuccessAlert("Full Financial Report PDF Generated Successfully!");
-};
-
-// ====================== FINANCE PORTAL — FULLY INTERACTIVE (Green Alerts) ======================
-function renderFinancePanel(user) {
-    return `
-    <div class="admin-layout">
-        <div class="admin-sidenav">
-            <div class="admin-sidenav-title">
-                <i class="fas fa-coins"></i> Finance Menu
             </div>
-            <button class="admin-nav-btn active" onclick="financeSection('pending',this)">
-                <i class="fas fa-clock"></i> Pending from HOD
-            </button>
-            <button class="admin-nav-btn" onclick="financeSection('cleared',this)">
-                <i class="fas fa-check-circle"></i> Cleared Students
-            </button>
-            <button class="admin-nav-btn" onclick="financeSection('uncleared',this)">
-                <i class="fas fa-exclamation-triangle"></i> Uncleared → Deputy
-            </button>
-            <button class="admin-nav-btn" onclick="financeSection('received',this)">
-                <i class="fas fa-inbox"></i> Received PDFs
-            </button>
-            <button class="admin-nav-btn" onclick="financeSection('report',this)">
-                <i class="fas fa-chart-bar"></i> Financial Report
-            </button>
+        </div>`;
+        return;
+    }
+
+    const items = (data.financeReceived || []).filter(f => f.fromRole === key).slice().reverse();
+    area.innerHTML = `
+        <div class="admin-card">
+            <div class="admin-card-title">${meta.icon} From ${meta.label}</div>
+            <div style="margin-top:10px;">
+                ${items.length === 0 ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No items yet.</p>' : items.map(financeGenericItemCard).join('')}
+            </div>
+        </div>`;
+};
+
+function financeGenericItemCard(f) {
+    return `
+    <div class="admin-card" style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <strong>${f.subject}</strong>
+            ${f.amount ? `<span style="font-weight:800;color:var(--success);">KSh ${f.amount.toLocaleString()}</span>` : ''}
         </div>
-        <div class="admin-main" id="financeMain">
-            ${financePendingHTML()}
-        </div>
+        ${f.studentName ? `<div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px;">${f.studentName} (${f.studentId||'—'})</div>` : ''}
+        <div style="font-size:0.82rem;margin-top:6px;">${f.message}</div>
+        ${f.fileName ? `<div style="font-size:0.7rem;margin-top:6px;color:var(--purple-light);">📎 ${f.fileName}</div>` : ''}
+        <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:6px;">${new Date(f.timestamp).toLocaleString()}</div>
+        ${f.studentId ? `<button class="admin-action-btn edit" style="margin-top:8px;" onclick="financeJumpToStudent('${f.studentId}')"><i class="fas fa-user-graduate"></i> Open in All Students</button>` : ''}
     </div>`;
 }
 
-window.financeSection = function(section, btn) {
-    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const map = {
-        pending:    () => financePendingHTML(),
-        cleared:    () => financeClearedHTML(),
-        uncleared:  () => financeUnclearedHTML(),
-        received:   () => financeReceivedHTML(),
-        report:     () => financeReportHTML()
-    };
-    document.getElementById('financeMain').innerHTML = map[section]();
-};
-
-// Beautiful Green Success Alert (same as Exam Office)
-function showSuccessAlert(message) {
-    const alertHTML = `
-        <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-                    background:#1a1e2c;border:2px solid #10b981;border-radius:16px;
-                    padding:25px 30px;z-index:10000;max-width:380px;text-align:center;
-                    box-shadow:0 10px 30px rgba(0,0,0,0.5);">
-            <div style="font-size:3rem;margin-bottom:10px;">✅</div>
-            <div style="color:#10b981;font-weight:700;font-size:1.1rem;margin-bottom:8px;">
-                ${message}
+/* ══════════════════ SEND — multi-method upload ══════════════════ */
+function financeSendHTML() {
+    const targets = [
+        { key:'hod',          label:'🏛️ HOD' },
+        { key:'admin',        label:'🔐 System Admin' },
+        { key:'examoffice',   label:'📋 Exam Office' },
+        { key:'deputy_acad',  label:'👑 Deputy (Academics)' },
+        { key:'principal',    label:'🎓 Principal' },
+        { key:'deputy_infra', label:'🏗️ Deputy (Infrastructure)' },
+        { key:'procurement',  label:'📦 Procurement Office' }
+    ];
+    return `
+        <div class="admin-section-head">📤 Send</div>
+        <div class="admin-card">
+            <div style="display:grid;gap:10px;">
+                <select id="finSendTarget" class="admin-input">
+                    ${targets.map(t => `<option value="${t.key}">${t.label}</option>`).join('')}
+                </select>
+                <input id="finSendSubject" class="admin-input" placeholder="Subject">
+                <textarea id="finSendMessage" class="admin-input" rows="3" placeholder="Message..."></textarea>
             </div>
-            <button onclick="this.parentElement.remove()" 
-                    style="margin-top:15px;padding:10px 25px;background:#10b981;color:white;
-                    border:none;border-radius:8px;font-weight:600;cursor:pointer;">
-                OK
+
+            <div class="admin-card-title" style="margin-top:14px;">Attach via</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:8px;">
+                <button class="admin-btn-secondary" type="button" onclick="document.getElementById('finSendFile').click()"><i class="fas fa-file-upload"></i> File</button>
+                <button class="admin-btn-secondary" type="button" onclick="financeToggleLinkInput()"><i class="fas fa-link"></i> Paste Link</button>
+                <button class="admin-btn-secondary" type="button" onclick="financeToggleNoteInput()"><i class="fas fa-file-alt"></i> New Note</button>
+                <button class="admin-btn-secondary" type="button" onclick="alert('Google Drive integration requires backend setup — use File or Link instead for now.')"><i class="fab fa-google-drive"></i> Drive</button>
+            </div>
+            <input id="finSendFile" type="file" style="display:none;" onchange="financeShowFileName()">
+            <div id="finSendFileNameDisplay" style="font-size:0.75rem;color:var(--success);margin-top:6px;"></div>
+            <div id="finSendLinkWrap" style="display:none;margin-top:8px;">
+                <input id="finSendLink" class="admin-input" placeholder="Paste link (e.g. shared doc URL)">
+            </div>
+            <div id="finSendNoteWrap" style="display:none;margin-top:8px;">
+                <textarea id="finSendNote" class="admin-input" rows="4" placeholder="Type a quick note/document content..."></textarea>
+            </div>
+
+            <button class="admin-btn-primary" type="button" style="margin-top:16px;width:100%;" onclick="financeSendToDepartment()">
+                <i class="fas fa-paper-plane"></i> Send
             </button>
         </div>`;
-    
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = alertHTML;
-    document.body.appendChild(tempDiv.firstElementChild);
-};
-
-/* ── 1. Pending from HOD ── */
-function financePendingHTML() {
-    const data = getData();
-    let pending = data.examRegistrations.filter(r => r.status === 'pending_finance');
-
-    if (pending.length === 0) {
-        pending = [{ id: "REG-998877", studentId: "STU-2026-20670", totalExamFee: 3200, units: [{name:"CS101"}] }];
-    }
-
-    const cards = pending.map(reg => {
-        const student = data.students.find(s => s.id === reg.studentId) || {name: "Sarah Achieng", department: "Computer Studies", feeBalance: 25000};
-        const examFee = reg.totalExamFee || 0;
-        const currentBalance = student.feeBalance || 0;
-        const newTotal = currentBalance + examFee;
-
-        return `
-        <div class="admin-card" style="margin-bottom:15px;">
-            <div style="font-weight:700;">${student.name}</div>
-            <div style="color:var(--text-secondary);font-size:0.8rem;">${reg.studentId} • ${student.department}</div>
-            
-            <div style="margin:12px 0;padding:12px;background:var(--bg-elevated);border-radius:10px;">
-                <strong>Exam Fee:</strong> KSh ${examFee.toLocaleString()}<br>
-                <strong>Current Balance:</strong> KSh ${currentBalance.toLocaleString()}<br>
-                <strong style="color:var(--purple-light)">New Total: KSh ${newTotal.toLocaleString()}</strong>
-            </div>
-
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <button class="admin-btn-primary" onclick="financeClearStudent('${reg.id}')">
-                    ✅ Clear Fees → Exam Office
-                </button>
-                <button class="admin-action-btn danger" onclick="financeSendToDeputy('${reg.id}')">
-                    ⚠️ Send to Deputy (Uncleared)
-                </button>
-            </div>
-        </div>`;
-    }).join('');
-
-    return `<div class="admin-section-head">💰 Pending from HOD (${pending.length})</div>${cards}`;
 }
 
+window.financeToggleLinkInput = function() {
+    const w = document.getElementById('finSendLinkWrap');
+    w.style.display = w.style.display === 'none' ? 'block' : 'none';
+};
+window.financeToggleNoteInput = function() {
+    const w = document.getElementById('finSendNoteWrap');
+    w.style.display = w.style.display === 'none' ? 'block' : 'none';
+};
+window.financeShowFileName = function() {
+    const f = document.getElementById('finSendFile').files[0];
+    document.getElementById('finSendFileNameDisplay').textContent = f ? `📎 ${f.name}` : '';
+};
+
+window.financeSendToDepartment = function() {
+    const target  = document.getElementById('finSendTarget').value;
+    const subject = document.getElementById('finSendSubject').value.trim();
+    const message = document.getElementById('finSendMessage').value.trim();
+    const file    = document.getElementById('finSendFile').files[0];
+    const link    = document.getElementById('finSendLink')?.value.trim();
+    const note    = document.getElementById('finSendNote')?.value.trim();
+    if (!subject || !message) return alert('Please fill in Subject and Message.');
+
+    const data = getData();
+    const payload = {
+        id: 'FS-' + Date.now(), from: 'Finance Office', fromRole: 'finance',
+        subject, message: message + (link ? `\n🔗 Link: ${link}` : '') + (note ? `\n📝 Note: ${note}` : ''),
+        fileName: file?.name || null,
+        timestamp: new Date().toISOString(), read: false
+    };
+
+    const routes = {
+        hod:          () => { data.hodReceived        = data.hodReceived        || []; data.hodReceived.push(payload); },
+        admin:        () => { data.sysAdminReceived    = data.sysAdminReceived    || []; data.sysAdminReceived.push(payload); },
+        examoffice:   () => { data.examOfficeReceived   = data.examOfficeReceived   || []; data.examOfficeReceived.push(payload); },
+        deputy_acad:  () => { data.deputyAcadReceived   = data.deputyAcadReceived   || []; data.deputyAcadReceived.push(payload); },
+        principal:    () => { data.principalReceived    = data.principalReceived    || []; data.principalReceived.push(payload); },
+        deputy_infra: () => { data.deputyInfraReceived  = data.deputyInfraReceived  || []; data.deputyInfraReceived.push(payload); },
+        procurement:  () => { data.procurementReceived  = data.procurementReceived  || []; data.procurementReceived.push(payload); }
+    };
+    (routes[target] || (()=>{}))();
+
+    data.financeSentItems = data.financeSentItems || [];
+    data.financeSentItems.push({ ...payload, to: target });
+
+    saveData(data);
+    showSuccessAlert(`Sent to ${target.replace('_',' ')} successfully!`);
+    document.getElementById('financeMain').innerHTML = financeSendHTML();
+};
+
+/* ══════════════════ ALL STUDENTS — search, filter, edit fees ══════════════════ */
+function financeStudentsHTML(filters = {}) {
+    const data = getData();
+    let list = data.students || [];
+
+    const q = (filters.search || '').toLowerCase().trim();
+    const month = filters.month || '', year = filters.year || '';
+    const feeMin = filters.feeMin !== undefined && filters.feeMin !== '' ? Number(filters.feeMin) : null;
+    const feeMax = filters.feeMax !== undefined && filters.feeMax !== '' ? Number(filters.feeMax) : null;
+
+    if (q) {
+        list = list.filter(s => {
+            const name  = (s.name  || '').toLowerCase();
+            const id    = (s.id    || '').toLowerCase();
+            const phone = (s.phone || '').toLowerCase();
+            return name.includes(q) || id.includes(q) || phone.includes(q);
+        });
+    }
+    if (feeMin !== null) list = list.filter(s => (s.feeBalance || 0) >= feeMin);
+    if (feeMax !== null) list = list.filter(s => (s.feeBalance || 0) <= feeMax);
+    if (month || year) {
+        list = list.filter(s => (s.financeEditHistory || []).some(h => {
+            const d = new Date(h.timestamp);
+            const mOk = month ? (d.getMonth()+1).toString().padStart(2,'0') === month : true;
+            const yOk = year ? d.getFullYear().toString() === year : true;
+            return mOk && yOk;
+        }));
+    }
+
+    const rows = list.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No students match this filter.</p>`
+        : list.map(s => `
+        <div class="admin-card" style="margin-bottom:8px;" id="stu_row_${s.id}">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                <div>
+                    <strong>${s.name || '—'}</strong>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${s.id || '—'} • ${s.department || '—'} • 📱 ${s.phone || '—'}</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-weight:800;color:${(s.feeBalance||0)===0?'var(--success)':'var(--danger)'};">KSh ${(s.feeBalance||0).toLocaleString()}</div>
+                    <button class="admin-action-btn edit" type="button" style="margin-top:4px;" onclick="financeOpenEditFee('${s.id}')">✏️ Edit</button>
+                </div>
+            </div>
+        </div>`).join('');
+
+    return `
+        <div class="admin-section-head">🎓 All Students (${list.length})</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <input id="finStuSearch" class="admin-input" placeholder="Search by name, admission no, or phone" value="${filters.search||''}" style="margin-bottom:10px;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;">
+                <input id="finStuFeeMin" class="admin-input" type="number" placeholder="Min balance" value="${filters.feeMin||''}">
+                <input id="finStuFeeMax" class="admin-input" type="number" placeholder="Max balance" value="${filters.feeMax||''}">
+                <select id="finStuMonth" class="admin-input">
+                    <option value="">All Months</option>
+                    ${['01','02','03','04','05','06','07','08','09','10','11','12'].map(m=>`<option value="${m}" ${filters.month===m?'selected':''}>${m}</option>`).join('')}
+                </select>
+                <input id="finStuYear" class="admin-input" placeholder="Year (e.g. 2026)" value="${filters.year||''}">
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="admin-btn-primary" type="button" onclick="financeApplyStudentFilter()">Filter</button>
+                <button class="admin-btn-secondary" type="button" onclick="financeClearStudentFilter()">Clear</button>
+            </div>
+        </div>
+        <div id="financeEditModalArea"></div>
+        ${rows}`;
+}
+
+window.financeApplyStudentFilter = function() {
+    const searchEl = document.getElementById('finStuSearch');
+    const minEl    = document.getElementById('finStuFeeMin');
+    const maxEl    = document.getElementById('finStuFeeMax');
+    const monthEl  = document.getElementById('finStuMonth');
+    const yearEl   = document.getElementById('finStuYear');
+
+    window._financeStudentFilters = {
+        search: searchEl ? searchEl.value : '',
+        feeMin: minEl ? minEl.value : '',
+        feeMax: maxEl ? maxEl.value : '',
+        month:  monthEl ? monthEl.value : '',
+        year:   yearEl ? yearEl.value : ''
+    };
+    document.getElementById('financeMain').innerHTML = financeStudentsHTML(window._financeStudentFilters);
+};
+
+window.financeClearStudentFilter = function() {
+    window._financeStudentFilters = {};
+    document.getElementById('financeMain').innerHTML = financeStudentsHTML({});
+};
+
+window.financeJumpToStudent = function(studentId) {
+    window._financeStudentFilters = { search: studentId };
+    const navBtns = document.querySelectorAll('.admin-nav-btn');
+    financeSection('students', navBtns[3] || null);
+    setTimeout(() => window.financeOpenEditFee(studentId), 100);
+};
+
+window.financeOpenEditFee = function(studentId) {
+    const data = getData();
+    const student = data.students.find(s => s.id === studentId);
+    if (!student) return;
+    document.getElementById('financeEditModalArea').innerHTML = `
+        <div class="admin-card" style="border:2px solid var(--purple);margin-bottom:1rem;">
+            <div class="admin-card-title">✏️ Edit Fees — ${student.name} (${student.id})</div>
+            <div style="font-size:0.85rem;margin-top:8px;">Current Balance: <strong style="color:${(student.feeBalance||0)===0?'var(--success)':'var(--danger)'};">KSh ${(student.feeBalance||0).toLocaleString()}</strong></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
+                <select id="feeEditType" class="admin-input">
+                    <option value="add">➕ Add to Balance</option>
+                    <option value="reduce">➖ Reduce Balance</option>
+                </select>
+                <input id="feeEditAmount" type="number" min="0" class="admin-input" placeholder="Amount (KSh)">
+            </div>
+            <textarea id="feeEditReason" class="admin-input" rows="2" placeholder="Reason (e.g. Bursary applied, Late payment penalty)..." style="margin-top:8px;"></textarea>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="admin-btn-primary" type="button" onclick="financeSubmitFeeEdit('${student.id}')"><i class="fas fa-save"></i> Save Change</button>
+                <button class="admin-btn-secondary" type="button" onclick="document.getElementById('financeEditModalArea').innerHTML=''">Cancel</button>
+            </div>
+        </div>`;
+};
+
+window.financeSubmitFeeEdit = function(studentId) {
+    const type   = document.getElementById('feeEditType').value;
+    const amount = parseFloat(document.getElementById('feeEditAmount').value);
+    const reason = document.getElementById('feeEditReason').value.trim();
+    if (!amount || amount <= 0) return alert('Enter a valid amount.');
+    if (!reason) return alert('Please provide a reason for this change.');
+
+    const data = getData();
+    const student = data.students.find(s => s.id === studentId);
+    if (!student) return;
+
+    const before = student.feeBalance || 0;
+    student.feeBalance = type === 'add' ? before + amount : Math.max(0, before - amount);
+
+    student.financeEditHistory = student.financeEditHistory || [];
+    student.financeEditHistory.push({
+        id: 'FE-' + Date.now(), type, amount, reason,
+        before, after: student.feeBalance, timestamp: new Date().toISOString()
+    });
+
+    data.sysAdminReceived = data.sysAdminReceived || [];
+    data.sysAdminReceived.push({
+        id: 'SAR-' + Date.now(), from: 'Finance Office', fromRole: 'finance',
+        subject: `Fee ${type === 'add' ? 'Increase' : 'Reduction'} — ${student.name}`,
+        message: `${student.name} (${student.id}): KSh ${before.toLocaleString()} → KSh ${student.feeBalance.toLocaleString()} (${type === 'add' ? '+' : '-'}KSh ${amount.toLocaleString()}). Reason: ${reason}.`,
+        timestamp: new Date().toISOString(), read: false
+    });
+
+    data.financeStore = data.financeStore || [];
+    data.financeStore.push({
+        id: 'FST-' + Date.now(), studentId: student.id, studentName: student.name,
+        department: student.department, action: `Fee ${type === 'add' ? 'Added' : 'Reduced'}`,
+        amount, reason, before, after: student.feeBalance,
+        timestamp: new Date().toISOString()
+    });
+
+    saveData(data);
+    showSuccessAlert(`${student.name}'s balance updated to KSh ${student.feeBalance.toLocaleString()}. System Admin notified for accountability.`);
+    document.getElementById('financeEditModalArea').innerHTML = '';
+    document.getElementById('financeMain').innerHTML = financeStudentsHTML(window._financeStudentFilters || {});
+};
+
+/* ══════════════════ Legacy HOD clear/uncleared actions (called from Received) ══════════════════ */
 window.financeClearStudent = function(regId) {
     const data = getData();
     const reg = data.examRegistrations.find(r => r.id === regId);
     if (!reg) return;
     const student = data.students.find(s => s.id === reg.studentId);
 
+    const before = student ? (student.feeBalance || 0) : 0;
+    const examFee = reg.totalExamFee || 0;
+    if (student) student.feeBalance = before + examFee;
+    const after = student ? student.feeBalance : examFee;
+
     reg.status = 'pending_exam';
     reg.financeChecked = true;
+
+    data.financeStore = data.financeStore || [];
+    data.financeStore.push({
+        id: 'FST-' + Date.now(), studentId: reg.studentId, studentName: student?.name || reg.studentId,
+        department: student?.department || '—', action: 'HOD Fees Cleared → Exam Office',
+        amount: examFee, reason: 'Exam fee cleared',
+        before, after,
+        timestamp: new Date().toISOString()
+    });
+
     saveData(data);
-
-    generatePDF({ /* ... your existing PDF config ... */ });
-
     showSuccessAlert(`Fees Cleared Successfully!<br>Registration ${regId} sent to Exam Office.`);
-    document.getElementById('financeMain').innerHTML = financePendingHTML();
+    window.financeOpenSenderInbox('hod');
 };
 
 window.financeSendToDeputy = function(regId) {
     const data = getData();
     const reg = data.examRegistrations.find(r => r.id === regId);
     if (!reg) return;
-
     reg.status = 'pending_deputy';
     reg.referredToDeputy = true;
+
+    data.financeStore = data.financeStore || [];
+    const student = data.students.find(s => s.id === reg.studentId);
+    data.financeStore.push({
+        id: 'FST-' + Date.now(), studentId: reg.studentId, studentName: student?.name || reg.studentId,
+        department: student?.department || '—', action: 'Sent to Deputy (Uncleared)',
+        amount: reg.totalExamFee || 0, reason: 'Fees not cleared', timestamp: new Date().toISOString()
+    });
+
     saveData(data);
-
-    generatePDF({ /* ... your existing PDF config ... */ });
-
-    showSuccessAlert(`Student sent to Deputy Academics!<br>PDF generated for review.`);
-    document.getElementById('financeMain').innerHTML = financePendingHTML();
+    showSuccessAlert(`Student sent to Deputy Academics!`);
+    window.financeOpenSenderInbox('hod');
 };
 
-/* ── 2. Cleared Students ── */
-function financeClearedHTML() {
+window.financeAddBillToFees = function(finId) {
     const data = getData();
-    const cleared = data.examRegistrations.filter(r => r.financeChecked && r.status === 'pending_exam');
+    const f = (data.financeReceived || []).find(x => x.id === finId);
+    if (!f || f.addedToFees) return;
+    const student = data.students.find(s => s.id === f.studentId);
 
-    let html = `<div class="admin-section-head">✅ Cleared Students (${cleared.length})</div>`;
+    const before = student ? (student.feeBalance || 0) : 0;
+    if (student) student.feeBalance = before + f.amount;
+    const after = student ? student.feeBalance : f.amount;
 
-    if (cleared.length === 0) {
-        html += `<div class="admin-card"><p>No cleared students yet.</p></div>`;
-    } else {
-        html += cleared.map(reg => {
-            const student = data.students.find(s => s.id === reg.studentId) || {};
-            return `<div class="admin-card">✅ ${student.name} (${reg.studentId}) — Cleared</div>`;
-        }).join('');
-    }
+    f.addedToFees = true;
+    f.read = true;
+    pushStudentNotification(f.studentId, '🏥 Hospital Bill Added',
+        `You were billed KSh ${f.amount.toLocaleString()} for hospital treatment. This has been added to your fee balance.`, 'hospital_bill');
 
-    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="financeDownloadCleared()">📄 Download Cleared List PDF</button>`;
-    return html;
+    data.financeStore = data.financeStore || [];
+    data.financeStore.push({
+        id: 'FST-' + Date.now(), studentId: f.studentId, studentName: f.studentName,
+        department: student?.department || '—', action: 'Hospital Bill Added to Fees',
+        amount: f.amount, reason: f.message,
+        before, after,
+        timestamp: new Date().toISOString()
+    });
+
+    saveData(data);
+    showSuccessAlert(`KSh ${f.amount.toLocaleString()} added to ${f.studentName}'s fees. Student notified.`);
+    window.financeOpenSenderInbox('hospital');
 };
 
-window.financeDownloadCleared = function() {
-    showSuccessAlert("Cleared Students List PDF Downloaded Successfully!");
-};
-
-/* ── 3. Uncleared → Deputy ── */
-function financeUnclearedHTML() {
+/* ══════════════════ MY STORE ══════════════════ */
+function financeStoreHTML(filters = {}) {
     const data = getData();
-    const uncleared = data.examRegistrations.filter(r => r.referredToDeputy);
+    let store = data.financeStore || [];
 
-    let html = `<div class="admin-section-head">⚠️ Uncleared → Deputy (${uncleared.length})</div>`;
+    const dept = filters.department || '', month = filters.month || '', year = filters.year || '', search = (filters.search||'').toLowerCase().trim();
+    if (dept) store = store.filter(s => s.department === dept);
+    if (search) store = store.filter(s => (s.studentName||'').toLowerCase().includes(search) || (s.studentId||'').toLowerCase().includes(search));
+    if (month || year) store = store.filter(s => {
+        const d = new Date(s.timestamp);
+        const mOk = month ? (d.getMonth()+1).toString().padStart(2,'0') === month : true;
+        const yOk = year ? d.getFullYear().toString() === year : true;
+        return mOk && yOk;
+    });
 
-    if (uncleared.length === 0) {
-        html += `<div class="admin-card"><p>No uncleared students at the moment.</p></div>`;
-    } else {
-        html += uncleared.map(reg => {
-            const student = data.students.find(s => s.id === reg.studentId) || {};
-            return `<div class="admin-card">⚠️ ${student.name} (${reg.studentId}) — Sent to Deputy</div>`;
-        }).join('');
-    }
+    const allDepts = [...new Set((data.financeStore||[]).map(s => s.department).filter(Boolean))];
 
-    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="financeDownloadUncleared()">📄 Download Uncleared List PDF</button>`;
-    return html;
-};
+    const rows = store.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No records match this filter.</p>`
+        : store.slice().reverse().map(s => `
+        <div class="admin-card" style="margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                <div>
+                    <strong>${s.studentName}</strong>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${s.studentId} • ${s.department}</div>
+                </div>
+                <div style="text-align:right;">
+                    <span class="admin-role-pill">${s.action}</span>
+                    <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:4px;">${new Date(s.timestamp).toLocaleString()}</div>
+                </div>
+            </div>
+            ${s.amount ? `<div style="font-size:0.8rem;margin-top:6px;color:var(--success);font-weight:700;">KSh ${s.amount.toLocaleString()}</div>` : ''}
+            ${s.before !== undefined ? `
+            <div style="font-size:0.78rem;margin-top:6px;padding:8px;background:var(--bg-elevated);border-radius:8px;">
+                Previous: <strong>KSh ${s.before.toLocaleString()}</strong> + Added: <strong style="color:var(--success);">KSh ${s.amount.toLocaleString()}</strong>
+                → New Total: <strong style="color:var(--purple-light);">KSh ${s.after.toLocaleString()}</strong>
+            </div>` : ''}
+            ${s.reason ? `<div style="font-size:0.78rem;margin-top:4px;color:var(--text-secondary);">${s.reason}</div>` : ''}
+        </div>`).join('');
 
-window.financeDownloadUncleared = function() {
-    showSuccessAlert("Uncleared Students List PDF Downloaded!");
-};
-
-/* ── 4. Received PDFs ── */
-function financeReceivedHTML() {
     return `
-        <div class="admin-section-head">📥 Received PDFs / Documents</div>
-        <div class="admin-card">
-            <strong>HOD Exam Fee List</strong><br>
-            REG-998877 — Sarah Achieng (Computer Studies)
-            <button class="admin-btn-primary" style="margin-top:10px;" onclick="financeViewReceivedPDF('hod1')">
-                📄 View / Download PDF
-            </button>
-        </div>`;
+        <div class="admin-section-head">🗄️ My Store (${store.length})</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+                <button class="admin-btn-secondary" type="button" onclick="financeExportStore('pdf')"><i class="fas fa-file-pdf"></i> Save as PDF</button>
+                <button class="admin-btn-secondary" type="button" onclick="financeExportStore('excel')"><i class="fas fa-file-excel"></i> Save as Excel</button>
+            </div>
+            <input id="finStoreSearch" class="admin-input" placeholder="Search student name/admission no" value="${filters.search||''}" style="margin-bottom:10px;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;">
+                <select id="finStoreDept" class="admin-input">
+                    <option value="">All Departments</option>
+                    ${allDepts.map(d => `<option value="${d}" ${dept===d?'selected':''}>${d}</option>`).join('')}
+                </select>
+                <select id="finStoreMonth" class="admin-input">
+                    <option value="">All Months</option>
+                    ${['01','02','03','04','05','06','07','08','09','10','11','12'].map(m=>`<option value="${m}" ${month===m?'selected':''}>${m}</option>`).join('')}
+                </select>
+                <input id="finStoreYear" class="admin-input" placeholder="Year" value="${year}">
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="admin-btn-primary" type="button" onclick="financeApplyStoreFilter()">Filter</button>
+                <button class="admin-btn-secondary" type="button" onclick="financeClearStoreFilter()">Clear</button>
+            </div>
+        </div>
+        ${rows}`;
+}
+
+window.financeApplyStoreFilter = function() {
+    const searchEl = document.getElementById('finStoreSearch');
+    const deptEl   = document.getElementById('finStoreDept');
+    const monthEl  = document.getElementById('finStoreMonth');
+    const yearEl   = document.getElementById('finStoreYear');
+
+    window._financeStoreFilters = {
+        search: searchEl ? searchEl.value : '',
+        department: deptEl ? deptEl.value : '',
+        month: monthEl ? monthEl.value : '',
+        year: yearEl ? yearEl.value : ''
+    };
+    document.getElementById('financeMain').innerHTML = financeStoreHTML(window._financeStoreFilters);
 };
 
-window.financeViewReceivedPDF = function(id) {
-    showSuccessAlert("HOD PDF Opened Successfully!");
+window.financeClearStoreFilter = function() {
+    window._financeStoreFilters = {};
+    document.getElementById('financeMain').innerHTML = financeStoreHTML({});
 };
 
-/* ── 5. Financial Report ── */
+window.financeExportStore = function(type) {
+    const data = getData();
+    const store = data.financeStore || [];
+    if (store.length === 0) return alert('No records to export.');
+    if (type === 'pdf') {
+        generatePDF({
+            title: 'Finance Office — My Store Records', subtitle: 'Archive of all processed fee actions',
+            office: 'FINANCE OFFICE', stage: 'Store', department: '',
+            signatoryLabel: 'Finance Officer Signature',
+            columns: [
+                {label:'Student', key:'studentName'}, {label:'Admission No', key:'studentId'},
+                {label:'Department', key:'department'}, {label:'Action', key:'action'},
+                {label:'Previous', key:'beforeDisplay'}, {label:'Added', key:'amountDisplay'},
+                {label:'New Total', key:'afterDisplay'}, {label:'Date', key:'date'}
+            ],
+            rows: store.map(s => ({
+                ...s,
+                amountDisplay: s.amount ? `KSh ${s.amount.toLocaleString()}` : '—',
+                beforeDisplay: s.before !== undefined ? `KSh ${s.before.toLocaleString()}` : '—',
+                afterDisplay: s.after !== undefined ? `KSh ${s.after.toLocaleString()}` : '—',
+                date: new Date(s.timestamp).toLocaleDateString()
+            }))
+        });
+    } else {
+        const headers = 'Student,AdmissionNo,Department,Action,Previous,Added,NewTotal,Reason,Date';
+        const body = store.map(s => `"${s.studentName||''}","${s.studentId||''}","${s.department||''}","${s.action||''}","${s.before??''}","${s.amount||0}","${s.after??''}","${(s.reason||'').replace(/"/g,'')}","${new Date(s.timestamp).toLocaleDateString()}"`).join('\n');
+        const blob = new Blob([headers+'\n'+body], {type:'application/vnd.ms-excel'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `finance_store.xls`;
+        a.click(); URL.revokeObjectURL(url);
+    }
+};
+
+/* ══════════════════ REPORT — SVG graphs ══════════════════ */
 function financeReportHTML() {
+    const data = getData();
+    const store = data.financeStore || [];
+    const students = data.students || [];
+
+    const totalOutstanding = students.reduce((s,x) => s + (x.feeBalance||0), 0);
+    const totalPaid = students.reduce((s,x) => s + ((x.totalFee||0) - (x.feeBalance||0)), 0);
+
+    const actionTally = {};
+    store.forEach(s => { actionTally[s.action] = (actionTally[s.action]||0) + 1; });
+    const actionBars = Object.entries(actionTally).map(([a,c],i) => ({ label:a.split(' ').slice(0,2).join(' '), value:c, color:['#8b5cf6','#3b82f6','#10b981','#f59e0b','#ef4444'][i%5] }));
+
+    const byCategoryUnread = {};
+    financeSenders.forEach(s => {
+        const count = (data.financeReceived||[]).filter(f=>f.fromRole===s.key).length + (s.key==='hod' ? (data.examRegistrations||[]).filter(r=>r.status==='pending_finance').length : 0);
+        byCategoryUnread[s.category] = (byCategoryUnread[s.category]||0)+count;
+    });
+
     return `
-        <div class="admin-section-head">📊 Financial Report</div>
+        <div class="admin-section-head">📊 Report</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Store Actions Breakdown</div>
+            <div style="overflow-x:auto;margin-top:10px;">${svgBarChart(actionBars.length?actionBars:[{label:'No data',value:0,color:'#3a2d6e'}])}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Fee Collection Overview</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([{value:totalPaid||0.0001,color:'#10b981'},{value:totalOutstanding||0.0001,color:'#ef4444'}])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Paid KSh ${totalPaid.toLocaleString()}</span>&nbsp;
+                    <span style="color:var(--danger);">● Outstanding KSh ${totalOutstanding.toLocaleString()}</span>
+                </div>
+            </div>
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Received Items by Category</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart(Object.entries(byCategoryUnread).map(([cat,val]) => ({value:val||0.0001, color:financeCategoryColors[cat]})))}
+                </div>
+                <div style="font-size:0.72rem;margin-top:8px;">
+                    ${Object.entries(byCategoryUnread).map(([cat,val]) => `<span style="color:${financeCategoryColors[cat]};">● ${cat} ${val}</span>`).join(' &nbsp; ')}
+                </div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${students.length}</h3><p>Total Students</p></div>
+            <div class="stat-card"><h3>${store.length}</h3><p>Actions Recorded</p></div>
+            <div class="stat-card"><h3>${(data.financeSentItems||[]).length}</h3><p>Items Sent</p></div>
+        </div>`;
+}
+
+/* ══════════════════ POST TO GLOBAL NOTICE BOARD ══════════════════ */
+function financeNoticeboardHTML() {
+    return `
+        <div class="admin-section-head">📢 Post to Global Notice Board</div>
         <div class="admin-card">
-            <p><strong>Total Expected Exam Fees:</strong> KSh 48,500</p>
-            <p><strong>Cleared:</strong> KSh 32,000 | <strong>Pending:</strong> KSh 16,500</p>
-            <button class="admin-btn-primary" onclick="financeGenerateFullReport()">
-                📄 Generate Full Report PDF
+            <textarea id="finNoticeMsg" class="admin-input" rows="4" placeholder="e.g. Fee payment deadline is 30th June 2026..."></textarea>
+            <button class="admin-btn-primary" type="button" style="margin-top:10px;" onclick="financePostNotice()">
+                <i class="fas fa-bullhorn"></i> Post Notice
             </button>
         </div>`;
-};
+}
 
-window.financeGenerateFullReport = function() {
-    showSuccessAlert("Full Financial Report PDF Generated Successfully!");
+window.financePostNotice = function() {
+    const msg = document.getElementById('finNoticeMsg').value.trim();
+    if (!msg) return alert('Enter a message.');
+    const data = getData();
+    data.noticeboard = data.noticeboard || [];
+    data.noticeboard.push({ id: 'n' + Date.now(), sender: 'Finance Office', message: msg, timestamp: new Date().toISOString(), recipient: 'all' });
+    saveData(data);
+    showSuccessAlert('Notice posted to Global Notice Board!');
+    document.getElementById('finNoticeMsg').value = '';
 };
 
 /* ══════════════════════════════════════════
@@ -3143,84 +3489,457 @@ window.infraPostNotice = function() {
     document.getElementById('infraMain').innerHTML = infraNoticesHTML();
 };
  
-/* ── Section switcher ── */
-window.adminSection = function(section, btn) {
-    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const main = document.getElementById('adminMain');
-    const map = {
-        users:       adminUsersHTML,
-        principals:  adminPrincipalsHTML,
-        departments: adminDepartmentsHTML,
-        courses:     adminCoursesHTML,
-        announce:    adminAnnounceHTML,
-        idcards:     adminIDCardsHTML,
-        logs:        adminLogsHTML,
-        backup:      adminBackupHTML,
-        export:      adminExportHTML,
-    };
-    main.innerHTML = (map[section] || adminUsersHTML)();
-};
+
 
 /* ══════════════════════════════════════════
-   EXAMINATION OFFICE PORTAL
+   EXAMINATION OFFICE PORTAL — RESTRUCTURED
 ══════════════════════════════════════════ */
-// ====================== EXAM OFFICE PORTAL — FULL INTERACTIVE ======================
+
 function renderExamOfficePanel(user) {
+    const unread = (getData().examOfficeReceived || []).filter(r => !r.read).length;
     return `
     <div class="admin-layout">
         <div class="admin-sidenav">
-            <div class="admin-sidenav-title">
-                <i class="fas fa-building"></i> Exam Office Menu
-            </div>
-            
-            <button class="admin-nav-btn active" onclick="examOfficeSection('pending',this)">
-                <i class="fas fa-clock"></i> Pending Final Approval
+            <div class="admin-sidenav-title"><i class="fas fa-building"></i> Exam Office Menu</div>
+            <button class="admin-nav-btn" onclick="examOfficeSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
+            <button class="admin-nav-btn active" onclick="examOfficeSection('received',this)">
+                <i class="fas fa-bell"></i> Received
+                ${unread > 0 ? `<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${unread}</span>` : ''}
             </button>
-            <button class="admin-nav-btn" onclick="examOfficeSection('registered',this)">
-                <i class="fas fa-check-circle"></i> Registered Students
-            </button>
-            <button class="admin-nav-btn" onclick="examOfficeSection('register',this)">
-                <i class="fas fa-list"></i> Exam Register
-            </button>
-            <button class="admin-nav-btn" onclick="examOfficeSection('report',this)">
-                <i class="fas fa-chart-bar"></i> Reports & Statistics
-            </button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('pending',this)"><i class="fas fa-clock"></i> Pending Final Approval</button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('registered',this)"><i class="fas fa-check-circle"></i> Registered Students</button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('booking',this)"><i class="fas fa-calendar-check"></i> Booking</button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('store',this)"><i class="fas fa-archive"></i> My Store</button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('send',this)"><i class="fas fa-paper-plane"></i> Send</button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('register',this)"><i class="fas fa-list"></i> Exam Register</button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('report',this)"><i class="fas fa-chart-bar"></i> Report</button>
         </div>
-        
         <div class="admin-main" id="examOfficeMain">
-            ${examOfficePendingHTML()}
+            ${examOfficeReceivedHTML()}
         </div>
     </div>`;
 }
 
 window.examOfficeSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
+    if (btn) btn.classList.add('active');
     const map = {
-        pending:    () => examOfficePendingHTML(),
-        registered: () => examOfficeRegisteredHTML(),
-        register:   () => examOfficeRegisterHTML(),
-        report:     () => examOfficeReportHTML()
+        profile:    examOfficeProfileHTML,
+        received:   examOfficeReceivedHTML,
+        pending:    examOfficePendingHTML,
+        registered: examOfficeRegisteredHTML,
+        booking:    () => examOfficeBookingHTML(window._examBookingFilters || {}),
+        store:      () => examOfficeStoreHTML(window._examStoreFilters || {}),
+        send:       examOfficeSendHTML,
+        register:   examOfficeRegisterHTML,
+        report:     examOfficeReportHTML
     };
-    
-    document.getElementById('examOfficeMain').innerHTML = map[section]();
+    document.getElementById('examOfficeMain').innerHTML = (map[section] || examOfficeReceivedHTML)();
 };
 
-// Pending Final Approval
+/* ══════════════════ PROFILE ══════════════════ */
+function examOfficeProfileHTML(user) {
+    const data = getData();
+    return `
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">
+                <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#6c3fcf,#a855f7);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;flex-shrink:0;">📋</div>
+                <div>
+                    <h3 style="margin:0;">${user?.name || 'Exam Officer'}</h3>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user?.id || 'EXAM-001'}</div>
+                    <span class="admin-role-pill" style="margin-top:6px;display:inline-block;">📋 Examination Office</span>
+                </div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${(data.examOfficeReceived||[]).length}</h3><p>Items Received</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${(data.examOfficeStore||[]).length}</h3><p>Stored Records</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light);">${(data.examOfficeSentItems||[]).length}</h3><p>Items Sent</p></div>
+        </div>`;
+}
+
+/* ══════════════════ RECEIVED — 3D department cards ══════════════════ */
+function examOfficeReceivedHTML() {
+    const data = getData();
+    const items = data.examOfficeReceived || [];
+    const senders = [
+        { key:'principal',    label:'Principal',            icon:'🎓', color:'#a855f7' },
+        { key:'admin',        label:'System Admin',         icon:'🔐', color:'#6c3fcf' },
+        { key:'deputy_acad',  label:'Deputy (Academics)',   icon:'👑', color:'#3b82f6' },
+        { key:'register',     label:'Registrar',            icon:'📇', color:'#10b981' }
+    ];
+
+    const cards = senders.map(s => {
+        const fromItems = items.filter(i => i.fromRole === s.key);
+        const pendingCount = fromItems.filter(i => i.status === 'pending').length;
+        return `
+        <div onclick="examOfficeOpenSenderInbox('${s.key}')" style="cursor:pointer;background:linear-gradient(135deg, ${s.color}22, ${s.color}11); border:1px solid ${s.color}55; border-radius:16px; padding:1.4rem; text-align:center; transition:transform .25s, box-shadow .25s;"
+             onmouseover="this.style.transform='translateY(-6px) scale(1.02)'; this.style.boxShadow='0 12px 24px ${s.color}33';"
+             onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+            <div style="font-size:2.4rem;">${s.icon}</div>
+            <div style="font-weight:700;margin-top:8px;">${s.label}</div>
+            <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:4px;">${fromItems.length} item(s)</div>
+            ${pendingCount > 0
+                ? `<span class="admin-role-pill" style="margin-top:8px;display:inline-block;background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);">🔔 ${pendingCount} pending</span>`
+                : `<span class="admin-role-pill" style="margin-top:8px;display:inline-block;">✅ Clear</span>`}
+        </div>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">📥 Received</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Items sent from the Principal, System Admin, Deputy (Academics) and Registrar arrive here.
+                Click a department card to review, confirm, or reject each item.
+            </p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;">${cards}</div>
+        <div id="examSenderInboxArea" style="margin-top:1.2rem;"></div>`;
+}
+
+window.examOfficeOpenSenderInbox = function(senderKey) {
+    const data  = getData();
+    const items = (data.examOfficeReceived || []).filter(i => i.fromRole === senderKey).slice().reverse();
+    const labelMap = { principal:'Principal', admin:'System Admin', deputy_acad:'Deputy (Academics)', register:'Registrar' };
+
+    const rows = items.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No items from this department yet.</p>`
+        : items.map(i => {
+            const statusColor = i.status === 'confirmed' ? 'var(--success)' : i.status === 'rejected' ? 'var(--danger)' : 'var(--warning)';
+            const statusLabel = i.status === 'confirmed' ? '✅ Confirmed' : i.status === 'rejected' ? '❌ Rejected' : '⏳ Pending';
+            return `
+            <div class="admin-card" style="margin-bottom:10px;border-left:4px solid ${statusColor};" onclick="examOfficeMarkReceivedRead('${i.id}')">
+                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                    <div>
+                        <strong>${i.subject}</strong>
+                        ${i.studentName ? `<div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px;">${i.studentName} (${i.studentId||'—'}) • ${i.department||'—'}</div>` : ''}
+                    </div>
+                    <span class="admin-role-pill" style="background:${statusColor}22;border-color:${statusColor};color:${statusColor};">${statusLabel}</span>
+                </div>
+                <div style="font-size:0.82rem;margin-top:8px;">${i.message}</div>
+                ${i.fileName ? `<div style="font-size:0.72rem;margin-top:6px;color:var(--purple-light);">📎 ${i.fileName}</div>` : ''}
+                ${i.status === 'rejected' && i.rejectionReason ? `<div style="font-size:0.72rem;margin-top:6px;color:var(--danger);">Reason: ${i.rejectionReason}</div>` : ''}
+                <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:6px;">${new Date(i.timestamp).toLocaleString()}</div>
+                ${i.status === 'pending' ? `
+                <div style="display:flex;gap:8px;margin-top:10px;">
+                    <button class="admin-btn-primary" onclick="event.stopPropagation();examOfficeConfirmReceived('${i.id}')">✅ Confirm</button>
+                    <button class="admin-action-btn danger" onclick="event.stopPropagation();examOfficeRejectReceived('${i.id}')">❌ Reject</button>
+                </div>` : ''}
+            </div>`;
+        }).join('');
+
+    document.getElementById('examSenderInboxArea').innerHTML = `
+        <div class="admin-card">
+            <div class="admin-card-title">📨 From ${labelMap[senderKey]} (${items.length})</div>
+            <div style="margin-top:10px;">${rows}</div>
+        </div>`;
+};
+
+window.examOfficeMarkReceivedRead = function(id) {
+    const data = getData();
+    const item = (data.examOfficeReceived || []).find(i => i.id === id);
+    if (item) item.read = true;
+    saveData(data);
+};
+
+window.examOfficeConfirmReceived = function(id) {
+    const data = getData();
+    const item = (data.examOfficeReceived || []).find(i => i.id === id);
+    if (!item) return;
+    item.status = 'confirmed';
+    item.read = true;
+    data.examOfficeBookings = data.examOfficeBookings || [];
+    data.examOfficeBookings.push({
+        id: 'BK-' + Date.now(), sourceId: item.id,
+        studentId: item.studentId, studentName: item.studentName,
+        department: item.department, course: item.course || '—',
+        subject: item.subject, message: item.message,
+        confirmedAt: new Date().toISOString(), booked: false
+    });
+    saveData(data);
+    alert(`✅ Confirmed. "${item.subject}" moved to Booking.`);
+    examOfficeOpenSenderInbox(item.fromRole);
+};
+
+window.examOfficeRejectReceived = function(id) {
+    const reason = prompt('Reason for rejection (this will notify the sending department):');
+    if (!reason) return;
+    const data = getData();
+    const item = (data.examOfficeReceived || []).find(i => i.id === id);
+    if (!item) return;
+    item.status = 'rejected';
+    item.rejectionReason = reason;
+    item.read = true;
+
+    const notify = {
+        id: 'NTF-' + Date.now(), from: 'Exam Office', fromRole: 'examoffice',
+        subject: `Rejected: ${item.subject}`,
+        message: `Your item "${item.subject}" was rejected by the Exam Office. Reason: ${reason}`,
+        timestamp: new Date().toISOString(), read: false
+    };
+    const routes = {
+        admin:        () => { data.sysAdminReceived   = data.sysAdminReceived   || []; data.sysAdminReceived.push(notify); },
+        deputy_acad:  () => { data.deputyAcadReceived  = data.deputyAcadReceived  || []; data.deputyAcadReceived.push(notify); },
+        register:     () => { data.registrarReceived   = data.registrarReceived   || []; data.registrarReceived.push(notify); },
+        principal:    () => { data.principalReceived    = data.principalReceived    || []; data.principalReceived.push(notify); }
+    };
+    (routes[item.fromRole] || (()=>{}))();
+
+    saveData(data);
+    alert(`❌ Rejected. Sending department notified with reason.`);
+    examOfficeOpenSenderInbox(item.fromRole);
+};
+
+/* ══════════════════ BOOKING ══════════════════ */
+function examOfficeBookingHTML(filters = {}) {
+    const data = getData();
+    let bookings = (data.examOfficeBookings || []).filter(b => !b.booked);
+
+    const admin = filters.admin || '', dept = filters.department || '', course = filters.course || '';
+    if (admin)  bookings = bookings.filter(b => (b.studentId||'').toLowerCase().includes(admin.toLowerCase()));
+    if (dept)   bookings = bookings.filter(b => b.department === dept);
+    if (course) bookings = bookings.filter(b => b.course === course);
+
+    const allDepts   = [...new Set((data.examOfficeBookings||[]).map(b => b.department).filter(Boolean))];
+    const allCourses = [...new Set((data.examOfficeBookings||[]).map(b => b.course).filter(Boolean))];
+
+    const rows = bookings.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No items awaiting booking.</p>`
+        : bookings.map(b => `
+        <div class="admin-card" style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;">
+                <div>
+                    <strong>${b.studentName || b.subject}</strong>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${b.studentId||'—'} • ${b.department||'—'} • ${b.course||'—'}</div>
+                    <div style="font-size:0.78rem;margin-top:4px;">${b.subject}</div>
+                </div>
+                <button class="admin-btn-primary" onclick="examOfficeBookItem('${b.id}')"><i class="fas fa-check"></i> Booked</button>
+            </div>
+        </div>`).join('');
+
+    return `
+        <div class="admin-section-head">📅 Booking (${bookings.length})</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;">
+                <input id="bkFilterAdmin" class="admin-input" placeholder="Admission No" value="${admin}">
+                <select id="bkFilterDept" class="admin-input">
+                    <option value="">All Departments</option>
+                    ${allDepts.map(d => `<option value="${d}" ${dept===d?'selected':''}>${d}</option>`).join('')}
+                </select>
+                <select id="bkFilterCourse" class="admin-input">
+                    <option value="">All Courses</option>
+                    ${allCourses.map(c => `<option value="${c}" ${course===c?'selected':''}>${c}</option>`).join('')}
+                </select>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="admin-btn-primary" onclick="examOfficeApplyBookingFilter()">Filter</button>
+                <button class="admin-btn-secondary" onclick="examOfficeClearBookingFilter()">Clear</button>
+            </div>
+        </div>
+        ${rows}`;
+}
+
+window.examOfficeApplyBookingFilter = function() {
+    window._examBookingFilters = {
+        admin: document.getElementById('bkFilterAdmin').value,
+        department: document.getElementById('bkFilterDept').value,
+        course: document.getElementById('bkFilterCourse').value
+    };
+    document.getElementById('examOfficeMain').innerHTML = examOfficeBookingHTML(window._examBookingFilters);
+};
+window.examOfficeClearBookingFilter = function() {
+    window._examBookingFilters = {};
+    document.getElementById('examOfficeMain').innerHTML = examOfficeBookingHTML({});
+};
+
+window.examOfficeBookItem = function(bookingId) {
+    const data = getData();
+    const booking = (data.examOfficeBookings || []).find(b => b.id === bookingId);
+    if (!booking) return;
+    booking.booked = true;
+    booking.bookedAt = new Date().toISOString();
+    data.examOfficeStore = data.examOfficeStore || [];
+    data.examOfficeStore.push({
+        id: 'ST-' + Date.now(),
+        studentId: booking.studentId, studentName: booking.studentName,
+        department: booking.department, course: booking.course,
+        subject: booking.subject, message: booking.message,
+        storedAt: new Date().toISOString()
+    });
+    saveData(data);
+    alert('✅ Marked as Booked and moved to My Store.');
+    document.getElementById('examOfficeMain').innerHTML = examOfficeBookingHTML(window._examBookingFilters || {});
+};
+
+/* ══════════════════ MY STORE ══════════════════ */
+function examOfficeStoreHTML(filters = {}) {
+    const data = getData();
+    let store = data.examOfficeStore || [];
+
+    const dept = filters.department || '', course = filters.course || '', month = filters.month || '', year = filters.year || '';
+    if (dept)   store = store.filter(s => s.department === dept);
+    if (course) store = store.filter(s => s.course === course);
+    if (month)  store = store.filter(s => (new Date(s.storedAt).getMonth()+1).toString().padStart(2,'0') === month);
+    if (year)   store = store.filter(s => new Date(s.storedAt).getFullYear().toString() === year);
+
+    const allDepts   = [...new Set((data.examOfficeStore||[]).map(s => s.department).filter(Boolean))];
+    const allCourses = [...new Set((data.examOfficeStore||[]).map(s => s.course).filter(Boolean))];
+    const allYears   = [...new Set((data.examOfficeStore||[]).map(s => new Date(s.storedAt).getFullYear().toString()))];
+
+    const rows = store.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No stored records match this filter.</p>`
+        : store.slice().reverse().map(s => `
+        <div class="admin-card" style="margin-bottom:8px;">
+            <strong>${s.studentName || s.subject}</strong>
+            <div style="font-size:0.72rem;color:var(--text-secondary);">${s.studentId||'—'} • ${s.department||'—'} • ${s.course||'—'} • ${new Date(s.storedAt).toLocaleDateString()}</div>
+            <div style="font-size:0.78rem;margin-top:4px;">${s.subject}</div>
+        </div>`).join('');
+
+    return `
+        <div class="admin-section-head">🗄️ My Store (${store.length})</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+                <button class="admin-btn-secondary" onclick="examOfficeExportStore('pdf')"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="admin-btn-secondary" onclick="examOfficeExportStore('excel')"><i class="fas fa-file-excel"></i> Excel</button>
+                <button class="admin-btn-secondary" onclick="examOfficeExportStore('csv')"><i class="fas fa-file-csv"></i> CSV</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;">
+                <select id="stFilterDept" class="admin-input">
+                    <option value="">All Departments</option>
+                    ${allDepts.map(d => `<option value="${d}" ${dept===d?'selected':''}>${d}</option>`).join('')}
+                </select>
+                <select id="stFilterCourse" class="admin-input">
+                    <option value="">All Courses</option>
+                    ${allCourses.map(c => `<option value="${c}" ${course===c?'selected':''}>${c}</option>`).join('')}
+                </select>
+                <select id="stFilterMonth" class="admin-input">
+                    <option value="">All Months</option>
+                    ${['01','02','03','04','05','06','07','08','09','10','11','12'].map(m => `<option value="${m}" ${month===m?'selected':''}>${m}</option>`).join('')}
+                </select>
+                <select id="stFilterYear" class="admin-input">
+                    <option value="">All Years</option>
+                    ${allYears.map(y => `<option value="${y}" ${year===y?'selected':''}>${y}</option>`).join('')}
+                </select>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="admin-btn-primary" onclick="examOfficeApplyStoreFilter()">Filter</button>
+                <button class="admin-btn-secondary" onclick="examOfficeClearStoreFilter()">Clear</button>
+            </div>
+        </div>
+        ${rows}`;
+}
+
+window.examOfficeApplyStoreFilter = function() {
+    window._examStoreFilters = {
+        department: document.getElementById('stFilterDept').value,
+        course: document.getElementById('stFilterCourse').value,
+        month: document.getElementById('stFilterMonth').value,
+        year: document.getElementById('stFilterYear').value
+    };
+    document.getElementById('examOfficeMain').innerHTML = examOfficeStoreHTML(window._examStoreFilters);
+};
+window.examOfficeClearStoreFilter = function() {
+    window._examStoreFilters = {};
+    document.getElementById('examOfficeMain').innerHTML = examOfficeStoreHTML({});
+};
+
+window.examOfficeExportStore = function(type) {
+    const data = getData();
+    const store = data.examOfficeStore || [];
+    if (store.length === 0) return alert('No records to export.');
+    if (type === 'pdf') {
+        generatePDF({
+            title: 'Exam Office — My Store Records', subtitle: 'Booked student records archive',
+            office: 'EXAM OFFICE', stage: 'Store', department: '',
+            signatoryLabel: 'Exam Officer Signature',
+            columns: [
+                {label:'Student', key:'studentName'}, {label:'Admission No', key:'studentId'},
+                {label:'Department', key:'department'}, {label:'Course', key:'course'},
+                {label:'Subject', key:'subject'}, {label:'Date Stored', key:'date'}
+            ],
+            rows: store.map(s => ({...s, date: new Date(s.storedAt).toLocaleDateString()}))
+        });
+    } else {
+        const headers = 'Student,AdmissionNo,Department,Course,Subject,DateStored';
+        const body = store.map(s => `"${s.studentName||''}","${s.studentId||''}","${s.department||''}","${s.course||''}","${s.subject||''}","${new Date(s.storedAt).toLocaleDateString()}"`).join('\n');
+        const blob = new Blob([headers+'\n'+body], {type: type==='excel' ? 'application/vnd.ms-excel' : 'text/csv'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `exam_office_store.${type==='excel'?'xls':'csv'}`;
+        a.click(); URL.revokeObjectURL(url);
+    }
+};
+
+/* ══════════════════ SEND ══════════════════ */
+function examOfficeSendHTML() {
+    const targets = [
+        { key:'finance',     label:'💰 Finance' },
+        { key:'deputy_acad', label:'👑 Deputy (Academics)' },
+        { key:'admin',       label:'🔐 System Admin' },
+        { key:'register',    label:'📇 Registrar' },
+        { key:'principal',   label:'🎓 Principal' }
+    ];
+    return `
+        <div class="admin-section-head">📤 Send</div>
+        <div class="admin-card">
+            <p style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:10px;">
+                Upload a file and/or write a message, choose the department, then send.
+            </p>
+            <div style="display:grid;gap:10px;">
+                <select id="sendTargetDept" class="admin-input">
+                    ${targets.map(t => `<option value="${t.key}">${t.label}</option>`).join('')}
+                </select>
+                <input id="sendSubject" class="admin-input" placeholder="Subject">
+                <textarea id="sendMessage" class="admin-input" rows="3" placeholder="Message..."></textarea>
+                <input id="sendFile" type="file" class="admin-input">
+            </div>
+            <button class="admin-btn-primary" style="margin-top:12px;" onclick="examOfficeSendToDepartment()">
+                <i class="fas fa-paper-plane"></i> Send
+            </button>
+        </div>`;
+}
+
+window.examOfficeSendToDepartment = function() {
+    const target  = document.getElementById('sendTargetDept').value;
+    const subject = document.getElementById('sendSubject').value.trim();
+    const message = document.getElementById('sendMessage').value.trim();
+    const file    = document.getElementById('sendFile').files[0];
+    if (!subject || !message) return alert('Please fill in Subject and Message.');
+
+    const data = getData();
+    const payload = {
+        id: 'EOS-' + Date.now(), from: 'Exam Office', fromRole: 'examoffice',
+        subject, message, fileName: file?.name || null,
+        timestamp: new Date().toISOString(), read: false
+    };
+
+    const routes = {
+        finance:     () => { data.financeReceived   = data.financeReceived   || []; data.financeReceived.push({...payload, amount:0, studentId:null, studentName:null, addedToFees:false}); },
+        deputy_acad: () => { data.deputyAcadReceived = data.deputyAcadReceived || []; data.deputyAcadReceived.push(payload); },
+        admin:       () => { data.sysAdminReceived   = data.sysAdminReceived   || []; data.sysAdminReceived.push(payload); },
+        register:    () => { data.registrarReceived  = data.registrarReceived  || []; data.registrarReceived.push(payload); },
+        principal:   () => { data.principalReceived  = data.principalReceived  || []; data.principalReceived.push(payload); }
+    };
+    (routes[target] || (()=>{}))();
+
+    data.examOfficeSentItems = data.examOfficeSentItems || [];
+    data.examOfficeSentItems.push({ ...payload, to: target });
+
+    saveData(data);
+    alert(`✅ Sent to ${target.replace('_',' ')}.`);
+    document.getElementById('examOfficeMain').innerHTML = examOfficeSendHTML();
+};
+
+/* ══════════════════ PENDING FINAL APPROVAL (kept) ══════════════════ */
 function examOfficePendingHTML() {
     const data = getData();
     let pending = data.examRegistrations.filter(r => r.status === 'pending_exam');
 
     if (pending.length === 0) {
-        // Demo data if empty
         pending = [{
-            id: "REG-687074",
-            studentId: "STU-2026-20670",
-            status: "pending_exam",
-            totalExamFee: 4700,
-            units: [{name:"Computer Essentials", code:"CS101"}],
+            id: "REG-687074", studentId: "STU-2026-20670", status: "pending_exam",
+            totalExamFee: 4700, units: [{name:"Computer Essentials", code:"CS101"}],
             submittedDate: new Date().toISOString()
         }];
     }
@@ -3237,56 +3956,24 @@ function examOfficePendingHTML() {
                 <strong>Units:</strong> ${reg.units.length}<br>
                 <strong>Exam Fee:</strong> KSh ${(reg.totalExamFee || 0).toLocaleString()}
             </div>
-
             <div style="display:flex;gap:10px;">
-                <button class="admin-btn-primary" onclick="examOfficeRegisterStudent('${reg.id}')">
-                    ✅ Register for Exams
-                </button>
-                <button class="admin-action-btn danger" onclick="examOfficeReject('${reg.id}')">
-                    ❌ Reject
-                </button>
+                <button class="admin-btn-primary" onclick="examOfficeRegisterStudent('${reg.id}')">✅ Register for Exams</button>
+                <button class="admin-action-btn danger" onclick="examOfficeReject('${reg.id}')">❌ Reject</button>
             </div>
         </div>`;
     }).join('');
 
-    return `
-        <div class="admin-section-head">📋 Pending Final Approval (${pending.length})</div>
-        ${cards}`;
-};
-
-// Success Alert Function
-function showSuccessAlert(message) {
-    const alertHTML = `
-        <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-                    background:#1a1e2c;border:2px solid #10b981;border-radius:16px;
-                    padding:25px 30px;z-index:10000;max-width:380px;text-align:center;
-                    box-shadow:0 10px 30px rgba(0,0,0,0.5);">
-            <div style="font-size:3rem;margin-bottom:10px;">✅</div>
-            <div style="color:#10b981;font-weight:700;font-size:1.1rem;margin-bottom:8px;">
-                ${message}
-            </div>
-            <button onclick="this.parentElement.remove()" 
-                    style="margin-top:15px;padding:10px 25px;background:#10b981;color:white;
-                    border:none;border-radius:8px;font-weight:600;cursor:pointer;">
-                OK
-            </button>
-        </div>`;
-    
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = alertHTML;
-    document.body.appendChild(tempDiv.firstElementChild);
+    return `<div class="admin-section-head">📋 Pending Final Approval (${pending.length})</div>${cards}`;
 }
 
 window.examOfficeRegisterStudent = function(regId) {
     const data = getData();
     const reg = data.examRegistrations.find(r => r.id === regId);
     if (!reg) return;
-
     reg.status = 'approved';
     reg.examApproved = true;
     reg.examApprovedDate = new Date().toISOString();
     saveData(data);
-
     showSuccessAlert(`Registration ${regId} approved successfully!<br>Student is now fully registered for exams.`);
     document.getElementById('examOfficeMain').innerHTML = examOfficePendingHTML();
 };
@@ -3294,7 +3981,6 @@ window.examOfficeRegisterStudent = function(regId) {
 window.examOfficeReject = function(regId) {
     const reason = prompt("Reason for rejection:");
     if (!reason) return;
-
     const data = getData();
     const reg = data.examRegistrations.find(r => r.id === regId);
     if (reg) {
@@ -3302,19 +3988,16 @@ window.examOfficeReject = function(regId) {
         reg.rejectedBy = 'Exam Office';
         reg.rejectionReason = reason;
         saveData(data);
-        
         showSuccessAlert(`Registration ${regId} has been rejected.`);
         document.getElementById('examOfficeMain').innerHTML = examOfficePendingHTML();
     }
 };
 
-// Registered Students
+/* ══════════════════ REGISTERED STUDENTS (kept) ══════════════════ */
 function examOfficeRegisteredHTML() {
     const data = getData();
     const approved = data.examRegistrations.filter(r => r.status === 'approved');
-
     let html = `<div class="admin-section-head">✅ Registered Students (${approved.length})</div>`;
-
     if (approved.length === 0) {
         html += `<div class="admin-card"><p>No students registered yet.</p></div>`;
     } else {
@@ -3327,50 +4010,83 @@ function examOfficeRegisteredHTML() {
             </div>`;
         }).join('');
     }
-
-    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="examOfficeGenerateFinalList()">
-        📄 Generate Final Registered List PDF
-    </button>`;
-
+    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="examOfficeGenerateFinalList()">📄 Generate Final Registered List PDF</button>`;
     return html;
-};
+}
 
 window.examOfficeGenerateFinalList = function() {
     showSuccessAlert("Final Registered Students List PDF Generated!<br>Ready for printing.");
 };
 
-// Exam Register
+/* ══════════════════ EXAM REGISTER (kept) ══════════════════ */
 function examOfficeRegisterHTML() {
     return `
         <div class="admin-section-head">📋 Full Exam Register</div>
         <div class="admin-card">
             <p>Full official exam register with all approved students.</p>
-            <button class="admin-btn-primary" onclick="examOfficeGenerateRegister()">
-                📄 Generate & Download Exam Register PDF
-            </button>
+            <button class="admin-btn-primary" onclick="examOfficeGenerateRegister()">📄 Generate & Download Exam Register PDF</button>
         </div>`;
-};
+}
 
 window.examOfficeGenerateRegister = function() {
     showSuccessAlert("Official Exam Register PDF Generated!<br>Contains all approved students.");
 };
 
-// Reports & Statistics
+/* ══════════════════ REPORT — SVG graphs ══════════════════ */
 function examOfficeReportHTML() {
-    return `
-        <div class="admin-section-head">📊 Reports & Statistics</div>
-        <div class="admin-card">
-            <p>Total Approved Students: <strong>12</strong></p>
-            <p>By Department: Computer Studies (8), Hospitality (4)</p>
-            <button class="admin-btn-primary" onclick="examOfficeGenerateReport()">
-                📊 Generate Full Statistics Report PDF
-            </button>
-        </div>`;
-};
+    const data = getData();
+    const received  = data.examOfficeReceived || [];
+    const confirmed = received.filter(r => r.status==='confirmed').length;
+    const rejected  = received.filter(r => r.status==='rejected').length;
+    const pending   = received.filter(r => r.status==='pending').length;
 
-window.examOfficeGenerateReport = function() {
-    showSuccessAlert("Exam Office Statistics Report PDF Generated!");
-};
+    const bookings = data.examOfficeBookings || [];
+    const booked   = bookings.filter(b=>b.booked).length;
+    const awaiting = bookings.filter(b=>!b.booked).length;
+
+    const store = data.examOfficeStore || [];
+    const deptTally = {};
+    store.forEach(s => { deptTally[s.department||'Unspecified'] = (deptTally[s.department||'Unspecified']||0)+1; });
+    const deptBars = Object.entries(deptTally).map(([d,c],i) => ({ label:d, value:c, color: ['#8b5cf6','#3b82f6','#10b981','#f59e0b','#ef4444'][i%5] }));
+
+    return `
+        <div class="admin-section-head">📊 Report</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Stored Records by Department</div>
+            <div style="overflow-x:auto;margin-top:10px;">
+                ${svgBarChart(deptBars.length ? deptBars : [{label:'No data',value:0,color:'#3a2d6e'}])}
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;">
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Received Items Status</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([{value:confirmed||0.0001,color:'#10b981'},{value:pending||0.0001,color:'#f59e0b'},{value:rejected||0.0001,color:'#ef4444'}])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Confirmed ${confirmed}</span>&nbsp;
+                    <span style="color:var(--warning);">● Pending ${pending}</span>&nbsp;
+                    <span style="color:var(--danger);">● Rejected ${rejected}</span>
+                </div>
+            </div>
+            <div class="admin-card" style="text-align:center;">
+                <div class="admin-card-title">Booking Status</div>
+                <div style="display:flex;justify-content:center;margin-top:10px;">
+                    ${svgDonutChart([{value:booked||0.0001,color:'#10b981'},{value:awaiting||0.0001,color:'#f59e0b'}])}
+                </div>
+                <div style="font-size:0.75rem;margin-top:8px;">
+                    <span style="color:var(--success);">● Booked ${booked}</span>&nbsp;
+                    <span style="color:var(--warning);">● Awaiting ${awaiting}</span>
+                </div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${received.length}</h3><p>Total Received</p></div>
+            <div class="stat-card"><h3>${bookings.length}</h3><p>Total Bookings</p></div>
+            <div class="stat-card"><h3>${store.length}</h3><p>Stored Records</p></div>
+            <div class="stat-card"><h3>${(data.examOfficeSentItems||[]).length}</h3><p>Items Sent</p></div>
+        </div>`;
+}
 
 /* ══════════════════════════════════════════
    DEAN OF STUDENTS PORTAL — Full Implementation
@@ -6400,8 +7116,10 @@ function renderHospitalPanel(user) {
                 <i class="fas fa-inbox"></i> Received
                 ${unread > 0 ? `<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${unread}</span>` : ''}
             </button>
+            <button class="admin-nav-btn" onclick="hospitalSection('allergies',this)"><i class="fas fa-allergies"></i> Allergies</button>
             <button class="admin-nav-btn" onclick="hospitalSection('records',this)"><i class="fas fa-file-medical"></i> Medical Records</button>
             <button class="admin-nav-btn" onclick="hospitalSection('billing',this)"><i class="fas fa-coins"></i> Billing → Finance</button>
+            <button class="admin-nav-btn" onclick="hospitalSection('storage',this)"><i class="fas fa-box-archive"></i> Storage</button>
             <button class="admin-nav-btn" onclick="hospitalSection('report',this)"><i class="fas fa-chart-bar"></i> Report</button>
         </div>
         <div class="admin-main" id="hospitalMain">
@@ -6420,7 +7138,9 @@ window.hospitalSection = function(section, btn) {
         received: () => hospitalReceivedHTML(user),
         records:  () => hospitalRecordsHTML(user),
         billing:  () => hospitalBillingHTML(user),
-        report:   () => hospitalReportHTML(user)
+         storage: () => hospitalStorageHTML(user, window._hospitalStorageFilters || {}),
+        allergies: () => hospitalAllergiesHTML(user),
+        report:    () => hospitalReportHTML(user)
     };
     const target = document.getElementById('hospitalMain');
     if (target) target.innerHTML = (map[section] || (() => hospitalReceivedHTML(user)))();
@@ -6462,6 +7182,105 @@ function hospitalProfileHTML(user) {
             <div class="stat-card"><h3 style="color:var(--purple-light);">${bills.length}</h3><p>Bills Issued</p></div>
         </div>`;
 }
+
+ /* ── Student Allergies ── */
+function hospitalAllergiesHTML(user) {
+    const data      = getData();
+    const allergies = data.studentAllergies || [];
+
+    return `
+        <div class="admin-section-head">⚠️ Student Allergies & Dietary Records</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Captured from medical reports submitted when students first join.
+                These flags are visible to the Mess Department during meal ordering to prevent harmful serving.
+            </p>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add Allergy Record</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">ADMISSION NO (auto-fills name)</label>
+                    <input type="text" id="algId" class="admin-input" placeholder="e.g. STU-2026-20669" oninput="hospitalAutoFillAllergy(this.value)" style="margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">STUDENT NAME (auto-filled)</label>
+                    <input type="text" id="algName" class="admin-input" readonly style="margin-top:4px;background:var(--bg-elevated);">
+                </div>
+            </div>
+            <div style="margin-top:10px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">ALLERGIES (one per line — e.g. "Lactose intolerant", "Nut allergy")</label>
+                <textarea id="algAllergies" class="admin-input" rows="3" placeholder="Lactose intolerant&#10;Nut allergy" style="margin-top:4px;"></textarea>
+            </div>
+            <div style="margin-top:10px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">DIETARY RESTRICTIONS</label>
+                <textarea id="algDiet" class="admin-input" rows="2" placeholder="e.g. No red meat, Vegetarian" style="margin-top:4px;"></textarea>
+            </div>
+            <div style="margin-top:10px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">OTHER MEDICAL CONDITIONS</label>
+                <input type="text" id="algMedical" class="admin-input" placeholder="e.g. Mild anaemia — needs iron-rich foods" style="margin-top:4px;">
+            </div>
+            <button class="admin-btn-primary" style="margin-top:12px;" onclick="hospitalSaveAllergy()">
+                <i class="fas fa-save"></i> Save Allergy Record
+            </button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Allergy Records (${allergies.length})</div>
+            ${allergies.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No records yet.</p>'
+                : allergies.map(a => `
+                <div style="padding:1rem;background:var(--bg-elevated);border-radius:14px;border-left:4px solid var(--warning);margin-top:10px;">
+                    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                        <div>
+                            <strong>${a.studentName}</strong>
+                            <div style="font-size:0.72rem;color:var(--text-secondary);">${a.studentId}</div>
+                        </div>
+                        <span style="font-size:0.68rem;color:var(--text-secondary);">Recorded: ${new Date(a.recordedAt).toLocaleDateString()}</span>
+                    </div>
+                    <div style="font-size:0.82rem;margin-top:8px;">
+                        <div>⚠️ <strong>Allergies:</strong> ${a.allergies.join(' • ')}</div>
+                        ${a.dietaryRestrictions?.length ? `<div style="margin-top:4px;">🥗 <strong>Dietary:</strong> ${a.dietaryRestrictions.join(' • ')}</div>` : ''}
+                        ${a.medicalConditions ? `<div style="margin-top:4px;">🏥 <strong>Medical:</strong> ${a.medicalConditions}</div>` : ''}
+                    </div>
+                </div>`).join('')}
+        </div>`;
+}
+
+window.hospitalAutoFillAllergy = function(admNo) {
+    const data = getData();
+    const stu  = (data.students || []).find(s => s.id === admNo.trim());
+    document.getElementById('algName').value = stu ? stu.name : '';
+};
+
+window.hospitalSaveAllergy = function() {
+    const studentId = document.getElementById('algId')?.value.trim();
+    const studentName = document.getElementById('algName')?.value.trim();
+    const rawAllergies = document.getElementById('algAllergies')?.value.trim();
+    const rawDiet     = document.getElementById('algDiet')?.value.trim();
+    const medical     = document.getElementById('algMedical')?.value.trim();
+
+    if (!studentId || !studentName) return alert('Enter a valid Admission No first.');
+    if (!rawAllergies) return alert('Please list at least one allergy.');
+
+    const data = getData();
+    data.studentAllergies = data.studentAllergies || [];
+    if (data.studentAllergies.find(a => a.studentId === studentId)) {
+        if (!confirm(`A record already exists for ${studentName}. Replace it?`)) return;
+        data.studentAllergies = data.studentAllergies.filter(a => a.studentId !== studentId);
+    }
+
+    data.studentAllergies.push({
+        id: 'SA-'+Date.now(), studentId, studentName,
+        allergies: rawAllergies.split('\n').map(s => s.trim()).filter(Boolean),
+        dietaryRestrictions: rawDiet ? rawDiet.split('\n').map(s => s.trim()).filter(Boolean) : [],
+        medicalConditions: medical || null,
+        recordedBy: 'Hospital', recordedAt: new Date().toISOString()
+    });
+    saveData(data);
+    alert(`✅ Allergy record for ${studentName} saved. Mess Department will see this flag.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hospitalMain').innerHTML = hospitalAllergiesHTML(user);
+};
 
 /* ── Received: pending, attended, and rejected ── */
 function hospitalReceivedHTML(user) {
@@ -6729,11 +7548,146 @@ function hospitalBillingHTML(user) {
                     </div>
                     <div style="text-align:right;">
                         <div style="font-weight:700;color:var(--success);">KSh ${(b.amount||0).toLocaleString()}</div>
-                        <span class="admin-role-pill" style="background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">✅ Received by Finance</span>
+                       <span class="admin-role-pill" style="background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">✅ Sent to Finance</span>
                     </div>
                 </div>`).join('')}
         </div>`;
 }
+
+/* ── Storage: accountability archive, per-arrival, filterable, deletable-with-reason ── */
+function hospitalStorageHTML(user, filters = {}) {
+    const data = getData();
+    let records = (data.hospitalStorage || []).slice().reverse();
+
+    const category = filters.category || '';
+    const search   = (filters.search || '').toLowerCase();
+    const fromDate = filters.fromDate || '';
+    const toDate   = filters.toDate || '';
+
+    if (category) records = records.filter(r => r.category === category);
+    if (search)   records = records.filter(r => r.studentId.toLowerCase().includes(search) || r.studentName.toLowerCase().includes(search));
+    if (fromDate) records = records.filter(r => r.timestamp.slice(0,10) >= fromDate);
+    if (toDate)   records = records.filter(r => r.timestamp.slice(0,10) <= toDate);
+
+    const allCategories = [...new Set((data.hospitalStorage || []).map(r => r.category))];
+
+    const rows = records.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No records match this filter.</p>`
+        : records.map(r => `
+        <div class="admin-card" style="margin-bottom:10px;border-left:4px solid var(--purple);">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                <div>
+                    <span class="admin-role-pill">${r.category}</span>
+                    <div style="font-weight:700;margin-top:6px;">${r.studentName}</div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">${r.studentId} • ${r.department || '—'}</div>
+                </div>
+                <div style="text-align:right;font-size:0.68rem;color:var(--text-secondary);">
+                    ${new Date(r.timestamp).toLocaleDateString()}<br>${new Date(r.timestamp).toLocaleTimeString()}
+                </div>
+            </div>
+            <div style="font-size:0.8rem;margin-top:8px;">${r.description}</div>
+            ${r.amount ? `<div style="font-size:0.8rem;margin-top:4px;color:var(--success);font-weight:700;">KSh ${r.amount.toLocaleString()}</div>` : ''}
+            <button class="admin-action-btn danger" style="margin-top:8px;" onclick="hospitalDeleteStorageRecord('${r.id}')">🗑 Delete</button>
+        </div>`).join('');
+
+    return `
+        <div class="admin-section-head">📦 Storage — Accountability Archive (${records.length})</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Every visit request, medical record, and bill sent is archived here permanently with the exact
+                date and time it happened. Deleting a record requires a reason — it is logged and sent to
+                System Admin for accountability.
+            </p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px;">
+                <select id="storageFilterCategory" class="admin-input">
+                    <option value="">All Categories</option>
+                    ${allCategories.map(c => `<option value="${c}" ${category===c?'selected':''}>${c}</option>`).join('')}
+                </select>
+                <input id="storageFilterSearch" class="admin-input" placeholder="Search Admission No / Name" value="${filters.search || ''}">
+                <input id="storageFilterFrom" type="date" class="admin-input" value="${fromDate}">
+                <input id="storageFilterTo" type="date" class="admin-input" value="${toDate}">
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+                <button class="admin-btn-primary" onclick="hospitalApplyStorageFilter()"><i class="fas fa-filter"></i> Filter</button>
+                <button class="admin-btn-secondary" onclick="hospitalClearStorageFilter()">Clear</button>
+                <button class="admin-action-btn edit" onclick="hospitalGenerateStorageReport()"><i class="fas fa-chart-bar"></i> Generate Report (time frame)</button>
+            </div>
+        </div>
+        <div id="storageReportArea"></div>
+        <div class="admin-card">
+            <div class="admin-card-title">Records (${records.length})</div>
+            ${rows}
+        </div>`;
+}
+
+window.hospitalApplyStorageFilter = function() {
+    const filters = {
+        category: document.getElementById('storageFilterCategory').value,
+        search:   document.getElementById('storageFilterSearch').value,
+        fromDate: document.getElementById('storageFilterFrom').value,
+        toDate:   document.getElementById('storageFilterTo').value
+    };
+    window._hospitalStorageFilters = filters;
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hospitalMain').innerHTML = hospitalStorageHTML(user, filters);
+};
+
+window.hospitalClearStorageFilter = function() {
+    window._hospitalStorageFilters = {};
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hospitalMain').innerHTML = hospitalStorageHTML(user, {});
+};
+
+window.hospitalGenerateStorageReport = function() {
+    const from = document.getElementById('storageFilterFrom').value;
+    const to   = document.getElementById('storageFilterTo').value;
+    if (!from || !to) return alert('Select both a "From" and "To" date to generate a time-frame report.');
+    const data = getData();
+    const records = (data.hospitalStorage || []).filter(r => {
+        const d = r.timestamp.slice(0, 10);
+        return d >= from && d <= to;
+    });
+    const tally = {};
+    let totalAmount = 0;
+    records.forEach(r => {
+        tally[r.category] = (tally[r.category] || 0) + 1;
+        totalAmount += r.amount || 0;
+    });
+    const rows = Object.entries(tally).map(([cat, count]) => `
+        <div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
+            <span>${cat}</span><strong style="color:var(--purple-light);">${count}</strong>
+        </div>`).join('');
+    document.getElementById('storageReportArea').innerHTML = `
+        <div class="admin-card" style="margin-bottom:1rem;border:2px solid var(--purple);">
+            <div class="admin-card-title">📊 Storage Report — ${from} → ${to}</div>
+            <div style="margin-top:10px;">${rows || '<p style="color:var(--text-secondary);font-size:0.85rem;">No records in this range.</p>'}</div>
+            <div style="margin-top:10px;font-size:0.85rem;">
+                <strong>Total Records:</strong> ${records.length} &nbsp;|&nbsp;
+                <strong>Total Amount Involved:</strong> <span style="color:var(--success);">KSh ${totalAmount.toLocaleString()}</span>
+            </div>
+        </div>`;
+};
+
+window.hospitalDeleteStorageRecord = function(recordId) {
+    const reason = prompt('Reason for deleting this record (required for accountability):');
+    if (!reason) return;
+    const data = getData();
+    const record = (data.hospitalStorage || []).find(r => r.id === recordId);
+    if (!record) return;
+    data.hospitalStorage = data.hospitalStorage.filter(r => r.id !== recordId);
+    data.sysAdminReceived = data.sysAdminReceived || [];
+    data.sysAdminReceived.push({
+        id: 'SAR-' + Date.now(),
+        from: 'Hospital', fromRole: 'hospital',
+        subject: `Deleted Record — ${record.studentName} (${record.category})`,
+        message: `Category: ${record.category}. Student: ${record.studentName} (${record.studentId}). Original detail: ${record.description}${record.amount ? ' — KSh ' + record.amount.toLocaleString() : ''}. Reason for deletion: ${reason}.`,
+        timestamp: new Date().toISOString(), read: false
+    });
+    saveData(data);
+    alert('✅ Record deleted. Reason logged and sent to System Admin for accountability.');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('hospitalMain').innerHTML = hospitalStorageHTML(user, window._hospitalStorageFilters || {});
+};
 
 /* ── Report ── */
 function hospitalReportHTML(user) {
@@ -6818,7 +7772,44 @@ window.hospitalRejectVisit = function(visitId) {
     alert(`❌ Visit rejected. Student will see: "${reason}"`);
     const user = JSON.parse(sessionStorage.getItem('currentUser'));
     document.getElementById('hospitalMain').innerHTML = hospitalReceivedHTML(user);
+   
+    data.hospitalStorage = data.hospitalStorage || [];
+data.hospitalStorage.push({
+    id: 'HS-' + Date.now(), category: 'Rejected Visit',
+    studentId: visit.studentId, studentName: visit.studentName, department: visit.department,
+    description: `Visit rejected — Reason: ${reason}`,
+    timestamp: new Date().toISOString()
+});
+
+data.hospitalStorage = data.hospitalStorage || [];
+data.hospitalStorage.push({
+    id: 'HS-' + Date.now(), category: 'Medical Record',
+    studentId, studentName, department,
+    description: `Diagnosis: ${diagnosis}. Treatment: ${treatment}.`,
+    amount: cost,
+    timestamp: new Date().toISOString()
+});
+
+data.hospitalStorage = data.hospitalStorage || [];
+data.hospitalStorage.push({
+    id: 'HS-' + Date.now(), category: 'Bill Sent to Finance',
+    studentId: bill.studentId, studentName: bill.studentName, department: bill.department,
+    description: bill.description, amount: bill.amount,
+    timestamp: new Date().toISOString()
+});
+
+data.hospitalStorage = data.hospitalStorage || [];
+data.hospitalStorage.push({
+    id: 'HS-' + Date.now() + Math.random().toString(36).slice(2,5), category: 'Bill Sent to Finance',
+    studentId: b.studentId, studentName: b.studentName, department: b.department,
+    description: b.description, amount: b.amount,
+    timestamp: new Date().toISOString()
+});
+
+
 };
+
+
 
 window.hospitalSubmitMedicalRecord = function(visitId, studentId, studentName, department) {
     const diagnosis = document.getElementById('mfDiagnosis')?.value.trim();
@@ -6964,7 +7955,8 @@ function renderStudentPanel(user) {
             <button class="admin-nav-btn" onclick="studentSection('fee',this)"><i class="fas fa-wallet"></i> Fee Statement</button>
             <button class="admin-nav-btn" onclick="studentSection('results',this)"><i class="fas fa-graduation-cap"></i> Results</button>
             <button class="admin-nav-btn" onclick="studentSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
-            <button class="admin-nav-btn" onclick="studentSection('hospital',this)"><i class="fas fa-hospital"></i> Hospital</button>
+           <button class="admin-nav-btn" onclick="studentSection('hospital',this)"><i class="fas fa-hospital"></i> Hospital</button>
+            ${(getData().messActivatedStudents||[]).includes(user.id) ? `<button class="admin-nav-btn" onclick="studentSection('mess',this)"><i class="fas fa-utensils"></i> Mess / Meals</button>` : ''}
             <button class="admin-nav-btn" onclick="studentSection('meals',this)"><i class="fas fa-utensils"></i> Meals</button>
             <button class="admin-nav-btn" onclick="studentSection('report',this)"><i class="fas fa-chart-bar"></i> Report</button>
             
@@ -6988,6 +7980,7 @@ window.studentSection = function(section, btn) {
         results:    () => studentResultsHTML(user),
         profile:    () => studentProfileHTML(user),
         hospital:   () => studentHospitalHTML(user),
+        mess:       () => studentMessHTML(user),
          meals:      () => studentMealsHTML(user),
         report:     () => studentReportHTML(user),
        
@@ -7827,6 +8820,179 @@ function studentProfileHTML(user) {
             </div>
         </div>`;
 }
+
+/* ── Mess / Meals ── */
+function studentMessHTML(user) {
+    const data = getData();
+    if (!(data.messActivatedStudents || []).includes(user.id)) {
+        return `
+            <div class="admin-section-head">🍽️ Mess / Meals</div>
+            <div class="admin-card">
+                <p style="color:var(--text-secondary);">You are not registered for boarding meals. Contact the Dean's office if this is an error.</p>
+            </div>`;
+    }
+
+    const today    = new Date().toLocaleDateString('en-CA');
+    const menu     = getTodayMenu();
+    const myOrders = (data.messOrders || []).filter(o => o.studentId === user.id && o.date === today);
+    const allergy  = (data.studentAllergies || []).find(a => a.studentId === user.id);
+    const closeTimes = { morning:'07:30', afternoon:'12:00', evening:'18:30' };
+    const emoji      = { morning:'🌅', afternoon:'☀️', evening:'🌙' };
+    const labels     = { morning:'Morning Breakfast', afternoon:'Afternoon Lunch', evening:'Evening Supper' };
+
+    const isOpen = s => {
+        if (!menu?.[s]?.isSet) return false;
+        const [h,m] = closeTimes[s].split(':').map(Number);
+        const close = new Date(); close.setHours(h,m,0,0);
+        return new Date() < close;
+    };
+
+    const buildCard = s => {
+        const myOrder = myOrders.find(o => o.session === s);
+        const open    = isOpen(s);
+        const set     = menu?.[s]?.isSet;
+
+        let preview = `<em style="color:var(--text-secondary);">Menu not set yet.</em>`;
+        if (set) {
+            preview = s === 'morning'
+                ? `🫖 Tea: ${menu.morning.teaOptions.join(' / ')}<br>🍞 Bread (always included)`
+                : `🍚 Starch: ${menu[s].starchOptions.join(' or ')}<br>🥬 Accompaniment: ${menu[s].accompaniments.join(' or ')}<br>🥩 Protein: ${menu[s].protein}`;
+        }
+
+        let action = '';
+        if (myOrder) {
+            const orderSummary = s === 'morning'
+                ? myOrder.selections?.tea
+                : `${myOrder.selections?.starch} + ${myOrder.selections?.accompaniment} + ${menu?.[s]?.protein}`;
+            action = `
+                <div style="margin-top:10px;padding:8px;background:rgba(16,185,129,.1);border:1px solid var(--success);border-radius:10px;">
+                    <div style="font-size:0.78rem;color:var(--success);">✅ Ordered: <strong>${orderSummary}</strong></div>
+                    ${myOrder.receivedFood === true  ? `<div style="font-size:0.72rem;color:var(--success);margin-top:4px;">✅ You received your meal.</div>`
+                    : myOrder.receivedFood === false ? `<div style="font-size:0.72rem;color:var(--danger);margin-top:4px;">❌ Marked as did not receive.</div>`
+                    : `<div style="font-size:0.72rem;color:var(--warning);margin-top:4px;">⏳ Awaiting serving confirmation.</div>`}
+                </div>`;
+        } else if (!set) {
+            action = `<button disabled style="margin-top:10px;padding:8px 16px;border-radius:10px;background:var(--bg-elevated);color:var(--text-secondary);border:1px solid var(--border);cursor:not-allowed;">🔒 Menu not set yet</button>`;
+        } else if (!open) {
+            action = `<button disabled style="margin-top:10px;padding:8px 16px;border-radius:10px;background:var(--bg-elevated);color:var(--text-secondary);border:1px solid var(--border);cursor:not-allowed;">🔒 Closed at ${closeTimes[s]}</button>`;
+        } else {
+            action = `<button class="admin-btn-primary" style="margin-top:10px;" onclick="studentOpenMessForm('${s}')">🍽️ Order ${labels[s]}</button>`;
+        }
+
+        return `
+        <div class="admin-card" style="margin-bottom:1rem;border-left:4px solid ${open&&!myOrder?'var(--success)':myOrder?'var(--purple)':'var(--border)'};">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div class="admin-card-title">${emoji[s]} ${labels[s]}</div>
+                <span style="font-size:0.68rem;color:var(--text-secondary);">Closes ${closeTimes[s]}</span>
+            </div>
+            <div style="font-size:0.8rem;margin-top:8px;line-height:1.8;">${preview}</div>
+            ${action}
+        </div>`;
+    };
+
+    return `
+        <div class="admin-section-head">🍽️ Mess / Meals — ${today}</div>
+        ${allergy ? `
+        <div class="admin-card" style="margin-bottom:1rem;border-left:4px solid var(--warning);background:rgba(245,158,11,.05);">
+            <p style="font-size:0.82rem;color:var(--warning);">⚠️ Your dietary flag is visible to Mess staff: <strong>${allergy.allergies.join(', ')}</strong></p>
+        </div>` : ''}
+        ${buildCard('morning')}
+        ${buildCard('afternoon')}
+        ${buildCard('evening')}
+
+        <!-- Order Popup -->
+        <div id="messOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:999;align-items:center;justify-content:center;">
+            <div style="background:var(--bg-card);border:1px solid var(--purple);border-radius:20px;padding:2rem;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative;">
+                <button onclick="studentCloseMessForm()" style="position:absolute;top:12px;right:16px;background:none;border:none;color:var(--text-secondary);font-size:1.4rem;cursor:pointer;">✕</button>
+                <div id="messFormBody"></div>
+            </div>
+        </div>`;
+}
+
+window.studentOpenMessForm = function(session) {
+    const menu  = getTodayMenu();
+    const emoji = {morning:'🌅',afternoon:'☀️',evening:'🌙'};
+    const label = {morning:'Morning Breakfast',afternoon:'Afternoon Lunch',evening:'Evening Supper'};
+    let body = `<h3 style="margin:0 0 6px;">${emoji[session]} ${label[session]}</h3>
+                <p style="font-size:0.78rem;color:var(--text-secondary);margin:0 0 16px;">PC Kinyanjui TTI — select your meal below</p>`;
+
+    if (session === 'morning') {
+        body += `<label style="font-size:0.7rem;color:var(--text-secondary);">TEA OPTION</label>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;margin-bottom:16px;">
+                ${(menu.morning.teaOptions||[]).map(t => `
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px;border:1px solid var(--border);border-radius:10px;">
+                    <input type="radio" name="ord_tea" value="${t}"> ${t}
+                </label>`).join('')}
+            </div>
+            <div style="padding:8px;background:rgba(16,185,129,.1);border:1px solid var(--success);border-radius:10px;font-size:0.82rem;margin-bottom:16px;">
+                🍞 Bread is always included
+            </div>`;
+    } else {
+        const m = menu[session];
+        body += `
+            <label style="font-size:0.7rem;color:var(--text-secondary);">STARCH</label>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;margin-bottom:14px;">
+                ${(m.starchOptions||[]).map(s => `
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px;border:1px solid var(--border);border-radius:10px;">
+                    <input type="radio" name="ord_starch" value="${s}"> ${s}
+                </label>`).join('')}
+            </div>
+            <label style="font-size:0.7rem;color:var(--text-secondary);">ACCOMPANIMENT</label>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;margin-bottom:14px;">
+                ${(m.accompaniments||[]).map(a => `
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px;border:1px solid var(--border);border-radius:10px;">
+                    <input type="radio" name="ord_acc" value="${a}"> ${a}
+                </label>`).join('')}
+            </div>
+            <div style="padding:8px;background:rgba(108,63,207,.1);border:1px solid var(--purple);border-radius:10px;font-size:0.82rem;margin-bottom:16px;">
+                🥩 Protein today: <strong>${m.protein}</strong> (same for everyone)
+            </div>`;
+    }
+
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    body += `<button class="admin-btn-primary" style="width:100%;padding:1rem;" onclick="studentSubmitMessOrder('${session}','${user.id}','${user.name}')">
+        <i class="fas fa-paper-plane"></i> Confirm Order
+    </button>`;
+
+    document.getElementById('messFormBody').innerHTML = body;
+    const overlay = document.getElementById('messOverlay');
+    if (overlay) overlay.style.display = 'flex';
+};
+
+window.studentCloseMessForm = function() {
+    const o = document.getElementById('messOverlay');
+    if (o) o.style.display = 'none';
+};
+
+window.studentSubmitMessOrder = function(session, studentId, studentName) {
+    const menu = getTodayMenu();
+    const data = getData();
+    let selections = {};
+
+    if (session === 'morning') {
+        const tea = document.querySelector('input[name="ord_tea"]:checked')?.value;
+        if (!tea) return alert('Please select a tea option.');
+        selections = { tea };
+    } else {
+        const starch = document.querySelector('input[name="ord_starch"]:checked')?.value;
+        const acc    = document.querySelector('input[name="ord_acc"]:checked')?.value;
+        if (!starch || !acc) return alert('Please select both starch and accompaniment.');
+        selections = { starch, accompaniment: acc };
+    }
+
+    data.messOrders = data.messOrders || [];
+    data.messOrders.push({
+        id: 'MO-'+Date.now(), studentId, studentName,
+        date: new Date().toLocaleDateString('en-CA'), session,
+        selections, orderedAt: new Date().toISOString(),
+        receivedFood: null, markedAt: null
+    });
+    saveData(data);
+    studentCloseMessForm();
+    alert('✅ Order confirmed! Reference: MO-'+Date.now().toString().slice(-5));
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('studentMain').innerHTML = studentMessHTML(user);
+};
 
 /* ── 8. Report (inline SVG charts, no external library) ── */
 function svgDonutChart(segments, size = 140) {
@@ -8676,290 +9842,6 @@ window.sportLeaderSection = function(section, btn) {
     document.getElementById('sportLeaderMain').innerHTML = `<div class="admin-card"><p>${section} section coming soon...</p></div>`;
 };
 
-/* ══════════════════════════════════════════
-   STUDENT DASHBOARD — Final Combined Version
-══════════════════════════════════════════ */
-// ====================== FINANCE PORTAL — FULLY INTERACTIVE (Green Alerts) ======================
-function renderFinancePanel(user) {
-    return `
-    <div class="admin-layout">
-        <div class="admin-sidenav">
-            <div class="admin-sidenav-title">
-                <i class="fas fa-coins"></i> Finance Menu
-            </div>
-            <button class="admin-nav-btn active" onclick="financeSection('pending',this)">
-                <i class="fas fa-clock"></i> Pending from HOD
-            </button>
-            <button class="admin-nav-btn" onclick="financeSection('cleared',this)">
-                <i class="fas fa-check-circle"></i> Cleared Students
-            </button>
-            <button class="admin-nav-btn" onclick="financeSection('uncleared',this)">
-                <i class="fas fa-exclamation-triangle"></i> Uncleared → Deputy
-            </button>
-            <button class="admin-nav-btn" onclick="financeSection('received',this)">
-                <i class="fas fa-inbox"></i> Received PDFs
-            </button>
-            <button class="admin-nav-btn" onclick="financeSection('report',this)">
-                <i class="fas fa-chart-bar"></i> Financial Report
-            </button>
-        </div>
-        <div class="admin-main" id="financeMain">
-            ${financePendingHTML()}
-        </div>
-    </div>`;
-}
-
-window.financeSection = function(section, btn) {
-    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const map = {
-        pending:    () => financePendingHTML(),
-        cleared:    () => financeClearedHTML(),
-        uncleared:  () => financeUnclearedHTML(),
-        received:   () => financeReceivedHTML(),
-        report:     () => financeReportHTML()
-    };
-    document.getElementById('financeMain').innerHTML = map[section]();
-};
-
-// Beautiful Green Success Alert (same as Exam Office)
-function showSuccessAlert(message) {
-    const alertHTML = `
-        <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-                    background:#1a1e2c;border:2px solid #10b981;border-radius:16px;
-                    padding:25px 30px;z-index:10000;max-width:380px;text-align:center;
-                    box-shadow:0 10px 30px rgba(0,0,0,0.5);">
-            <div style="font-size:3rem;margin-bottom:10px;">✅</div>
-            <div style="color:#10b981;font-weight:700;font-size:1.1rem;margin-bottom:8px;">
-                ${message}
-            </div>
-            <button onclick="this.parentElement.remove()" 
-                    style="margin-top:15px;padding:10px 25px;background:#10b981;color:white;
-                    border:none;border-radius:8px;font-weight:600;cursor:pointer;">
-                OK
-            </button>
-        </div>`;
-    
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = alertHTML;
-    document.body.appendChild(tempDiv.firstElementChild);
-};
-
-/* ── 1. Pending from HOD ── */
-function financePendingHTML() {
-    const data = getData();
-    let pending = data.examRegistrations.filter(r => r.status === 'pending_finance');
-
-    if (pending.length === 0) {
-        pending = [{ id: "REG-998877", studentId: "STU-2026-20670", totalExamFee: 3200, units: [{name:"CS101"}] }];
-    }
-
-    const cards = pending.map(reg => {
-        const student = data.students.find(s => s.id === reg.studentId) || {name: "Sarah Achieng", department: "Computer Studies", feeBalance: 25000};
-        const examFee = reg.totalExamFee || 0;
-        const currentBalance = student.feeBalance || 0;
-        const newTotal = currentBalance + examFee;
-
-        return `
-        <div class="admin-card" style="margin-bottom:15px;">
-            <div style="font-weight:700;">${student.name}</div>
-            <div style="color:var(--text-secondary);font-size:0.8rem;">${reg.studentId} • ${student.department}</div>
-            
-            <div style="margin:12px 0;padding:12px;background:var(--bg-elevated);border-radius:10px;">
-                <strong>Exam Fee:</strong> KSh ${examFee.toLocaleString()}<br>
-                <strong>Current Balance:</strong> KSh ${currentBalance.toLocaleString()}<br>
-                <strong style="color:var(--purple-light)">New Total: KSh ${newTotal.toLocaleString()}</strong>
-            </div>
-
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <button class="admin-btn-primary" onclick="financeClearStudent('${reg.id}')">
-                    ✅ Clear Fees → Exam Office
-                </button>
-                <button class="admin-action-btn danger" onclick="financeSendToDeputy('${reg.id}')">
-                    ⚠️ Send to Deputy (Uncleared)
-                </button>
-            </div>
-        </div>`;
-    }).join('');
-
-    return `<div class="admin-section-head">💰 Pending from HOD (${pending.length})</div>${cards}`;
-}
-
-window.financeClearStudent = function(regId) {
-    const data = getData();
-    const reg = data.examRegistrations.find(r => r.id === regId);
-    if (!reg) return;
-    const student = data.students.find(s => s.id === reg.studentId);
-
-    reg.status = 'pending_exam';
-    reg.financeChecked = true;
-    saveData(data);
-
-    generatePDF({ /* ... your existing PDF config ... */ });
-
-    showSuccessAlert(`Fees Cleared Successfully!<br>Registration ${regId} sent to Exam Office.`);
-    document.getElementById('financeMain').innerHTML = financePendingHTML();
-};
-
-window.financeSendToDeputy = function(regId) {
-    const data = getData();
-    const reg = data.examRegistrations.find(r => r.id === regId);
-    if (!reg) return;
-
-    reg.status = 'pending_deputy';
-    reg.referredToDeputy = true;
-    saveData(data);
-
-    generatePDF({ /* ... your existing PDF config ... */ });
-
-    showSuccessAlert(`Student sent to Deputy Academics!<br>PDF generated for review.`);
-    document.getElementById('financeMain').innerHTML = financePendingHTML();
-};
-
-/* ── 2. Cleared Students ── */
-function financeClearedHTML() {
-    const data = getData();
-    const cleared = data.examRegistrations.filter(r => r.financeChecked && r.status === 'pending_exam');
-
-    let html = `<div class="admin-section-head">✅ Cleared Students (${cleared.length})</div>`;
-
-    if (cleared.length === 0) {
-        html += `<div class="admin-card"><p>No cleared students yet.</p></div>`;
-    } else {
-        html += cleared.map(reg => {
-            const student = data.students.find(s => s.id === reg.studentId) || {};
-            return `<div class="admin-card">✅ ${student.name} (${reg.studentId}) — Cleared</div>`;
-        }).join('');
-    }
-
-    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="financeDownloadCleared()">📄 Download Cleared List PDF</button>`;
-    return html;
-};
-
-window.financeDownloadCleared = function() {
-    showSuccessAlert("Cleared Students List PDF Downloaded Successfully!");
-};
-
-/* ── 3. Uncleared → Deputy ── */
-function financeUnclearedHTML() {
-    const data = getData();
-    const uncleared = data.examRegistrations.filter(r => r.referredToDeputy);
-
-    let html = `<div class="admin-section-head">⚠️ Uncleared → Deputy (${uncleared.length})</div>`;
-
-    if (uncleared.length === 0) {
-        html += `<div class="admin-card"><p>No uncleared students at the moment.</p></div>`;
-    } else {
-        html += uncleared.map(reg => {
-            const student = data.students.find(s => s.id === reg.studentId) || {};
-            return `<div class="admin-card">⚠️ ${student.name} (${reg.studentId}) — Sent to Deputy</div>`;
-        }).join('');
-    }
-
-    html += `<button class="admin-btn-primary" style="margin-top:15px;" onclick="financeDownloadUncleared()">📄 Download Uncleared List PDF</button>`;
-    return html;
-};
-
-window.financeDownloadUncleared = function() {
-    showSuccessAlert("Uncleared Students List PDF Downloaded!");
-};
-
-/* ── 4. Received PDFs ── */
-function financeReceivedHTML() {
-    return `
-        <div class="admin-section-head">📥 Received PDFs / Documents</div>
-        <div class="admin-card">
-            <strong>HOD Exam Fee List</strong><br>
-            REG-998877 — Sarah Achieng (Computer Studies)
-            <button class="admin-btn-primary" style="margin-top:10px;" onclick="financeViewReceivedPDF('hod1')">
-                📄 View / Download PDF
-            </button>
-        </div>`;
-};
-
-window.financeViewReceivedPDF = function(id) {
-    showSuccessAlert("HOD PDF Opened Successfully!");
-};
-
-
-// 5. Financial Report
-function financeReportHTML() {
-    return `
-        <div class="admin-section-head">📊 Financial Report</div>
-        <div class="admin-card">
-            <p>Total Expected Exam Fees: <strong>KSh 48,500</strong></p>
-            <p>Cleared: KSh 32,000 | Pending: KSh 16,500</p>
-            <button class="admin-btn-primary" onclick="alert('Full Financial Report PDF Generated')">📄 Generate Full Report PDF</button>
-        </div>`;
-}
-
-// Action Functions
-window.financeClearStudent = function(regId) {
-    const data = getData();
-    const reg = data.examRegistrations.find(r => r.id === regId);
-    if (reg) {
-        reg.status = 'pending_exam';
-        saveData(data);
-        alert(`✅ Fees cleared! Registration ${regId} forwarded to Exam Office.`);
-        document.getElementById('financeMain').innerHTML = financePendingHTML();
-    }
-};
-
-window.financeSendToDeputy = function(regId) {
-    const data = getData();
-    const reg = data.examRegistrations.find(r => r.id === regId);
-    if (reg) {
-        reg.status = 'pending_deputy';
-        saveData(data);
-        alert(`⚠️ Registration sent to Deputy Academics.`);
-        document.getElementById('financeMain').innerHTML = financePendingHTML();
-    }
-};
-
-window.selectSportSubRole = function(subRole) {
-    // Set temporary role for login
-    sessionStorage.setItem('sportSubRole', subRole);
-    
-    const titles = {
-        sportsadmin: 'Sports Admin Login',
-        sportleader: 'Student Sport Leader Login'
-    };
-
-    document.getElementById('dashboardTitle').innerHTML = 
-        `<i class="fas fa-football-ball"></i> ${titles[subRole]}`;
-
-    // Show normal login form but with sport context
-    let content = `
-        <div class="form-card" style="max-width:420px;margin:2rem auto;">
-            <h3 style="text-align:center;">Enter Credentials</h3>
-            <input type="text" id="sportId" class="login-input" placeholder="ID / Username">
-            <input type="password" id="sportPass" class="login-input" placeholder="Password">
-            <button class="btn-primary" style="width:100%;margin-top:1rem;" onclick="handleSportSubLogin()">
-                Login
-            </button>
-        </div>`;
-
-    document.getElementById('dashboardContent').innerHTML = content;
-};
-
-window.handleSportSubLogin = function() {
-    const subRole = sessionStorage.getItem('sportSubRole');
-    const id = document.getElementById('sportId').value.trim();
-    const pass = document.getElementById('sportPass').value.trim();
-
-    // Demo credentials (you can expand later)
-    if (subRole === 'sportsadmin' && pass === 'sports123') {
-        const user = { role: 'sportsadmin', name: 'Sports Admin', id: id || 'SP-ADMIN-001' };
-        sessionStorage.setItem('currentUser', JSON.stringify(user));
-        showDashboard('sportsadmin', user);
-    } else if (subRole === 'sportleader' && pass === 'leader123') {
-        const user = { role: 'sportleader', name: 'Sport Leader', id: id || 'LEADER-001', sport: 'Football' };
-        sessionStorage.setItem('currentUser', JSON.stringify(user));
-        showDashboard('sportleader', user);
-    } else {
-        alert('❌ Invalid credentials. Try:\nSports Admin → sports123\nSport Leader → leader123');
-    }
-};
 
 function renderAdminPanel() {
     return `
@@ -8968,6 +9850,10 @@ function renderAdminPanel() {
         <!-- MINI SIDEBAR NAV -->
         <div class="admin-sidenav">
             <div class="admin-sidenav-title">Admin Menu</div>
+            <button class="admin-nav-btn" onclick="adminSection('received',this)">
+             <i class="fas fa-inbox"></i> Received
+             ${(getData().sysAdminReceived||[]).filter(i=>!i.read).length > 0 ? `<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${(getData().sysAdminReceived||[]).filter(i=>!i.read).length}</span>` : ''}
+            </button>
             <button class="admin-nav-btn active" onclick="adminSection('users',this)">
                 <i class="fas fa-users-cog"></i> User Management
             </button>
@@ -8995,6 +9881,7 @@ function renderAdminPanel() {
             <button class="admin-nav-btn" onclick="adminSection('export',this)">
                 <i class="fas fa-file-export"></i> Export Data
             </button>
+             
         </div>
  
         <!-- MAIN CONTENT AREA -->
@@ -9003,6 +9890,67 @@ function renderAdminPanel() {
         </div>
     </div>`;
 }
+
+/* ── Section switcher ── */
+window.adminSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const main = document.getElementById('adminMain');
+    const map = {
+        received: adminReceivedHTML,
+        users:       adminUsersHTML,
+        principals:  adminPrincipalsHTML,
+        departments: adminDepartmentsHTML,
+        courses:     adminCoursesHTML,
+        announce:    adminAnnounceHTML,
+        idcards:     adminIDCardsHTML,
+        logs:        adminLogsHTML,
+        backup:      adminBackupHTML,
+         messaccess : adminMessAccessHTML,
+        export:      adminExportHTML,
+       
+        
+    };
+    main.innerHTML = (map[section] || adminUsersHTML)();
+};
+
+
+function adminReceivedHTML() {
+    const data  = getData();
+    const items = (data.sysAdminReceived || []).slice().reverse();
+    const unread = items.filter(i => !i.read).length;
+    return `
+        <div class="admin-section-head">📥 Received (${items.length}) ${unread>0?`<span style="color:var(--danger);font-size:0.75rem;">${unread} unread</span>`:''}</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Accountability inbox — deletion reasons and other office reports sent to System Admin (e.g. Hospital
+                Storage deletions, Dean discipline records).
+            </p>
+        </div>
+        <div class="admin-card">
+            ${items.length === 0
+                ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No messages yet.</p>'
+                : items.map(i => `
+                <div style="padding:1rem;background:var(--bg-elevated);border-radius:12px;margin-bottom:10px;border-left:4px solid ${i.read?'var(--border)':'var(--purple)'};" onclick="adminMarkReceivedRead('${i.id}')">
+                    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                        <div>
+                            <span class="admin-role-pill">${i.from}</span>
+                            <div style="font-weight:700;margin-top:6px;font-size:0.88rem;">${i.subject}</div>
+                        </div>
+                        <div style="font-size:0.68rem;color:var(--text-secondary);">${new Date(i.timestamp).toLocaleString()}${!i.read?' <span style="color:var(--purple-light);">● New</span>':''}</div>
+                    </div>
+                    <div style="font-size:0.82rem;margin-top:8px;color:var(--text-secondary);">${i.message}</div>
+                </div>`).join('')}
+        </div>`;
+}
+
+window.adminMarkReceivedRead = function(id) {
+    const data = getData();
+    const item = (data.sysAdminReceived || []).find(i => i.id === id);
+    if (item) item.read = true;
+    saveData(data);
+};
+
 
 /* ══════════════════════════════════════════
    SECTION 1 — USER MANAGEMENT
@@ -9556,6 +10504,56 @@ window.adminRestore = function() {
     };
     reader.readAsText(file);
 };
+
+function adminMessAccessHTML() {
+    const data      = getData();
+    const students  = data.students || [];
+    const activated = data.messActivatedStudents || [];
+
+    const rows = students.map(s => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;">
+            <div>
+                <strong style="font-size:0.85rem;">${s.name}</strong>
+                <div style="font-size:0.72rem;color:var(--text-secondary);">${s.id} • ${s.department}</div>
+            </div>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.85rem;">
+                <input type="checkbox" class="mess-chk" data-id="${s.id}" ${activated.includes(s.id) ? 'checked' : ''}>
+                <span>${activated.includes(s.id) ? '<span style="color:var(--success);">✅ Mess Access</span>' : '<span style="color:var(--text-secondary);">No access</span>'}</span>
+            </label>
+        </div>`).join('');
+
+    return `
+        <div class="admin-section-head">🍽️ Mess Access Management</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Received from Dean (from Finance). Select all students who have paid for boarding meals.
+                Checked students will see the Mess ordering section in their portal.
+                Currently activated: <strong style="color:var(--success);">${activated.length} students</strong>.
+            </p>
+            <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+                <button class="admin-btn-primary" onclick="adminSaveMessAccess()"><i class="fas fa-save"></i> Save Mess Access</button>
+                <button class="admin-btn-secondary" onclick="adminSelectAllMess(true)">Select All</button>
+                <button class="admin-btn-secondary" onclick="adminSelectAllMess(false)">Deselect All</button>
+            </div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Students (${students.length})</div>
+            <div style="margin-top:10px;">${rows || '<p style="color:var(--text-secondary);">No students in system.</p>'}</div>
+        </div>`;
+}
+
+window.adminSaveMessAccess = function() {
+    const data = getData();
+    const checked = [...document.querySelectorAll('.mess-chk:checked')].map(el => el.dataset.id);
+    data.messActivatedStudents = checked;
+    saveData(data);
+    alert(`✅ Mess access saved. ${checked.length} student(s) activated.`);
+    document.getElementById('adminMain').innerHTML = adminMessAccessHTML();
+};
+
+window.adminSelectAllMess = function(select) {
+    document.querySelectorAll('.mess-chk').forEach(el => el.checked = select);
+};
  
 /* ══════════════════════════════════════════
    SECTION 9 — EXPORT DATA
@@ -9994,6 +10992,7 @@ function migrateData() {
     if (!data.hospitalVisits)    { data.hospitalVisits    = []; changed = true; }
     if (!data.medicalRecords)    { data.medicalRecords     = []; changed = true; }
     if (!data.hospitalBills)     { data.hospitalBills      = []; changed = true; }
+    if (!data.hospitalStorage) { data.hospitalStorage = []; changed = true; } 
     if (!data.hostelResidents)   { data.hostelResidents    = [
         { id:'HR-001', studentId:'STU-2026-20670', studentName:'Sarah Achieng',  gender:'Female', room:'Room 14B', wing:'Female Wing', admittedDate:'2024-01-10', status:'resident', clearedForExit:false },
         { id:'HR-002', studentId:'STU-2026-20674', studentName:'Faith Kamau',    gender:'Female', room:'Room 22A', wing:'Female Wing', admittedDate:'2024-01-10', status:'resident', clearedForExit:false },
@@ -10020,6 +11019,23 @@ function migrateData() {
         { id:'LU-001', code:'CS101', name:'Computer Essentials',          level:5, department:'Computer Studies', lecturerId:'LEC-2026-001', semester:'March/April 2026', description:'Introduction to computers and digital literacy' },
         { id:'LU-002', code:'CS102', name:'Computer Operations',          level:5, department:'Computer Studies', lecturerId:'LEC-2026-001', semester:'March/April 2026', description:'Practical computer operations and software use' }
     ]; changed = true; }
+
+    if (!data.examOfficeReceived)  { data.examOfficeReceived  = []; changed = true; }
+if (!data.examOfficeBookings)  { data.examOfficeBookings  = []; changed = true; }
+if (!data.examOfficeStore)     { data.examOfficeStore     = []; changed = true; }
+if (!data.examOfficeSentItems) { data.examOfficeSentItems = []; changed = true; }
+if (!data.deputyAcadReceived)  { data.deputyAcadReceived  = []; changed = true; }
+if (!data.registrarReceived)   { data.registrarReceived   = []; changed = true; }
+if (!data.principalReceived)   { data.principalReceived   = []; changed = true; }
+
+ if (!data.hodReceived)        { data.hodReceived        = []; changed = true; }
+if (!data.deputyInfraReceived){ data.deputyInfraReceived = []; changed = true; }
+if (!data.procurementReceived){ data.procurementReceived = []; changed = true; }
+if (!data.financeStore)       { data.financeStore        = []; changed = true; }
+if (!data.financeSentItems)   { data.financeSentItems    = []; changed = true; }
+if (!data.deputyAcadReceived) { data.deputyAcadReceived  = []; changed = true; }
+if (!data.principalReceived)  { data.principalReceived   = []; changed = true; }
+if (!data.examOfficeReceived) { data.examOfficeReceived  = []; changed = true; }
 
   if (!data.mess)               { data.mess               = { id:'MESS-001', name:'Mess Department', password:'mess123' }; changed = true; }
     if (!data.messActivatedStudents) { data.messActivatedStudents = ['STU-2026-20669','STU-2026-20670']; changed = true; }
