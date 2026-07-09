@@ -13,6 +13,21 @@ function initializeData() {
                 { id: 3, name: "Dr. Peter Omondi",     photo: "https://randomuser.me/api/portraits/men/45.jpg",   startYear: 2020, endYear: 2024, isCurrent: false },
                 { id: 4, name: "Dr. Elizabeth Wanjiku",photo: "https://randomuser.me/api/portraits/women/89.jpg", startYear: 2024, endYear: null, isCurrent: true  }
             ],
+
+            deputyAcadProfile: {
+    fullName: 'Dr. Charles Otieno',
+    email: 'charles.otieno@pcktti.ac.ke',
+    phone: '0722 456 789'
+},
+deputyAcadReceived: [
+    { id:'DAR-DEMO-01', from:'Principal', fromRole:'principal', subject:'Term Directive — Academic Standards Review', message:'Please review and report on academic standards across all departments this term.', timestamp:'2026-06-20T09:00:00.000Z', read:false },
+    { id:'DAR-DEMO-02', from:'Finance', fromRole:'finance', subject:'Uncleared Fees — Exam Blockers', message:'3 students remain uncleared for this exam cycle. See attached list for follow-up.', timestamp:'2026-06-19T09:00:00.000Z', read:false },
+    { id:'DAR-DEMO-03', from:'HOD', fromRole:'hod', subject:'Special Exam Case — Medical Deferral', message:'Requesting approval for a deferred exam sitting due to medical leave.', timestamp:'2026-06-18T09:00:00.000Z', read:false },
+    { id:'DAR-DEMO-04', from:'Dean of Students', fromRole:'dean_admin', subject:'Discipline Escalation Affecting Academics', message:'Student under disciplinary review — please hold exam registration pending outcome.', timestamp:'2026-06-17T09:00:00.000Z', read:false },
+    { id:'DAR-DEMO-05', from:'Exam Office', fromRole:'examoffice', subject:'Rejected Registration — Missing Documents', message:'Registration rejected due to incomplete unit selection. Escalating for review.', timestamp:'2026-06-16T09:00:00.000Z', read:false },
+    { id:'DAR-DEMO-06', from:'System Admin', fromRole:'admin', subject:'New Academic Year Setup', message:'Academic year 2026/2027 structure has been created. Please review department mappings.', timestamp:'2026-06-15T09:00:00.000Z', read:false }
+],
+deputyAcadSentItems: [],
             examOfficeReceived: [
     { id:'EOR-DEMO-01', from:'System Admin', fromRole:'admin', subject:'New Unit Allocation — CS105', message:'Please review and confirm intake for CS105 for Computer Studies students.', fileName:'unit_allocation_cs105.pdf', studentId:null, studentName:null, department:'Computer Studies', course:null, timestamp:'2026-06-20T09:00:00.000Z', status:'pending', read:false },
     { id:'EOR-DEMO-02', from:'Deputy (Academics)', fromRole:'deputy_acad', subject:'Special Exam Approval — Brian Otieno', message:'Approved special sitting for Brian Otieno. Please book accordingly.', fileName:null, studentId:'STU-2026-20671', studentName:'Brian Otieno', department:'Computer Studies', course:'Diploma in Computer Studies', timestamp:'2026-06-21T09:00:00.000Z', status:'pending', read:false },
@@ -33,6 +48,14 @@ principalReceived: [],
                 hostel_f: { images: ["https://placehold.co/400x300/2563eb/white?text=Female+Hostel"], videos: [] },
                 field:    { images: ["https://placehold.co/400x300/6c3fcf/white?text=Main+Field"], videos: [] }
             },
+
+            studentWallRecords: [
+    { id:'SW-001', admissionNo:'STU-1985-00012', name:'James Kariuki', department:'Automotive Engineering', yearJoined:1985, yearGraduated:1987, status:'graduated', statusHistory:[] },
+    { id:'SW-002', admissionNo:'STU-1992-00045', name:'Mary Wanjiru', department:'Business', yearJoined:1992, yearGraduated:1994, status:'graduated', statusHistory:[] },
+    { id:'SW-003', admissionNo:'STU-2001-00108', name:'Samuel Otieno', department:'Electrical Engineering', yearJoined:2001, yearGraduated:null, status:'not_graduated', statusHistory:[] },
+    { id:'SW-004', admissionNo:'STU-2015-00390', name:'Grace Achieng', department:'Computer Studies', yearJoined:2015, yearGraduated:2017, status:'graduated', statusHistory:[] },
+    { id:'SW-005', admissionNo:'STU-2026-20669', name:'John Mwangi', department:'Computer Studies', yearJoined:2026, yearGraduated:null, status:'not_graduated', statusHistory:[] }
+            ],
             infrastructureList: ["library", "sports", "hostel_m", "hostel_f", "field"],
             departments: ['Computer Studies', 'Hospitality', 'Automotive Engineering', 'Electrical Engineering', 'Civil Engineering', 'Business'],
             hospitalVisits: [
@@ -50,11 +73,45 @@ mealCategories: [
     { id:'MC-06', session:'evening',   name:'Stew',      meals:[{id:'M-14',name:'Fish Stew'},{id:'M-15',name:'Beans'}] }
 ],
 
+hostelClearances: {
+    female: [
+        { id:'HC-F-01', studentId:'STU-2026-20670', studentName:'Sarah Achieng', department:'Computer Studies', clearedBy:'Matron', date:'2026-07-05T10:00:00.000Z' }
+    ],
+    male: [
+        { id:'HC-M-01', studentId:'STU-2026-20669', studentName:'John Mwangi', department:'Computer Studies', clearedBy:'Patron', date:'2026-07-04T10:00:00.000Z' }
+    ]
+},
+disciplineRecords: [
+    { id:'DR-DEMO-01', studentId:'STU-2026-20673', studentName:'Peter Njoroge', department:'Computer Studies', severity:'minor', date:'2026-07-02T09:00:00.000Z', offense:'Late to class three times this week', action:'Verbal warning issued', recordedBy:'Front Office', timestamp:'2026-07-02T09:00:00.000Z' }
+],
+
 mealOrders: [],
 messWindowOverrides: { morning: null, afternoon: null, evening: null },
 messBoarders: [],
 messComplaints: [],
 deanComplaints: [],
+          
+           deanAdmin:   { id:'DEAN-ADMIN-001', name:'Dean of Students', password:'dean-4321' },
+deputyDean1: { id:'DDEAN-001', name:'Deputy Dean 1', password:'deputy123' },
+deputyDean2: { id:'DDEAN-002', name:'Deputy Dean 2', password:'deputy4321' },
+frontOffice: { id:'FRONT-001', name:'Front Office', password:'front4321' },
+
+frontOfficeReceived: [
+    { id:'FOR-DEMO-01', from:'Finance Office', fromRole:'finance', subject:'Fee Clearance Summary — June', message:'12 students fully cleared fees for June intake. Please confirm and forward.', timestamp:'2026-06-20T09:00:00.000Z', status:'pending', read:false },
+    { id:'FOR-DEMO-02', from:'Mess Department', fromRole:'mess', subject:'Weekly Meal Attendance Report', message:'320 meals served this week. 4 shortage incidents reported.', timestamp:'2026-06-19T09:00:00.000Z', status:'pending', read:false },
+    { id:'FOR-DEMO-03', from:'Class Reps', fromRole:'classrep', subject:'Computer Studies — Attendance Concern', message:'Several students in Form 3C not attending regularly. Requesting Dean intervention.', timestamp:'2026-06-18T09:00:00.000Z', status:'pending', read:false },
+    { id:'FOR-DEMO-04', from:'KITCO', fromRole:'kitco', subject:'Cultural Festival Proposal', message:'Requesting approval and budget allocation for Annual Cultural Festival 2026.', timestamp:'2026-06-17T09:00:00.000Z', status:'pending', read:false },
+    { id:'FOR-DEMO-05', from:'Principal', fromRole:'principal', subject:'Directive — Term Closing Procedures', message:'Please ensure all clearance and welfare records are up to date before term closes.', timestamp:'2026-06-16T09:00:00.000Z', status:'confirmed', read:true },
+    { id:'FOR-DEMO-06', from:'Deputy Dean 1', fromRole:'deputy_dean', subject:'Discipline Escalation — Repeat Offender', message:'Student has a third minor offense this term. Recommend Dean review.', timestamp:'2026-06-15T09:00:00.000Z', status:'pending', read:false }
+],
+
+deputyDeanReceived: [],
+deanAdminReceived: [],
+deanAdminReview: [],
+deanAdminSentItems: [],
+classRepReceived: [],
+kitcoReceived: [],
+messReceivedFromDean: [], 
             medicalRecords: [
                 { id: 'MR-001', visitId: 'HV-DEMO', studentId: 'STU-2026-20675', studentName: 'Kevin Oduya', department: 'Computer Studies', phone: '0778901234', complaint: 'Ankle sprain from football practice', diagnosis: 'Grade 1 lateral ankle sprain', treatment: 'Bandage applied. Anti-inflammatory administered.', drugsAvailable: 'yes', referral: false, referralReason: null, doctorRemarks: 'Rest foot for 3 days. Return if swelling worsens.', cost: 200, billedToFinance: true, recordedAt: '2026-06-20T14:00:00.000Z' }
             ],
@@ -770,10 +827,22 @@ function showGlobalNoticeBoard() {
     document.getElementById('schoolInfoPanel').innerHTML = html;
 }
 
+
 // ==================== NAVIGATE TO ROLE ====================
- function navigateToRole(role) {
-    if (role === 'home') { showHome(); return; }
-    if (role === 'hostels') { showHostelSubLogin(); return; }
+function navigateToRole(role) {
+    if (role === 'home') { 
+        showHome(); 
+        return; 
+    }
+    if (role === 'dean') { 
+        showDeanSubLogin(); 
+        return; 
+    }
+    if (role === 'hostels') { 
+        showHostelSubLogin(); 
+        return; 
+    }
+
     if (role === 'tour') {
         showTourPage();
         return;
@@ -787,11 +856,13 @@ function showGlobalNoticeBoard() {
         return;
     }
     if (role === 'noticeboard') {
-        alert("📢 Global Notice Board coming soon...");
+        showGlobalNoticeBoard();   // ← You can change this later when ready
         return;
     }
-    if (role === 'studentwall') {
-        alert("👥 Student Wall coming soon...");
+    
+    // ✅ UPDATED STUDENT WALL HANDLING
+    if (role === 'studentwall' || role === 'studentWall') {
+        showStudentWall();
         return;
     }
 
@@ -800,13 +871,13 @@ function showGlobalNoticeBoard() {
     const sideItem = document.querySelector(`.sidebar-menu li[data-role="${role}"]`);
     if (sideItem) sideItem.classList.add('active');
 
-    // SPECIAL HANDLING FOR SPORT CLUB (Sub-login)
+    // SPECIAL HANDLING FOR SPORT CLUB
     if (role === 'sportclub') {
         showSportSubLogin();
         return;
     }
                
-    // Normal login for all other roles
+    // Normal login for other roles
     showLoginForm(role);
 
     // Close sidebar on mobile
@@ -1071,7 +1142,13 @@ function showDashboard(role, user) {
         content += renderSportLeaderPanel(user);
     } else if (role === 'admin') {
         content += renderAdminPanel();
-    }
+    } else if (role === 'dean_admin') {
+    content += renderDeanAdminPanel(user);
+} else if (role === 'deputy_dean1' || role === 'deputy_dean2') {
+    content += renderDeputyDeanPanel(user);
+} else if (role === 'front_office') {
+    content += renderFrontOfficePanel(user);
+}
 
     content += `
         <div class="form-card">
@@ -2711,121 +2788,294 @@ window.financePostNotice = function() {
     document.getElementById('finNoticeMsg').value = '';
 };
 
+
 /* ══════════════════════════════════════════
-   DEPUTY PRINCIPAL (ACADEMICS) — 8 Features
+   DEPUTY (ACADEMICS) PORTAL — RESTRUCTURED
 ══════════════════════════════════════════ */
-function renderDeputyAcadPanel() {
-    return `
-    <div class="admin-layout">
-        <div class="admin-sidenav">
 
-            <div class="admin-sidenav-title">Acad Menu</div>
-            <button class="admin-nav-btn active" onclick="acadSection('approvals',this)"><i class="fas fa-check-circle"></i> Exam Approvals</button>
-            <button class="admin-nav-btn" onclick="acadSection('uncleared',this)"><i class="fas fa-exclamation-circle"></i> Uncleared Fees</button>
-            <button class="admin-nav-btn" onclick="acadSection('calendar',this)"><i class="fas fa-calendar"></i> Academic Calendar</button>
-            <button class="admin-nav-btn" onclick="acadSection('stats',this)"><i class="fas fa-chart-bar"></i> Statistics</button>
-            <button class="admin-nav-btn" onclick="acadSection('policy',this)"><i class="fas fa-gavel"></i> Policy Board</button>
-            <button class="admin-nav-btn" onclick="acadSection('staffreport',this)"><i class="fas fa-chalkboard-user"></i> Staff Report</button>
-            <button class="admin-nav-btn" onclick="acadSection('deptcompare',this)"><i class="fas fa-chart-pie"></i> Dept Comparison</button>
-            <button class="admin-nav-btn" onclick="acadSection('acadnotices',this)"><i class="fas fa-bullhorn"></i> Acad Notices</button>
-        </div>
-        <div class="admin-main" id="acadMain">${acadApprovalsHTML()}</div>
-    </div>`;
+const deputyAcadSenders = [
+    { key:'principal',  label:'Principal',        icon:'🎓' },
+    { key:'finance',    label:'Finance',          icon:'💰' },
+    { key:'hod',        label:'HOD',              icon:'🏛️' },
+    { key:'dean_admin', label:'Dean of Students',  icon:'💛' },
+    { key:'examoffice', label:'Exam Office',       icon:'📋' },
+    { key:'admin',      label:'System Admin',      icon:'🔐' }
+];
+
+function deputyAcadUnreadCount() {
+    const data = getData();
+    return (data.deputyAcadReceived || []).filter(function(i){ return !i.read; }).length;
 }
 
-window.acadSection = function(section, btn) {
-    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+function renderDeputyAcadPanel(user) {
+    const unread = deputyAcadUnreadCount();
+    return (
+        '<div class="admin-layout">' +
+            '<div class="admin-sidenav">' +
+                '<div class="admin-sidenav-title"><i class="fas fa-crown"></i> Acad Menu</div>' +
+                '<button class="admin-nav-btn active" onclick="deputyAcadSection(\'profile\',this)"><i class="fas fa-user"></i> Profile</button>' +
+                '<button class="admin-nav-btn" onclick="deputyAcadSection(\'received\',this)">' +
+                    '<i class="fas fa-bell"></i> Received' +
+                    (unread > 0 ? '<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">' + unread + '</span>' : '') +
+                '</button>' +
+                '<button class="admin-nav-btn" onclick="deputyAcadSection(\'send\',this)"><i class="fas fa-paper-plane"></i> Send</button>' +
+                '<button class="admin-nav-btn" onclick="deputyAcadSection(\'calendar\',this)"><i class="fas fa-calendar-alt"></i> Academic Calendar</button>' +
+                '<button class="admin-nav-btn" onclick="deputyAcadSection(\'statistics\',this)"><i class="fas fa-chart-line"></i> Statistics</button>' +
+                '<button class="admin-nav-btn" onclick="deputyAcadSection(\'policy\',this)"><i class="fas fa-gavel"></i> Policy Board</button>' +
+                '<button class="admin-nav-btn" onclick="deputyAcadSection(\'staffreport\',this)"><i class="fas fa-chalkboard-teacher"></i> Staff Report</button>' +
+                '<button class="admin-nav-btn" onclick="deputyAcadSection(\'deptcompare\',this)"><i class="fas fa-balance-scale"></i> Dept Comparison</button>' +
+                '<button class="admin-nav-btn" onclick="deputyAcadSection(\'notices\',this)"><i class="fas fa-bullhorn"></i> Acad Notices</button>' +
+                '<button class="admin-nav-btn" onclick="deputyAcadSection(\'report\',this)"><i class="fas fa-chart-bar"></i> Report</button>' +
+            '</div>' +
+            '<div class="admin-main" id="deputyAcadMain">' + deputyAcadProfileHTML(user) + '</div>' +
+        '</div>'
+    );
+}
+
+window.deputyAcadSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(function(b){ b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
     const map = {
-        approvals:   acadApprovalsHTML,
-        uncleared:   acadUnclearedHTML,
-        calendar:    acadCalendarHTML,
-        stats:       acadStatsHTML,
-        policy:      acadPolicyHTML,
-        staffreport: acadStaffReportHTML,
-        deptcompare: acadDeptCompareHTML,
-        acadnotices: acadNoticesHTML,
+        profile:        function(){ return deputyAcadProfileHTML(user); },
+        received:       deputyAcadReceivedHTML,
+        send:           deputyAcadSendHTML,
+        examapprovals:  function(){ return typeof deputyAcadExamApprovalsHTML === 'function' ? deputyAcadExamApprovalsHTML() : '<p>Exam Approvals section not found — keeping old function name intact.</p>'; },
+        uncleared:      function(){ return typeof deputyAcadUnclearedHTML === 'function' ? deputyAcadUnclearedHTML() : '<p>Uncleared Fees section not found.</p>'; },
+        calendar:       function(){ return typeof deputyAcadCalendarHTML === 'function' ? deputyAcadCalendarHTML() : '<p>Academic Calendar section not found.</p>'; },
+        statistics:     function(){ return typeof deputyAcadStatisticsHTML === 'function' ? deputyAcadStatisticsHTML() : '<p>Statistics section not found.</p>'; },
+        policy:         function(){ return typeof deputyAcadPolicyHTML === 'function' ? deputyAcadPolicyHTML() : '<p>Policy Board section not found.</p>'; },
+        staffreport:    function(){ return typeof deputyAcadStaffReportHTML === 'function' ? deputyAcadStaffReportHTML() : '<p>Staff Report section not found.</p>'; },
+        deptcompare:    function(){ return typeof deputyAcadDeptCompareHTML === 'function' ? deputyAcadDeptCompareHTML() : '<p>Dept Comparison section not found.</p>'; },
+        notices:        function(){ return typeof deputyAcadNoticesHTML === 'function' ? deputyAcadNoticesHTML() : '<p>Acad Notices section not found.</p>'; },
+        report:         deputyAcadReportHTML
     };
-    document.getElementById('acadMain').innerHTML = (map[section] || acadApprovalsHTML)();
+    document.getElementById('deputyAcadMain').innerHTML = (map[section] || map.profile)();
 };
 
-/* 1 — Special Exam Approvals */
-function acadApprovalsHTML() {
+
+
+/* ══════════════════ PROFILE ══════════════════ */
+function deputyAcadProfileHTML(user) {
     const data = getData();
-    const special = data.examRegistrations.filter(r => r.status === 'pending_deputy');
-    const rows = special.length === 0
-        ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No pending special cases.</p>'
-        : special.map(r => `
-            <div class="admin-card" style="margin-bottom:10px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-                    <div>
-                        <div style="font-weight:700;font-size:0.88rem;">${r.studentId} — ${r.units?.length || 0} units</div>
-                        <div style="font-size:0.75rem;color:var(--text-secondary);">Fee: KSh ${r.totalExamFee?.toLocaleString()} · ${r.prevExam || 'N/A'}</div>
-                        <div style="font-size:0.72rem;color:var(--warning);">Reason: ${r.specialReason || 'Fee balance outstanding'}</div>
-                    </div>
-                    <div style="display:flex;gap:8px;">
-                        <button class="admin-action-btn edit" onclick="acadApprove('${r.id}')">✅ Approve</button>
-                        <button class="admin-action-btn danger" onclick="acadReject('${r.id}')">❌ Reject</button>
-                    </div>
-                </div>
-            </div>`).join('');
-    return `
-        <div class="admin-section-head">✅ Special Exam Approvals</div>
-        <div class="admin-card" style="margin-bottom:1rem;">
-            <div class="admin-card-title">Pending Special Cases (${special.length})</div>
-            <div style="margin-top:10px;">${rows}</div>
-        </div>
-        <div class="admin-card">
-            <div class="admin-card-title">All Registrations Overview</div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
-                <div class="stat-card"><i class="fas fa-clock" style="color:var(--warning)"></i><h3>${data.examRegistrations.filter(r=>r.status==='pending_hod').length}</h3><p>Pending HOD</p></div>
-                <div class="stat-card"><i class="fas fa-check" style="color:var(--success)"></i><h3>${data.examRegistrations.filter(r=>r.status==='approved').length}</h3><p>Approved</p></div>
-                <div class="stat-card"><i class="fas fa-times" style="color:var(--danger)"></i><h3>${data.examRegistrations.filter(r=>r.status==='rejected').length}</h3><p>Rejected</p></div>
-            </div>
-        </div>`;
+    const profile = data.deputyAcadProfile || { fullName: user.name || 'Deputy Academics', email:'', phone:'' };
+    const received = data.deputyAcadReceived || [];
+    const sent = data.deputyAcadSentItems || [];
+
+    return (
+        '<div class="admin-section-head">👤 My Profile</div>' +
+        '<div class="admin-card" style="margin-bottom:1rem;">' +
+            '<div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">' +
+                '<div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;flex-shrink:0;">👑</div>' +
+                '<div>' +
+                    '<h3 style="margin:0;">' + profile.fullName + '</h3>' +
+                    '<div style="font-size:0.8rem;color:var(--text-secondary);">Deputy Principal — Academics</div>' +
+                    '<span class="admin-role-pill" style="margin-top:6px;display:inline-block;">👑 Deputy (Academics)</span>' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="admin-card" style="margin-bottom:1rem;">' +
+            '<div class="admin-card-title">Contact Information</div>' +
+            '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">' +
+                '<div><span style="color:var(--text-secondary);font-size:0.7rem;">FULL NAME</span><br>' + profile.fullName + '</div>' +
+                '<div><span style="color:var(--text-secondary);font-size:0.7rem;">EMAIL</span><br>' + profile.email + '</div>' +
+                '<div><span style="color:var(--text-secondary);font-size:0.7rem;">PHONE NUMBER</span><br>' + profile.phone + '</div>' +
+            '</div>' +
+        '</div>' +
+        '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">' +
+            '<div class="stat-card"><h3 style="color:var(--warning);">' + received.filter(function(i){return !i.read;}).length + '</h3><p>New Items</p></div>' +
+            '<div class="stat-card"><h3>' + received.length + '</h3><p>Total Received</p></div>' +
+            '<div class="stat-card"><h3 style="color:var(--success);">' + sent.length + '</h3><p>Items Sent</p></div>' +
+        '</div>'
+    );
 }
 
-window.acadApprove = function(id) {
+/* ══════════════════ RECEIVED — cards with bell badge ══════════════════ */
+function deputyAcadReceivedHTML() {
     const data = getData();
-    const reg  = data.examRegistrations.find(r => r.id === id);
-    if (reg) { reg.status = 'approved'; reg.deputyApproved = true; saveData(data); adminLog(`Deputy Acad approved exam reg ${id}`); }
-    document.getElementById('acadMain').innerHTML = acadApprovalsHTML();
-};
+    const cards = deputyAcadSenders.map(function(s) {
+        const items = (data.deputyAcadReceived || []).filter(function(i){ return i.fromRole === s.key; });
+        const pending = items.filter(function(i){ return !i.read; }).length;
+        return (
+            '<div onclick="deputyAcadOpenSenderInbox(\'' + s.key + '\')" style="cursor:pointer;background:var(--bg-elevated);border:1px solid var(--border);border-radius:16px;padding:1.4rem;text-align:center;transition:transform .25s, box-shadow .25s;" ' +
+            'onmouseover="this.style.transform=\'translateY(-6px) scale(1.02)\';this.style.boxShadow=\'0 12px 24px rgba(139,92,246,.25)\';" ' +
+            'onmouseout="this.style.transform=\'none\';this.style.boxShadow=\'none\';">' +
+                '<div style="font-size:2.4rem;">' + s.icon + '</div>' +
+                '<div style="font-weight:700;margin-top:8px;">' + s.label + '</div>' +
+                (pending > 0
+                    ? '<span class="admin-role-pill" style="margin-top:8px;display:inline-block;background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);"><i class="fas fa-bell"></i> ' + pending + ' new</span>'
+                    : '<span class="admin-role-pill" style="margin-top:8px;display:inline-block;">✅ Clear</span>') +
+            '</div>'
+        );
+    }).join('');
 
-window.acadReject = function(id) {
-    const reason = prompt('Reason for rejection:');
-    if (!reason) return;
-    const data = getData();
-    const reg  = data.examRegistrations.find(r => r.id === id);
-    if (reg) { reg.status = 'rejected'; reg.rejectedReason = reason; saveData(data); adminLog(`Deputy Acad rejected exam reg ${id}: ${reason}`); }
-    document.getElementById('acadMain').innerHTML = acadApprovalsHTML();
-};
-
-/* 2 — Uncleared Fee Students */
-function acadUnclearedHTML() {
-    const data = getData();
-    const uncleared = data.students.filter(s => s.feeBalance > 0);
-    return `
-        <div class="admin-section-head">⚠️ Uncleared Fee Students</div>
-        <div class="admin-card">
-            <div class="admin-card-title">${uncleared.length} student(s) with outstanding balance</div>
-            ${uncleared.length === 0
-                ? '<p style="color:var(--success);font-size:0.85rem;margin-top:8px;">✅ All students cleared!</p>'
-                : uncleared.map(s => `
-                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;flex-wrap:wrap;gap:6px;">
-                        <div>
-                            <div style="font-weight:700;">${s.name}</div>
-                            <div style="font-size:0.72rem;color:var(--text-secondary);">${s.id} · ${s.department} · ${s.class}</div>
-                        </div>
-                        <div style="color:var(--danger);font-weight:700;">KSh ${s.feeBalance.toLocaleString()}</div>
-                        <button class="admin-action-btn edit" onclick="acadReferToDeputy('${s.id}')">📋 Flag for Review</button>
-                    </div>`).join('')}
-        </div>`;
+    return (
+        '<div class="admin-section-head">📥 Received</div>' +
+        '<div class="admin-card" style="margin-bottom:1rem;">' +
+            '<p style="font-size:0.78rem;color:var(--text-secondary);">Items from Principal, Finance, HODs, Dean of Students, Exam Office, and System Admin arrive here. Click a card to review; save any item as PDF, Excel, or CSV.</p>' +
+        '</div>' +
+        '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;">' + cards + '</div>' +
+        '<div id="deputyAcadInboxArea" style="margin-top:1.2rem;"></div>'
+    );
 }
 
-window.acadReferToDeputy = function(id) {
-    adminLog(`Deputy Acad flagged student ${id} for fee review`);
-    alert(`✅ Student ${id} flagged for fee review. Finance has been notified.`);
+window.deputyAcadOpenSenderInbox = function(key) {
+    const data = getData();
+    const meta = deputyAcadSenders.find(function(s){ return s.key === key; });
+    const items = (data.deputyAcadReceived || []).filter(function(i){ return i.fromRole === key; }).slice().reverse();
+    items.forEach(function(i){ i.read = true; });
+    saveData(data);
+
+    const rows = items.length === 0
+        ? '<p style="color:var(--text-secondary);font-size:0.85rem;">No items from this department yet.</p>'
+        : items.map(function(i) {
+            return (
+                '<div class="admin-card" style="margin-bottom:10px;">' +
+                    '<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">' +
+                        '<strong>' + i.subject + '</strong>' +
+                        '<span style="font-size:0.68rem;color:var(--text-secondary);">' + new Date(i.timestamp).toLocaleString() + '</span>' +
+                    '</div>' +
+                    '<div style="font-size:0.82rem;margin-top:8px;">' + i.message + '</div>' +
+                    (i.fileName ? '<div style="font-size:0.7rem;margin-top:6px;color:var(--purple-light);">📎 ' + i.fileName + '</div>' : '') +
+                    '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">' +
+                        '<button class="admin-action-btn edit" onclick="deputyAcadSaveItem(\'' + i.id + '\',\'pdf\')"><i class="fas fa-file-pdf"></i> PDF</button>' +
+                        '<button class="admin-action-btn edit" onclick="deputyAcadSaveItem(\'' + i.id + '\',\'excel\')"><i class="fas fa-file-excel"></i> Excel</button>' +
+                        '<button class="admin-action-btn edit" onclick="deputyAcadSaveItem(\'' + i.id + '\',\'csv\')"><i class="fas fa-file-csv"></i> CSV</button>' +
+                    '</div>' +
+                '</div>'
+            );
+        }).join('');
+
+    document.getElementById('deputyAcadInboxArea').innerHTML =
+        '<div class="admin-card">' +
+            '<div class="admin-card-title">' + meta.icon + ' From ' + meta.label + '</div>' +
+            '<div style="margin-top:10px;">' + rows + '</div>' +
+        '</div>';
+};
+
+window.deputyAcadSaveItem = function(itemId, type) {
+    const data = getData();
+    const item = (data.deputyAcadReceived || []).find(function(i){ return i.id === itemId; });
+    if (!item) return;
+
+    if (type === 'pdf') {
+        if (typeof generatePDF === 'function') {
+            generatePDF({
+                title: 'Deputy (Academics) — Received Item', subtitle: item.subject,
+                office: 'DEPUTY ACADEMICS', stage: 'Received', department: '',
+                signatoryLabel: 'Deputy Academics Signature',
+                columns: [
+                    {label:'From', key:'from'}, {label:'Subject', key:'subject'},
+                    {label:'Message', key:'message'}, {label:'Date', key:'date'}
+                ],
+                rows: [{ from: item.from, subject: item.subject, message: item.message, date: new Date(item.timestamp).toLocaleDateString() }]
+            });
+        } else {
+            alert('PDF export requires generatePDF() function.');
+        }
+        return;
+    }
+
+    const headers = 'From,Subject,Message,Date';
+    const body = '"' + item.from + '","' + item.subject + '","' + item.message.replace(/"/g,'') + '","' + new Date(item.timestamp).toLocaleDateString() + '"';
+    const blob = new Blob([headers + '\n' + body], { type: type === 'excel' ? 'application/vnd.ms-excel' : 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'received_item.' + (type === 'excel' ? 'xls' : 'csv');
+    a.click();
+    URL.revokeObjectURL(url);
+};
+
+/* ══════════════════ SEND ══════════════════ */
+function deputyAcadSendHTML() {
+    const targets = [
+        { key:'principal',   label:'🎓 Principal' },
+        { key:'dean_admin',  label:'💛 Dean' },
+        { key:'admin',       label:'🔐 System Admin' },
+        { key:'hod',         label:'🏛️ HODs' },
+        { key:'finance',     label:'💰 Finance' },
+        { key:'examoffice',  label:'📋 Exam Office' }
+    ];
+
+    return (
+        '<div class="admin-section-head">📤 Send</div>' +
+        '<div class="admin-card">' +
+            '<select id="daSendTarget" class="admin-input" style="margin-bottom:10px;">' +
+                targets.map(function(t){ return '<option value="' + t.key + '">' + t.label + '</option>'; }).join('') +
+            '</select>' +
+            '<input id="daSendSubject" class="admin-input" placeholder="Subject" style="margin-bottom:10px;">' +
+            '<textarea id="daSendMessage" class="admin-input" rows="4" placeholder="Message..."></textarea>' +
+
+            '<div class="admin-card-title" style="margin-top:14px;">Attach via</div>' +
+            '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:8px;">' +
+                '<button type="button" class="admin-btn-secondary" onclick="document.getElementById(\'daSendFile\').click()"><i class="fas fa-file-upload"></i> File</button>' +
+                '<button type="button" class="admin-btn-secondary" onclick="deputyAcadToggleLink()"><i class="fas fa-link"></i> Paste Link</button>' +
+                '<button type="button" class="admin-btn-secondary" onclick="deputyAcadToggleNote()"><i class="fas fa-file-alt"></i> New Note</button>' +
+                '<button type="button" class="admin-btn-secondary" onclick="alert(\'Google Drive integration requires backend setup — use File or Link instead for now.\')"><i class="fab fa-google-drive"></i> Drive</button>' +
+            '</div>' +
+            '<input id="daSendFile" type="file" style="display:none;" onchange="deputyAcadShowFileName()">' +
+            '<div id="daSendFileNameDisplay" style="font-size:0.75rem;color:var(--success);margin-top:6px;"></div>' +
+            '<div id="daSendLinkWrap" style="display:none;margin-top:8px;">' +
+                '<input id="daSendLink" class="admin-input" placeholder="Paste link (e.g. shared doc URL)">' +
+            '</div>' +
+            '<div id="daSendNoteWrap" style="display:none;margin-top:8px;">' +
+                '<textarea id="daSendNote" class="admin-input" rows="4" placeholder="Type a quick note/document content..."></textarea>' +
+            '</div>' +
+
+            '<button type="button" class="admin-btn-primary" style="margin-top:16px;width:100%;" onclick="deputyAcadSendToDepartment()">' +
+                '<i class="fas fa-paper-plane"></i> Send' +
+            '</button>' +
+        '</div>'
+    );
+}
+
+window.deputyAcadToggleLink = function() {
+    const w = document.getElementById('daSendLinkWrap');
+    w.style.display = w.style.display === 'none' ? 'block' : 'none';
+};
+window.deputyAcadToggleNote = function() {
+    const w = document.getElementById('daSendNoteWrap');
+    w.style.display = w.style.display === 'none' ? 'block' : 'none';
+};
+window.deputyAcadShowFileName = function() {
+    const f = document.getElementById('daSendFile').files[0];
+    document.getElementById('daSendFileNameDisplay').textContent = f ? '📎 ' + f.name : '';
+};
+
+window.deputyAcadSendToDepartment = function() {
+    const target  = document.getElementById('daSendTarget').value;
+    const subject = document.getElementById('daSendSubject').value.trim();
+    const message = document.getElementById('daSendMessage').value.trim();
+    const file    = document.getElementById('daSendFile').files[0];
+    const link    = document.getElementById('daSendLink') ? document.getElementById('daSendLink').value.trim() : '';
+    const note    = document.getElementById('daSendNote') ? document.getElementById('daSendNote').value.trim() : '';
+    if (!subject || !message) { alert('Please fill in Subject and Message.'); return; }
+
+    const data = getData();
+    const payload = {
+        id: 'DAS-' + Date.now(), from: 'Deputy (Academics)', fromRole: 'deputy_acad',
+        subject: subject, message: message + (link ? '\n🔗 Link: ' + link : '') + (note ? '\n📝 Note: ' + note : ''),
+        fileName: file ? file.name : null,
+        timestamp: new Date().toISOString(), read: false
+    };
+
+    const routes = {
+        principal:  function(){ data.principalReceived  = data.principalReceived  || []; data.principalReceived.push(payload); },
+        dean_admin: function(){ data.deanAdminReceived   = data.deanAdminReceived   || []; data.deanAdminReceived.push(Object.assign({}, payload, { title: subject, status:'pending' })); },
+        admin:      function(){ data.sysAdminReceived    = data.sysAdminReceived    || []; data.sysAdminReceived.push(payload); },
+        hod:        function(){ data.hodReceived         = data.hodReceived         || []; data.hodReceived.push(payload); },
+        finance:    function(){ data.financeReceived     = data.financeReceived     || []; data.financeReceived.push(Object.assign({}, payload, { amount:0, studentId:null, studentName:null, addedToFees:false })); },
+        examoffice: function(){ data.examOfficeReceived   = data.examOfficeReceived   || []; data.examOfficeReceived.push(payload); }
+    };
+    (routes[target] || function(){})();
+
+    data.deputyAcadSentItems = data.deputyAcadSentItems || [];
+    data.deputyAcadSentItems.push(Object.assign({}, payload, { to: target }));
+
+    saveData(data);
+    alert('✅ Sent to ' + target.replace('_',' ') + '.');
+    document.getElementById('deputyAcadMain').innerHTML = deputyAcadSendHTML();
 };
 
 /* 3 — Academic Calendar */
@@ -3070,6 +3320,49 @@ window.acadPostNotice = function() {
     alert('✅ Notice broadcast to academic staff!');
     document.getElementById('acadMain').innerHTML = acadNoticesHTML();
 };
+
+/* ══════════════════ REPORT — SVG summary ══════════════════ */
+function deputyAcadReportHTML() {
+    const data = getData();
+    const received = data.deputyAcadReceived || [];
+    const sent = data.deputyAcadSentItems || [];
+
+    const senderTally = {};
+    received.forEach(function(i) { senderTally[i.fromRole] = (senderTally[i.fromRole] || 0) + 1; });
+    const bars = Object.keys(senderTally).map(function(k, idx) {
+        const colors = ['#8b5cf6','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899'];
+        return { label: k, value: senderTally[k], color: colors[idx % colors.length] };
+    });
+
+    const unread = received.filter(function(i){ return !i.read; }).length;
+    const readCount = received.length - unread;
+
+    const targetTally = {};
+    sent.forEach(function(s) { targetTally[s.to] = (targetTally[s.to] || 0) + 1; });
+
+    return (
+        '<div class="admin-section-head">📊 Report</div>' +
+        '<div class="admin-card" style="margin-bottom:1rem;">' +
+            '<div class="admin-card-title">Received Items by Department</div>' +
+            '<div style="overflow-x:auto;margin-top:10px;">' + svgBarChart(bars.length ? bars : [{label:'No data',value:0,color:'#3a2d6e'}]) + '</div>' +
+        '</div>' +
+        '<div class="admin-card" style="text-align:center;margin-bottom:1rem;">' +
+            '<div class="admin-card-title">Read vs Unread</div>' +
+            '<div style="display:flex;justify-content:center;margin-top:10px;">' +
+                svgDonutChart([{value: readCount || 0.0001, color:'#10b981'}, {value: unread || 0.0001, color:'#f59e0b'}]) +
+            '</div>' +
+            '<div style="font-size:0.75rem;margin-top:8px;">' +
+                '<span style="color:var(--success);">● Read ' + readCount + '</span>&nbsp;' +
+                '<span style="color:var(--warning);">● Unread ' + unread + '</span>' +
+            '</div>' +
+        '</div>' +
+        '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">' +
+            '<div class="stat-card"><h3>' + received.length + '</h3><p>Total Received</p></div>' +
+            '<div class="stat-card"><h3 style="color:var(--success);">' + sent.length + '</h3><p>Total Sent</p></div>' +
+            '<div class="stat-card"><h3 style="color:var(--warning);">' + unread + '</h3><p>Unread Items</p></div>' +
+        '</div>'
+    );
+}
 
 
 /* ══════════════════════════════════════════
@@ -4089,53 +4382,818 @@ function examOfficeReportHTML() {
 }
 
 /* ══════════════════════════════════════════
-   DEAN OF STUDENTS PORTAL — Full Implementation
+   FRONT OFFICE PORTAL
 ══════════════════════════════════════════ */
-function renderDeanPanel(user) {
-    const unread = (getData().deanReceived || []).filter(m => !m.read).length;
+const frontOfficeSenders = [
+    { key:'finance',     label:'Finance',      icon:'💰' },
+    { key:'mess',        label:'Mess',         icon:'🍽️' },
+    { key:'classrep',    label:'Class Reps',   icon:'🗣️' },
+    { key:'kitco',       label:'KITCO',        icon:'🎉' },
+    { key:'principal',   label:'Principal',    icon:'🎓' },
+    { key:'deputy_dean', label:'Deputy Dean',  icon:'🧑‍💼' },
+    { key:'admin',       label:'System Admin', icon:'🔐' }
+];
+
+function frontOfficeReceivedHTML() {
+    const data = getData();
+
+    const genericCards = frontOfficeSenders.map(s => {
+        const fromItems = (data.frontOfficeReceived || []).filter(i => i.fromRole === s.key);
+        const pending = fromItems.filter(i => !i.read).length;
+        return `
+        <div onclick="frontOfficeOpenSenderInbox('${s.key}')" style="cursor:pointer;background:linear-gradient(135deg,#6c3fcf22,#6c3fcf11);border:1px solid #6c3fcf55;border-radius:16px;padding:1.2rem;text-align:center;transition:transform .25s, box-shadow .25s;"
+             onmouseover="this.style.transform='translateY(-6px) scale(1.02)';this.style.boxShadow='0 12px 24px #6c3fcf33';"
+             onmouseout="this.style.transform='none';this.style.boxShadow='none';">
+            <div style="font-size:2.2rem;">${s.icon}</div>
+            <div style="font-weight:700;margin-top:6px;font-size:0.88rem;">${s.label}</div>
+            ${pending > 0
+                ? `<span class="admin-role-pill" style="margin-top:8px;display:inline-block;background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);"><i class="fas fa-bell"></i> ${pending} new</span>`
+                : `<span class="admin-role-pill" style="margin-top:8px;display:inline-block;">✅ Clear</span>`}
+        </div>`;
+    }).join('');
+
+    const hostelPending = (data.hostelClearances?.female?.filter(h=>!h.read).length || 0) + (data.hostelClearances?.male?.filter(h=>!h.read).length || 0);
+    const hostelsCard = `
+    <div onclick="frontOfficeOpenHostelsInbox()" style="cursor:pointer;background:linear-gradient(135deg,#f9731622,#f9731611);border:1px solid #f9731655;border-radius:16px;padding:1.2rem;text-align:center;transition:transform .25s, box-shadow .25s;"
+         onmouseover="this.style.transform='translateY(-6px) scale(1.02)';this.style.boxShadow='0 12px 24px #f9731633';"
+         onmouseout="this.style.transform='none';this.style.boxShadow='none';">
+        <div style="font-size:2.2rem;">🏠</div>
+        <div style="font-weight:700;margin-top:6px;font-size:0.88rem;">Hostels</div>
+        ${hostelPending > 0
+            ? `<span class="admin-role-pill" style="margin-top:8px;display:inline-block;background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);"><i class="fas fa-bell"></i> ${hostelPending} new</span>`
+            : `<span class="admin-role-pill" style="margin-top:8px;display:inline-block;">✅ Clear</span>`}
+    </div>`;
+
+    return `
+        <div class="admin-section-head">📥 Received</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Items from Finance, Mess, Class Reps, KITCO, Principal, Deputy Dean, System Admin, and both Hostel
+                wings arrive here. Click a card, review, then confirm — confirmed items move to Share.
+            </p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;">${genericCards}${hostelsCard}</div>
+        <div id="frontOfficeSenderInboxArea" style="margin-top:1.2rem;"></div>`;
+}
+
+window.frontOfficeOpenSenderInbox = function(key) {
+    const data = getData();
+    const meta = frontOfficeSenders.find(s => s.key === key);
+    const items = (data.frontOfficeReceived || []).filter(i => i.fromRole === key).slice().reverse();
+    items.forEach(i => i.read = true);
+    saveData(data);
+
+    const rows = items.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No items from this department yet.</p>`
+        : items.map(i => `
+        <div class="admin-card" style="margin-bottom:10px;border-left:4px solid ${i.status==='confirmed'?'var(--success)':'var(--warning)'};">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                <strong>${i.subject}</strong>
+                <span class="admin-role-pill" style="${i.status==='confirmed'?'background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);':'background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);'}">${i.status==='confirmed'?'✅ Confirmed':'⏳ Pending'}</span>
+            </div>
+            <div style="font-size:0.82rem;margin-top:8px;">${i.message}</div>
+            <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:6px;">${new Date(i.timestamp).toLocaleString()}</div>
+            ${i.status !== 'confirmed' ? `<button class="admin-btn-primary" style="margin-top:8px;" onclick="frontOfficeConfirmItem('${i.id}')">✅ Confirm</button>` : ''}
+        </div>`).join('');
+
+    document.getElementById('frontOfficeSenderInboxArea').innerHTML = `
+        <div class="admin-card">
+            <div class="admin-card-title">${meta.icon} From ${meta.label}</div>
+            <div style="margin-top:10px;">${rows}</div>
+        </div>`;
+};
+
+/* Hostels — matches image 5 layout exactly */
+window.frontOfficeOpenHostelsInbox = function() {
+    const data = getData();
+    data.hostelClearances = data.hostelClearances || { female: [], male: [] };
+    data.hostelClearances.female.forEach(h => h.read = true);
+    data.hostelClearances.male.forEach(h => h.read = true);
+    saveData(data);
+
+    const buildList = (list, wingLabel, clearer) => `
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">${wingLabel} — Cleared by ${clearer} (${list.length})</div>
+            <div style="margin-top:10px;">
+                ${list.length === 0 ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No ${wingLabel.toLowerCase()} clearances received yet.</p>` :
+                list.slice().reverse().map(h => `
+                <div style="padding:0.7rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;">
+                    <strong>${h.studentName}</strong> <span style="color:var(--text-secondary);">(${h.studentId})</span> • ${h.department}
+                    <div style="font-size:0.7rem;color:var(--text-secondary);margin-top:2px;">Cleared ${new Date(h.date).toLocaleDateString()}</div>
+                </div>`).join('')}
+            </div>
+        </div>`;
+
+    document.getElementById('frontOfficeSenderInboxArea').innerHTML = `
+        <div class="admin-section-head" style="font-size:1rem;">🏠 Hostel Clearance</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Lists sent by Matron (female wing) and Patron (male wing) after they confirm each student has
+                vacated their room. Generate clearance slips per student from here.
+            </p>
+        </div>
+        ${buildList(data.hostelClearances.female, '👧 Female Wing', 'Matron')}
+        ${buildList(data.hostelClearances.male, '👦 Male Wing', 'Patron')}`;
+};
+
+window.frontOfficeConfirmItem = function(id) {
+    const data = getData();
+    const item = (data.frontOfficeReceived || []).find(i => i.id === id);
+    if (!item) return;
+    item.status = 'confirmed';
+    item.read = true;
+    saveData(data);
+    alert('✅ Confirmed. Item moved to Share for distribution.');
+    window.frontOfficeOpenSenderInbox(item.fromRole);
+};
+
+function renderFrontOfficePanel(user) {
+    const recUnread = (getData().frontOfficeReceived||[]).filter(i=>!i.read).length;
     return `
     <div class="admin-layout">
         <div class="admin-sidenav">
-            <div class="admin-sidenav-title"><i class="fas fa-heart"></i> Dean Menu</div>
-            <button class="admin-nav-btn" onclick="deanSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
-            <button class="admin-nav-btn active" onclick="deanSection('received',this)">
-                <i class="fas fa-inbox"></i> Received
-                ${unread > 0 ? `<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${unread}</span>` : ''}
+            <div class="admin-sidenav-title"><i class="fas fa-heart"></i> Front Office Menu</div>
+            <button class="admin-nav-btn" onclick="frontOfficeSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
+            <button class="admin-nav-btn active" onclick="frontOfficeSection('received',this)">
+                <i class="fas fa-bell"></i> Received
+                ${recUnread>0?`<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${recUnread}</span>`:''}
             </button>
-            <button class="admin-nav-btn" onclick="deanSection('discipline',this)"><i class="fas fa-gavel"></i> Discipline Records</button>
-            <button class="admin-nav-btn" onclick="deanSection('clearance',this)"><i class="fas fa-home"></i> Hostel Clearance</button>
-            <button class="admin-nav-btn" onclick="deanSection('complaints',this)"><i class="fas fa-exclamation-triangle"></i> Student Complaints</button>
-            <button class="admin-nav-btn" onclick="deanSection('activities',this)"><i class="fas fa-calendar-alt"></i> Activity Approvals</button>
-            <button class="admin-nav-btn" onclick="deanSection('kitco',this)"><i class="fas fa-users"></i> KITCO Management</button>
-            <button class="admin-nav-btn" onclick="deanSection('mess',this)"><i class="fas fa-utensils"></i> Mess Boarders</button>
-            <button class="admin-nav-btn" onclick="deanSection('report',this)"><i class="fas fa-chart-bar"></i> Student Welfare Report</button>
+            <button class="admin-nav-btn" onclick="frontOfficeSection('share',this)"><i class="fas fa-share-square"></i> Share</button>
+            <button class="admin-nav-btn" onclick="frontOfficeSection('activities',this)"><i class="fas fa-calendar-alt"></i> Activity Approvals</button>
+            <button class="admin-nav-btn" onclick="frontOfficeSection('mess',this)"><i class="fas fa-utensils"></i> Mess Boarders</button>
+            <button class="admin-nav-btn" onclick="frontOfficeSection('report',this)"><i class="fas fa-chart-bar"></i> Report</button>
         </div>
-        <div class="admin-main" id="deanMain">
-            ${deanReceivedHTML(user)}
-        </div>
+        <div class="admin-main" id="frontOfficeMain">${frontOfficeReceivedHTML()}</div>
     </div>`;
 }
 
-window.deanSection = function(section, btn) {
+window.frontOfficeSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    if (btn) btn.classList.add('active');
     const user = JSON.parse(sessionStorage.getItem('currentUser'));
     const map = {
-        profile:    () => deanProfileHTML(user),
-        received:   () => deanReceivedHTML(user),
-        discipline: () => deanDisciplineHTML(user),
-        clearance:  () => deanClearanceHTML(user),
-        complaints: () => deanComplaintsHTML(user),
+        profile:    () => frontOfficeProfileHTML(user),
+        received:   () => frontOfficeReceivedHTML(),
+        share:      () => frontOfficeShareHTML(),
         activities: () => deanActivitiesHTML(user),
-        kitco:      () => deanKitcoHTML(user),
-        mess:       () => deanMessHTML(user),
-        report:     () => deanReportHTML(user),
-        
+        mess:       () => messBoardersHTML('frontOfficeMain'),
+        report:     () => frontOfficeReportHTML()
     };
-    document.getElementById('deanMain').innerHTML = (map[section] || (() => deanReceivedHTML(user)))();
+    document.getElementById('frontOfficeMain').innerHTML = (map[section] || (()=>frontOfficeReceivedHTML()))();
 };
 
-function deanMessHTML(user) {
+function frontOfficeProfileHTML(user) {
+    const data = getData();
+    const received = data.frontOfficeReceived || [];
+    const shared = received.filter(i => i.sharedAt).length;
+    return `
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">
+                <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;">🗂️</div>
+                <div>
+                    <h3 style="margin:0;">${user.name}</h3>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user.id}</div>
+                    <span class="admin-role-pill" style="margin-top:6px;display:inline-block;">Front Office</span>
+                </div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${received.length}</h3><p>Items Received</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${shared}</h3><p>Items Shared</p></div>
+        </div>`;
+}
+
+function frontOfficeReceivedHTML() {
+    const data = getData();
+    const cards = frontOfficeSenders.map(s => {
+        const fromItems = (data.frontOfficeReceived || []).filter(i => i.fromRole === s.key);
+        const pending = fromItems.filter(i => !i.read).length;
+        return `
+        { id:'FOR-DEMO-07', from:'System Admin', fromRole:'admin', subject:'New Term Circular', message:'Please distribute the updated term calendar to both Deputy Deans.', timestamp:'2026-06-21T09:00:00.000Z', status:'pending', read:false }
+        <div onclick="frontOfficeOpenSenderInbox('${s.key}')" style="cursor:pointer;background:linear-gradient(135deg,#6c3fcf22,#6c3fcf11);border:1px solid #6c3fcf55;border-radius:16px;padding:1.2rem;text-align:center;transition:transform .25s, box-shadow .25s;"
+             onmouseover="this.style.transform='translateY(-6px) scale(1.02)';this.style.boxShadow='0 12px 24px #6c3fcf33';"
+             onmouseout="this.style.transform='none';this.style.boxShadow='none';">
+            <div style="font-size:2.2rem;">${s.icon}</div>
+            <div style="font-weight:700;margin-top:6px;font-size:0.88rem;">${s.label}</div>
+            ${pending > 0
+                ? `<span class="admin-role-pill" style="margin-top:8px;display:inline-block;background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);"><i class="fas fa-bell"></i> ${pending} new</span>`
+                : `<span class="admin-role-pill" style="margin-top:8px;display:inline-block;">✅ Clear</span>`}
+        </div>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">📥 Received</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Items from Finance, Mess, Class Reps, KITCO, Principal, and Deputy Dean arrive here. Click a card,
+                review, then confirm — confirmed items move to Share for distribution to the Deputy Deans.
+            </p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;">${cards}</div>
+        <div id="frontOfficeSenderInboxArea" style="margin-top:1.2rem;"></div>`;
+}
+
+window.frontOfficeOpenSenderInbox = function(key) {
+    const data = getData();
+    const meta = frontOfficeSenders.find(s => s.key === key);
+    const items = (data.frontOfficeReceived || []).filter(i => i.fromRole === key).slice().reverse();
+    items.forEach(i => i.read = true);
+    saveData(data);
+
+    const rows = items.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No items from this department yet.</p>`
+        : items.map(i => `
+        <div class="admin-card" style="margin-bottom:10px;border-left:4px solid ${i.status==='confirmed'?'var(--success)':'var(--warning)'};">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                <strong>${i.subject}</strong>
+                <span class="admin-role-pill" style="${i.status==='confirmed'?'background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);':'background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);'}">${i.status==='confirmed'?'✅ Confirmed':'⏳ Pending'}</span>
+            </div>
+            <div style="font-size:0.82rem;margin-top:8px;">${i.message}</div>
+            <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:6px;">${new Date(i.timestamp).toLocaleString()}</div>
+            ${i.status !== 'confirmed' ? `<button class="admin-btn-primary" style="margin-top:8px;" onclick="frontOfficeConfirmItem('${i.id}')">✅ Confirm</button>` : ''}
+        </div>`).join('');
+
+    document.getElementById('frontOfficeSenderInboxArea').innerHTML = `
+        <div class="admin-card">
+            <div class="admin-card-title">${meta.icon} From ${meta.label}</div>
+            <div style="margin-top:10px;">${rows}</div>
+        </div>`;
+};
+
+window.frontOfficeConfirmItem = function(id) {
+    const data = getData();
+    const item = (data.frontOfficeReceived || []).find(i => i.id === id);
+    if (!item) return;
+    item.status = 'confirmed';
+    item.read = true;
+    saveData(data);
+    alert('✅ Confirmed. Item moved to Share for distribution.');
+    window.frontOfficeOpenSenderInbox(item.fromRole);
+};
+
+function frontOfficeShareHTML() {
+    const data = getData();
+    const confirmed = (data.frontOfficeReceived || []).filter(i => i.status === 'confirmed' && !i.sharedAt);
+    const shared = (data.frontOfficeReceived || []).filter(i => i.sharedAt);
+
+    const cards = confirmed.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No confirmed items awaiting share.</p>`
+        : confirmed.map(i => `
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="font-weight:700;">${i.subject}</div>
+            <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px;">From: ${i.from}</div>
+            <div style="font-size:0.82rem;margin-top:6px;">${i.message}</div>
+            <div style="margin-top:10px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">TITLE FOR DEPUTY DEAN</label>
+                <input id="shareTitle_${i.id}" class="admin-input" placeholder="e.g. Weekly Fee Clearance Digest" style="margin-top:4px;">
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:12px;">
+                <div onclick="frontOfficeShareTo('${i.id}','deputy_dean1')" style="cursor:pointer;background:linear-gradient(135deg,#3b82f622,#3b82f611);border:1px solid #3b82f655;border-radius:14px;padding:1rem;text-align:center;transition:transform .2s;"
+                     onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+                    <div style="font-size:1.6rem;">🧑‍💼</div>
+                    <div style="font-weight:700;margin-top:4px;font-size:0.82rem;">Send to Deputy Dean 1</div>
+                </div>
+                <div onclick="frontOfficeShareTo('${i.id}','deputy_dean2')" style="cursor:pointer;background:linear-gradient(135deg,#8b5cf622,#8b5cf611);border:1px solid #8b5cf655;border-radius:14px;padding:1rem;text-align:center;transition:transform .2s;"
+                     onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+                    <div style="font-size:1.6rem;">🧑‍💼</div>
+                    <div style="font-weight:700;margin-top:4px;font-size:0.82rem;">Send to Deputy Dean 2</div>
+                </div>
+            </div>
+        </div>`).join('');
+
+    return `
+        <div class="admin-section-head">📤 Share</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Confirmed items appear here. Give each a title, then click a Deputy Dean's card to send it.
+            </p>
+        </div>
+        ${cards}
+        <div class="admin-card" style="margin-top:1rem;">
+            <div class="admin-card-title">✅ Shared History (${shared.length})</div>
+            ${shared.length === 0 ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">None shared yet.</p>' :
+            shared.slice().reverse().map(i => `
+            <div style="padding:0.7rem 0;border-bottom:1px solid var(--border);font-size:0.82rem;">
+                <strong>${i.shareTitle}</strong> → ${i.sharedTo === 'deputy_dean1' ? 'Deputy Dean 1' : 'Deputy Dean 2'}
+                <div style="font-size:0.68rem;color:var(--text-secondary);">${new Date(i.sharedAt).toLocaleString()}</div>
+            </div>`).join('')}
+        </div>`;
+}
+
+window.frontOfficeShareTo = function(itemId, toRole) {
+    const data = getData();
+    const item = (data.frontOfficeReceived || []).find(i => i.id === itemId);
+    if (!item) return;
+    const titleEl = document.getElementById(`shareTitle_${itemId}`);
+    const title = titleEl ? titleEl.value.trim() : '';
+    if (!title) return alert('Please give this item a title before sending.');
+
+    item.sharedAt = new Date().toISOString();
+    item.sharedTo = toRole;
+    item.shareTitle = title;
+
+    data.deputyDeanReceived = data.deputyDeanReceived || [];
+    data.deputyDeanReceived.push({
+        id: 'DDR-' + Date.now(), title, message: item.message, sourceSubject: item.subject,
+        fromFrontOffice: true, toRole, status: 'pending', signedBy: null,
+        timestamp: new Date().toISOString()
+    });
+
+    saveData(data);
+    alert(`✅ "${title}" sent to ${toRole === 'deputy_dean1' ? 'Deputy Dean 1' : 'Deputy Dean 2'}.`);
+    document.getElementById('frontOfficeMain').innerHTML = frontOfficeShareHTML();
+};
+
+function frontOfficeReportHTML() {
+    const data = getData();
+    const received = data.frontOfficeReceived || [];
+    const pending = received.filter(i => i.status === 'pending').length;
+    const confirmed = received.filter(i => i.status === 'confirmed' && !i.sharedAt).length;
+    const shared = received.filter(i => i.sharedAt).length;
+
+    const senderTally = {};
+    received.forEach(i => { senderTally[i.fromRole] = (senderTally[i.fromRole]||0)+1; });
+    const bars = Object.entries(senderTally).map(([k,c],i) => ({ label:k, value:c, color:['#8b5cf6','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899'][i%6] }));
+
+    return `
+        <div class="admin-section-head">📊 Report</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Received Items by Department</div>
+            <div style="overflow-x:auto;margin-top:10px;">${svgBarChart(bars.length?bars:[{label:'No data',value:0,color:'#3a2d6e'}])}</div>
+        </div>
+        <div class="admin-card" style="text-align:center;margin-bottom:1rem;">
+            <div class="admin-card-title">Item Pipeline</div>
+            <div style="display:flex;justify-content:center;margin-top:10px;">
+                ${svgDonutChart([{value:pending||0.0001,color:'#f59e0b'},{value:confirmed||0.0001,color:'#3b82f6'},{value:shared||0.0001,color:'#10b981'}])}
+            </div>
+            <div style="font-size:0.75rem;margin-top:8px;">
+                <span style="color:var(--warning);">● Pending ${pending}</span>&nbsp;
+                <span style="color:#3b82f6;">● Confirmed ${confirmed}</span>&nbsp;
+                <span style="color:var(--success);">● Shared ${shared}</span>
+            </div>
+        </div>`;
+}
+
+/* ══════════════════════════════════════════
+   DEPUTY DEAN PORTAL (shared by both)
+══════════════════════════════════════════ */
+function renderDeputyDeanPanel(user) {
+    const data = getData();
+    const pending = (data.deputyDeanReceived || []).filter(i => i.toRole === user.role && i.status === 'pending').length;
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title"><i class="fas fa-user-tie"></i> ${user.name} Menu</div>
+            <button class="admin-nav-btn" onclick="deputyDeanSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
+            <button class="admin-nav-btn active" onclick="deputyDeanSection('received',this)">
+                <i class="fas fa-bell"></i> Received
+                ${pending > 0 ? `<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${pending}</span>` : ''}
+            </button>
+            <button class="admin-nav-btn" onclick="deputyDeanSection('store',this)"><i class="fas fa-box-archive"></i> Store</button>
+            <button class="admin-nav-btn" onclick="deputyDeanSection('report',this)"><i class="fas fa-chart-bar"></i> Report</button>
+        </div>
+        <div class="admin-main" id="deputyDeanMain">${deputyDeanReceivedHTML(user)}</div>
+    </div>`;
+}
+
+window.deputyDeanSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const map = {
+        profile:  () => deputyDeanProfileHTML(user),
+        received: () => deputyDeanReceivedHTML(user),
+        store:    () => deputyDeanStoreHTML(user),
+        report:   () => deputyDeanReportHTML(user)
+    };
+    document.getElementById('deputyDeanMain').innerHTML = (map[section] || (()=>deputyDeanReceivedHTML(user)))();
+};
+
+function deputyDeanProfileHTML(user) {
+    const data = getData();
+    const mine = (data.deputyDeanReceived || []).filter(i => i.toRole === user.role);
+    const confirmed = mine.filter(i => i.status === 'confirmed').length;
+    const pending = mine.filter(i => i.status === 'pending').length;
+    return `
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">
+                <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;">🧑‍💼</div>
+                <div>
+                    <h3 style="margin:0;">${user.name}</h3>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user.id}</div>
+                    <span class="admin-role-pill" style="margin-top:6px;display:inline-block;">Deputy Dean of Students</span>
+                </div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${mine.length}</h3><p>Total Received</p></div>
+            <div class="stat-card"><h3 style="color:var(--warning);">${pending}</h3><p>Pending</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${confirmed}</h3><p>Confirmed</p></div>
+        </div>`;
+}
+
+function deputyDeanReceivedHTML(user) {
+    const data = getData();
+    const items = (data.deputyDeanReceived || []).filter(i => i.toRole === user.role && i.status === 'pending').slice().reverse();
+
+    const rows = items.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No pending items from Front Office.</p>`
+        : items.map(i => `
+        <div class="admin-card" style="margin-bottom:10px;">
+            <strong>${i.title}</strong>
+            <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px;">From: Front Office • Ref: ${i.sourceSubject || '—'}</div>
+            <div style="font-size:0.82rem;margin-top:6px;">${i.message}</div>
+            <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:6px;">${new Date(i.timestamp).toLocaleString()}</div>
+            <div style="margin-top:10px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">SIGN AS (optional)</label>
+                <input id="signName_${i.id}" class="admin-input" placeholder="Your full name" style="margin-top:4px;">
+            </div>
+            <div onclick="deputyDeanConfirmItem('${i.id}')" style="margin-top:10px;cursor:pointer;background:linear-gradient(135deg,#10b98122,#10b98111);border:1px solid #10b98155;border-radius:14px;padding:0.8rem;text-align:center;font-weight:700;color:var(--success);transition:transform .2s;"
+                 onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
+                ✅ Confirm
+            </div>
+        </div>`).join('');
+
+    return `
+        <div class="admin-section-head">📥 Received</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">Items shared by Front Office. Optionally sign your name, then confirm — it moves to Store.</p>
+        </div>
+        ${rows}`;
+}
+
+window.deputyDeanConfirmItem = function(id) {
+    const data = getData();
+    const item = (data.deputyDeanReceived || []).find(i => i.id === id);
+    if (!item) return;
+    const nameEl = document.getElementById(`signName_${id}`);
+    item.signedBy = nameEl && nameEl.value.trim() ? nameEl.value.trim() : null;
+    item.status = 'confirmed';
+    item.confirmedAt = new Date().toISOString();
+    saveData(data);
+    alert('✅ Confirmed and moved to Store.');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('deputyDeanMain').innerHTML = deputyDeanReceivedHTML(user);
+};
+
+function deputyDeanStoreHTML(user) {
+    const data = getData();
+    const items = (data.deputyDeanReceived || []).filter(i => i.toRole === user.role && i.status === 'confirmed').slice().reverse();
+
+    const rows = items.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No confirmed items yet.</p>`
+        : items.map(i => `
+        <div class="admin-card" style="margin-bottom:10px;border-left:4px solid var(--success);">
+            <strong>${i.title}</strong>
+            <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px;">
+                Confirmed: ${new Date(i.confirmedAt).toLocaleString()} ${i.signedBy ? `• Signed by: ${i.signedBy}` : ''}
+            </div>
+            <div style="font-size:0.82rem;margin-top:6px;">${i.message}</div>
+            ${i.sentToDeanAdmin
+                ? `<span class="admin-role-pill" style="margin-top:8px;display:inline-block;background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">✅ Sent to Dean Admin</span>`
+                : `<button class="admin-action-btn edit" style="margin-top:8px;" onclick="deputyDeanSendToAdmin('${i.id}')"><i class="fas fa-paper-plane"></i> Send to Admin Dean</button>`}
+        </div>`).join('');
+
+    return `
+        <div class="admin-section-head">🗄️ Store</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">Confirmed records archived here. Send them onward to the Dean Admin when ready.</p>
+        </div>
+        ${rows}`;
+}
+
+window.deputyDeanSendToAdmin = function(id) {
+    const data = getData();
+    const item = (data.deputyDeanReceived || []).find(i => i.id === id);
+    if (!item) return;
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    item.sentToDeanAdmin = true;
+    item.sentToDeanAdminAt = new Date().toISOString();
+
+    data.deanAdminReceived = data.deanAdminReceived || [];
+    data.deanAdminReceived.push({
+        id: 'DAR-' + Date.now(), from: user.name, fromRole: user.role,
+        title: item.title, message: item.message, signedBy: item.signedBy,
+        status: 'pending', read: false, timestamp: new Date().toISOString()
+    });
+
+    saveData(data);
+    alert('✅ Sent to Dean Admin.');
+    document.getElementById('deputyDeanMain').innerHTML = deputyDeanStoreHTML(user);
+};
+
+function deputyDeanReportHTML(user) {
+    const data = getData();
+    const mine = (data.deputyDeanReceived || []).filter(i => i.toRole === user.role);
+    const pending = mine.filter(i => i.status === 'pending').length;
+    const confirmed = mine.filter(i => i.status === 'confirmed' && !i.sentToDeanAdmin).length;
+    const sent = mine.filter(i => i.sentToDeanAdmin).length;
+
+    return `
+        <div class="admin-section-head">📊 Report</div>
+        <div class="admin-card" style="text-align:center;">
+            <div class="admin-card-title">Item Flow Status</div>
+            <div style="display:flex;justify-content:center;margin-top:10px;">
+                ${svgDonutChart([{value:pending||0.0001,color:'#f59e0b'},{value:confirmed||0.0001,color:'#3b82f6'},{value:sent||0.0001,color:'#10b981'}])}
+            </div>
+            <div style="font-size:0.75rem;margin-top:8px;">
+                <span style="color:var(--warning);">● Pending ${pending}</span>&nbsp;
+                <span style="color:#3b82f6;">● In Store ${confirmed}</span>&nbsp;
+                <span style="color:var(--success);">● Sent to Dean Admin ${sent}</span>
+            </div>
+        </div>`;
+}
+
+/* ══════════════════════════════════════════
+   DEAN ADMIN PORTAL
+══════════════════════════════════════════ */
+function showDeanSubLogin() {
+    document.getElementById('schoolInfoPanel').style.display = 'none';
+    document.getElementById('loginFormContainer').style.display = 'block';
+    document.getElementById('dashboardContainer').style.display = 'none';
+
+    document.getElementById('loginTitle').innerHTML = "💛 Dean's Office — Select Portal";
+
+    const portals = [
+        { role:'dean_admin',   name:'Dean of Students', sub:'Admin Office',   color:'#ec4899', img:'https://i.pravatar.cc/300?img=47' },
+        { role:'deputy_dean1', name:'Deputy Dean 1',    sub:'Academic Wing',  color:'#3b82f6', img:'https://i.pravatar.cc/300?img=12' },
+        { role:'deputy_dean2', name:'Deputy Dean 2',    sub:'Welfare Wing',   color:'#8b5cf6', img:'https://i.pravatar.cc/300?img=33' },
+        { role:'front_office', name:'Front Office',     sub:'Reception Desk', color:'#10b981', img:'https://i.pravatar.cc/300?img=25' }
+    ];
+
+    let cardsHTML = '<p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:16px;">Select your office to log in:</p>';
+    cardsHTML += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;">';
+
+    portals.forEach(function(p) {
+        cardsHTML +=
+            '<div onclick="deanSubSelect(\'' + p.role + '\')" ' +
+            'style="cursor:pointer;background:var(--bg-elevated);border:2px solid ' + p.color + '55;border-radius:16px;overflow:hidden;transition:transform .25s, box-shadow .25s;" ' +
+            'onmouseover="this.style.transform=\'translateY(-6px) scale(1.02)\';this.style.boxShadow=\'0 12px 24px ' + p.color + '44\';this.style.borderColor=\'' + p.color + '\';" ' +
+            'onmouseout="this.style.transform=\'none\';this.style.boxShadow=\'none\';this.style.borderColor=\'' + p.color + '55\';">' +
+                '<div style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;">' +
+                    '<img src="' + p.img + '" alt="' + p.name + '" style="width:100%;height:100%;object-fit:cover;display:block;">' +
+                    '<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent, rgba(0,0,0,.85));padding:20px 10px 10px;">' +
+                        '<div style="color:#fff;font-weight:700;font-size:0.85rem;">' + p.name + '</div>' +
+                        '<div style="color:' + p.color + ';font-size:0.68rem;font-weight:600;margin-top:2px;">' + p.sub + '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+    });
+
+    cardsHTML += '</div>';
+
+    document.getElementById('loginFields').innerHTML = cardsHTML;
+    document.getElementById('loginBtn').style.display = 'none';
+}
+
+window.deanSubSelect = function(role) {
+    selectedRole = null;
+    window._deanSubRole = role;
+
+    const titles = {
+        dean_admin: '💛 Dean of Students (Admin) Login',
+        deputy_dean1: '🧑‍💼 Deputy Dean 1 Login',
+        deputy_dean2: '🧑‍💼 Deputy Dean 2 Login',
+        front_office: '🗂️ Front Office Login'
+    };
+
+    const titleEl = document.getElementById('loginTitle');
+    if (titleEl) titleEl.innerHTML = titles[role] || 'Login';
+
+    const fieldsEl = document.getElementById('loginFields');
+    if (fieldsEl) fieldsEl.innerHTML = '<input type="password" id="loginPass" class="admin-input" placeholder="Enter Password">';
+
+    const btnEl = document.getElementById('loginBtn');
+    if (btnEl) {
+        btnEl.style.display = 'block';
+        btnEl.onclick = function() { handleDeanLogin(role); };
+    }
+};
+
+window.handleDeanLogin = function(role) {
+    const passEl = document.getElementById('loginPass');
+    const pass = passEl ? passEl.value.trim() : '';
+
+    const data = getData();
+    const staffMap = {
+        dean_admin: data.deanAdmin,
+        deputy_dean1: data.deputyDean1,
+        deputy_dean2: data.deputyDean2,
+        front_office: data.frontOffice
+    };
+    const staff = staffMap[role];
+
+    if (!staff) { alert('❌ Staff data not found.'); return; }
+    if (pass !== staff.password) { alert('❌ Invalid credentials. Please try again.'); return; }
+
+    const user = Object.assign({}, staff, { role: role });
+    sessionStorage.setItem('currentUser', JSON.stringify(user));
+    showDashboard(role, user);
+};
+
+function renderDeanAdminPanel(user) {
+    const data = getData();
+    const unread = (data.deanAdminReceived || []).filter(i => !i.read).length;
+    return `
+    <div class="admin-layout">
+        <div class="admin-sidenav">
+            <div class="admin-sidenav-title"><i class="fas fa-heart"></i> Dean Admin Menu</div>
+            <button class="admin-nav-btn" onclick="deanAdminSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
+            <button class="admin-nav-btn active" onclick="deanAdminSection('received',this)">
+                <i class="fas fa-bell"></i> Received
+                ${unread > 0 ? `<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${unread}</span>` : ''}
+            </button>
+            <button class="admin-nav-btn" onclick="deanAdminSection('review',this)"><i class="fas fa-clipboard-check"></i> Review</button>
+            <button class="admin-nav-btn" onclick="deanAdminSection('mess',this)"><i class="fas fa-utensils"></i> Mess Boarders</button>
+            <button class="admin-nav-btn" onclick="deanAdminSection('discipline',this)"><i class="fas fa-gavel"></i> Discipline Records</button>
+            <button class="admin-nav-btn" onclick="deanAdminSection('report',this)"><i class="fas fa-chart-bar"></i> Report</button>
+            <button class="admin-nav-btn" onclick="deanAdminSection('noticeboard',this)"><i class="fas fa-bullhorn"></i> Post Notice</button>
+        </div>
+        <div class="admin-main" id="deanAdminMain">${deanAdminReceivedHTML(user)}</div>
+    </div>`;
+}
+
+window.deanAdminSection = function(section, btn) {
+    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const map = {
+        profile:     () => deanAdminProfileHTML(user),
+        received:    () => deanAdminReceivedHTML(user),
+        review:      () => deanAdminReviewHTML(user),
+        discipline:  () => deanAdminDisciplineHTML(user),
+        mess:        () => deanAdminMessHTML(user),  
+        report:      () => deanAdminReportHTML(user),
+        noticeboard: () => deanAdminNoticeboardHTML(user)
+    };
+    document.getElementById('deanAdminMain').innerHTML = (map[section] || (()=>deanAdminReceivedHTML(user)))();
+};
+
+function deanAdminProfileHTML(user) {
+    const data = getData();
+    const received = data.deanAdminReceived || [];
+    const review = data.deanAdminReview || [];
+    return `
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">
+                <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#a855f7);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;">💛</div>
+                <div>
+                    <h3 style="margin:0;">${user.name}</h3>
+                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user.id}</div>
+                    <span class="admin-role-pill" style="margin-top:6px;display:inline-block;">Dean of Students — Admin</span>
+                </div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${received.length}</h3><p>Items Received</p></div>
+            <div class="stat-card"><h3>${review.length}</h3><p>In Review</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${(data.deanAdminSentItems||[]).length}</h3><p>Dispatched</p></div>
+        </div>`;
+}
+
+function deanAdminReceivedHTML(user) {
+    const data = getData();
+    const items = (data.deanAdminReceived || []).filter(i => i.status === 'pending').slice().reverse();
+    items.forEach(i => i.read = true);
+    saveData(data);
+
+    const rows = items.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No pending items.</p>`
+        : items.map(i => `
+        <div class="admin-card" style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                <strong>${i.title}</strong>
+                <span class="admin-role-pill">${i.from}</span>
+            </div>
+            <div style="font-size:0.82rem;margin-top:6px;">${i.message}</div>
+            ${i.signedBy ? `<div style="font-size:0.72rem;color:var(--text-secondary);margin-top:4px;">Signed by: ${i.signedBy}</div>` : ''}
+            <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:6px;">${new Date(i.timestamp).toLocaleString()}</div>
+            <button class="admin-btn-primary" style="margin-top:8px;" onclick="deanAdminConfirmItem('${i.id}')">✅ Confirm → Review</button>
+        </div>`).join('');
+
+    return `
+        <div class="admin-section-head">📥 Received</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">Items sent from Deputy Dean 1 and Deputy Dean 2. Confirm to move them into Review.</p>
+        </div>
+        ${rows}`;
+}
+
+window.deanAdminConfirmItem = function(id) {
+    const data = getData();
+    const item = (data.deanAdminReceived || []).find(i => i.id === id);
+    if (!item) return;
+    item.status = 'confirmed';
+
+    data.deanAdminReview = data.deanAdminReview || [];
+    data.deanAdminReview.push({
+        id: 'DAV-' + Date.now(), sourceId: item.id, title: item.title, message: item.message,
+        from: item.from, signedBy: item.signedBy, notes: '', saved: false,
+        timestamp: new Date().toISOString()
+    });
+
+    saveData(data);
+    alert('✅ Moved to Review.');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('deanAdminMain').innerHTML = deanAdminReceivedHTML(user);
+};
+
+function deanAdminReviewHTML(user) {
+    const data = getData();
+    const items = (data.deanAdminReview || []).slice().reverse();
+    const targets = [
+        { key:'finance',    label:'💰 Finance' },
+        { key:'mess',       label:'🍽️ Mess' },
+        { key:'classrep',   label:'🗣️ Class Reps' },
+        { key:'kitco',      label:'🎉 KITCO' },
+        { key:'principal',  label:'🎓 Principal' },
+        { key:'deputy_dean',label:'🧑‍💼 Deputy Dean' }
+    ];
+
+    const rows = items.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">Nothing in review yet.</p>`
+        : items.map(i => `
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                <strong>${i.title}</strong>
+                <span class="admin-role-pill">${i.from}</span>
+            </div>
+            <div style="font-size:0.82rem;margin-top:6px;color:var(--text-secondary);">${i.message}</div>
+            <div style="margin-top:10px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">DEAN'S NOTES / RECORD ENTRY</label>
+                <textarea id="reviewNotes_${i.id}" class="admin-input" rows="3" placeholder="Enter your record of this item..." style="margin-top:4px;">${i.notes||''}</textarea>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;">
+                <button class="admin-btn-secondary" onclick="deanAdminSaveReview('${i.id}')"><i class="fas fa-save"></i> Save</button>
+                ${i.saved ? '<span class="admin-role-pill" style="background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);">✅ Saved</span>' : ''}
+                <select id="sendDept_${i.id}" class="admin-input" style="max-width:180px;">
+                    ${targets.map(t => `<option value="${t.key}">${t.label}</option>`).join('')}
+                </select>
+                <button class="admin-btn-primary" onclick="deanAdminSendReview('${i.id}')"><i class="fas fa-paper-plane"></i> Send</button>
+            </div>
+        </div>`).join('');
+
+    return `
+        <div class="admin-section-head">📋 Review</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Use the confirmed records here to enter your notes, save for your own record, then dispatch to the relevant department.
+            </p>
+        </div>
+        ${rows}`;
+}
+
+window.deanAdminSaveReview = function(id) {
+    const data = getData();
+    const item = (data.deanAdminReview || []).find(i => i.id === id);
+    if (!item) return;
+    const notesEl = document.getElementById(`reviewNotes_${id}`);
+    item.notes = notesEl ? notesEl.value : '';
+    item.saved = true;
+    saveData(data);
+    alert('✅ Notes saved.');
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('deanAdminMain').innerHTML = deanAdminReviewHTML(user);
+};
+
+window.deanAdminSendReview = function(id) {
+    const data = getData();
+    const item = (data.deanAdminReview || []).find(i => i.id === id);
+    if (!item) return;
+    const deptEl = document.getElementById(`sendDept_${id}`);
+    const dept = deptEl ? deptEl.value : '';
+    if (!dept) return alert('Select a department.');
+
+    const payload = {
+        id: 'DAS-' + Date.now(), from: 'Dean of Students', fromRole: 'dean_admin',
+        subject: item.title, message: item.notes || item.message,
+        timestamp: new Date().toISOString(), read: false
+    };
+
+    const routes = {
+        finance:     () => { data.financeReceived      = data.financeReceived      || []; data.financeReceived.push({...payload, amount:0, studentId:null, studentName:null, addedToFees:false}); },
+        mess:        () => { data.messReceivedFromDean = data.messReceivedFromDean || []; data.messReceivedFromDean.push(payload); },
+        classrep:    () => { data.classRepReceived      = data.classRepReceived      || []; data.classRepReceived.push(payload); },
+        kitco:       () => { data.kitcoReceived         = data.kitcoReceived         || []; data.kitcoReceived.push(payload); },
+        principal:   () => { data.principalReceived     = data.principalReceived     || []; data.principalReceived.push(payload); },
+        deputy_dean: () => { data.deputyDeanReceived     = data.deputyDeanReceived     || []; data.deputyDeanReceived.push({...payload, title:item.title, toRole:'deputy_dean1', status:'pending', signedBy:null}); }
+    };
+    (routes[dept] || (()=>{}))();
+
+    data.deanAdminSentItems = data.deanAdminSentItems || [];
+    data.deanAdminSentItems.push({ ...payload, to: dept });
+    data.deanAdminReview = (data.deanAdminReview || []).filter(x => x.id !== id);
+
+    saveData(data);
+    alert(`✅ Sent to ${dept.replace('_',' ')}.`);
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    document.getElementById('deanAdminMain').innerHTML = deanAdminReviewHTML(user);
+};
+
+function messBoardersHTML(targetId) {
     const data = getData();
     const boarders = data.messBoarders || [];
     const sent   = boarders.filter(b => b.sentToMess);
@@ -4151,21 +5209,19 @@ function deanMessHTML(user) {
                 then add late students afterward with a reason — sent as an update.
             </p>
         </div>
-
         <div class="admin-card" style="margin-bottom:1rem;">
             <div class="admin-card-title">➕ Add Student to Boarders List</div>
             <div style="display:grid;grid-template-columns:2fr 2fr;gap:10px;margin-top:10px;">
-                <select id="messAddStudent" class="admin-input">
+                <select id="messAddStudent_${targetId}" class="admin-input">
                     <option value="">-- Select Student --</option>
                     ${candidates.map(s => `<option value="${s.id}">${s.name} (${s.id})</option>`).join('')}
                 </select>
-                <input id="messAddReason" class="admin-input" placeholder="Reason (required if list already sent)">
+                <input id="messAddReason_${targetId}" class="admin-input" placeholder="Reason (required if list already sent)">
             </div>
-            <button class="admin-btn-primary" style="margin-top:10px;" onclick="deanAddMessBoarder()">
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="messAddBoarder('${targetId}')">
                 <i class="fas fa-plus"></i> Add Student
             </button>
         </div>
-
         ${unsent.length > 0 ? `
         <div class="admin-card" style="margin-bottom:1rem;">
             <div class="admin-card-title">⏳ Not Yet Sent to Mess (${unsent.length})</div>
@@ -4174,25 +5230,24 @@ function deanMessHTML(user) {
                     <strong>${b.studentName}</strong> <span style="color:var(--text-secondary);">(${b.studentId})</span>
                     ${b.reason ? `<div style="font-size:0.72rem;color:var(--warning);">Reason: ${b.reason}</div>` : ''}
                 </div>`).join('')}
-            <button class="admin-btn-primary" style="margin-top:10px;" onclick="deanSendMessListToMess()">
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="messSendBoarderListToMess('${targetId}')">
                 <i class="fas fa-paper-plane"></i> Send ${unsent.length} to Mess
             </button>
         </div>` : ''}
-
         <div class="admin-card">
             <div class="admin-card-title">✅ Sent to Mess (${sent.length})</div>
             ${sent.length === 0 ? '<p style="color:var(--text-secondary);font-size:0.85rem;">None sent yet.</p>' :
             sent.map(b => `
                 <div style="display:flex;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;">
                     <span><strong>${b.studentName}</strong> (${b.studentId})</span>
-                    <button class="admin-action-btn danger" onclick="deanRemoveMessBoarder('${b.id}')">Remove</button>
+                    <button class="admin-action-btn danger" onclick="messRemoveBoarder('${b.id}','${targetId}')">Remove</button>
                 </div>`).join('')}
         </div>`;
 }
 
-window.deanAddMessBoarder = function() {
-    const studentId = document.getElementById('messAddStudent').value;
-    const reason     = document.getElementById('messAddReason').value.trim();
+window.messAddBoarder = function(targetId) {
+    const studentId = document.getElementById(`messAddStudent_${targetId}`).value;
+    const reason     = document.getElementById(`messAddReason_${targetId}`).value.trim();
     if (!studentId) return alert('Select a student.');
     const data = getData();
     const student = data.students.find(s => s.id === studentId);
@@ -4201,463 +5256,189 @@ window.deanAddMessBoarder = function() {
     data.messBoarders = data.messBoarders || [];
     data.messBoarders.push({
         id: 'MB-' + Date.now(), studentId, studentName: student.name,
-        addedDate: new Date().toISOString(), addedBy: 'Dean of Students',
+        addedDate: new Date().toISOString(), addedBy: 'Dean Office',
         reason: reason || null, sentToMess: false
     });
     saveData(data);
     alert(`✅ ${student.name} added to boarders list.`);
-    const user = JSON.parse(sessionStorage.getItem('currentUser'));
-    document.getElementById('deanMain').innerHTML = deanMessHTML(user);
+    document.getElementById(targetId).innerHTML = messBoardersHTML(targetId);
 };
 
-window.deanSendMessListToMess = function() {
+window.messSendBoarderListToMess = function(targetId) {
     const data = getData();
     (data.messBoarders || []).forEach(b => { if (!b.sentToMess) b.sentToMess = true; });
     saveData(data);
     alert('✅ List sent to Mess Department.');
-    const user = JSON.parse(sessionStorage.getItem('currentUser'));
-    document.getElementById('deanMain').innerHTML = deanMessHTML(user);
+    document.getElementById(targetId).innerHTML = messBoardersHTML(targetId);
 };
 
-window.deanRemoveMessBoarder = function(id) {
+window.messRemoveBoarder = function(id, targetId) {
     if (!confirm('Remove this student from meal services?')) return;
     const data = getData();
     data.messBoarders = (data.messBoarders || []).filter(b => b.id !== id);
     saveData(data);
-    const user = JSON.parse(sessionStorage.getItem('currentUser'));
-    document.getElementById('deanMain').innerHTML = deanMessHTML(user);
+    document.getElementById(targetId).innerHTML = messBoardersHTML(targetId);
 };
 
-/* ── Profile ── */
-function deanProfileHTML(user) {
-    const data      = getData();
-    const complaints = (data.deanComplaints || []).length;
-    const discipline = (data.disciplineRecords || []).length;
-    const clearances = (data.hostelClearances || []).filter(c => c.sentToDean).length;
+function disciplineRecordsHTML(targetId) {
+    const data = getData();
+    const records = (data.disciplineRecords || []).slice().reverse();
     return `
-        <div class="admin-section-head">👤 My Profile</div>
-        <div class="admin-card" style="margin-bottom:1rem;">
-            <div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">
-                <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#a855f7);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;flex-shrink:0;">💛</div>
-                <div>
-                    <h3 style="margin:0;">${user.name || 'Dean of Students'}</h3>
-                    <div style="font-size:0.8rem;color:var(--text-secondary);">${user.id || 'DEAN-001'}</div>
-                    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
-                        <span class="admin-role-pill" style="background:rgba(236,72,153,.15);border-color:#ec4899;color:#ec4899;">💛 Dean of Students</span>
-                        <span class="admin-role-pill">Student Welfare</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="admin-card" style="margin-bottom:1rem;">
-            <div class="admin-card-title">Office Information</div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
-                <div><span style="color:var(--text-secondary);font-size:0.7rem;">FULL NAME</span><br>${user.name || 'Dean of Students'}</div>
-                <div><span style="color:var(--text-secondary);font-size:0.7rem;">STAFF ID</span><br>${user.id || 'DEAN-001'}</div>
-                <div><span style="color:var(--text-secondary);font-size:0.7rem;">DEPARTMENT</span><br>Student Affairs</div>
-                <div><span style="color:var(--text-secondary);font-size:0.7rem;">ROLE</span><br>Dean of Students</div>
-            </div>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
-            <div class="stat-card"><h3>${discipline}</h3><p>Discipline Records</p></div>
-            <div class="stat-card"><h3>${complaints}</h3><p>Complaints</p></div>
-            <div class="stat-card"><h3>${clearances}</h3><p>Hostel Clearances</p></div>
-        </div>`;
-}
-
-/* ── Received ── */
-function deanReceivedHTML(user) {
-    const data   = getData();
-    const msgs   = data.deanReceived || [];
-    const unread = msgs.filter(m => !m.read).length;
-
-    const roleBadge = role => {
-        const map = {
-            finance:       ['💰 Finance Office',  '#10b981'],
-            hostel_matron: ['👩 Hostel — Matron', '#a855f7'],
-            hostel_patron: ['👨 Hostel — Patron',  '#3b82f6'],
-            hospital:      ['🏥 Hospital',          '#ef4444']
-        };
-        const [label, color] = map[role] || ['📨 System', '#6c3fcf'];
-        return `<span class="admin-role-pill" style="background:${color}20;border-color:${color};color:${color};">${label}</span>`;
-    };
-
-    return `
-        <div class="admin-section-head">📥 Received (${msgs.length}) ${unread > 0 ? `<span style="color:var(--danger);font-size:0.75rem;">${unread} unread</span>` : ''}</div>
+        <div class="admin-section-head">🥊 Discipline Records</div>
         <div class="admin-card" style="margin-bottom:1rem;">
             <p style="font-size:0.78rem;color:var(--text-secondary);">
-                Inbox from Finance (fee clearance), Hostel Matron/Patron (clearance lists), and Hospital.
-            </p>
-        </div>
-        <div class="admin-card">
-            ${msgs.length === 0
-                ? '<p style="color:var(--text-secondary);">No messages yet.</p>'
-                : msgs.slice().reverse().map(m => `
-                <div style="padding:1rem;background:var(--bg-elevated);border-radius:12px;margin-bottom:10px;border-left:4px solid ${m.read ? 'var(--border)' : 'var(--purple)'};" onclick="deanMarkRead('${m.id}')">
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;">
-                        <div>
-                            ${roleBadge(m.fromRole)}
-                            <div style="font-weight:700;margin-top:6px;font-size:0.88rem;">${m.subject}</div>
-                        </div>
-                        <div style="font-size:0.68rem;color:var(--text-secondary);">${new Date(m.timestamp).toLocaleString()}${!m.read ? ' <span style="color:var(--purple-light);">● New</span>' : ''}</div>
-                    </div>
-                    <div style="font-size:0.82rem;margin-top:8px;color:var(--text-secondary);">${m.message}</div>
-                </div>`).join('')}
-        </div>`;
-}
-
-/* ── Discipline Records ── */
-function deanDisciplineHTML(user) {
-    const data    = getData();
-    const records = data.disciplineRecords || [];
-
-    const severityBadge = s => {
-        const map = { minor:['⚠️ Minor','#f59e0b'], moderate:['🔶 Moderate','#ef4444'], severe:['🚨 Severe','#dc2626'] };
-        const [label, color] = map[s] || ['📋 General','#6c3fcf'];
-        return `<span class="admin-role-pill" style="background:${color}20;border-color:${color};color:${color};">${label}</span>`;
-    };
-
-    const cards = records.map(r => {
-        const student = (data.students || []).find(s => s.id === r.studentId);
-        return `
-        <div style="padding:1rem;background:var(--bg-elevated);border-radius:14px;border-left:4px solid ${r.severity==='severe'?'#dc2626':r.severity==='moderate'?'var(--danger)':'var(--warning)'};margin-bottom:10px;">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;">
-                <div>
-                    ${severityBadge(r.severity)}
-                    <div style="font-weight:700;margin-top:6px;">${r.studentName}</div>
-                    <div style="font-size:0.72rem;color:var(--text-secondary);">
-                        ${r.studentId} • ${r.department}
-                        ${student ? ` • 📱 ${student.phone || '—'}` : ''}
-                        ${student?.status === 'active' ? ' • <span style="color:var(--success);">✅ Active</span>' : student?.status === 'not_attending' ? ' • <span style="color:var(--danger);">🚫 Not Attending</span>' : ''}
-                    </div>
-                </div>
-                <div style="font-size:0.72rem;color:var(--text-secondary);">${r.date}</div>
-            </div>
-            <div style="font-size:0.82rem;margin-top:8px;"><strong>Offense:</strong> ${r.offense}</div>
-            <div style="font-size:0.82rem;margin-top:4px;"><strong>Action Taken:</strong> ${r.action}</div>
-            ${r.sentToAdmin
-                ? `<div style="font-size:0.7rem;color:var(--success);margin-top:6px;">✅ Sent to System Admin</div>`
-                : `<button class="admin-action-btn edit" style="margin-top:8px;" onclick="deanSendRecordToAdmin('${r.id}')">📤 Send to System Admin</button>`}
-        </div>`;
-    }).join('');
-
-    return `
-        <div class="admin-section-head">⚖️ Discipline Records</div>
-        <div class="admin-card" style="margin-bottom:1rem;">
-            <p style="font-size:0.78rem;color:var(--text-secondary);">
-                Every record is tied to a student's profile by name and admission number — like a school police record.
-                When a student's name is entered, all their details auto-populate. Records are sent to System Admin weekly.
+                Every record is tied to a student's profile by name and admission number — like a school police
+                record. When a student's admission number is entered, all their details auto-populate. Records
+                are sent to System Admin weekly.
             </p>
         </div>
         <div class="admin-card" style="margin-bottom:1rem;">
             <div class="admin-card-title">📝 Add New Discipline Record</div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px;">
                 <div>
                     <label style="font-size:0.7rem;color:var(--text-secondary);">STUDENT ADMISSION NO (auto-fills details)</label>
-                    <input type="text" id="drStudentId" class="admin-input" placeholder="e.g. STU-2026-20669" style="margin-top:4px;" oninput="deanAutoFillStudent(this.value)">
+                    <input id="discAdmNo" class="admin-input" placeholder="e.g. STU-2026-20669" oninput="disciplineAutofill()" style="margin-top:4px;">
                 </div>
                 <div>
                     <label style="font-size:0.7rem;color:var(--text-secondary);">FULL NAME (auto-filled)</label>
-                    <input type="text" id="drStudentName" class="admin-input" placeholder="Auto-filled" readonly style="margin-top:4px;background:var(--bg-elevated);">
+                    <input id="discName" class="admin-input" placeholder="Auto-filled" readonly style="margin-top:4px;">
                 </div>
                 <div>
                     <label style="font-size:0.7rem;color:var(--text-secondary);">DEPARTMENT (auto-filled)</label>
-                    <input type="text" id="drDept" class="admin-input" placeholder="Auto-filled" readonly style="margin-top:4px;background:var(--bg-elevated);">
+                    <input id="discDept" class="admin-input" placeholder="Auto-filled" readonly style="margin-top:4px;">
                 </div>
                 <div>
                     <label style="font-size:0.7rem;color:var(--text-secondary);">SEVERITY</label>
-                    <select id="drSeverity" class="admin-input" style="margin-top:4px;">
+                    <select id="discSeverity" class="admin-input" style="margin-top:4px;">
                         <option value="minor">⚠️ Minor</option>
                         <option value="moderate">🔶 Moderate</option>
-                        <option value="severe">🚨 Severe</option>
+                        <option value="major">🚨 Major</option>
                     </select>
                 </div>
                 <div>
                     <label style="font-size:0.7rem;color:var(--text-secondary);">DATE</label>
-                    <input type="date" id="drDate" class="admin-input" value="${new Date().toLocaleDateString('en-CA')}" style="margin-top:4px;">
+                    <input id="discDate" type="date" class="admin-input" value="${new Date().toISOString().slice(0,10)}" style="margin-top:4px;">
                 </div>
             </div>
             <div style="margin-top:10px;">
                 <label style="font-size:0.7rem;color:var(--text-secondary);">OFFENSE DESCRIPTION</label>
-                <textarea id="drOffense" class="admin-input" rows="2" placeholder="Describe the offense in detail..." style="margin-top:4px;"></textarea>
+                <textarea id="discOffense" class="admin-input" rows="3" placeholder="Describe the offense in detail..." style="margin-top:4px;"></textarea>
             </div>
             <div style="margin-top:10px;">
                 <label style="font-size:0.7rem;color:var(--text-secondary);">ACTION TAKEN</label>
-                <textarea id="drAction" class="admin-input" rows="2" placeholder="What action was taken (warning, suspension, counselling...)..." style="margin-top:4px;"></textarea>
+                <textarea id="discAction" class="admin-input" rows="2" placeholder="What action was taken (warning, suspension, counselling...)..." style="margin-top:4px;"></textarea>
             </div>
-            <button class="admin-btn-primary" style="margin-top:12px;" onclick="deanAddRecord()">
+            <button class="admin-btn-primary" style="margin-top:12px;" onclick="disciplineAddRecord('${targetId}')">
                 <i class="fas fa-gavel"></i> Add Discipline Record
             </button>
         </div>
         <div class="admin-card">
-            <div class="admin-card-title">All Records (${records.length})</div>
-            ${cards || '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No discipline records yet.</p>'}
-        </div>`;
-}
-
-/* ── Hostel Clearance ── */
-function deanClearanceHTML(user) {
-    const data       = getData();
-    const clearances = (data.hostelClearances || []).filter(c => c.sentToDean);
-    const allStudents = data.students || [];
-
-    const grouped = { Female: clearances.filter(c => c.gender === 'Female'), Male: clearances.filter(c => c.gender === 'Male') };
-
-    const buildWingSection = (wing, list) => {
-        if (list.length === 0) return `<p style="color:var(--text-secondary);font-size:0.85rem;margin:8px 0;">No ${wing.toLowerCase()} wing clearances received yet.</p>`;
-        return list.map(c => {
-            const stu = allStudents.find(s => s.id === c.studentId);
-            return `
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:0.8rem;background:var(--bg-elevated);border-radius:12px;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
-                <div>
-                    <strong>${c.studentName}</strong>
-                    <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px;">
-                        ${c.studentId} • ${c.room} • ${stu?.phone || '—'}
-                        ${stu?.department ? ` • ${stu.department}` : ''}
-                    </div>
-                    <div style="font-size:0.7rem;color:var(--success);margin-top:2px;">✅ Cleared by ${c.clearedByName} on ${c.clearanceDate}</div>
-                </div>
-                <button class="admin-action-btn edit" onclick="deanGenerateClearanceSlip('${c.studentId}','${c.studentName}','${c.room}')">
-                    📄 Generate Clearance Slip
-                </button>
-            </div>`;
-        }).join('');
-    };
-
-    return `
-        <div class="admin-section-head">🏠 Hostel Clearance</div>
-        <div class="admin-card" style="margin-bottom:1rem;">
-            <p style="font-size:0.78rem;color:var(--text-secondary);">
-                Lists sent by Matron (female wing) and Patron (male wing) after they confirm each student has vacated their room.
-                Generate clearance slips per student from here.
-            </p>
-        </div>
-        <div class="admin-card" style="margin-bottom:1rem;">
-            <div class="admin-card-title">👩 Female Wing — Cleared by Matron (${grouped.Female.length})</div>
-            <div style="margin-top:10px;">${buildWingSection('Female', grouped.Female)}</div>
-        </div>
-        <div class="admin-card">
-            <div class="admin-card-title">👨 Male Wing — Cleared by Patron (${grouped.Male.length})</div>
-            <div style="margin-top:10px;">${buildWingSection('Male', grouped.Male)}</div>
-        </div>`;
-}
-
-/* ── Student Complaints ── */
-function deanComplaintsHTML(user) {
-    const data = getData();
-    const items = data.deanComplaints || [];
-    return `
-        <div class="admin-section-head">⚠️ Complaints Received</div>
-        <div class="admin-card">
-            <div class="admin-card-title">All Complaints (${items.length})</div>
-            ${items.length === 0 ? '<p style="color:var(--text-secondary);font-size:0.85rem;">None yet.</p>' :
-            items.slice().reverse().map(c => `
-            <div style="padding:1rem;background:var(--bg-elevated);border-radius:12px;border-left:4px solid ${c.status==='resolved'?'var(--success)':'var(--warning)'};margin-bottom:10px;margin-top:10px;">
+            <div class="admin-card-title">📂 All Records (${records.length})</div>
+            ${records.length === 0 ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No records yet.</p>' :
+            records.map(r => `
+            <div style="padding:1rem;background:var(--bg-elevated);border-radius:12px;margin-bottom:10px;border-left:4px solid ${r.severity==='major'?'var(--danger)':r.severity==='moderate'?'var(--warning)':'var(--purple)'};">
                 <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
-                    <div>
-                        <span class="admin-role-pill">${c.source === 'mess_department' ? '🍽️ Mess Department' : '🎓 ' + (c.studentName || 'Student')}</span>
-                        <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px;">${c.category || 'General'} • ${new Date(c.timestamp).toLocaleDateString()}</div>
-                    </div>
-                    <span class="admin-role-pill" style="${c.status==='resolved'?'background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);':'background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);'}">${c.status==='resolved'?'✅ Resolved':'⏳ Pending'}</span>
+                    <strong>${r.studentName}</strong>
+                    <span class="admin-role-pill">${r.severity.toUpperCase()}</span>
                 </div>
-                <div style="font-size:0.82rem;margin-top:8px;">${c.complaint}</div>
-                ${c.status!=='resolved' ? `<button class="admin-action-btn edit" style="margin-top:8px;" onclick="deanResolveComplaint('${c.id}')">Mark Resolved</button>` : ''}
+                <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px;">${r.studentId} • ${r.department} • ${new Date(r.date).toLocaleDateString()}</div>
+                <div style="font-size:0.82rem;margin-top:6px;"><strong>Offense:</strong> ${r.offense}</div>
+                <div style="font-size:0.82rem;margin-top:4px;"><strong>Action:</strong> ${r.action}</div>
+                <div style="font-size:0.7rem;color:var(--text-secondary);margin-top:4px;">Recorded by: ${r.recordedBy}</div>
             </div>`).join('')}
         </div>`;
 }
 
-/* ── Activity Approvals ── */
-function deanActivitiesHTML(user) {
-    const demo = [
-        { id:'aa1', activityName:'Inter-Department Football Tournament', organizer:'KITCO', date:'2026-07-10', venue:'School Grounds', status:'pending', timestamp:'2026-06-25T10:00:00.000Z' },
-        { id:'aa2', activityName:'Computer Studies End-Term Dinner', organizer:'Computer Studies Class Rep', date:'2026-07-08', venue:'School Cafeteria', status:'approved', timestamp:'2026-06-20T14:00:00.000Z' }
-    ];
-    return `
-        <div class="admin-section-head">📅 Activity Approvals</div>
-        <div class="admin-card">
-            <div class="admin-card-title">Activity Requests (${demo.length})</div>
-            ${demo.map(a => `
-            <div style="padding:1rem;background:var(--bg-elevated);border-radius:12px;border-left:4px solid ${a.status==='approved'?'var(--success)':'var(--warning)'};margin-bottom:10px;margin-top:10px;">
-                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
-                    <div>
-                        <strong>${a.activityName}</strong>
-                        <div style="font-size:0.72rem;color:var(--text-secondary);">By: ${a.organizer} • Venue: ${a.venue} • Date: ${a.date}</div>
-                    </div>
-                    <span class="admin-role-pill" style="${a.status==='approved'?'background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);':'background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);'}">${a.status==='approved'?'✅ Approved':'⏳ Pending'}</span>
-                </div>
-                ${a.status!=='approved' ? `
-                <div style="display:flex;gap:8px;margin-top:8px;">
-                    <button class="admin-action-btn edit" onclick="alert('Activity approved!')">✅ Approve</button>
-                    <button class="admin-action-btn danger" onclick="alert('Activity rejected.')">❌ Reject</button>
-                </div>` : ''}
-            </div>`).join('')}
-        </div>`;
-}
-
-/* ── KITCO Management ── */
-function deanKitcoHTML(user) {
+window.disciplineAutofill = function() {
+    const admNo = document.getElementById('discAdmNo').value.trim();
     const data = getData();
-    const events = data.kitcoEvents || [];
-    const demo = [
-        { id:'ke1', title:'Annual Cultural Festival 2026', date:'2026-07-15', venue:'School Hall', status:'upcoming', organizer:'KITCO President' },
-        { id:'ke2', title:'Sports Day — Athletics & Football', date:'2026-07-20', venue:'School Grounds', status:'upcoming', organizer:'Sports Department' }
-    ];
-    const items = events.length ? events : demo;
-    return `
-        <div class="admin-section-head">🎓 KITCO Management</div>
-        <div class="admin-card">
-            <div class="admin-card-title">Upcoming KITCO Events (${items.length})</div>
-            ${items.map(e => `
-            <div style="padding:0.9rem;background:var(--bg-elevated);border-radius:12px;margin-bottom:8px;margin-top:10px;">
-                <strong>${e.title}</strong>
-                <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:4px;">📅 ${e.date} • 📍 ${e.venue} • By: ${e.organizer}</div>
-                <span class="admin-role-pill" style="margin-top:6px;display:inline-block;">🗓️ ${e.status}</span>
-            </div>`).join('')}
-        </div>`;
-}
+    const student = (data.students || []).find(s => s.id === admNo);
+    document.getElementById('discName').value = student ? student.name : '';
+    document.getElementById('discDept').value = student ? student.department : '';
+};
 
-/* ── Student Welfare Report ── */
-function deanReportHTML(user) {
-    const data       = getData();
-    const students   = data.students || [];
-    const discipline = data.disciplineRecords || [];
-    const clearances = (data.hostelClearances || []).filter(c => c.sentToDean);
-    const hostelMale = (data.hostelResidents || []).filter(r => r.gender === 'Male').length;
-    const hostelFem  = (data.hostelResidents || []).filter(r => r.gender === 'Female').length;
-    const complaints = data.deanComplaints || [];
-    const received   = data.deanReceived || [];
+window.disciplineAddRecord = function(targetId) {
+    const admNo    = document.getElementById('discAdmNo').value.trim();
+    const name     = document.getElementById('discName').value.trim();
+    const dept     = document.getElementById('discDept').value.trim();
+    const severity = document.getElementById('discSeverity').value;
+    const date     = document.getElementById('discDate').value;
+    const offense  = document.getElementById('discOffense').value.trim();
+    const action   = document.getElementById('discAction').value.trim();
+    if (!admNo || !name || !offense || !action) return alert('Please enter a valid Admission No (student must exist), Offense, and Action.');
 
-    const active   = students.filter(s => (s.status||'active') === 'active').length;
-    const notAtt   = students.filter(s => s.status === 'not_attending').length;
-    const deferred = students.filter(s => s.status === 'deferred').length;
+    const data = getData();
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    data.disciplineRecords = data.disciplineRecords || [];
+    data.disciplineRecords.push({
+        id: 'DR-' + Date.now(), studentId: admNo, studentName: name, department: dept,
+        severity, date, offense, action, recordedBy: user?.name || 'Dean Office',
+        timestamp: new Date().toISOString()
+    });
+    saveData(data);
+    alert('✅ Discipline record added.');
+    document.getElementById(targetId).innerHTML = disciplineRecordsHTML(targetId);
+};
 
-    const minor    = discipline.filter(d => d.severity === 'minor').length;
-    const moderate = discipline.filter(d => d.severity === 'moderate').length;
-    const severe   = discipline.filter(d => d.severity === 'severe').length;
+/* Thin wrappers so each portal's section map can call it with the right container */
+function deanAdminDisciplineHTML() { return disciplineRecordsHTML('deanAdminMain'); }
+function deputyDeanDisciplineHTML() { return disciplineRecordsHTML('deputyDeanMain'); }
 
-    const cleared = clearances.length;
-    const pending = (data.hostelResidents || []).length - cleared;
+function deanAdminReportHTML(user) {
+    const data = getData();
+    const received = data.deanAdminReceived || [];
+    const review = data.deanAdminReview || [];
+    const sent = data.deanAdminSentItems || [];
+    const pending = received.filter(i => i.status === 'pending').length;
+    const confirmed = received.filter(i => i.status === 'confirmed').length;
 
-    const discBars = discipline.map(d => ({
-        label: d.studentName.split(' ')[0],
-        value: d.severity === 'minor' ? 1 : d.severity === 'moderate' ? 2 : 3,
-        color: d.severity === 'minor' ? '#f59e0b' : d.severity === 'moderate' ? '#ef4444' : '#dc2626'
-    }));
+    const deptTally = {};
+    sent.forEach(s => { deptTally[s.to] = (deptTally[s.to]||0)+1; });
+    const bars = Object.entries(deptTally).map(([d,c],i) => ({ label:d, value:c, color:['#8b5cf6','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899'][i%6] }));
 
     return `
-        <div class="admin-section-head">📊 Student Welfare Report</div>
+        <div class="admin-section-head">📊 Report</div>
         <div class="admin-card" style="margin-bottom:1rem;">
-            <div class="admin-card-title">Discipline Records by Student</div>
-            <div style="overflow-x:auto;margin-top:10px;">
-                ${svgBarChart(discBars.length ? discBars : [{label:'No records',value:0,color:'#3a2d6e'}])}
-            </div>
-            <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:4px;">Bar height: 1=Minor, 2=Moderate, 3=Severe</div>
+            <div class="admin-card-title">Dispatches by Department</div>
+            <div style="overflow-x:auto;margin-top:10px;">${svgBarChart(bars.length?bars:[{label:'No data',value:0,color:'#3a2d6e'}])}</div>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;">
-            <div class="admin-card" style="text-align:center;">
-                <div class="admin-card-title">Student Status</div>
-                <div style="display:flex;justify-content:center;margin-top:10px;">
-                    ${svgDonutChart([{value:active||0.0001,color:'#10b981'},{value:notAtt||0.0001,color:'#ef4444'},{value:deferred||0.0001,color:'#f59e0b'}])}
-                </div>
-                <div style="font-size:0.75rem;margin-top:8px;">
-                    <span style="color:var(--success);">● Active ${active}</span>&nbsp;
-                    <span style="color:var(--danger);">● Not Attending ${notAtt}</span>&nbsp;
-                    <span style="color:var(--warning);">● Deferred ${deferred}</span>
-                </div>
+        <div class="admin-card" style="text-align:center;margin-bottom:1rem;">
+            <div class="admin-card-title">Received Item Status</div>
+            <div style="display:flex;justify-content:center;margin-top:10px;">
+                ${svgDonutChart([{value:pending||0.0001,color:'#f59e0b'},{value:confirmed||0.0001,color:'#10b981'}])}
             </div>
-            <div class="admin-card" style="text-align:center;">
-                <div class="admin-card-title">Discipline Breakdown</div>
-                <div style="display:flex;justify-content:center;margin-top:10px;">
-                    ${svgDonutChart([{value:minor||0.0001,color:'#f59e0b'},{value:moderate||0.0001,color:'#ef4444'},{value:severe||0.0001,color:'#dc2626'}])}
-                </div>
-                <div style="font-size:0.75rem;margin-top:8px;">
-                    <span style="color:#f59e0b;">● Minor ${minor}</span>&nbsp;
-                    <span style="color:var(--danger);">● Moderate ${moderate}</span>&nbsp;
-                    <span style="color:#dc2626;">● Severe ${severe}</span>
-                </div>
-            </div>
-            <div class="admin-card" style="text-align:center;">
-                <div class="admin-card-title">Hostel Clearance Status</div>
-                <div style="display:flex;justify-content:center;margin-top:10px;">
-                    ${svgDonutChart([{value:cleared||0.0001,color:'#10b981'},{value:pending||0.0001,color:'#f59e0b'}])}
-                </div>
-                <div style="font-size:0.75rem;margin-top:8px;">
-                    <span style="color:var(--success);">● Cleared ${cleared}</span>&nbsp;
-                    <span style="color:var(--warning);">● Pending ${pending}</span>
-                </div>
+            <div style="font-size:0.75rem;margin-top:8px;">
+                <span style="color:var(--warning);">● Pending ${pending}</span>&nbsp;
+                <span style="color:var(--success);">● Confirmed ${confirmed}</span>
             </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
-            <div class="stat-card"><h3>${students.length}</h3><p>Total Students</p></div>
-            <div class="stat-card"><h3 style="color:var(--danger);">${discipline.length}</h3><p>Discipline Records</p></div>
-            <div class="stat-card"><h3 style="color:var(--success);">${cleared}</h3><p>Hostel Cleared</p></div>
-            <div class="stat-card"><h3>${hostelMale + hostelFem}</h3><p>Hostel Residents</p></div>
-            <div class="stat-card"><h3 style="color:var(--warning);">${received.filter(m=>!m.read).length}</h3><p>Unread Messages</p></div>
-            <div class="stat-card"><h3>${complaints.length}</h3><p>Complaints</p></div>
+            <div class="stat-card"><h3>${received.length}</h3><p>Total Received</p></div>
+            <div class="stat-card"><h3>${review.length}</h3><p>In Review</p></div>
+            <div class="stat-card"><h3 style="color:var(--success);">${sent.length}</h3><p>Dispatched</p></div>
         </div>`;
 }
 
-/* ── Dean Window Actions ── */
-window.deanMarkRead = function(msgId) {
+function deanAdminNoticeboardHTML(user) {
+    return `
+        <div class="admin-section-head">📢 Post to Global Notice Board</div>
+        <div class="admin-card">
+            <textarea id="deanNoticeMsg" class="admin-input" rows="4" placeholder="e.g. Term closing procedures — all clearances due by..."></textarea>
+            <button class="admin-btn-primary" style="margin-top:10px;" onclick="deanAdminPostNotice()">
+                <i class="fas fa-bullhorn"></i> Post Notice
+            </button>
+        </div>`;
+}
+
+window.deanAdminPostNotice = function() {
+    const msg = document.getElementById('deanNoticeMsg').value.trim();
+    if (!msg) return alert('Enter a message.');
     const data = getData();
-    const msg  = (data.deanReceived || []).find(m => m.id === msgId);
-    if (msg) msg.read = true;
+    data.noticeboard = data.noticeboard || [];
+    data.noticeboard.push({ id:'n'+Date.now(), sender:'Dean of Students', message: msg, timestamp:new Date().toISOString(), recipient:'all' });
     saveData(data);
-};
-
-window.deanAutoFillStudent = function(admNo) {
-    const data    = getData();
-    const student = (data.students || []).find(s => s.id === admNo.trim());
-    if (student) {
-        document.getElementById('drStudentName').value = student.name;
-        document.getElementById('drDept').value         = student.department;
-    } else {
-        document.getElementById('drStudentName').value = '';
-        document.getElementById('drDept').value         = '';
-    }
-};
-
-window.deanAddRecord = function() {
-    const studentId   = document.getElementById('drStudentId')?.value.trim();
-    const studentName = document.getElementById('drStudentName')?.value.trim();
-    const department  = document.getElementById('drDept')?.value.trim();
-    const severity    = document.getElementById('drSeverity')?.value;
-    const date        = document.getElementById('drDate')?.value;
-    const offense     = document.getElementById('drOffense')?.value.trim();
-    const action      = document.getElementById('drAction')?.value.trim();
-    if (!studentId || !offense || !action) return alert('Please fill in all required fields.');
-    const data = getData();
-    data.disciplineRecords = data.disciplineRecords || [];
-    data.disciplineRecords.push({ id:'DR-'+Date.now(), studentId, studentName, department, offense, date, severity, action, recordedBy:'Dean of Students', status:'active', sentToAdmin:false, timestamp:new Date().toISOString() });
-    saveData(data);
-    alert(`✅ Discipline record for ${studentName} added.`);
-    const user = JSON.parse(sessionStorage.getItem('currentUser'));
-    document.getElementById('deanMain').innerHTML = deanDisciplineHTML(user);
-};
-
-window.deanSendRecordToAdmin = function(recordId) {
-    const data   = getData();
-    const record = (data.disciplineRecords || []).find(r => r.id === recordId);
-    if (!record) return;
-    record.sentToAdmin = true;
-    data.sysAdminReceived = data.sysAdminReceived || [];
-    data.sysAdminReceived.push({ id:'SAR-'+Date.now(), from:'Dean of Students', fromRole:'dean', subject:`Discipline Record — ${record.studentName}`, message:`Offense: ${record.offense}. Action: ${record.action}. Severity: ${record.severity}. Date: ${record.date}.`, timestamp:new Date().toISOString(), read:false });
-    saveData(data);
-    alert(`✅ Record for ${record.studentName} sent to System Admin.`);
-    const user = JSON.parse(sessionStorage.getItem('currentUser'));
-    document.getElementById('deanMain').innerHTML = deanDisciplineHTML(user);
-};
-
-window.deanGenerateClearanceSlip = function(studentId, studentName, room) {
-    alert(`📄 Clearance Slip Generated\n\n${studentName} (${studentId})\nRoom: ${room}\nStatus: ✅ Fully Cleared\nDate: ${new Date().toLocaleDateString()}\n\nHostel clearance confirmed by Matron/Patron.`);
-};   
-
-window.deanResolveComplaint = function(id) {
-    const data = getData();
-    const c    = (data.deanComplaints || []).find(c => c.id === id);
-    if (c) { c.status = 'resolved'; saveData(data); }
-    const user = JSON.parse(sessionStorage.getItem('currentUser'));
-    document.getElementById('deanMain').innerHTML = deanComplaintsHTML(user);
+    alert('✅ Notice posted to Global Notice Board!');
+    document.getElementById('deanNoticeMsg').value = '';
 };
 
 /* ══════════════════════════════════════════
@@ -9881,6 +10662,7 @@ function renderAdminPanel() {
             <button class="admin-nav-btn" onclick="adminSection('export',this)">
                 <i class="fas fa-file-export"></i> Export Data
             </button>
+            <button class="admin-nav-btn" onclick="adminSection('studentwall',this)"><i class="fas fa-users"></i> Student Wall</button>
              
         </div>
  
@@ -9908,7 +10690,7 @@ window.adminSection = function(section, btn) {
         backup:      adminBackupHTML,
          messaccess : adminMessAccessHTML,
         export:      adminExportHTML,
-       
+        studentwall: adminStudentWallHTML
         
     };
     main.innerHTML = (map[section] || adminUsersHTML)();
@@ -10962,7 +11744,7 @@ function initMagazineNav() {
             } else if (page === 'noticeboard') {
                 showGlobalNoticeBoard();
             } else if (page === 'studentwall') {
-                alert("👥 Student Wall coming soon...");
+                showStudentWall();
             } else {
                 alert("Page coming soon...");
             }
@@ -10988,6 +11770,20 @@ function migrateData() {
     Object.entries(defaults).forEach(([key, val]) => {
         if (!data[key]) { data[key] = val; changed = true; }
     });
+   if (!data.studentWallRecords) { data.studentWallRecords = []; changed = true; } 
+
+    if (!data.deanAdmin)    { data.deanAdmin    = { id:'DEAN-ADMIN-001', name:'Dean of Students', password:'dean-4321' }; changed = true; }
+if (!data.deputyDean1)  { data.deputyDean1  = { id:'DDEAN-001', name:'Deputy Dean 1', password:'deputy123' }; changed = true; }
+if (!data.deputyDean2)  { data.deputyDean2  = { id:'DDEAN-002', name:'Deputy Dean 2', password:'deputy4321' }; changed = true; }
+if (!data.frontOffice)  { data.frontOffice  = { id:'FRONT-001', name:'Front Office', password:'front4321' }; changed = true; }
+if (!data.frontOfficeReceived) { data.frontOfficeReceived = []; changed = true; }
+if (!data.deputyDeanReceived)  { data.deputyDeanReceived  = []; changed = true; }
+if (!data.deanAdminReceived)   { data.deanAdminReceived   = []; changed = true; }
+if (!data.deanAdminReview)     { data.deanAdminReview     = []; changed = true; }
+if (!data.deanAdminSentItems)  { data.deanAdminSentItems  = []; changed = true; }
+if (!data.classRepReceived)    { data.classRepReceived    = []; changed = true; }
+if (!data.kitcoReceived)       { data.kitcoReceived       = []; changed = true; }
+if (!data.messReceivedFromDean){ data.messReceivedFromDean= []; changed = true; }
 
     if (!data.hospitalVisits)    { data.hospitalVisits    = []; changed = true; }
     if (!data.medicalRecords)    { data.medicalRecords     = []; changed = true; }
@@ -10999,6 +11795,8 @@ function migrateData() {
         { id:'HR-003', studentId:'STU-2026-20673', studentName:'Peter Njoroge',  gender:'Male',   room:'Room 8C',  wing:'Male Wing',   admittedDate:'2024-01-10', status:'resident', clearedForExit:false },
         { id:'HR-004', studentId:'STU-2026-20675', studentName:'Kevin Oduya',    gender:'Male',   room:'Room 12A', wing:'Male Wing',   admittedDate:'2024-01-10', status:'resident', clearedForExit:false }
     ]; changed = true; }
+    if (!data.hostelClearances) { data.hostelClearances = { female: [], male: [] }; changed = true; }
+    if (!data.disciplineRecords) { data.disciplineRecords = []; changed = true; }
     if (!data.hostelClearances)  { data.hostelClearances   = []; changed = true; }
     if (!data.disciplineRecords) { data.disciplineRecords  = []; changed = true; }
     if (!data.deanReceived)      { data.deanReceived        = []; changed = true; }
@@ -11050,6 +11848,172 @@ if (!data.examOfficeReceived) { data.examOfficeReceived  = []; changed = true; }
         localStorage.setItem('pck_institute_v3', JSON.stringify(data)); 
     }
 }
+
+
+
+/* ══════════════════════════════════════════
+   STUDENT WALL — Self-contained overlay (works regardless of page layout)
+══════════════════════════════════════════ */
+
+window.showStudentWall = function() {
+    let overlay = document.getElementById('studentWallOverlay');
+    if (overlay) overlay.remove();
+
+    overlay = document.createElement('div');
+    overlay.id = 'studentWallOverlay';
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#0b0b16;z-index:99999;overflow-y:auto;padding:20px;';
+    overlay.innerHTML =
+        '<div style="max-width:1100px;margin:0 auto;">' +
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">' +
+                '<h2 style="color:#a855f7;margin:0;">👥 Student Wall — Since 1979</h2>' +
+                '<button onclick="closeStudentWall()" style="background:#ef4444;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:700;cursor:pointer;">✕ Close</button>' +
+            '</div>' +
+            '<div id="studentWallInner"></div>' +
+        '</div>';
+    document.body.appendChild(overlay);
+    document.getElementById('studentWallInner').innerHTML = studentWallPublicHTML({});
+};
+
+window.closeStudentWall = function() {
+    const overlay = document.getElementById('studentWallOverlay');
+    if (overlay) overlay.remove();
+};
+
+function studentWallPublicHTML(filters) {
+    filters = filters || {};
+    const data = getData();
+    let records = (data.studentWallRecords || []).slice();
+
+    const q = (filters.search || '').toLowerCase().trim();
+    const onlyGraduated = filters.graduatedOnly === true;
+
+    if (q) {
+        records = records.filter(function(r) {
+            return r.admissionNo.toLowerCase().indexOf(q) !== -1 || r.name.toLowerCase().indexOf(q) !== -1;
+        });
+    }
+    if (onlyGraduated) records = records.filter(function(r) { return r.status === 'graduated'; });
+
+    const byYear = {};
+    records.forEach(function(r) {
+        if (!byYear[r.yearJoined]) byYear[r.yearJoined] = [];
+        byYear[r.yearJoined].push(r);
+    });
+    const years = Object.keys(byYear).map(Number).sort(function(a,b) { return b - a; });
+
+    let yearBlocks = '';
+    if (years.length === 0) {
+        yearBlocks = '<p style="color:#9ca3af;">No students match this filter.</p>';
+    } else {
+        years.forEach(function(y) {
+            let studentCards = byYear[y].map(function(r) {
+                const color = r.status === 'graduated' ? '#10b981' : '#f59e0b';
+                const badge = r.status === 'graduated'
+                    ? '🎓 Graduated ' + (r.yearGraduated || '')
+                    : '📖 Current / Not Graduated';
+                return (
+                    '<div style="background:#1a1e2c;border-radius:14px;padding:1rem;border-left:4px solid ' + color + ';">' +
+                        '<strong style="color:#fff;">' + r.name + '</strong>' +
+                        '<div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">' + r.admissionNo + ' • ' + r.department + '</div>' +
+                        '<span style="margin-top:8px;display:inline-block;font-size:0.7rem;padding:3px 10px;border-radius:20px;background:' + color + '22;border:1px solid ' + color + ';color:' + color + ';">' + badge + '</span>' +
+                    '</div>'
+                );
+            }).join('');
+            yearBlocks +=
+                '<div style="background:#12121f;border:1px solid #2a2a3d;border-radius:14px;padding:1.2rem;margin-bottom:1.2rem;">' +
+                    '<div style="color:#a855f7;font-weight:700;margin-bottom:12px;">📅 Intake ' + y + '</div>' +
+                    '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">' + studentCards + '</div>' +
+                '</div>';
+        });
+    }
+
+    const inputStyle = 'width:100%;padding:10px 12px;border-radius:10px;border:1px solid #2a2a3d;background:#1a1e2c;color:#fff;box-sizing:border-box;';
+    const btnPrimary = 'background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-weight:700;cursor:pointer;';
+    const btnSecondary = 'background:#2a2a3d;color:#fff;border:none;padding:10px 18px;border-radius:10px;font-weight:700;cursor:pointer;';
+
+    return (
+        '<div style="background:#12121f;border:1px solid #2a2a3d;border-radius:14px;padding:1.2rem;margin-bottom:1.2rem;">' +
+            '<input id="swSearch" style="' + inputStyle + 'margin-bottom:10px;" placeholder="Search by admission no or name" value="' + (filters.search || '') + '">' +
+            '<label style="display:flex;align-items:center;gap:8px;color:#e5e7eb;font-size:0.85rem;">' +
+                '<input type="checkbox" id="swGradOnly" ' + (filters.graduatedOnly ? 'checked' : '') + '> Show graduated students only' +
+            '</label>' +
+            '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">' +
+                '<button type="button" style="' + btnPrimary + '" onclick="studentWallApplyFilter()">Filter</button>' +
+                '<button type="button" style="' + btnSecondary + '" onclick="studentWallClearFilter()">Clear</button>' +
+                '<button type="button" style="' + btnSecondary + '" onclick="studentWallExport(\'pdf\')">📄 PDF</button>' +
+                '<button type="button" style="' + btnSecondary + '" onclick="studentWallExport(\'excel\')">📊 Excel</button>' +
+                '<button type="button" style="' + btnSecondary + '" onclick="studentWallExport(\'csv\')">📑 CSV</button>' +
+            '</div>' +
+        '</div>' +
+        yearBlocks
+    );
+}
+
+window.studentWallApplyFilter = function() {
+    const searchEl = document.getElementById('swSearch');
+    const gradEl = document.getElementById('swGradOnly');
+    const filters = {
+        search: searchEl ? searchEl.value : '',
+        graduatedOnly: gradEl ? gradEl.checked : false
+    };
+    window._studentWallFilters = filters;
+    document.getElementById('studentWallInner').innerHTML = studentWallPublicHTML(filters);
+};
+
+window.studentWallClearFilter = function() {
+    window._studentWallFilters = {};
+    document.getElementById('studentWallInner').innerHTML = studentWallPublicHTML({});
+};
+
+window.studentWallExport = function(type) {
+    const data = getData();
+    const filters = window._studentWallFilters || {};
+    let records = (data.studentWallRecords || []).slice();
+    const q = (filters.search || '').toLowerCase().trim();
+    if (q) {
+        records = records.filter(function(r) {
+            return r.admissionNo.toLowerCase().indexOf(q) !== -1 || r.name.toLowerCase().indexOf(q) !== -1;
+        });
+    }
+    if (filters.graduatedOnly) records = records.filter(function(r) { return r.status === 'graduated'; });
+    if (records.length === 0) { alert('No records to export.'); return; }
+
+    if (type === 'pdf') {
+        if (typeof generatePDF === 'function') {
+            generatePDF({
+                title: 'PC Kinyanjui TTI — Student Wall',
+                subtitle: 'Archive of all students since 1979',
+                office: 'SYSTEM ADMIN', stage: 'Student Wall', department: '',
+                signatoryLabel: 'Registrar Signature',
+                columns: [
+                    {label:'Admission No', key:'admissionNo'}, {label:'Name', key:'name'},
+                    {label:'Department', key:'department'}, {label:'Year Joined', key:'yearJoined'},
+                    {label:'Status', key:'statusDisplay'}
+                ],
+                rows: records.map(function(r) {
+                    return Object.assign({}, r, { statusDisplay: r.status === 'graduated' ? ('Graduated ' + r.yearGraduated) : 'Not Graduated' });
+                })
+            });
+        } else {
+            alert('PDF export requires generatePDF() — not found in this file.');
+        }
+        return;
+    }
+
+    const headers = 'AdmissionNo,Name,Department,YearJoined,Status,YearGraduated';
+    const body = records.map(function(r) {
+        return '"' + r.admissionNo + '","' + r.name + '","' + r.department + '","' + r.yearJoined + '","' + r.status + '","' + (r.yearGraduated || '') + '"';
+    }).join('\n');
+    const blob = new Blob([headers + '\n' + body], { type: type === 'excel' ? 'application/vnd.ms-excel' : 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'student_wall.' + (type === 'excel' ? 'xls' : 'csv');
+    a.click();
+    URL.revokeObjectURL(url);
+};
+
+
 
 // ==================== INIT ====================
 function init() {
