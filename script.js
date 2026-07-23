@@ -1125,7 +1125,9 @@ function showDashboard(role, user) {
     } else if (role === 'examoffice') {
         content += renderExamOfficePanel(user);
    } else if (role === 'dean') {
-        content += renderDeanPanel(user);
+        // Legacy role — the Dean's Office now uses the sub-login system (dean_admin, deputy_dean1/2, front_office).
+        // Route any stale session here instead of crashing on a function that no longer exists.
+        content += renderDeanAdminPanel(getData().deanAdmin || user);
     } else if (role === 'principal') {
         content += renderPrincipalPanel(user);
     } else if (role === 'hospital') {
@@ -4463,6 +4465,22 @@ window.frontOfficeOpenSenderInbox = function(key) {
         </div>`;
 };
 
+function frontOfficeActivitiesHTML() {
+    return `
+        <div class="admin-section-head">📅 Activity Approvals</div>
+        <div class="admin-card">
+            <p style="color:var(--text-secondary);font-size:0.85rem;">
+                Activity & event approval system coming soon. 
+                Students will submit proposals here for review and approval.
+            </p>
+            <div style="margin-top:2rem;text-align:center;padding:3rem;background:var(--bg-elevated);border-radius:16px;">
+                <div style="font-size:4rem;opacity:0.3;">🏗️</div>
+                <h3 style="margin:1rem 0 0.5rem;">Under Construction</h3>
+                <p style="color:var(--text-secondary);">This module will be available in the next update.</p>
+            </div>
+        </div>`;
+}
+
 /* Hostels — matches image 5 layout exactly */
 window.frontOfficeOpenHostelsInbox = function() {
     const data = getData();
@@ -4530,16 +4548,19 @@ function renderFrontOfficePanel(user) {
 window.frontOfficeSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
-    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const user = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+    
     const map = {
         profile:    () => frontOfficeProfileHTML(user),
         received:   () => frontOfficeReceivedHTML(),
         share:      () => frontOfficeShareHTML(),
-        activities: () => deanActivitiesHTML(user),
+        activities: () => frontOfficeActivitiesHTML(),   // ← Fixed / added
         mess:       () => messBoardersHTML('frontOfficeMain'),
         report:     () => frontOfficeReportHTML()
     };
-    document.getElementById('frontOfficeMain').innerHTML = (map[section] || (()=>frontOfficeReceivedHTML()))();
+    
+    const content = (map[section] || (() => frontOfficeReceivedHTML()))();
+    document.getElementById('frontOfficeMain').innerHTML = content;
 };
 
 function frontOfficeProfileHTML(user) {
@@ -4564,73 +4585,6 @@ function frontOfficeProfileHTML(user) {
         </div>`;
 }
 
-function frontOfficeReceivedHTML() {
-    const data = getData();
-    const cards = frontOfficeSenders.map(s => {
-        const fromItems = (data.frontOfficeReceived || []).filter(i => i.fromRole === s.key);
-        const pending = fromItems.filter(i => !i.read).length;
-        return `
-        { id:'FOR-DEMO-07', from:'System Admin', fromRole:'admin', subject:'New Term Circular', message:'Please distribute the updated term calendar to both Deputy Deans.', timestamp:'2026-06-21T09:00:00.000Z', status:'pending', read:false }
-        <div onclick="frontOfficeOpenSenderInbox('${s.key}')" style="cursor:pointer;background:linear-gradient(135deg,#6c3fcf22,#6c3fcf11);border:1px solid #6c3fcf55;border-radius:16px;padding:1.2rem;text-align:center;transition:transform .25s, box-shadow .25s;"
-             onmouseover="this.style.transform='translateY(-6px) scale(1.02)';this.style.boxShadow='0 12px 24px #6c3fcf33';"
-             onmouseout="this.style.transform='none';this.style.boxShadow='none';">
-            <div style="font-size:2.2rem;">${s.icon}</div>
-            <div style="font-weight:700;margin-top:6px;font-size:0.88rem;">${s.label}</div>
-            ${pending > 0
-                ? `<span class="admin-role-pill" style="margin-top:8px;display:inline-block;background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);"><i class="fas fa-bell"></i> ${pending} new</span>`
-                : `<span class="admin-role-pill" style="margin-top:8px;display:inline-block;">✅ Clear</span>`}
-        </div>`;
-    }).join('');
-
-    return `
-        <div class="admin-section-head">📥 Received</div>
-        <div class="admin-card" style="margin-bottom:1rem;">
-            <p style="font-size:0.78rem;color:var(--text-secondary);">
-                Items from Finance, Mess, Class Reps, KITCO, Principal, and Deputy Dean arrive here. Click a card,
-                review, then confirm — confirmed items move to Share for distribution to the Deputy Deans.
-            </p>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;">${cards}</div>
-        <div id="frontOfficeSenderInboxArea" style="margin-top:1.2rem;"></div>`;
-}
-
-window.frontOfficeOpenSenderInbox = function(key) {
-    const data = getData();
-    const meta = frontOfficeSenders.find(s => s.key === key);
-    const items = (data.frontOfficeReceived || []).filter(i => i.fromRole === key).slice().reverse();
-    items.forEach(i => i.read = true);
-    saveData(data);
-
-    const rows = items.length === 0
-        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No items from this department yet.</p>`
-        : items.map(i => `
-        <div class="admin-card" style="margin-bottom:10px;border-left:4px solid ${i.status==='confirmed'?'var(--success)':'var(--warning)'};">
-            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
-                <strong>${i.subject}</strong>
-                <span class="admin-role-pill" style="${i.status==='confirmed'?'background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success);':'background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);'}">${i.status==='confirmed'?'✅ Confirmed':'⏳ Pending'}</span>
-            </div>
-            <div style="font-size:0.82rem;margin-top:8px;">${i.message}</div>
-            <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:6px;">${new Date(i.timestamp).toLocaleString()}</div>
-            ${i.status !== 'confirmed' ? `<button class="admin-btn-primary" style="margin-top:8px;" onclick="frontOfficeConfirmItem('${i.id}')">✅ Confirm</button>` : ''}
-        </div>`).join('');
-
-    document.getElementById('frontOfficeSenderInboxArea').innerHTML = `
-        <div class="admin-card">
-            <div class="admin-card-title">${meta.icon} From ${meta.label}</div>
-            <div style="margin-top:10px;">${rows}</div>
-        </div>`;
-};
-
-window.frontOfficeConfirmItem = function(id) {
-    const data = getData();
-    const item = (data.frontOfficeReceived || []).find(i => i.id === id);
-    if (!item) return;
-    item.status = 'confirmed';
-    item.read = true;
-    saveData(data);
-    alert('✅ Confirmed. Item moved to Share for distribution.');
-    window.frontOfficeOpenSenderInbox(item.fromRole);
-};
 
 function frontOfficeShareHTML() {
     const data = getData();
@@ -5018,17 +4972,19 @@ function renderDeanAdminPanel(user) {
 window.deanAdminSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
-    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const user = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+    
     const map = {
         profile:     () => deanAdminProfileHTML(user),
         received:    () => deanAdminReceivedHTML(user),
         review:      () => deanAdminReviewHTML(user),
-        discipline:  () => deanAdminDisciplineHTML(user),
-        mess:        () => deanAdminMessHTML(user),  
+        discipline:  () => deanAdminDisciplineHTML(),
+        mess:        () => messBoardersHTML('deanAdminMain'),   // ← Fixed
         report:      () => deanAdminReportHTML(user),
         noticeboard: () => deanAdminNoticeboardHTML(user)
     };
-    document.getElementById('deanAdminMain').innerHTML = (map[section] || (()=>deanAdminReceivedHTML(user)))();
+    
+    document.getElementById('deanAdminMain').innerHTML = (map[section] || (() => deanAdminReceivedHTML(user)))();
 };
 
 function deanAdminProfileHTML(user) {
@@ -8821,6 +8777,32 @@ window.studentSection = function(section, btn) {
         </div>`;
 }
 
+// Quick Submit (no modal/consent form — just type + student ID)
+window.studentSubmitIDRequest = function(studentId) {
+    const typeEl = document.getElementById('idReqType');
+    const type = typeEl ? typeEl.value : 'new';
+    const data = getData();
+    const student = data.students.find(s => s.id === studentId);
+
+    data.idRequests = data.idRequests || [];
+    data.idRequests.push({
+        id: 'IDR-' + Date.now().toString().slice(-6),
+        studentId,
+        type,
+        fullName: student ? student.name : '',
+        course: student ? student.department : '',
+        level: student ? student.level : '',
+        fee: type === 'replacement' ? 500 : 0,
+        status: 'pending_finance',
+        dateRequested: new Date().toISOString(),
+        consentGiven: false
+    });
+
+    saveData(data);
+    alert('✅ ID Request submitted! (Tip: use "Fill Details" if you want your ID to include a photo consent form and full details.)');
+    document.getElementById('studentMain').innerHTML = studentIDRequestHTML({ id: studentId, name: student?.name, department: student?.department });
+};
+
 // Toggle Submit Button for New ID
 window.toggleSubmitButton = function(studentId) {
     const type = document.getElementById('idReqType').value;
@@ -10004,105 +9986,6 @@ window.postKITCONotice = function() {
     document.getElementById('kitcoNotice').value = '';
 };
 
-/* ══════════════════════════════════════════
-   SPORTS ADMIN PORTAL — FINAL FIXED VERSION
-══════════════════════════════════════════ */
-function renderSportsAdminPanel(user) {
-    return `
-    <div class="admin-layout">
-        <div class="admin-sidenav">
-            <div class="admin-sidenav-title">
-                <i class="fas fa-football-ball"></i> Sports Admin
-            </div>
-            
-            <button class="admin-nav-btn active" onclick="sportsSection('dashboard',this)">
-                <i class="fas fa-tachometer-alt"></i> Dashboard
-            </button>
-            <button class="admin-nav-btn" onclick="sportsSection('sports',this)">
-                <i class="fas fa-list"></i> Manage Sports
-            </button>
-            <button class="admin-nav-btn" onclick="sportsSection('items',this)">
-                <i class="fas fa-box"></i> Items Inventory
-            </button>
-            <button class="admin-nav-btn" onclick="sportsSection('participants',this)">
-                <i class="fas fa-user-graduate"></i> Student Sport Leaders
-            </button>
-            <button class="admin-nav-btn" onclick="sportsSection('requests',this)">
-                <i class="fas fa-inbox"></i> Pending Requests
-            </button>
-            <button class="admin-nav-btn" onclick="sportsSection('lost',this)">
-                <i class="fas fa-exclamation-triangle"></i> Lost Items
-            </button>
-            <button class="admin-nav-btn" onclick="sportsSection('report',this)">
-                <i class="fas fa-chart-bar"></i> Reports
-            </button>
-        </div>
-        
-        <div class="admin-main" id="sportsMain">
-            ${sportsDashboardHTML()}
-        </div>
-    </div>`;
-}
-
-window.sportsSection = function(section, btn) {
-    document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    const map = {
-        dashboard:    () => sportsDashboardHTML(),
-        sports:       () => sportsManageHTML(),
-        items:        () => sportsItemsHTML(),
-        participants: () => sportsStudentSportLeadersHTML(),   // This must point here
-        requests:     () => sportsRequestsHTML(),
-        lost:         () => sportsLostItemsHTML(),
-        report:       () => sportsReportHTML()
-    };
-    
-    document.getElementById('sportsMain').innerHTML = map[section]();
-};
-
-// Dashboard
-function sportsDashboardHTML() {
-    return `
-        <div class="admin-section-head">⚽ Sports Department Dashboard</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
-            <div class="stat-card"><h3>8</h3><p>Active Sports</p></div>
-            <div class="stat-card"><h3>245</h3><p>Participants</p></div>
-            <div class="stat-card"><h3>67</h3><p>Items Issued</p></div>
-            <div class="stat-card"><h3>12</h3><p>Pending Requests</p></div>
-        </div>`;
-}
-
-// Manage Sports
-function sportsListHTML() {
-    return `
-        <div class="admin-section-head">🏅 Manage Sports</div>
-        <div class="admin-card">
-            <button class="admin-btn-primary" onclick="alert('Add new sport form')">+ Add New Sport</button>
-            <p style="margin-top:15px;">Football, Rugby, Hockey, Netball, Athletics, Table Tennis, Badminton, etc.</p>
-        </div>`;
-}
-
-// Items Inventory
-function sportsItemsHTML() {
-    return `
-        <div class="admin-section-head">📦 Items & Equipment</div>
-        <div class="admin-card">
-            <p><strong>Football:</strong> Balls (25), Jerseys, Cones</p>
-            <p><strong>Hockey:</strong> Sticks, Balls, Goalkeeper Kit</p>
-            <button class="admin-btn-primary" style="margin-top:12px;" onclick="alert('Item issuance record opened')">Record Item Issuance</button>
-        </div>`;
-}
-
-// All Participants
-function sportsParticipantsHTML() {
-    return `
-        <div class="admin-section-head">👥 All Sport Participants</div>
-        <div class="admin-card">
-            <p>Full list with Name, Admin No, Department, Sport, Items Issued</p>
-            <button class="admin-btn-primary" onclick="alert('PDF generated')">Download Full List PDF</button>
-        </div>`;
-}
 
 // Pending Requests (from Sport Leaders)
 function sportsRequestsHTML() {
