@@ -41,12 +41,22 @@ deputyAcadReceived: [],
 registrarReceived: [],
 principalReceived: [],
 
-            schoolTour: {
-                library:  { images: ["https://placehold.co/400x300/6c3fcf/white?text=Library"], videos: [] },
-                sports:   { images: ["https://placehold.co/400x300/2563eb/white?text=Sports+Field"], videos: [] },
-                hostel_m: { images: ["https://placehold.co/400x300/6c3fcf/white?text=Male+Hostel"], videos: [] },
-                hostel_f: { images: ["https://placehold.co/400x300/2563eb/white?text=Female+Hostel"], videos: [] },
-                field:    { images: ["https://placehold.co/400x300/6c3fcf/white?text=Main+Field"], videos: [] }
+            tourManagement: {
+    story: { history: '', challenges: '', quote: '' },
+    locations: [
+                    { key:'front_gate',      label:'Front Gate',              icon:'🚪', type:'categorized',   categories:[] },
+                    { key:'parking',         label:'Parking',                 icon:'🅿️', type:'categorized',   categories:[] },
+                    { key:'admin_block',     label:'Administration Block',    icon:'🏛️', type:'categorized',   categories:[] },
+                    { key:'academic_blocks', label:'Academic Blocks',         icon:'📚', type:'categorized',   categories:[] },
+                    { key:'library',         label:'Library',                 icon:'📖', type:'categorized',   categories:[] },
+                    { key:'workshops',       label:'Workshops',               icon:'🔧', type:'categorized',   categories:[] },
+                    { key:'school_aerial',   label:'School (Aerial View)',    icon:'🛰️', type:'single_image',  image:null },
+                    { key:'sports_complex',  label:'Sports Complex',          icon:'⚽', type:'categorized',   categories:[] },
+                    { key:'hostel_girls',    label:'Hostel — Girls',          icon:'👧', type:'categorized',   categories:[] },
+                    { key:'hostel_boys',     label:'Hostel — Boys',           icon:'👦', type:'categorized',   categories:[] },
+                    { key:'mess',            label:'Mess / Dining Hall',      icon:'🍽️', type:'categorized',   categories:[] },
+                    { key:'exam_block',      label:'Exam Block',              icon:'📝', type:'categorized',   categories:[] }
+                ]
             },
 
             studentWallRecords: [
@@ -56,7 +66,6 @@ principalReceived: [],
     { id:'SW-004', admissionNo:'STU-2015-00390', name:'Grace Achieng', department:'Computer Studies', yearJoined:2015, yearGraduated:2017, status:'graduated', statusHistory:[] },
     { id:'SW-005', admissionNo:'STU-2026-20669', name:'John Mwangi', department:'Computer Studies', yearJoined:2026, yearGraduated:null, status:'not_graduated', statusHistory:[] }
             ],
-            infrastructureList: ["library", "sports", "hostel_m", "hostel_f", "field"],
             departments: ['Computer Studies', 'Hospitality', 'Automotive Engineering', 'Electrical Engineering', 'Civil Engineering', 'Business'],
             hospitalVisits: [
                 { id: 'HV-001', studentId: 'STU-2026-20669', studentName: 'John Mwangi', department: 'Computer Studies', purpose: 'Persistent headache and fever since morning — possible malaria', requestedAt: '2026-06-22T10:00:00.000Z', status: 'pending' },
@@ -251,7 +260,7 @@ messReceivedFromDean: [],
             principal:    { id: 'PRINCIPAL-001', name: 'Dr. Elizabeth Wanjiku', password: 'principal123' },
             hospital:     { id: 'HOSP-001', name: 'School Nurse', password: 'hospital123' },
             library:      { id: 'LIB-001', name: 'Librarian', password: 'library123' },
-            admin:        { id: 'ADMIN-001', password: 'Admin@2026' },
+            admin:        { id: 'ADMIN-001', name: 'System Administrator', email: 'admin@kinyanjuitechnical.ac.ke', phone: '0797510552', password: 'Admin@2026' },
             courses: [
                 { id: 'CS101', name: 'Computer Essentials',          code: 'CS101' },
                 { id: 'CS102', name: 'Computer Operations',           code: 'CS102' },
@@ -279,6 +288,7 @@ messReceivedFromDean: [],
             noticeboard: [
                 { id: 'n1', sender: 'System', message: 'Welcome to PCK Institute Management System', timestamp: new Date().toISOString(), recipient: 'all' }
             ],
+            adminCustomSections: [],
             newsletterSubscribers: [],
 
             // Finance inboxes for departments that don't have one yet
@@ -308,6 +318,39 @@ financeReceived: [
 }
 
 function getData()       { return JSON.parse(localStorage.getItem('pck_institute_v3')); }
+
+/* ==================== IMAGE COMPRESSION HELPER ====================
+   localStorage has a hard ~5-10MB quota. Raw phone photos (2-8MB each)
+   would fill that almost immediately, so every image uploaded anywhere
+   in the system (Tour Management, etc.) is resized + re-compressed to
+   a JPEG before being stored. This keeps things working reliably on
+   localStorage without needing a backend for images. */
+function compressImageFile(file, callback, maxDim = 1000, quality = 0.72) {
+    if (!file) return;
+    if (!file.type || !file.type.startsWith('image/')) {
+        alert('Please choose an image file (JPG or PNG).');
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            let { width, height } = img;
+            if (width > height && width > maxDim) { height = Math.round(height * (maxDim / width)); width = maxDim; }
+            else if (height > maxDim) { width = Math.round(width * (maxDim / height)); height = maxDim; }
+            const canvas = document.createElement('canvas');
+            canvas.width = width; canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+            callback(compressedDataUrl);
+        };
+        img.onerror = function() { alert('Could not read that image. Please try a different file.'); };
+        img.src = e.target.result;
+    };
+    reader.onerror = function() { alert('Could not read that file.'); };
+    reader.readAsDataURL(file);
+}
 function saveData(data)  { localStorage.setItem('pck_institute_v3', JSON.stringify(data)); }
 
 // ==================== SCHOOL INFO FUNCTIONS ====================
@@ -364,93 +407,18 @@ function renderPrincipals() {
     });
 }
 
-// ==================== SCHOOL TOUR — Design A: Sidebar Nav + Preview ====================
-const tourIcons = {
-    library: '📚', sports: '⚽', hostel_m: '🏠', hostel_f: '🏠',
-    field: '🌿', mess: '🍽️', workshop: '🔧', lab: '🔬'
-};
-
-let currentTourLocation = 'library';
-let currentThumbIdx = 0;
-
-function renderTourNav() {
-    const data = getData();
-    const nav = document.getElementById('tourNav');
-    if (!nav) return;
-    nav.innerHTML = data.infrastructureList.map(loc => {
-        const icon = tourIcons[loc] || '📍';
-        const label = loc.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-        return `<div class="tour-nav-item ${loc === currentTourLocation ? 'active' : ''}" data-location="${loc}">
-            ${icon} ${label}
-        </div>`;
-    }).join('');
-    nav.querySelectorAll('.tour-nav-item').forEach(item => {
-        item.addEventListener('click', () => {
-            currentTourLocation = item.dataset.location;
-            currentThumbIdx = 0;
-            nav.querySelectorAll('.tour-nav-item').forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-            renderTourPreview(currentTourLocation);
-        });
-    });
-}
-
-function renderTourPreview(location) {
-    const data = getData();
-    const media = data.schoolTour[location] || { images: [], videos: [] };
-    const label = location.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    const imgs = media.images;
-    const mainImg = imgs[currentThumbIdx] || `https://placehold.co/800x400/251b42/white?text=${encodeURIComponent(label)}`;
-
-    const previewImg = document.getElementById('tourPreviewImg');
-    const previewTitle = document.getElementById('tourPreviewTitle');
-    const previewDesc = document.getElementById('tourPreviewDesc');
-    const thumbsEl = document.getElementById('tourThumbs');
-
-    if (previewImg) previewImg.src = mainImg;
-    if (previewTitle) previewTitle.textContent = label;
-    if (previewDesc) previewDesc.textContent = `${imgs.length} photo${imgs.length !== 1 ? 's' : ''} available`;
-
-    // Thumbnail strip — only if multiple images
-    if (thumbsEl) {
-        if (imgs.length > 1) {
-            thumbsEl.innerHTML = imgs.map((src, idx) =>
-                `<img src="${src}" class="tour-thumb ${idx === currentThumbIdx ? 'active' : ''}"
-                      data-idx="${idx}" alt="thumb">`
-            ).join('');
-            thumbsEl.querySelectorAll('.tour-thumb').forEach(t => {
-                t.addEventListener('click', () => {
-                    currentThumbIdx = parseInt(t.dataset.idx);
-                    if (previewImg) previewImg.src = imgs[currentThumbIdx];
-                    thumbsEl.querySelectorAll('.tour-thumb').forEach(x => x.classList.remove('active'));
-                    t.classList.add('active');
-                });
-            });
-        } else {
-            thumbsEl.innerHTML = '';
-        }
-    }
-}
-
-function populateInfraSelect() {
-    const data = getData();
-    const select = document.getElementById('infraSelect');
-    if (select) select.innerHTML = data.infrastructureList.map(loc =>
-        `<option value="${loc}">${loc.replace(/_/g, ' ').toUpperCase()}</option>`
-    ).join('');
-}
 
 function repairMissingFields() {
     const data = getData();
-    if (!data.mess) { data.mess = { id:'MESS-001', name:'Mess Supervisor', password:'mess123' }; changed = true; }
-if (!data.mealCategories) { data.mealCategories = []; changed = true; }
-if (!data.mealOrders) { data.mealOrders = []; changed = true; }
-if (!data.messWindowOverrides) { data.messWindowOverrides = { morning:null, afternoon:null, evening:null }; changed = true; }
-if (!data.messBoarders) { data.messBoarders = []; changed = true; }
-if (!data.messComplaints) { data.messComplaints = []; changed = true; }
-if (!data.deanComplaints) { data.deanComplaints = []; changed = true; }
     if (!data) return;
     let changed = false;
+    if (!data.mess) { data.mess = { id:'MESS-001', name:'Mess Supervisor', password:'mess123' }; changed = true; }
+    if (!data.mealCategories) { data.mealCategories = []; changed = true; }
+    if (!data.mealOrders) { data.mealOrders = []; changed = true; }
+    if (!data.messWindowOverrides) { data.messWindowOverrides = { morning:null, afternoon:null, evening:null }; changed = true; }
+    if (!data.messBoarders) { data.messBoarders = []; changed = true; }
+    if (!data.messComplaints) { data.messComplaints = []; changed = true; }
+    if (!data.deanComplaints) { data.deanComplaints = []; changed = true; }
     const requiredSingles = {
         hospital: { id:'HOSP-001', name:'School Nurse', password:'hospital123' },
         library: { id:'LIB-001', name:'Librarian', password:'library123' },
@@ -459,13 +427,42 @@ if (!data.deanComplaints) { data.deanComplaints = []; changed = true; }
         deputyAcad: { id:'DEP-ACAD-001', name:'Dr. Charles Otieno', password:'deputyacad123' },
         deputyInfra: { id:'DEP-INFRA-001', name:'Eng. Peter Maina', password:'deputyinfra123' },
         examOffice: { id:'EXAM-001', name:'Exam Officer', password:'exam123' },
-        admin: { id:'ADMIN-001', password:'Admin@2026' },
+        admin: { id:'ADMIN-001', name:'System Administrator', email:'admin@kinyanjuitechnical.ac.ke', phone:'0797510552', password:'Admin@2026' },
         hostel_matron: { id:'MATRON-001', name:'Mama Rose', password:'matron123', gender:'Female' },
         hostel_patron: { id:'PATRON-001', name:'Baba John', password:'patron123', gender:'Male' },
     };
     Object.keys(requiredSingles).forEach(key => {
         if (!data[key]) { data[key] = requiredSingles[key]; changed = true; }
     });
+    // Backfill profile fields on an admin object that already exists (older installs)
+    if (data.admin) {
+        if (!data.admin.name)  { data.admin.name  = 'System Administrator'; changed = true; }
+        if (!data.admin.email) { data.admin.email = 'admin@kinyanjuitechnical.ac.ke'; changed = true; }
+        if (!data.admin.phone) { data.admin.phone = '0797510552'; changed = true; }
+    }
+    if (!data.adminCustomSections) { data.adminCustomSections = []; changed = true; }
+    if (!data.tourManagement || !data.tourManagement.locations) {
+        data.tourManagement = data.tourManagement || {};
+        data.tourManagement.locations = [
+            { key:'front_gate',      label:'Front Gate',              icon:'🚪', type:'categorized',   categories:[] },
+            { key:'parking',         label:'Parking',                 icon:'🅿️', type:'categorized',   categories:[] },
+            { key:'admin_block',     label:'Administration Block',    icon:'🏛️', type:'categorized',   categories:[] },
+            { key:'academic_blocks', label:'Academic Blocks',         icon:'📚', type:'categorized',   categories:[] },
+            { key:'library',         label:'Library',                 icon:'📖', type:'categorized',   categories:[] },
+            { key:'workshops',       label:'Workshops',               icon:'🔧', type:'categorized',   categories:[] },
+            { key:'school_aerial',   label:'School (Aerial View)',    icon:'🛰️', type:'single_image',  image:null },
+            { key:'sports_complex',  label:'Sports Complex',          icon:'⚽', type:'categorized',   categories:[] },
+            { key:'hostel_girls',    label:'Hostel — Girls',          icon:'👧', type:'categorized',   categories:[] },
+            { key:'hostel_boys',     label:'Hostel — Boys',           icon:'👦', type:'categorized',   categories:[] },
+            { key:'mess',            label:'Mess / Dining Hall',      icon:'🍽️', type:'categorized',   categories:[] },
+            { key:'exam_block',      label:'Exam Block',              icon:'📝', type:'categorized',   categories:[] }
+        ];
+        changed = true;
+    }
+    if (data.tourManagement && !data.tourManagement.story) {
+        data.tourManagement.story = { history: '', challenges: '', quote: '' };
+        changed = true;
+    }
     if (changed) { saveData(data); console.log('✅ Repaired missing login data.'); }
 }
 // ==================== CBET CURRICULUM — Design B: Step Progress ====================
@@ -577,56 +574,61 @@ function showTourPage() {
     document.getElementById('loginFormContainer').style.display = 'none';
     document.getElementById('dashboardContainer').style.display = 'none';
 
+    const data = getData();
+    const locations = (data.tourManagement && data.tourManagement.locations) || [];
+    const story = (data.tourManagement && data.tourManagement.story) || {};
+
+    const cards = locations.map(loc => {
+        let thumb, subtitle;
+        if (loc.type === 'single_image') {
+            thumb = loc.image
+                ? `<img src="${loc.image}" style="width:100%;height:180px;object-fit:contain;background:#1a1a2e;border-radius:12px;">`
+                : `<div class="tour-img-placeholder" style="background:linear-gradient(#4c1d95,#6c3fcf); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">${loc.icon}</div>`;
+            subtitle = loc.image ? 'Aerial view available' : 'Coming soon';
+        } else {
+            const firstImg = (loc.categories || []).flatMap(c => c.images || [])[0];
+            thumb = firstImg
+                ? `<img src="${firstImg.url}" style="width:100%;height:180px;object-fit:contain;background:#1a1a2e;border-radius:12px;">`
+                : `<div class="tour-img-placeholder" style="background:linear-gradient(#1e3a8a,#3b82f6); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">${loc.icon}</div>`;
+            const catCount = (loc.categories || []).length;
+            subtitle = catCount === 0 ? 'Coming soon' : `${catCount} area${catCount === 1 ? '' : 's'} to explore`;
+        }
+        return `
+        <div class="tour-card" style="cursor:pointer;" onclick="showTourLocationDetail('${loc.key}')">
+            ${thumb}
+            <h3>${loc.icon} ${loc.label}</h3>
+            <p>${subtitle}</p>
+        </div>`;
+    }).join('');
+
+    const storyHTML = (story.history || story.challenges || story.quote) ? `
+        <div style="max-width:900px;margin:0 auto 2.5rem;">
+            ${story.history ? `
+            <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:1.5rem;margin-bottom:1rem;">
+                <h3 style="color:#fbbf24;margin-bottom:0.8rem;"><i class="fas fa-landmark"></i> Our History</h3>
+                <p style="color:#e5e7eb;line-height:1.7;">${story.history}</p>
+            </div>` : ''}
+            ${story.challenges ? `
+            <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:1.5rem;margin-bottom:1rem;">
+                <h3 style="color:#fbbf24;margin-bottom:0.8rem;"><i class="fas fa-exclamation-triangle"></i> Challenges We've Faced</h3>
+                <p style="color:#e5e7eb;line-height:1.7;">${story.challenges}</p>
+            </div>` : ''}
+            ${story.quote ? `
+            <div style="border-left:4px solid #fbbf24;background:rgba(251,191,36,0.08);border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:0.5rem;">
+                <p style="color:#fde68a;font-style:italic;font-weight:600;margin:0;">"${story.quote}"</p>
+            </div>` : ''}
+            <p style="text-align:center;color:#6b7280;font-size:0.72rem;margin-top:0.5rem;">Content in this section is managed by System Admin → Tour Management.</p>
+        </div>` : '';
+
     const tourHTML = `
         <div style="max-width:1200px; margin:0 auto; padding:2rem 1rem;">
             <h2 style="text-align:center; color:white; margin-bottom:2rem; font-size:2.2rem;">
                 <i class="fas fa-map-marked-alt"></i> School Tour
             </h2>
-
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem;">
-
-                <!-- Admin Block -->
-                <div class="tour-card">
-                    <div class="tour-img-placeholder" style="background:linear-gradient(#4c1d95,#6c3fcf); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">🏛️</div>
-                    <h3>Admin Block</h3>
-                    <p>Principal's Office, Deputy Offices, Finance & Exam Office</p>
-                    <small>Directions: Straight from main gate, first building on left</small>
-                </div>
-
-                <!-- Library -->
-                <div class="tour-card">
-                    <div class="tour-img-placeholder" style="background:linear-gradient(#1e3a8a,#3b82f6); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">📚</div>
-                    <h3>Library</h3>
-                    <p>Over 15,000 books & digital resources</p>
-                    <small>Directions: Behind Admin Block, opposite Sports Field</small>
-                </div>
-
-                <!-- Sports -->
-                <div class="tour-card">
-                    <div class="tour-img-placeholder" style="background:linear-gradient(#166534,#4ade80); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">⚽</div>
-                    <h3>Sports Complex</h3>
-                    <p>Football, Basketball, Athletics Field</p>
-                    <small>Directions: Right side of main campus</small>
-                </div>
-
-                <!-- Hostels -->
-                <div class="tour-card">
-                    <div class="tour-img-placeholder" style="background:linear-gradient(#4338ca,#6366f1); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">🏠</div>
-                    <h3>Hostels</h3>
-                    <p>Male & Female Hostels</p>
-                    <small>Directions: Rear of campus, near dining hall</small>
-                </div>
-
-                <!-- Workshops & Labs -->
-                <div class="tour-card">
-                    <div class="tour-img-placeholder" style="background:linear-gradient(#b45309,#f59e0b); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">🔧</div>
-                    <h3>Workshops & Labs</h3>
-                    <p>Mechanical, Automotive, Electrical, Civil Engineering Labs</p>
-                    <small>Directions: Left wing of main academic block</small>
-                </div>
-
+            ${storyHTML}
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1.5rem;">
+                ${cards}
             </div>
-
             <div style="margin-top:3rem; text-align:center;">
                 <button onclick="showHome()" class="btn-secondary" style="padding:1rem 2rem;">
                     ← Back to Home
@@ -636,6 +638,71 @@ function showTourPage() {
     `;
 
     document.getElementById('schoolInfoPanel').innerHTML = tourHTML;
+}
+
+window.showTourLocationDetail = function(key) {
+    const data = getData();
+    const loc = (data.tourManagement && data.tourManagement.locations || []).find(l => l.key === key);
+    if (!loc) return;
+
+    let bodyHTML;
+    if (loc.type === 'single_image') {
+        bodyHTML = loc.image
+            ? `<div style="max-width:800px;margin:0 auto;"><img src="${loc.image}" style="width:100%;border-radius:16px;"></div>`
+            : `<p style="text-align:center;color:#c4b5fd;">No image uploaded yet — check back soon.</p>`;
+    } else if (!loc.categories || loc.categories.length === 0) {
+        bodyHTML = `<p style="text-align:center;color:#c4b5fd;">Content for this area is coming soon.</p>`;
+    } else {
+        bodyHTML = loc.categories.map(cat => {
+            const imgsHTML = (cat.images || []).length === 0 ? '' : `
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:12px;">
+                    ${cat.images.map(img => `
+                        <div>
+                            <img src="${img.url}" style="width:100%;height:140px;object-fit:contain;background:#1a1a2e;border-radius:12px;">
+                            ${img.caption ? `<div style="font-size:0.78rem;color:#c4b5fd;margin-top:4px;">${img.caption}</div>` : ''}
+                        </div>`).join('')}
+                </div>`;
+            const vidsHTML = (cat.videoLinks || []).length === 0 ? '' : `
+                <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px;">
+                    ${cat.videoLinks.map(v => renderTourVideoEmbed(v)).join('')}
+                </div>`;
+            return `
+            <div class="tour-card" style="margin-bottom:1.5rem;">
+                <h3>📁 ${cat.name}</h3>
+                ${(!cat.images || cat.images.length === 0) && (!cat.videoLinks || cat.videoLinks.length === 0) ? '<p style="color:#94a3b8;font-size:0.85rem;">No media added yet.</p>' : ''}
+                ${imgsHTML}
+                ${vidsHTML}
+            </div>`;
+        }).join('');
+    }
+
+    const html = `
+        <div style="max-width:1100px; margin:0 auto; padding:2rem 1rem; color:white;">
+            <h2 style="text-align:center; margin-bottom:0.5rem; font-size:2.2rem;">${loc.icon} ${loc.label}</h2>
+            <div style="text-align:center;margin-bottom:2rem;">
+                <button onclick="showTourPage()" class="btn-secondary" style="padding:0.7rem 1.5rem;">← Back to Tour</button>
+            </div>
+            ${bodyHTML}
+        </div>`;
+
+    document.getElementById('schoolInfoPanel').innerHTML = html;
+};
+
+function renderTourVideoEmbed(v) {
+    const ytMatch = v.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{6,})/);
+    if (ytMatch) {
+        return `
+        <div>
+            <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;">
+                <iframe src="https://www.youtube.com/embed/${ytMatch[1]}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe>
+            </div>
+            ${v.caption ? `<div style="font-size:0.78rem;color:#c4b5fd;margin-top:4px;">${v.caption}</div>` : ''}
+        </div>`;
+    }
+    return `
+    <a href="${v.url}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(255,255,255,.08);border-radius:12px;color:white;text-decoration:none;">
+        🔗 <span>${v.caption || 'Watch Video'}</span>
+    </a>`;
 }
 
 function showNewsletterPage() {
@@ -1152,6 +1219,8 @@ function showDashboard(role, user) {
     content += renderFrontOfficePanel(user);
 }
 
+    content += `<div id="adminCustomSectionsPanel"></div>`;
+
     content += `
         <div class="form-card">
             <h3><i class="fas fa-bell"></i> Noticeboard</h3>
@@ -1160,6 +1229,34 @@ function showDashboard(role, user) {
 
     document.getElementById('dashboardContent').innerHTML = content;
     renderNoticeboard();
+    renderAdminCustomSections(role);
+}
+
+/* ══════════════════════════════════════════
+   ADMIN CUSTOM SECTIONS — injected into every portal's dashboard
+══════════════════════════════════════════ */
+function renderAdminCustomSections(role) {
+    const data = getData();
+    const container = document.getElementById('adminCustomSectionsPanel');
+    if (!container) return;
+    const sections = (data.adminCustomSections || [])
+        .filter(s => s.targetPortal === 'all' || s.targetPortal === role)
+        .sort((a, b) => (b.pinned === true) - (a.pinned === true) || new Date(b.postedAt) - new Date(a.postedAt));
+
+    if (sections.length === 0) { container.innerHTML = ''; return; }
+
+    container.innerHTML = sections.map(s => `
+        <div class="admin-card" style="margin-bottom:1rem;border-left:4px solid ${s.color || 'var(--purple)'};background:linear-gradient(135deg,${s.color || '#6c3fcf'}15,${s.color || '#6c3fcf'}08);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:1.5rem;">${s.icon || '📌'}</span>
+                    <strong style="font-size:0.95rem;color:${s.color || 'var(--purple-light)'};">${s.title}</strong>
+                    ${s.pinned ? '<span class="admin-role-pill" style="background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);">📌 Pinned</span>' : ''}
+                </div>
+                <span style="font-size:0.68rem;color:var(--text-secondary);">${new Date(s.postedAt).toLocaleDateString()}</span>
+            </div>
+            <div style="font-size:0.85rem;margin-top:8px;line-height:1.6;white-space:pre-wrap;">${s.body}</div>
+        </div>`).join('');
 }
 
 function renderNoticeboard() {
@@ -4465,22 +4562,6 @@ window.frontOfficeOpenSenderInbox = function(key) {
         </div>`;
 };
 
-function frontOfficeActivitiesHTML() {
-    return `
-        <div class="admin-section-head">📅 Activity Approvals</div>
-        <div class="admin-card">
-            <p style="color:var(--text-secondary);font-size:0.85rem;">
-                Activity & event approval system coming soon. 
-                Students will submit proposals here for review and approval.
-            </p>
-            <div style="margin-top:2rem;text-align:center;padding:3rem;background:var(--bg-elevated);border-radius:16px;">
-                <div style="font-size:4rem;opacity:0.3;">🏗️</div>
-                <h3 style="margin:1rem 0 0.5rem;">Under Construction</h3>
-                <p style="color:var(--text-secondary);">This module will be available in the next update.</p>
-            </div>
-        </div>`;
-}
-
 /* Hostels — matches image 5 layout exactly */
 window.frontOfficeOpenHostelsInbox = function() {
     const data = getData();
@@ -4548,19 +4629,16 @@ function renderFrontOfficePanel(user) {
 window.frontOfficeSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
-    const user = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
-    
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
     const map = {
         profile:    () => frontOfficeProfileHTML(user),
         received:   () => frontOfficeReceivedHTML(),
         share:      () => frontOfficeShareHTML(),
-        activities: () => frontOfficeActivitiesHTML(),   // ← Fixed / added
+        activities: () => (typeof deanActivitiesHTML === 'function' ? deanActivitiesHTML(user) : '<div class="admin-section-head">📅 Activity Approvals</div><div class="admin-card"><p style="color:var(--text-secondary);font-size:0.85rem;">This section is not built yet.</p></div>'),
         mess:       () => messBoardersHTML('frontOfficeMain'),
         report:     () => frontOfficeReportHTML()
     };
-    
-    const content = (map[section] || (() => frontOfficeReceivedHTML()))();
-    document.getElementById('frontOfficeMain').innerHTML = content;
+    document.getElementById('frontOfficeMain').innerHTML = (map[section] || (()=>frontOfficeReceivedHTML()))();
 };
 
 function frontOfficeProfileHTML(user) {
@@ -4972,19 +5050,17 @@ function renderDeanAdminPanel(user) {
 window.deanAdminSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
-    const user = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
-    
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
     const map = {
         profile:     () => deanAdminProfileHTML(user),
         received:    () => deanAdminReceivedHTML(user),
         review:      () => deanAdminReviewHTML(user),
-        discipline:  () => deanAdminDisciplineHTML(),
-        mess:        () => messBoardersHTML('deanAdminMain'),   // ← Fixed
+        discipline:  () => deanAdminDisciplineHTML(user),
+        mess:        () => messBoardersHTML('deanAdminMain'),
         report:      () => deanAdminReportHTML(user),
         noticeboard: () => deanAdminNoticeboardHTML(user)
     };
-    
-    document.getElementById('deanAdminMain').innerHTML = (map[section] || (() => deanAdminReceivedHTML(user)))();
+    document.getElementById('deanAdminMain').innerHTML = (map[section] || (()=>deanAdminReceivedHTML(user)))();
 };
 
 function deanAdminProfileHTML(user) {
@@ -10514,11 +10590,17 @@ function renderAdminPanel() {
         <!-- MINI SIDEBAR NAV -->
         <div class="admin-sidenav">
             <div class="admin-sidenav-title">Admin Menu</div>
+            <button class="admin-nav-btn active" onclick="adminSection('profile',this)">
+                <i class="fas fa-user"></i> Profile
+            </button>
+            <button class="admin-nav-btn" onclick="adminSection('portalcontrol',this)">
+                <i class="fas fa-sitemap"></i> Portal Control
+            </button>
             <button class="admin-nav-btn" onclick="adminSection('received',this)">
              <i class="fas fa-inbox"></i> Received
              ${(getData().sysAdminReceived||[]).filter(i=>!i.read).length > 0 ? `<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${(getData().sysAdminReceived||[]).filter(i=>!i.read).length}</span>` : ''}
             </button>
-            <button class="admin-nav-btn active" onclick="adminSection('users',this)">
+            <button class="admin-nav-btn" onclick="adminSection('users',this)">
                 <i class="fas fa-users-cog"></i> User Management
             </button>
             <button class="admin-nav-btn" onclick="adminSection('principals',this)">
@@ -10546,22 +10628,34 @@ function renderAdminPanel() {
                 <i class="fas fa-file-export"></i> Export Data
             </button>
             <button class="admin-nav-btn" onclick="adminSection('studentwall',this)"><i class="fas fa-users"></i> Student Wall</button>
+            <button class="admin-nav-btn" onclick="adminSection('tourmanagement',this)"><i class="fas fa-video"></i> Tour Management</button>
              
         </div>
  
         <!-- MAIN CONTENT AREA -->
         <div class="admin-main" id="adminMain">
-            ${adminUsersHTML()}
+            ${adminProfileHTML()}
         </div>
     </div>`;
 }
 
 /* ── Section switcher ── */
 window.adminSection = function(section, btn) {
+    // Student Wall is a full-screen overlay (like the public magazine-nav version),
+    // not an inline adminMain panel — handle it separately and stop here.
+    if (section === 'studentwall') {
+        document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showStudentWall();
+        return;
+    }
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const main = document.getElementById('adminMain');
     const map = {
+        profile:     adminProfileHTML,
+        portalcontrol: adminPortalControlHTML,
+        tourmanagement: adminTourManagementHTML,
         received: adminReceivedHTML,
         users:       adminUsersHTML,
         principals:  adminPrincipalsHTML,
@@ -10572,8 +10666,7 @@ window.adminSection = function(section, btn) {
         logs:        adminLogsHTML,
         backup:      adminBackupHTML,
          messaccess : adminMessAccessHTML,
-        export:      adminExportHTML,
-        studentwall: adminStudentWallHTML
+        export:      adminExportHTML
         
     };
     main.innerHTML = (map[section] || adminUsersHTML)();
@@ -10620,6 +10713,749 @@ window.adminMarkReceivedRead = function(id) {
 /* ══════════════════════════════════════════
    SECTION 1 — USER MANAGEMENT
 ══════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   SECTION 0 — ADMIN PROFILE
+══════════════════════════════════════════ */
+function adminProfileHTML() {
+    const data = getData();
+    const admin = data.admin || {};
+    const totalStudents = (data.students || []).length;
+    const totalStaff = (data.lecturers||[]).length + (data.classTeachers||[]).length + (data.hods||[]).length + (data.deos||[]).length + (data.finance||[]).length + (data.classReps||[]).length;
+    const totalLogs = (data.systemLogs || []).length;
+    const customSections = (data.adminCustomSections || []).length;
+
+    return `
+        <div class="admin-section-head">👤 My Profile</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+                <div style="display:flex;gap:1.2rem;align-items:center;">
+                    <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#dc2626,#7c2d12);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;flex-shrink:0;">🔐</div>
+                    <div>
+                        <h3 style="margin:0;">${admin.name || 'System Administrator'}</h3>
+                        <div style="font-size:0.8rem;color:var(--text-secondary);">${admin.id || 'ADMIN-001'}</div>
+                        <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                            <span class="admin-role-pill" style="background:rgba(220,38,38,.2);border-color:#dc2626;color:#f87171;">🔐 System Administrator</span>
+                            <span class="admin-role-pill">Full System Access</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="admin-btn-secondary" onclick="adminEditProfileForm()"><i class="fas fa-edit"></i> Edit Profile</button>
+            </div>
+        </div>
+
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Contact Information</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;font-size:0.85rem;">
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">FULL NAME</span><br>${admin.name || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">EMAIL</span><br>${admin.email || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">PHONE</span><br>${admin.phone || '—'}</div>
+                <div><span style="color:var(--text-secondary);font-size:0.7rem;">STAFF ID</span><br>${admin.id || '—'}</div>
+            </div>
+        </div>
+
+        <div id="adminProfileEditArea"></div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;">
+            <div class="stat-card"><h3>${totalStudents}</h3><p>Total Students</p></div>
+            <div class="stat-card"><h3>${totalStaff}</h3><p>Total Staff Accounts</p></div>
+            <div class="stat-card"><h3 style="color:var(--purple-light);">${customSections}</h3><p>Custom Sections Posted</p></div>
+            <div class="stat-card"><h3 style="color:var(--text-secondary);">${totalLogs}</h3><p>System Log Entries</p></div>
+        </div>`;
+}
+
+window.adminEditProfileForm = function() {
+    const data = getData();
+    const admin = data.admin || {};
+    document.getElementById('adminProfileEditArea').innerHTML = `
+        <div class="admin-card" style="margin-bottom:1rem;border:2px solid var(--purple);">
+            <div class="admin-card-title">✏️ Edit Profile</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;">
+                <input id="adminEditName" class="admin-input" placeholder="Full Name" value="${admin.name || ''}">
+                <input id="adminEditEmail" class="admin-input" placeholder="Email" value="${admin.email || ''}">
+                <input id="adminEditPhone" class="admin-input" placeholder="Phone" value="${admin.phone || ''}">
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="admin-btn-primary" onclick="adminSaveProfile()"><i class="fas fa-save"></i> Save</button>
+                <button class="admin-btn-secondary" onclick="document.getElementById('adminProfileEditArea').innerHTML=''">Cancel</button>
+            </div>
+        </div>`;
+};
+
+window.adminSaveProfile = function() {
+    const data = getData();
+    data.admin.name  = document.getElementById('adminEditName').value.trim() || data.admin.name;
+    data.admin.email = document.getElementById('adminEditEmail').value.trim();
+    data.admin.phone = document.getElementById('adminEditPhone').value.trim();
+    saveData(data);
+    adminLog('Admin updated their profile details');
+    alert('✅ Profile updated.');
+    document.getElementById('adminMain').innerHTML = adminProfileHTML();
+};
+
+/* ══════════════════════════════════════════
+   PORTAL CONTROL — registry of every portal for
+   live stats + read-only drill-down + custom sections
+══════════════════════════════════════════ */
+const ADMIN_PORTAL_REGISTRY = [
+    { key:'student', label:'Student', icon:'🎓', multi:true,
+      source:d=>d.students, render:renderStudentPanel,
+      stats:d=>{const a=d.students||[];return [{l:'Total',v:a.length},{l:'Active',v:a.filter(s=>(s.status||'active')==='active').length},{l:'Not Attending',v:a.filter(s=>s.status==='not_attending').length},{l:'Deferred',v:a.filter(s=>s.status==='deferred').length}];}},
+    { key:'classrep', label:'Class Rep', icon:'🗣️', multi:true,
+      source:d=>d.classReps, render:renderClassRepPanel,
+      stats:d=>[{l:'Total',v:(d.classReps||[]).length}]},
+    { key:'lecturer', label:'Lecturer', icon:'👨‍💻', multi:true,
+      source:d=>d.lecturers, render:renderLecturerPanel,
+      stats:d=>[{l:'Total',v:(d.lecturers||[]).length},{l:'Units Assigned',v:(d.lecturerUnits||[]).filter(u=>u.lecturerId).length}]},
+    { key:'classteacher', label:'Class Teacher', icon:'🧑‍🏫', multi:true,
+      source:d=>d.classTeachers, render:renderClassTeacherPanel,
+      stats:d=>[{l:'Total',v:(d.classTeachers||[]).length}]},
+    { key:'hod', label:'H.O.D', icon:'🏛️', multi:true,
+      source:d=>d.hods, render:renderHODPanel,
+      stats:d=>{const pend=(d.examRegistrations||[]).filter(r=>r.status==='pending_hod').length+(d.studentReports||[]).filter(r=>r.status==='pending_hod').length;return [{l:'Total HODs',v:(d.hods||[]).length},{l:'System-wide Pending',v:pend}];}},
+    { key:'deo', label:'D.E.O', icon:'📝', multi:true,
+      source:d=>d.deos, render:renderDEOPanel,
+      stats:d=>[{l:'Total',v:(d.deos||[]).length},{l:'Pending DEO Review',v:(d.examRegistrations||[]).filter(r=>r.status==='pending_deo').length}]},
+    { key:'finance', label:'Finance', icon:'💰', multi:true,
+      source:d=>d.finance, render:renderFinancePanel,
+      stats:d=>{const out=(d.students||[]).reduce((s,x)=>s+(x.feeBalance||0),0);return [{l:'Total Outstanding',v:'KSh '+out.toLocaleString()},{l:'Fully Cleared',v:(d.students||[]).filter(s=>(s.feeBalance||0)===0).length}];}},
+    { key:'deputy_acad', label:'Deputy (Academics)', icon:'👑', multi:false,
+      source:d=>d.deputyAcad, render:renderDeputyAcadPanel,
+      stats:d=>[{l:'Items Received',v:(d.deputyAcadReceived||[]).length},{l:'Unread',v:(d.deputyAcadReceived||[]).filter(i=>!i.read).length}]},
+    { key:'deputy_infra', label:'Deputy (Infrastructure)', icon:'🏗️', multi:false,
+      source:d=>d.deputyInfra, render:renderDeputyInfraPanel,
+      stats:d=>[{l:'Complaints',v:(d.infraComplaints||[]).length},{l:'Projects',v:(d.infraProjects||[]).length}]},
+    { key:'examoffice', label:'Exam Office', icon:'📋', multi:false,
+      source:d=>d.examOffice, render:renderExamOfficePanel,
+      stats:d=>[{l:'Received',v:(d.examOfficeReceived||[]).length},{l:'Awaiting Booking',v:(d.examOfficeBookings||[]).filter(b=>!b.booked).length}]},
+    { key:'dean_admin', label:'Dean of Students (Admin)', icon:'💛', multi:false,
+      source:d=>d.deanAdmin, render:renderDeanAdminPanel,
+      stats:d=>[{l:'Received',v:(d.deanAdminReceived||[]).length},{l:'Pending',v:(d.deanAdminReceived||[]).filter(i=>i.status==='pending').length}]},
+    { key:'deputy_dean1', label:'Deputy Dean 1', icon:'🧑‍💼', multi:false,
+      source:d=>d.deputyDean1, render:renderDeputyDeanPanel,
+      stats:d=>[{l:'Pending',v:(d.deputyDeanReceived||[]).filter(i=>i.toRole==='deputy_dean1'&&i.status==='pending').length}]},
+    { key:'deputy_dean2', label:'Deputy Dean 2', icon:'🧑‍💼', multi:false,
+      source:d=>d.deputyDean2, render:renderDeputyDeanPanel,
+      stats:d=>[{l:'Pending',v:(d.deputyDeanReceived||[]).filter(i=>i.toRole==='deputy_dean2'&&i.status==='pending').length}]},
+    { key:'front_office', label:'Front Office', icon:'🗂️', multi:false,
+      source:d=>d.frontOffice, render:renderFrontOfficePanel,
+      stats:d=>[{l:'Received',v:(d.frontOfficeReceived||[]).length},{l:'Pending',v:(d.frontOfficeReceived||[]).filter(i=>i.status==='pending').length}]},
+    { key:'principal', label:'Principal', icon:'🎓', multi:false,
+      source:d=>d.principal, render:renderPrincipalPanel,
+      stats:d=>[{l:'Status',v:'Active'}]},
+    { key:'hospital', label:'Hospital', icon:'🏥', multi:false,
+      source:d=>d.hospital, render:renderHospitalPanel,
+      stats:d=>[{l:'Pending Visits',v:(d.hospitalVisits||[]).filter(v=>v.status==='pending').length},{l:'Bills Pending',v:(d.hospitalBills||[]).filter(b=>!b.sentToFinance).length}]},
+    { key:'library', label:'Library', icon:'📚', multi:false,
+      source:d=>d.library, render:renderLibraryPanel,
+      stats:d=>[{l:'Status',v:'Active'}]},
+    { key:'hostel_matron', label:'Hostel — Matron (Female)', icon:'👩', multi:false,
+      source:d=>d.hostel_matron, render:renderHostelPanel,
+      stats:d=>[{l:'Residents',v:(d.hostelResidents||[]).filter(r=>r.gender==='Female').length},{l:'Cleared',v:(d.hostelClearances||[]).filter(c=>c.gender==='Female').length}]},
+    { key:'hostel_patron', label:'Hostel — Patron (Male)', icon:'👨', multi:false,
+      source:d=>d.hostel_patron, render:renderHostelPanel,
+      stats:d=>[{l:'Residents',v:(d.hostelResidents||[]).filter(r=>r.gender==='Male').length},{l:'Cleared',v:(d.hostelClearances||[]).filter(c=>c.gender==='Male').length}]},
+    { key:'mess', label:'Mess / Canteen', icon:'🍽️', multi:false,
+      source:d=>d.mess, render:renderMessPanel,
+      stats:d=>{const t=new Date().toLocaleDateString('en-CA');return [{l:"Today's Orders",v:(d.messOrders||[]).filter(o=>o.date===t).length},{l:'Boarders',v:(d.messActivatedStudents||[]).length}];}},
+    { key:'sportsadmin', label:'Sports Admin', icon:'⚽', multi:false,
+      source:()=>({name:'Sports Admin', id:'SP-ADMIN-001'}), render:renderSportsAdminPanel,
+      stats:d=>[{l:'Sports',v:(d.sportsList||[]).length},{l:'Leaders',v:(d.studentSportLeaders||[]).length}]},
+];
+
+function adminPortalControlHTML() {
+    const data = getData();
+    const cards = ADMIN_PORTAL_REGISTRY.map(entry => {
+        const stats = entry.stats(data);
+        const statsHTML = stats.map(s => `<div style="font-size:0.68rem;color:var(--text-secondary);">${s.l}: <strong style="color:var(--text-primary);">${s.v}</strong></div>`).join('');
+
+        let actionHTML;
+        if (entry.multi) {
+            const arr = entry.source(data) || [];
+            const options = arr.map(x => `<option value="${x.id}">${x.name || x.id}</option>`).join('');
+            actionHTML = arr.length === 0
+                ? `<span style="font-size:0.72rem;color:var(--text-secondary);">No records yet</span>`
+                : `<select id="picker_${entry.key}" class="admin-input" style="font-size:0.75rem;padding:6px;margin-top:6px;">${options}</select>
+                   <button class="admin-action-btn edit" style="margin-top:6px;width:100%;" onclick="adminViewPortal('${entry.key}', document.getElementById('picker_${entry.key}').value)">👁️ View Live</button>`;
+        } else {
+            actionHTML = `<button class="admin-action-btn edit" style="margin-top:6px;width:100%;" onclick="adminViewPortal('${entry.key}', null)">👁️ View Live</button>`;
+        }
+
+        return `
+        <div class="admin-card" style="margin-bottom:0;">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:1.4rem;">${entry.icon}</span>
+                <strong style="font-size:0.85rem;">${entry.label}</strong>
+            </div>
+            <div style="margin-top:8px;display:grid;gap:2px;">${statsHTML}</div>
+            ${actionHTML}
+        </div>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">🕸️ Portal Control</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Live oversight of every portal in the system. Stats update automatically from real data.
+                Click "View Live" on any portal to see exactly what that user sees, in read-only mode —
+                nothing you do here can accidentally change their data.
+            </p>
+        </div>
+        <div id="adminPortalViewArea" style="margin-bottom:1.2rem;"></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:1.5rem;">
+            ${cards}
+        </div>
+        ${adminCustomSectionManagerHTML()}`;
+}
+
+window.adminViewPortal = function(roleKey, instanceId) {
+    const entry = ADMIN_PORTAL_REGISTRY.find(p => p.key === roleKey);
+    if (!entry) return;
+    const data = getData();
+    let userObj;
+    if (entry.multi) {
+        if (!instanceId) return alert('No record available to view for this portal yet.');
+        userObj = (entry.source(data) || []).find(x => x.id === instanceId);
+        if (!userObj) return alert('Record not found.');
+    } else {
+        userObj = entry.source(data);
+        if (!userObj) return alert(`${entry.label} has no data configured yet.`);
+    }
+
+    let html;
+    try {
+        html = entry.render({ ...userObj, role: roleKey });
+    } catch (e) {
+        html = `<div class="admin-card"><p style="color:var(--danger);">⚠️ Could not render this portal's live view: ${e.message}</p></div>`;
+    }
+
+    const area = document.getElementById('adminPortalViewArea');
+    area.innerHTML = `
+        <div style="position:sticky;top:0;z-index:5;background:linear-gradient(135deg,#7c2d12,#dc2626);color:#fff;padding:10px 16px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:0.85rem;flex-wrap:wrap;gap:8px;">
+            <span>👁️ VIEW-ONLY — ${entry.icon} ${entry.label}${userObj && userObj.name ? ' • ' + userObj.name : ''}</span>
+            <button onclick="document.getElementById('adminPortalViewArea').innerHTML=''" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:4px 12px;border-radius:8px;cursor:pointer;font-weight:700;">✕ Close</button>
+        </div>
+        <div style="pointer-events:none;user-select:none;opacity:.92;border:2px solid #dc2626;border-top:none;border-radius:0 0 12px 12px;padding:16px;background:var(--bg-primary);max-height:600px;overflow-y:auto;">
+            ${html}
+        </div>`;
+    area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    adminLog(`Admin viewed live portal: ${entry.label}${userObj && userObj.name ? ' (' + userObj.name + ')' : ''}`);
+};
+
+/* ══════════════════════════════════════════
+   CUSTOM SECTIONS — Admin can post a formatted
+   card into any portal's dashboard (or all)
+══════════════════════════════════════════ */
+function adminCustomSectionManagerHTML() {
+    const data = getData();
+    const sections = (data.adminCustomSections || []).slice().reverse();
+    const portalOptions = ['<option value="all">🌐 All Portals</option>']
+        .concat(ADMIN_PORTAL_REGISTRY.map(e => `<option value="${e.key}">${e.icon} ${e.label}</option>`))
+        .join('');
+
+    const rows = sections.length === 0
+        ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No custom sections posted yet.</p>'
+        : sections.map(s => {
+            const target = s.targetPortal === 'all' ? '🌐 All Portals' : (ADMIN_PORTAL_REGISTRY.find(e => e.key === s.targetPortal)?.label || s.targetPortal);
+            return `
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;padding:0.8rem;background:var(--bg-elevated);border-radius:12px;margin-top:8px;border-left:4px solid ${s.color || 'var(--purple)'};">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:1.2rem;">${s.icon || '📌'}</span>
+                        <strong style="font-size:0.85rem;">${s.title}</strong>
+                        ${s.pinned ? '<span class="admin-role-pill" style="background:rgba(245,158,11,.15);border-color:var(--warning);color:var(--warning);">📌</span>' : ''}
+                    </div>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:4px;">Target: ${target} • ${new Date(s.postedAt).toLocaleDateString()}</div>
+                    <div style="font-size:0.78rem;margin-top:6px;">${s.body}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                    <button class="admin-action-btn edit" onclick="adminEditCustomSection('${s.id}')">✏️ Edit</button>
+                    <button class="admin-action-btn danger" onclick="adminDeleteCustomSection('${s.id}')">🗑 Delete</button>
+                </div>
+            </div>`;
+        }).join('');
+
+    return `
+        <div class="admin-card" id="customSectionFormCard" style="margin-bottom:1rem;">
+            <div class="admin-card-title">📢 Post / Edit Custom Section</div>
+            <p style="font-size:0.75rem;color:var(--text-secondary);margin:6px 0 10px;">
+                Appears as a formatted card at the bottom of the target portal's dashboard (above the Noticeboard),
+                every time that user logs in.
+            </p>
+            <input type="hidden" id="csEditId" value="">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;">
+                <select id="csTarget" class="admin-input">${portalOptions}</select>
+                <input id="csIcon" class="admin-input" placeholder="Icon emoji (e.g. 📢)" maxlength="4">
+                <input id="csColor" class="admin-input" type="color" value="#6c3fcf" style="height:42px;padding:4px;">
+                <label style="display:flex;align-items:center;gap:8px;font-size:0.82rem;">
+                    <input type="checkbox" id="csPinned"> 📌 Pin to top
+                </label>
+            </div>
+            <input id="csTitle" class="admin-input" placeholder="Section title" style="margin-top:10px;">
+            <textarea id="csBody" class="admin-input" rows="3" placeholder="Content / message..." style="margin-top:8px;"></textarea>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="admin-btn-primary" onclick="adminSaveCustomSection()"><i class="fas fa-paper-plane"></i> Post Section</button>
+                <button class="admin-btn-secondary" onclick="adminClearCustomSectionForm()">Clear</button>
+            </div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Custom Sections (${sections.length})</div>
+            ${rows}
+        </div>`;
+}
+
+window.adminClearCustomSectionForm = function() {
+    document.getElementById('csEditId').value = '';
+    document.getElementById('csTarget').value = 'all';
+    document.getElementById('csIcon').value = '';
+    document.getElementById('csColor').value = '#6c3fcf';
+    document.getElementById('csPinned').checked = false;
+    document.getElementById('csTitle').value = '';
+    document.getElementById('csBody').value = '';
+};
+
+window.adminSaveCustomSection = function() {
+    const editId = document.getElementById('csEditId').value;
+    const targetPortal = document.getElementById('csTarget').value;
+    const icon = document.getElementById('csIcon').value.trim() || '📌';
+    const color = document.getElementById('csColor').value;
+    const pinned = document.getElementById('csPinned').checked;
+    const title = document.getElementById('csTitle').value.trim();
+    const body = document.getElementById('csBody').value.trim();
+    if (!title || !body) return alert('Please fill in both Title and Content.');
+
+    const data = getData();
+    data.adminCustomSections = data.adminCustomSections || [];
+
+    if (editId) {
+        const existing = data.adminCustomSections.find(s => s.id === editId);
+        if (existing) {
+            Object.assign(existing, { targetPortal, icon, color, pinned, title, body });
+            adminLog(`Admin edited custom section: ${title}`);
+        }
+    } else {
+        data.adminCustomSections.push({
+            id: 'ACS-' + Date.now(), targetPortal, icon, color, pinned, title, body,
+            postedAt: new Date().toISOString()
+        });
+        adminLog(`Admin posted custom section "${title}" to ${targetPortal}`);
+    }
+
+    saveData(data);
+    alert(editId ? '✅ Section updated.' : '✅ Section posted.');
+    document.getElementById('adminMain').innerHTML = adminPortalControlHTML();
+};
+
+window.adminEditCustomSection = function(id) {
+    const data = getData();
+    const s = (data.adminCustomSections || []).find(x => x.id === id);
+    if (!s) return;
+    document.getElementById('csEditId').value = s.id;
+    document.getElementById('csTarget').value = s.targetPortal;
+    document.getElementById('csIcon').value = s.icon || '';
+    document.getElementById('csColor').value = s.color || '#6c3fcf';
+    document.getElementById('csPinned').checked = !!s.pinned;
+    document.getElementById('csTitle').value = s.title;
+    document.getElementById('csBody').value = s.body;
+    document.getElementById('customSectionFormCard').scrollIntoView({ behavior: 'smooth' });
+};
+
+window.adminDeleteCustomSection = function(id) {
+    if (!confirm('Delete this custom section? It will disappear from the target portal immediately.')) return;
+    const data = getData();
+    data.adminCustomSections = (data.adminCustomSections || []).filter(s => s.id !== id);
+    saveData(data);
+    adminLog('Admin deleted a custom section');
+    document.getElementById('adminMain').innerHTML = adminPortalControlHTML();
+};
+
+/* ══════════════════════════════════════════
+   TOUR MANAGEMENT — Admin controls everything
+   shown on the public School Tour page
+══════════════════════════════════════════ */
+function adminTourManagementHTML() {
+    const data = getData();
+    if (!data.tourManagement || !data.tourManagement.locations) {
+        repairMissingFields();
+    }
+    const freshData = getData();
+    const locations = freshData.tourManagement.locations;
+    const story = freshData.tourManagement.story || { history:'', challenges:'', quote:'' };
+
+    const storyCard = `
+    <div class="admin-card" style="margin-bottom:1rem;border:2px solid var(--purple);">
+        <div class="admin-card-title">📖 Edit Our School's Story</div>
+        <p style="font-size:0.75rem;color:var(--text-secondary);margin:6px 0 10px;">
+            Displays as a formatted "Our School's Story" section on the public Tour page.
+        </p>
+        <div style="margin-top:10px;">
+            <label style="font-size:0.7rem;color:var(--text-secondary);">SCHOOL HISTORY</label>
+            <textarea id="tourStoryHistory" class="admin-input" rows="4" placeholder="How the school began, key milestones..." style="margin-top:4px;">${story.history || ''}</textarea>
+        </div>
+        <div style="margin-top:10px;">
+            <label style="font-size:0.7rem;color:var(--text-secondary);">CHALLENGES FACED</label>
+            <textarea id="tourStoryChallenges" class="admin-input" rows="4" placeholder="Difficulties overcome, lessons learned..." style="margin-top:4px;">${story.challenges || ''}</textarea>
+        </div>
+        <div style="margin-top:10px;">
+            <label style="font-size:0.7rem;color:var(--text-secondary);">INSPIRATIONAL QUOTE</label>
+            <input type="text" id="tourStoryQuote" class="admin-input" placeholder="A guiding motto or quote..." value="${(story.quote || '').replace(/"/g,'&quot;')}" style="margin-top:4px;">
+        </div>
+        <button class="admin-btn-primary" style="margin-top:12px;" onclick="adminSaveTourStory()">
+            <i class="fas fa-save"></i> Publish to Tour Page
+        </button>
+    </div>`;
+
+    const cards = locations.map(loc => {
+        let countsHTML, thumbUrl = null, vidCount = 0;
+        if (loc.type === 'single_image') {
+            countsHTML = loc.image ? '✅ Image uploaded' : '⚠️ No image yet';
+            thumbUrl = loc.image || null;
+        } else {
+            const catCount = loc.categories.length;
+            const imgCount = loc.categories.reduce((s,c)=>s+c.images.length,0);
+            vidCount = loc.categories.reduce((s,c)=>s+c.videoLinks.length,0);
+            countsHTML = `${catCount} categor${catCount===1?'y':'ies'} · ${imgCount} image${imgCount===1?'':'s'} · ${vidCount} link${vidCount===1?'':'s'}`;
+            const firstImg = loc.categories.flatMap(c => c.images || [])[0];
+            thumbUrl = firstImg ? firstImg.url : null;
+        }
+
+        const thumbHTML = thumbUrl
+            ? `<img src="${thumbUrl}" style="width:100%;height:90px;object-fit:contain;background:var(--bg-elevated);border-radius:8px;margin-top:8px;border:1px solid var(--border);">`
+            : `<div style="width:100%;height:90px;border-radius:8px;margin-top:8px;background:repeating-linear-gradient(45deg,var(--bg-elevated),var(--bg-elevated) 10px,rgba(255,255,255,0.03) 10px,rgba(255,255,255,0.03) 20px);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:1.6rem;">${loc.icon}</div>`;
+
+        const captionField = loc.type === 'single_image' ? '' :
+            `<input type="text" id="quickCap_${loc.key}" class="admin-input" placeholder="Caption..." style="margin-top:6px;font-size:0.72rem;padding:6px 8px;">`;
+
+        const videoLinkHTML = loc.type === 'single_image' ? '' : `
+            <button class="admin-btn-secondary" style="margin-top:6px;width:100%;font-size:0.72rem;padding:6px;background:var(--bg-elevated);" onclick="adminViewTourVideos('${loc.key}')">
+                🎥 View Videos${vidCount > 0 ? ` (${vidCount})` : ''}
+            </button>`;
+
+        return `
+        <div class="admin-card" style="text-align:center;">
+            <div style="font-size:1.8rem;">${loc.icon}</div>
+            <div style="font-weight:700;margin-top:4px;font-size:0.85rem;">${loc.label}</div>
+            <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:2px;">${countsHTML}</div>
+            ${thumbHTML}
+            <input type="file" accept="image/*" id="quickFile_${loc.key}" class="admin-input" style="margin-top:8px;font-size:0.68rem;padding:6px;">
+            ${captionField}
+            <button class="admin-btn-secondary" style="margin-top:6px;width:100%;font-size:0.72rem;padding:6px;" onclick="adminTourQuickUpload('${loc.key}')">
+                <i class="fas fa-upload"></i> Upload Photo
+            </button>
+            ${videoLinkHTML}
+            <button class="admin-action-btn edit" style="margin-top:6px;width:100%;font-size:0.68rem;" onclick="adminOpenTourLocation('${loc.key}')">
+                ⚙ Manage Categories &amp; Videos
+            </button>
+        </div>`;
+    }).join('');
+
+    return `
+        <div class="admin-section-head">🎥 Tour Management</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                Controls exactly what visitors see on the public School Tour page. Click a location to add,
+                rename, or delete categories, upload images (auto-compressed for storage), and add video links
+                (paste any link now — swap for the real one anytime).
+            </p>
+        </div>
+        ${storyCard}
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;">
+            ${cards}
+        </div>
+        <div id="tourLocationDetailArea" style="margin-top:1.2rem;"></div>`;
+}
+
+window.adminSaveTourStory = function() {
+    const history    = document.getElementById('tourStoryHistory').value.trim();
+    const challenges = document.getElementById('tourStoryChallenges').value.trim();
+    const quote      = document.getElementById('tourStoryQuote').value.trim();
+    const data = getData();
+    data.tourManagement.story = { history, challenges, quote };
+    saveData(data);
+    adminLog('Admin updated School Story (History/Challenges/Quote)');
+    alert('✅ School Story published to the Tour page.');
+};
+
+/* Quick-upload straight from the main grid card.
+   Saves directly into the same tourManagement data the public showTourPage()
+   reads from, so the photo appears on the live Tour page immediately —
+   no separate "publish" step needed. */
+window.adminTourQuickUpload = function(locKey) {
+    const fileInput = document.getElementById(`quickFile_${locKey}`);
+    const file = fileInput?.files[0];
+    if (!file) { alert('Choose an image first.'); return; }
+    if (file.size > 5 * 1024 * 1024) { alert('Image must be under 5MB.'); return; }
+
+    compressImageFile(file, function(dataUrl) {
+        const data = getData();
+        const loc = data.tourManagement.locations.find(l => l.key === locKey);
+        if (!loc) return;
+
+        if (loc.type === 'single_image') {
+            loc.image = dataUrl;
+        } else {
+            const captionInput = document.getElementById(`quickCap_${locKey}`);
+            const caption = captionInput ? captionInput.value.trim() : '';
+            let gallery = loc.categories.find(c => c.id === 'CAT-GALLERY');
+            if (!gallery) {
+                gallery = { id: 'CAT-GALLERY', name: 'Gallery', images: [], videoLinks: [] };
+                loc.categories.unshift(gallery);
+            }
+            gallery.images.push({ id: 'IMG-' + Date.now(), url: dataUrl, caption });
+        }
+
+        saveData(data);
+        adminLog(`Admin uploaded a photo to ${loc.label} — now live on the public Tour page`);
+        document.getElementById('adminMain').innerHTML = adminTourManagementHTML();
+    });
+};
+
+/* Opens the full category/video manager for one location into the
+   #tourLocationDetailArea placeholder rendered at the bottom of the grid. */
+window.adminOpenTourLocation = function(key) {
+    const area = document.getElementById('tourLocationDetailArea');
+    if (!area) return;
+    area.innerHTML = adminTourLocationDetailHTML(key);
+    area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+/* Jumps straight to a location's video links — skips the category-management
+   view and shows just the videos (embedded where possible), with a quick
+   way to add more or open the full manager. */
+window.adminViewTourVideos = function(key) {
+    const data = getData();
+    const loc = data.tourManagement.locations.find(l => l.key === key);
+    const area = document.getElementById('tourLocationDetailArea');
+    if (!loc || !area) return;
+
+    const allVideos = (loc.categories || []).flatMap(cat =>
+        (cat.videoLinks || []).map(v => ({ ...v, catName: cat.name }))
+    );
+
+    const videosHTML = allVideos.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:10px;">No video links added yet for ${loc.label}. Use "Manage Categories &amp; Videos" below to add one.</p>`
+        : `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:12px;">
+            ${allVideos.map(v => `
+                <div>
+                    ${renderTourVideoEmbed(v)}
+                    <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:4px;">📁 ${v.catName}</div>
+                </div>`).join('')}
+        </div>`;
+
+    area.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+            <div class="admin-section-head" style="margin:0;padding:0;border:none;">🎥 Videos: ${loc.label}</div>
+            <button class="admin-btn-secondary" onclick="document.getElementById('tourLocationDetailArea').innerHTML=''">✕ Close</button>
+        </div>
+        <div class="admin-card" style="border:2px solid var(--purple);">
+            ${videosHTML}
+            <button class="admin-action-btn edit" style="margin-top:14px;" onclick="adminOpenTourLocation('${key}')">
+                ⚙ Manage Categories &amp; Videos
+            </button>
+        </div>`;
+    area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+function adminTourLocationDetailHTML(key) {
+    const data = getData();
+    const loc = data.tourManagement.locations.find(l => l.key === key);
+    if (!loc) return '';
+    const header = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+            <div class="admin-section-head" style="margin:0;padding:0;border:none;">${loc.icon} Managing: ${loc.label}</div>
+            <button class="admin-btn-secondary" onclick="document.getElementById('tourLocationDetailArea').innerHTML=''">✕ Close</button>
+        </div>`;
+    return header + (loc.type === 'single_image' ? adminTourSchoolAerialHTML(loc) : adminTourCategorizedHTML(loc));
+}
+
+/* ── School (Aerial View) — single image, no categories ── */
+function adminTourSchoolAerialHTML(loc) {
+    return `
+    <div class="admin-card" style="border:2px solid var(--purple);">
+        <p style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:10px;">One aerial / area view image for the whole school.</p>
+        ${loc.image ? `
+        <div style="max-width:420px;">
+            <img src="${loc.image}" style="width:100%;border-radius:12px;border:1px solid var(--border);">
+            <button class="admin-action-btn danger" style="margin-top:8px;" onclick="adminTourDeleteSchoolAerial()">🗑 Remove Image</button>
+        </div>` : `
+        <input type="file" id="schoolAerialFile" accept="image/*" class="admin-input" style="margin-bottom:10px;">
+        <button class="admin-btn-primary" onclick="adminTourUploadSchoolAerial()"><i class="fas fa-upload"></i> Upload Image</button>`}
+    </div>`;
+}
+
+window.adminTourUploadSchoolAerial = function() {
+    const file = document.getElementById('schoolAerialFile')?.files[0];
+    if (!file) return alert('Choose an image first.');
+    compressImageFile(file, function(dataUrl) {
+        const data = getData();
+        data.tourManagement.locations.find(l => l.key === 'school_aerial').image = dataUrl;
+        saveData(data);
+        adminLog('Admin uploaded School Aerial View image');
+        document.getElementById('tourLocationDetailArea').innerHTML = adminTourLocationDetailHTML('school_aerial');
+    });
+};
+
+window.adminTourDeleteSchoolAerial = function() {
+    if (!confirm('Remove the aerial view image?')) return;
+    const data = getData();
+    data.tourManagement.locations.find(l => l.key === 'school_aerial').image = null;
+    saveData(data);
+    adminLog('Admin removed School Aerial View image');
+    document.getElementById('tourLocationDetailArea').innerHTML = adminTourLocationDetailHTML('school_aerial');
+};
+
+/* ── Categorized locations (the other 11) ── */
+function adminTourCategorizedHTML(loc) {
+    const categoriesHTML = loc.categories.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:10px;">No categories yet. Add one below.</p>`
+        : loc.categories.map(cat => adminTourCategoryBlockHTML(loc.key, cat)).join('');
+
+    return `
+    <div class="admin-card" style="border:2px solid var(--purple);margin-bottom:1rem;">
+        <p style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:10px;">
+            Add categories for this location (e.g. under Library: "Reading Hall", "Computer Lab"),
+            then upload images and paste video links for each one.
+        </p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input id="newCatName_${loc.key}" class="admin-input" placeholder="New category name" style="flex:1;min-width:200px;">
+            <button class="admin-btn-primary" onclick="adminTourAddCategory('${loc.key}')"><i class="fas fa-plus"></i> Add Category</button>
+        </div>
+    </div>
+    ${categoriesHTML}`;
+}
+
+function adminTourCategoryBlockHTML(locKey, cat) {
+    const imagesHTML = cat.images.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.75rem;margin-top:6px;">No images yet.</p>`
+        : `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-top:8px;">
+            ${cat.images.map(img => `
+                <div style="position:relative;">
+                    <img src="${img.url}" style="width:100%;height:75px;object-fit:contain;background:var(--bg-elevated);border-radius:8px;border:1px solid var(--border);">
+                    <button onclick="adminTourDeleteImage('${locKey}','${cat.id}','${img.id}')" style="position:absolute;top:2px;right:2px;background:rgba(239,68,68,.9);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:0.7rem;cursor:pointer;line-height:1;">✕</button>
+                    ${img.caption ? `<div style="font-size:0.6rem;color:var(--text-secondary);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${img.caption}</div>` : ''}
+                </div>`).join('')}
+        </div>`;
+
+    const videosHTML = cat.videoLinks.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.75rem;margin-top:6px;">No video links yet.</p>`
+        : cat.videoLinks.map(v => `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;background:var(--bg-elevated);border-radius:8px;margin-top:6px;font-size:0.76rem;">
+                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">🔗 ${v.caption || v.url}</span>
+                <button class="admin-action-btn danger" onclick="adminTourDeleteVideoLink('${locKey}','${cat.id}','${v.id}')" style="flex-shrink:0;">🗑</button>
+            </div>`).join('');
+
+    return `
+    <div class="admin-card" style="margin-bottom:1rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <strong style="font-size:0.88rem;">📁 ${cat.name}</strong>
+            <div style="display:flex;gap:6px;">
+                <button class="admin-action-btn edit" onclick="adminTourRenameCategory('${locKey}','${cat.id}')">✏️ Rename</button>
+                <button class="admin-action-btn danger" onclick="adminTourDeleteCategory('${locKey}','${cat.id}')">🗑 Delete</button>
+            </div>
+        </div>
+
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);">
+            <div style="font-size:0.7rem;color:var(--purple-light);font-weight:700;">IMAGES</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+                <input type="file" accept="image/*" id="imgFile_${cat.id}" class="admin-input" style="flex:1;min-width:150px;">
+                <input type="text" id="imgCaption_${cat.id}" class="admin-input" placeholder="Caption (optional)" style="flex:1;min-width:120px;">
+                <button class="admin-btn-secondary" onclick="adminTourUploadImage('${locKey}','${cat.id}')"><i class="fas fa-upload"></i> Add</button>
+            </div>
+            ${imagesHTML}
+        </div>
+
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);">
+            <div style="font-size:0.7rem;color:var(--purple-light);font-weight:700;">VIDEO LINKS <span style="color:var(--text-secondary);font-weight:400;">(paste any link now — swap for the real one anytime)</span></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+                <input type="text" id="vidUrl_${cat.id}" class="admin-input" placeholder="Video link (YouTube, Drive, etc.)" style="flex:1;min-width:150px;">
+                <input type="text" id="vidCaption_${cat.id}" class="admin-input" placeholder="Caption (optional)" style="flex:1;min-width:120px;">
+                <button class="admin-btn-secondary" onclick="adminTourAddVideoLink('${locKey}','${cat.id}')"><i class="fas fa-link"></i> Add</button>
+            </div>
+            ${videosHTML}
+        </div>
+    </div>`;
+}
+
+window.adminTourAddCategory = function(locKey) {
+    const input = document.getElementById(`newCatName_${locKey}`);
+    const name = input ? input.value.trim() : '';
+    if (!name) return alert('Enter a category name.');
+    const data = getData();
+    const loc = data.tourManagement.locations.find(l => l.key === locKey);
+    loc.categories.push({ id: 'CAT-' + Date.now(), name, images: [], videoLinks: [] });
+    saveData(data);
+    adminLog(`Admin added tour category "${name}" under ${loc.label}`);
+    document.getElementById('tourLocationDetailArea').innerHTML = adminTourLocationDetailHTML(locKey);
+};
+
+window.adminTourRenameCategory = function(locKey, catId) {
+    const data = getData();
+    const loc = data.tourManagement.locations.find(l => l.key === locKey);
+    const cat = loc.categories.find(c => c.id === catId);
+    if (!cat) return;
+    const newName = prompt('Rename category:', cat.name);
+    if (!newName || !newName.trim()) return;
+    cat.name = newName.trim();
+    saveData(data);
+    adminLog(`Admin renamed a tour category under ${loc.label}`);
+    document.getElementById('tourLocationDetailArea').innerHTML = adminTourLocationDetailHTML(locKey);
+};
+
+window.adminTourDeleteCategory = function(locKey, catId) {
+    if (!confirm('Delete this category and everything inside it (images + video links)?')) return;
+    const data = getData();
+    const loc = data.tourManagement.locations.find(l => l.key === locKey);
+    loc.categories = loc.categories.filter(c => c.id !== catId);
+    saveData(data);
+    adminLog(`Admin deleted a tour category under ${loc.label}`);
+    document.getElementById('tourLocationDetailArea').innerHTML = adminTourLocationDetailHTML(locKey);
+};
+
+window.adminTourUploadImage = function(locKey, catId) {
+    const file = document.getElementById(`imgFile_${catId}`)?.files[0];
+    if (!file) return alert('Choose an image first.');
+    const caption = document.getElementById(`imgCaption_${catId}`)?.value.trim() || '';
+    compressImageFile(file, function(dataUrl) {
+        const data = getData();
+        const loc = data.tourManagement.locations.find(l => l.key === locKey);
+        const cat = loc.categories.find(c => c.id === catId);
+        cat.images.push({ id: 'IMG-' + Date.now(), url: dataUrl, caption });
+        saveData(data);
+        adminLog(`Admin added an image to "${cat.name}" under ${loc.label}`);
+        document.getElementById('tourLocationDetailArea').innerHTML = adminTourLocationDetailHTML(locKey);
+    });
+};
+
+window.adminTourDeleteImage = function(locKey, catId, imgId) {
+    const data = getData();
+    const loc = data.tourManagement.locations.find(l => l.key === locKey);
+    const cat = loc.categories.find(c => c.id === catId);
+    cat.images = cat.images.filter(i => i.id !== imgId);
+    saveData(data);
+    document.getElementById('tourLocationDetailArea').innerHTML = adminTourLocationDetailHTML(locKey);
+};
+
+window.adminTourAddVideoLink = function(locKey, catId) {
+    const url = document.getElementById(`vidUrl_${catId}`)?.value.trim();
+    if (!url) return alert('Paste a video link first.');
+    const caption = document.getElementById(`vidCaption_${catId}`)?.value.trim() || '';
+    const data = getData();
+    const loc = data.tourManagement.locations.find(l => l.key === locKey);
+    const cat = loc.categories.find(c => c.id === catId);
+    cat.videoLinks.push({ id: 'VID-' + Date.now(), url, caption });
+    saveData(data);
+    adminLog(`Admin added a video link to "${cat.name}" under ${loc.label}`);
+    document.getElementById('tourLocationDetailArea').innerHTML = adminTourLocationDetailHTML(locKey);
+};
+
+window.adminTourDeleteVideoLink = function(locKey, catId, vidId) {
+    const data = getData();
+    const loc = data.tourManagement.locations.find(l => l.key === locKey);
+    const cat = loc.categories.find(c => c.id === catId);
+    cat.videoLinks = cat.videoLinks.filter(v => v.id !== vidId);
+    saveData(data);
+    document.getElementById('tourLocationDetailArea').innerHTML = adminTourLocationDetailHTML(locKey);
+};
+
 function adminUsersHTML() {
     const data = getData();
     const allUsers = [
@@ -11585,22 +12421,6 @@ function subscribeNewsletter() {
 function showAddPrincipalForm() {
     alert('Add Principal form — coming soon. Connect to backend for full functionality.');
 }
-function addNewInfrastructure() {
-    const name = document.getElementById('newInfraName')?.value?.trim();
-    if (!name) return alert('Enter infrastructure name.');
-    const key  = name.toLowerCase().replace(/\s+/g, '_');
-    const data = getData();
-    if (data.infrastructureList.includes(key)) return alert('Location already exists.');
-    data.infrastructureList.push(key);
-    data.schoolTour[key] = { images: [], videos: [] };
-    saveData(data);
-    renderTourNav();
-    populateInfraSelect();
-    alert(`✅ "${name}" added successfully!`);
-}
-function uploadTourMedia() {
-    alert('Image upload requires a backend server. This feature is ready for backend integration.');
-}
 function closeSettingsModal() {
     document.getElementById('settingsModal').style.display = 'none';
 }
@@ -11902,10 +12722,8 @@ window.studentWallExport = function(type) {
 function init() {
     migrateData();
     initializeData();
+    repairMissingFields();
     renderPrincipals();
-    renderTourNav();
-    renderTourPreview('library');
-    populateInfraSelect();
     renderCBET();
     initMagazineNav();
 
@@ -11947,6 +12765,7 @@ function init() {
 
     // ── Settings modal ──
     document.getElementById('settingsBtn').addEventListener('click', () => {
+        renderSettingsModal();
         document.getElementById('settingsModal').style.display = 'flex';
     });
     document.querySelectorAll('.close-modal').forEach(el => {
@@ -12000,25 +12819,7 @@ function init() {
             : '<i class="fas fa-moon"></i> Dark Mode';
     });
 
-    // ── Settings modal ──
-    document.getElementById('settingsBtn').addEventListener('click', () => {
-        document.getElementById('settingsModal').style.display = 'flex';
-    });
-    document.querySelectorAll('.close-modal').forEach(el => {
-        el.addEventListener('click', closeSettingsModal);
-    });
-    document.getElementById('settingsModal').addEventListener('click', (e) => {
-        if (e.target === document.getElementById('settingsModal')) closeSettingsModal();
-    });
 
-    // ── Close sidebar on outside click ──
-    document.addEventListener('click', (e) => {
-        if (sidebar.classList.contains('open') &&
-            !sidebar.contains(e.target) &&
-            !document.getElementById('menuToggle').contains(e.target)) {
-            sidebar.classList.remove('open');
-        }
-    });
 
     // ── Auto-login if session exists ──
     const saved = sessionStorage.getItem('currentUser');
@@ -12030,3 +12831,89 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+const SETTINGS_SECTIONS = [
+    {
+        id: 'password-flow', icon: '🔑', title: 'Password Flow',
+        keywords: 'password flow reset admin dean deputy hod class teacher lecturer student passcode',
+        render: () => `
+            <pre style="background:var(--bg-elevated);padding:1rem;border-radius:12px;font-size:0.78rem;border:1px solid var(--border);overflow-x:auto;">
+SYSTEM ADMIN
+     ├──► Can directly reset ANY password (Dean, Deputy, HOD, Finance, etc.)
+     ├──► DEAN password
+     ├──► DEPUTY (Academics) password
+     └──► DEPUTY (Infrastructure) password
+
+H.O.D (per department)
+     └──► CLASS TEACHER password
+              ├──► LECTURER password
+              ├──► CLASS REP password
+              └──► STUDENT passcode</pre>`
+    },
+    {
+        id: 'who-to-contact', icon: '❓', title: 'Who to Contact',
+        keywords: 'contact help support forgot password issue problem bug technical exam fee',
+        render: () => `
+            <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+                <tr style="border-bottom:1px solid var(--border);color:var(--purple-light);">
+                    <th style="padding:0.5rem;text-align:left;">Problem</th>
+                    <th style="padding:0.5rem;text-align:left;">Contact</th>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;">Forgot Student Passcode</td><td style="padding:0.5rem;">Class Teacher</td></tr>
+                <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;">Forgot Lecturer Password</td><td style="padding:0.5rem;">Class Teacher / HOD</td></tr>
+                <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;">Forgot HOD/Deputy/Dean Password</td><td style="padding:0.5rem;">System Admin</td></tr>
+                <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;">Fee Payment Issue</td><td style="padding:0.5rem;">Finance Officer</td></tr>
+                <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.5rem;">Exam Registration Problem</td><td style="padding:0.5rem;">D.E.O / HOD</td></tr>
+                <tr><td style="padding:0.5rem;">Technical Bug</td><td style="padding:0.5rem;">Tevin Mulinge — 0797510552</td></tr>
+            </table>`
+    },
+    {
+        id: 'developer', icon: '📞', title: 'Developer',
+        keywords: 'developer contact phone tevin mulinge support',
+        render: () => `<p>Tevin Mulinge | 0797510552</p>`
+    }
+];
+
+function renderSettingsModal() {
+    const container = document.getElementById('settingsContent');
+    if (!container) return;
+    container.innerHTML = `
+        <input type="text" id="settingsSearch" class="admin-input" placeholder="🔍 Search settings & help..." style="margin-bottom:14px;width:100%;">
+        <div id="settingsAccordion"></div>`;
+    document.getElementById('settingsSearch').addEventListener('input', e => {
+        renderSettingsAccordion(e.target.value);
+    });
+    renderSettingsAccordion('');
+}
+
+function renderSettingsAccordion(searchTerm) {
+    const acc = document.getElementById('settingsAccordion');
+    if (!acc) return;
+    const q = searchTerm.toLowerCase().trim();
+    const sections = SETTINGS_SECTIONS.filter(s =>
+        !q || s.title.toLowerCase().includes(q) || s.keywords.includes(q)
+    );
+
+    acc.innerHTML = sections.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;padding:1rem 0;">No results for "${searchTerm}".</p>`
+        : sections.map((s, i) => `
+            <div style="border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;">
+                <button type="button" onclick="toggleSettingsSection('${s.id}')"
+                    style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:0.9rem 1rem;background:var(--bg-elevated);border:none;cursor:pointer;color:var(--text-primary);font-weight:700;font-size:0.9rem;">
+                    <span>${s.icon} ${s.title}</span>
+                    <span id="chev_${s.id}">${(i === 0 || q) ? '▲' : '▼'}</span>
+                </button>
+                <div id="body_${s.id}" style="padding:1rem;display:${(i === 0 || q) ? 'block' : 'none'};">
+                    ${s.render()}
+                </div>
+            </div>`).join('');
+}
+
+window.toggleSettingsSection = function(id) {
+    const body = document.getElementById(`body_${id}`);
+    const chev = document.getElementById(`chev_${id}`);
+    if (!body) return;
+    const isOpen = body.style.display !== 'none';
+    body.style.display = isOpen ? 'none' : 'block';
+    if (chev) chev.textContent = isOpen ? '▼' : '▲';
+};
