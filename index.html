@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>PC Kinyanjui Technical Training Institute | Management System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styl.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="app-layout">
@@ -41,6 +42,8 @@
         <li data-role="examoffice"><i class="fas fa-file-alt"></i> Examination Office</li>
         <li data-role="dean"><i class="fas fa-heart"></i> Dean of Students</li>
         <li data-role="admin"><i class="fas fa-lock"></i> System Administrator</li>
+        <li data-role="magazine_admin"><i class="fas fa-book-open"></i> Magazine Management</li>
+
     </ul>
 
     <div class="sidebar-section-label">Vivid Hospitality</div>
@@ -75,16 +78,16 @@
             <div id="filterResults" class="filter-results"></div>
         </div>
 
-        <!-- MAGAZINE NAV BAR -->
-        <nav class="magazine-nav" id="magazineNav">
-            <button class="btn-3d active" data-page="home"><i class="fas fa-home"></i> Home</button>
-            <button class="btn-3d" data-page="tour"><i class="fas fa-map"></i> Tour</button>
-            <button class="btn-3d" data-page="newsletter"><i class="fas fa-newspaper"></i> Newsletter</button>
-            <button class="btn-3d" data-page="examination"><i class="fas fa-file-alt"></i> Examination</button>
-            <button class="btn-3d" data-page="noticeboard"><i class="fas fa-bullhorn"></i> Global Notice Board</button>
-            <button class="btn-3d" data-page="studentwall"><i class="fas fa-users"></i> Student Wall</button>
-        </nav>
-
+     <!-- MAGAZINE NAV BAR -->
+<nav class="magazine-nav" id="magazineNav">
+    <button class="btn-3d active" data-page="home"><i class="fas fa-home"></i> Home</button>
+    <button class="btn-3d" data-page="tour"><i class="fas fa-map"></i> Tour</button>
+    <button class="btn-3d" data-page="newsletter"><i class="fas fa-newspaper"></i> Newsletter</button>
+    <button class="btn-3d" data-page="examination"><i class="fas fa-file-alt"></i> Examination</button>
+    <button class="btn-3d" data-page="noticeboard"><i class="fas fa-bullhorn"></i> Global Notice Board</button>
+    <button class="btn-3d" data-page="studentwall"><i class="fas fa-users"></i> Student Wall</button>
+    <button class="btn-3d" data-page="magazine"><i class="fas fa-book-open"></i> Magazine</button>
+</nav>
         <div id="dynamicContent">
 
             <!-- SCHOOL INFO PANEL -->
@@ -92,13 +95,13 @@
 
                 <!-- INSTITUTE HEADER BANNER -->
                 <div class="institute-header">
-                    <img src="kenya logo.png" alt="Kenya Coat of Arms" class="header-logo" onerror="this.src='https://placehold.co/70x70/5b21b6/white?text=KE'">
+                    <img src="kenya logo.png" alt="Kenya Coat of Arms" class="header-logo" onerror="this.src='https://placehold.co/70x70/a855f7/030305?text=KE'">
                     <div class="header-text">
                         <h1>PC KINYANJUI</h1>
                         <h2>Technical Training Institute</h2>
                         <div class="motto">Excellence in Technology</div>
                     </div>
-                    <img src="pc k logo.png" alt="PCK Crest" class="header-logo" onerror="this.src='https://placehold.co/70x70/5b21b6/white?text=PCK'">
+                    <img src="pc k logo.png" alt="PCK Crest" class="header-logo" onerror="this.src='https://placehold.co/70x70/a855f7/030305?text=PCK'">
                 </div>
 
                 <!-- HERO TYPING -->
@@ -205,5 +208,6 @@
     </div>
 
 <script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>

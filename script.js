@@ -290,6 +290,13 @@ messReceivedFromDean: [],
             ],
             adminCustomSections: [],
             newsletterSubscribers: [],
+            guideTags: [
+                { id:'GT-01', context:'all',     order:1, icon:'🧭', color:'#6c3fcf', title:'Sidebar Navigation', body:'Tap the ☰ Menu button top-left to open the sidebar. It lists every portal — Student, Staff, and Administration — grouped by section.', isActive:true },
+                { id:'GT-02', context:'all',     order:2, icon:'🔑', color:'#3b82f6', title:'Logging In', body:'Pick your portal from the sidebar, then enter your ID (or Admission No) and password/passcode. Forgot it? Ask your Class Teacher or System Admin.', isActive:true },
+                { id:'GT-03', context:'all',     order:3, icon:'🔎', color:'#10b981', title:'Search Bar', body:'Use the search bar at the top to quickly jump to Home, Tour, Lecturer Login, Settings, and more.', isActive:true },
+                { id:'GT-04', context:'student', order:4, icon:'🎓', color:'#f59e0b', title:'Student Dashboard', body:'Your dashboard has tabs for ID Requests, Received messages, Attendance, Exam Registration, Fees, Results, Hospital and Meals.', isActive:true },
+                { id:'GT-05', context:'admin',   order:5, icon:'🛡️', color:'#ef4444', title:'System Admin Powers', body:'Portal Control lets you view any portal live (read-only). Guide Control (right here) lets you edit these tags.', isActive:true }
+            ],
 
             // Finance inboxes for departments that don't have one yet
 
@@ -441,6 +448,7 @@ function repairMissingFields() {
         if (!data.admin.phone) { data.admin.phone = '0797510552'; changed = true; }
     }
     if (!data.adminCustomSections) { data.adminCustomSections = []; changed = true; }
+    if (!data.guideTags) { data.guideTags = []; changed = true; }
     if (!data.tourManagement || !data.tourManagement.locations) {
         data.tourManagement = data.tourManagement || {};
         data.tourManagement.locations = [
@@ -931,6 +939,10 @@ function navigateToRole(role) {
     if (role === 'studentwall' || role === 'studentWall') {
         showStudentWall();
         return;
+    }
+    if (role === 'magazine_admin') {
+    showMagazineManagement();
+    return;
     }
 
     // Highlight sidebar item
@@ -10596,6 +10608,9 @@ function renderAdminPanel() {
             <button class="admin-nav-btn" onclick="adminSection('portalcontrol',this)">
                 <i class="fas fa-sitemap"></i> Portal Control
             </button>
+            <button class="admin-nav-btn" onclick="adminSection('guidecontrol',this)">
+                <i class="fas fa-tags"></i> Guide Control
+            </button>
             <button class="admin-nav-btn" onclick="adminSection('received',this)">
              <i class="fas fa-inbox"></i> Received
              ${(getData().sysAdminReceived||[]).filter(i=>!i.read).length > 0 ? `<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${(getData().sysAdminReceived||[]).filter(i=>!i.read).length}</span>` : ''}
@@ -10655,15 +10670,17 @@ window.adminSection = function(section, btn) {
     const map = {
         profile:     adminProfileHTML,
         portalcontrol: adminPortalControlHTML,
+        guidecontrol: adminGuideControlHTML,
         tourmanagement: adminTourManagementHTML,
         received: adminReceivedHTML,
+         magazine: showMagazineManagement,
         users:       adminUsersHTML,
         principals:  adminPrincipalsHTML,
         departments: adminDepartmentsHTML,
         courses:     adminCoursesHTML,
         announce:    adminAnnounceHTML,
         idcards:     adminIDCardsHTML,
-        logs:        adminLogsHTML,
+       logs:        adminLogsHTML,
         backup:      adminBackupHTML,
          messaccess : adminMessAccessHTML,
         export:      adminExportHTML
@@ -11066,6 +11083,216 @@ window.adminDeleteCustomSection = function(id) {
     saveData(data);
     adminLog('Admin deleted a custom section');
     document.getElementById('adminMain').innerHTML = adminPortalControlHTML();
+};
+
+/* ══════════════════════════════════════════
+   GUIDE CONTROL — manages the tag-style
+   in-app instructions shown by the Guide button
+══════════════════════════════════════════ */
+function adminGuideControlHTML() {
+    const data = getData();
+    const tags = (data.guideTags || []).slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    const contextOptions = ['all','public','student','classrep','lecturer','classteacher','hod','deo',
+        'finance','deputy_acad','deputy_infra','examoffice','dean_admin','deputy_dean1','deputy_dean2',
+        'front_office','principal','hospital','library','hostel_matron','hostel_patron','mess',
+        'sportsadmin','sportleader','admin']
+        .map(c => `<option value="${c}">${c}</option>`).join('');
+
+    const rows = tags.length === 0
+        ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin-top:8px;">No guide tags yet — add one below.</p>'
+        : tags.map(t => `
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;padding:0.8rem;background:var(--bg-elevated);border-radius:12px;margin-top:8px;border-left:4px solid ${t.color || 'var(--purple)'};">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:1.2rem;">${t.icon || '🏷️'}</span>
+                        <strong style="font-size:0.85rem;">${t.title}</strong>
+                        <span class="admin-role-pill">${t.context}</span>
+                        ${t.isActive === false ? '<span class="admin-role-pill" style="background:rgba(239,68,68,.15);border-color:var(--danger);color:var(--danger);">Hidden</span>' : ''}
+                    </div>
+                    <div style="font-size:0.78rem;margin-top:6px;color:var(--text-secondary);">${t.body}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                    <button class="admin-action-btn edit" onclick="adminEditGuideTag('${t.id}')">✏️ Edit</button>
+                    <button class="admin-action-btn edit" onclick="adminToggleGuideTag('${t.id}')">${t.isActive === false ? '👁️ Show' : '🙈 Hide'}</button>
+                    <button class="admin-action-btn danger" onclick="adminDeleteGuideTag('${t.id}')">🗑 Delete</button>
+                </div>
+            </div>`).join('');
+
+    return `
+        <div class="admin-section-head">🏷️ Guide Control</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <p style="font-size:0.78rem;color:var(--text-secondary);">
+                These tags appear when anyone clicks the "Guide" button next to Dark Mode. Set "Context" to
+                <strong>all</strong> to show a tag everywhere, <strong>public</strong> for logged-out visitors,
+                or a specific role (e.g. <strong>student</strong>) so it only shows on that portal.
+            </p>
+        </div>
+        <div class="admin-card" id="guideTagFormCard" style="margin-bottom:1rem;">
+            <div class="admin-card-title">➕ Add / Edit Guide Tag</div>
+            <input type="hidden" id="gtEditId" value="">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px;">
+                <select id="gtContext" class="admin-input">${contextOptions}</select>
+                <input id="gtIcon" class="admin-input" placeholder="Icon emoji (e.g. 🎓)" maxlength="4">
+                <input id="gtColor" type="color" class="guide-admin-color-swatch" value="#6c3fcf">
+                <input id="gtOrder" type="number" class="admin-input" placeholder="Order (1,2,3...)" value="${tags.length + 1}">
+            </div>
+            <input id="gtTitle" class="admin-input" placeholder="Tag title (e.g. 'Sidebar Navigation')" style="margin-top:10px;">
+            <textarea id="gtBody" class="admin-input" rows="3" placeholder="Instruction text shown on the tag..." style="margin-top:8px;"></textarea>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="admin-btn-primary" onclick="adminSaveGuideTag()"><i class="fas fa-save"></i> Save Tag</button>
+                <button class="admin-btn-secondary" onclick="adminClearGuideTagForm()">Clear</button>
+            </div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">All Guide Tags (${tags.length})</div>
+            ${rows}
+        </div>`;
+}
+
+window.adminClearGuideTagForm = function() {
+    document.getElementById('gtEditId').value = '';
+    document.getElementById('gtContext').value = 'all';
+    document.getElementById('gtIcon').value = '';
+    document.getElementById('gtColor').value = '#6c3fcf';
+    document.getElementById('gtOrder').value = ((getData().guideTags || []).length + 1);
+    document.getElementById('gtTitle').value = '';
+    document.getElementById('gtBody').value = '';
+};
+
+window.adminSaveGuideTag = function() {
+    const editId = document.getElementById('gtEditId').value;
+    const context = document.getElementById('gtContext').value;
+    const icon = document.getElementById('gtIcon').value.trim() || '🏷️';
+    const color = document.getElementById('gtColor').value;
+    const order = parseInt(document.getElementById('gtOrder').value) || 0;
+    const title = document.getElementById('gtTitle').value.trim();
+    const body = document.getElementById('gtBody').value.trim();
+    if (!title || !body) return alert('Please fill in both Title and Instruction text.');
+
+    const data = getData();
+    data.guideTags = data.guideTags || [];
+
+    if (editId) {
+        const existing = data.guideTags.find(t => t.id === editId);
+        if (existing) Object.assign(existing, { context, icon, color, order, title, body });
+        adminLog(`Admin edited guide tag: ${title}`);
+    } else {
+        data.guideTags.push({
+            id: 'GT-' + Date.now(), context, order, icon, color, title, body,
+            isActive: true, createdAt: new Date().toISOString()
+        });
+        adminLog(`Admin added guide tag: ${title}`);
+    }
+
+    saveData(data);
+    alert(editId ? '✅ Guide tag updated.' : '✅ Guide tag added.');
+    document.getElementById('adminMain').innerHTML = adminGuideControlHTML();
+};
+
+window.adminEditGuideTag = function(id) {
+    const data = getData();
+    const t = (data.guideTags || []).find(x => x.id === id);
+    if (!t) return;
+    document.getElementById('gtEditId').value = t.id;
+    document.getElementById('gtContext').value = t.context;
+    document.getElementById('gtIcon').value = t.icon || '';
+    document.getElementById('gtColor').value = t.color || '#6c3fcf';
+    document.getElementById('gtOrder').value = t.order || 0;
+    document.getElementById('gtTitle').value = t.title;
+    document.getElementById('gtBody').value = t.body;
+    document.getElementById('guideTagFormCard').scrollIntoView({ behavior: 'smooth' });
+};
+
+window.adminToggleGuideTag = function(id) {
+    const data = getData();
+    const t = (data.guideTags || []).find(x => x.id === id);
+    if (!t) return;
+    t.isActive = t.isActive === false ? true : false;
+    saveData(data);
+    document.getElementById('adminMain').innerHTML = adminGuideControlHTML();
+};
+
+window.adminDeleteGuideTag = function(id) {
+    if (!confirm('Delete this guide tag?')) return;
+    const data = getData();
+    data.guideTags = (data.guideTags || []).filter(t => t.id !== id);
+    saveData(data);
+    adminLog('Admin deleted a guide tag');
+    document.getElementById('adminMain').innerHTML = adminGuideControlHTML();
+};
+
+/* ══════════════════════════════════════════
+   GUIDE OVERLAY — the tag-cloud shown to
+   students/staff/visitors when they click "Guide"
+══════════════════════════════════════════ */
+function getActiveGuideContext() {
+    const saved = sessionStorage.getItem('currentUser');
+    if (!saved) return 'public';
+    try { return JSON.parse(saved).role || 'public'; } catch { return 'public'; }
+}
+
+function ensureGuideDOM() {
+    if (document.getElementById('guideOverlay')) return;
+
+    // Guide button — injected right next to the Dark Mode toggle
+    const themeBtn = document.getElementById('themeToggle');
+    if (themeBtn && !document.getElementById('guideToggle')) {
+        const guideBtn = document.createElement('button');
+        guideBtn.className = 'guide-toggle';
+        guideBtn.id = 'guideToggle';
+        guideBtn.innerHTML = '<i class="fas fa-tags"></i> Guide';
+        themeBtn.insertAdjacentElement('afterend', guideBtn);
+        guideBtn.addEventListener('click', openGuideOverlay);
+    }
+
+    // Overlay markup — injected once, at the end of <body>
+    const overlay = document.createElement('div');
+    overlay.className = 'guide-overlay';
+    overlay.id = 'guideOverlay';
+    overlay.innerHTML = `
+        <div class="guide-overlay-inner">
+            <div class="guide-overlay-header">
+                <h2><i class="fas fa-tags"></i> System Guide</h2>
+                <button class="guide-close-btn" id="guideCloseBtn">✕ Close</button>
+            </div>
+            <p class="guide-overlay-sub">Tap around — these tags explain what everything on screen does.</p>
+            <div class="guide-tag-grid" id="guideTagGrid"></div>
+        </div>`;
+    document.body.appendChild(overlay);
+    document.getElementById('guideCloseBtn').addEventListener('click', closeGuideOverlay);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeGuideOverlay(); });
+}
+
+function renderGuideOverlay() {
+    const data = getData();
+    const context = getActiveGuideContext();
+    const tags = (data.guideTags || [])
+        .filter(t => t.isActive !== false && (t.context === 'all' || t.context === context))
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    const grid = document.getElementById('guideTagGrid');
+    if (!grid) return;
+
+    grid.innerHTML = tags.length === 0
+        ? `<div class="guide-empty">No guide tags for this screen yet. System Admin can add some under Guide Control.</div>`
+        : tags.map((t, i) => `
+            <div class="guide-tag" style="--tag-color:${t.color || '#6c3fcf'};">
+                <div class="guide-tag-badge">${t.icon || (i + 1)}</div>
+                <div class="guide-tag-title">${t.title}</div>
+                <div class="guide-tag-body">${t.body}</div>
+            </div>`).join('');
+}
+
+window.openGuideOverlay = function() {
+    ensureGuideDOM();
+    renderGuideOverlay();
+    document.getElementById('guideOverlay').classList.add('open');
+};
+
+window.closeGuideOverlay = function() {
+    const overlay = document.getElementById('guideOverlay');
+    if (overlay) overlay.classList.remove('open');
 };
 
 /* ══════════════════════════════════════════
@@ -12451,6 +12678,10 @@ function initMagazineNav() {
             } else {
                 alert("Page coming soon...");
             }
+            if (page === 'magazine') {
+    showMagazinePage();
+    return;
+} 
         });
     });
 }
@@ -12809,6 +13040,9 @@ function init() {
         showHome();
     });
 
+    // ── Guide feature: inject the Guide button + overlay ──
+    ensureGuideDOM();
+
     // ── Theme toggle ──
     document.getElementById('themeToggle').addEventListener('click', () => {
         document.body.classList.toggle('light');
@@ -12916,4 +13150,243 @@ window.toggleSettingsSection = function(id) {
     const isOpen = body.style.display !== 'none';
     body.style.display = isOpen ? 'none' : 'block';
     if (chev) chev.textContent = isOpen ? '▼' : '▲';
+};
+
+
+/* ============================================================
+   MAGAZINE MODULE — Fully connected to Supabase
+   ============================================================ */
+
+const SUPABASE_URL = 'https://iwnoohankjcagxqougmw.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_VYpUdga0QoeewO3TUL4udA_AT-oBRi8';
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ----------------------------------------------------------
+// PUBLIC MAGAZINE PAGE (when user clicks the Magazine button)
+// ----------------------------------------------------------
+window.showMagazinePage = async function () {
+    const container = document.getElementById('dynamicContent');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div style="max-width:1100px;margin:0 auto;padding:1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:12px;">
+                <h2 style="color:#a855f7;margin:0;font-family:'Playfair Display',serif;">
+                    <i class="fas fa-book-open"></i> PC Kinyanjui Magazine
+                </h2>
+                <button onclick="showHome()" class="btn-secondary" style="padding:8px 16px;">← Back to Home</button>
+            </div>
+
+            <div id="magazinePublicContent">
+                <p style="color:#9ca3af;text-align:center;padding:3rem 0;">Loading magazine issues…</p>
+            </div>
+        </div>
+    `;
+
+    try {
+        const { data: issues, error } = await supabaseClient
+            .from('magazine_issues')
+            .select('*')
+            .eq('status', 'published')
+            .order('published_at', { ascending: false });
+
+        if (error) throw error;
+
+        const el = document.getElementById('magazinePublicContent');
+        if (!issues || issues.length === 0) {
+            el.innerHTML = `
+                <div style="text-align:center;padding:4rem 1rem;background:var(--bg-card);border-radius:16px;border:1px solid var(--border);">
+                    <div style="font-size:3rem;margin-bottom:1rem;">📖</div>
+                    <h3 style="color:#fff;margin-bottom:0.5rem;">No published issues yet</h3>
+                    <p style="color:#9ca3af;">The first magazine issue will appear here once the System Admin publishes it.</p>
+                </div>`;
+            return;
+        }
+
+        el.innerHTML = `
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;">
+                ${issues.map(issue => `
+                    <div class="tour-card" style="cursor:pointer;" onclick="openMagazineIssue('${issue.id}')">
+                        <div style="height:160px;background:#1a1330;border-radius:12px;overflow:hidden;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;">
+                            ${issue.cover_photo_url 
+                                ? `<img src="${issue.cover_photo_url}" style="width:100%;height:100%;object-fit:cover;">` 
+                                : `<span style="font-size:3rem;">📖</span>`}
+                        </div>
+                        <h3 style="margin:0 0 0.4rem;color:#fff;">${issue.title}</h3>
+                        <p style="color:#c4b5fd;font-size:0.85rem;margin:0 0 0.6rem;">${issue.description || ''}</p>
+                        <small style="color:#a5b4fc;">
+                            ${issue.academic_year || ''} ${issue.term ? '• ' + issue.term : ''}
+                        </small>
+                    </div>
+                `).join('')}
+            </div>`;
+    } catch (err) {
+        console.error(err);
+        document.getElementById('magazinePublicContent').innerHTML = 
+            `<p style="color:#f87171;text-align:center;">Failed to load magazine. Please try again later.</p>`;
+    }
+};
+
+window.openMagazineIssue = async function (issueId) {
+    const container = document.getElementById('dynamicContent');
+    container.innerHTML = `<p style="text-align:center;padding:3rem;color:#9ca3af;">Loading issue…</p>`;
+
+    try {
+        const { data: issue } = await supabaseClient
+            .from('magazine_issues')
+            .select('*')
+            .eq('id', issueId)
+            .single();
+
+        const { data: articles } = await supabaseClient
+            .from('magazine_articles')
+            .select('*, magazine_categories(name, icon)')
+            .eq('issue_id', issueId)
+            .eq('status', 'published')
+            .order('sort_order');
+
+        container.innerHTML = `
+            <div style="max-width:900px;margin:0 auto;padding:1rem;">
+                <button onclick="showMagazinePage()" class="btn-secondary" style="margin-bottom:1.5rem;">← Back to all issues</button>
+                
+                <div style="background:var(--bg-card);border-radius:20px;padding:2rem;border:1px solid var(--border);margin-bottom:2rem;">
+                    ${issue.cover_photo_url ? `<img src="${issue.cover_photo_url}" style="width:100%;max-height:320px;object-fit:cover;border-radius:14px;margin-bottom:1.5rem;">` : ''}
+                    <h1 style="color:#fff;font-family:'Playfair Display',serif;margin:0 0 0.5rem;">${issue.title}</h1>
+                    <p style="color:#c4b5fd;">${issue.description || ''}</p>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:1.2rem;">
+                    ${(articles || []).map(a => `
+                        <div style="background:var(--bg-card);border-radius:16px;padding:1.4rem;border:1px solid var(--border);">
+                            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:0.6rem;">
+                                <h3 style="color:#a855f7;margin:0;">${a.title}</h3>
+                                ${a.magazine_categories ? `<span style="font-size:0.75rem;background:rgba(168,85,247,0.15);color:#c4b5fd;padding:3px 10px;border-radius:20px;">${a.magazine_categories.icon || ''} ${a.magazine_categories.name}</span>` : ''}
+                            </div>
+                            <p style="color:#9ca3af;font-size:0.9rem;margin:0 0 0.8rem;">${a.summary || ''}</p>
+                            ${a.featured_image_url ? `<img src="${a.featured_image_url}" style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-bottom:0.8rem;">` : ''}
+                            <div style="color:#e5e7eb;line-height:1.7;font-size:0.95rem;">${a.content || ''}</div>
+                        </div>
+                    `).join('') || '<p style="color:#9ca3af;">No articles in this issue yet.</p>'}
+                </div>
+            </div>`;
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = `<p style="color:#f87171;text-align:center;">Could not load this issue.</p>`;
+    }
+};
+
+// ----------------------------------------------------------
+// MAGAZINE MANAGEMENT (System Admin)
+// ----------------------------------------------------------
+window.showMagazineManagement = async function () {
+    const container = document.getElementById('dashboardContent') || document.getElementById('dynamicContent');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div style="max-width:1200px;margin:0 auto;">
+            <h2 style="color:#a855f7;margin-bottom:1.5rem;">
+                <i class="fas fa-book-open"></i> Magazine Management
+            </h2>
+
+            <div style="display:flex;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap;">
+                <button class="btn-primary" onclick="magazineShowTab('issues')">Issues</button>
+                <button class="btn-secondary" onclick="magazineShowTab('articles')">Articles</button>
+                <button class="btn-secondary" onclick="magazineShowTab('photos')">Photos</button>
+                <button class="btn-secondary" onclick="magazineShowTab('categories')">Categories</button>
+            </div>
+
+            <div id="magazineAdminPanel">
+                <p style="color:#9ca3af;">Loading…</p>
+            </div>
+        </div>
+    `;
+
+    window.magazineShowTab('issues');
+};
+
+window.magazineShowTab = async function (tab) {
+    const panel = document.getElementById('magazineAdminPanel');
+    if (!panel) return;
+
+    if (tab === 'issues') {
+        const { data: issues } = await supabaseClient
+            .from('magazine_issues')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        panel.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <h3 style="color:#fff;margin:0;">Magazine Issues</h3>
+                <button class="btn-primary" onclick="magazineCreateIssue()">+ New Issue</button>
+            </div>
+            <div style="display:grid;gap:12px;">
+                ${(issues || []).map(i => `
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                        <div>
+                            <strong style="color:#fff;">${i.title}</strong>
+                            <div style="font-size:0.8rem;color:#9ca3af;margin-top:2px;">
+                                Status: <span style="color:${i.status === 'published' ? '#10b981' : '#f59e0b'}">${i.status}</span>
+                                ${i.academic_year ? ' • ' + i.academic_year : ''}
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:8px;">
+                            <button class="admin-action-btn edit" onclick="magazineEditIssue('${i.id}')">Edit</button>
+                            <button class="admin-action-btn danger" onclick="magazineDeleteIssue('${i.id}')">Delete</button>
+                        </div>
+                    </div>
+                `).join('') || '<p style="color:#9ca3af;">No issues yet. Create the first one.</p>'}
+            </div>
+        `;
+    }
+
+    // Simple placeholders for other tabs (we can expand later)
+    if (tab === 'articles') {
+        panel.innerHTML = `<p style="color:#9ca3af;">Articles management coming in the next update. You can already create Issues.</p>`;
+    }
+    if (tab === 'photos') {
+        panel.innerHTML = `<p style="color:#9ca3af;">Photos management coming next.</p>`;
+    }
+    if (tab === 'categories') {
+        const { data: cats } = await supabaseClient.from('magazine_categories').select('*').order('sort_order');
+        panel.innerHTML = `
+            <h3 style="color:#fff;margin-bottom:1rem;">Categories</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+                ${(cats || []).map(c => `
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:12px;">
+                        <span style="font-size:1.3rem;">${c.icon || '📁'}</span>
+                        <div style="color:#fff;font-weight:600;margin-top:4px;">${c.name}</div>
+                    </div>
+                `).join('')}
+            </div>`;
+    }
+};
+
+window.magazineCreateIssue = async function () {
+    const title = prompt('Issue title (e.g. Term 1 2026):');
+    if (!title) return;
+
+    const { error } = await supabaseClient.from('magazine_issues').insert({
+        title,
+        slug: title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+        status: 'draft',
+        academic_year: '2025/2026'
+    });
+
+    if (error) {
+        alert('Error: ' + error.message);
+    } else {
+        alert('Issue created successfully!');
+        window.magazineShowTab('issues');
+    }
+};
+
+window.magazineDeleteIssue = async function (id) {
+    if (!confirm('Delete this issue and all its articles?')) return;
+    await supabaseClient.from('magazine_issues').delete().eq('id', id);
+    window.magazineShowTab('issues');
+};
+
+window.magazineEditIssue = function (id) {
+    alert('Full edit form coming in the next step. For now you can create and delete issues.');
 };
