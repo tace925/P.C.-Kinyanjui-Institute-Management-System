@@ -37,7 +37,6 @@ deputyAcadSentItems: [],
 examOfficeBookings: [],
 examOfficeStore: [],
 examOfficeSentItems: [],
-deputyAcadReceived: [],
 registrarReceived: [],
 principalReceived: [],
 
@@ -82,18 +81,6 @@ mealCategories: [
     { id:'MC-06', session:'evening',   name:'Stew',      meals:[{id:'M-14',name:'Fish Stew'},{id:'M-15',name:'Beans'}] }
 ],
 
-hostelClearances: {
-    female: [
-        { id:'HC-F-01', studentId:'STU-2026-20670', studentName:'Sarah Achieng', department:'Computer Studies', clearedBy:'Matron', date:'2026-07-05T10:00:00.000Z' }
-    ],
-    male: [
-        { id:'HC-M-01', studentId:'STU-2026-20669', studentName:'John Mwangi', department:'Computer Studies', clearedBy:'Patron', date:'2026-07-04T10:00:00.000Z' }
-    ]
-},
-disciplineRecords: [
-    { id:'DR-DEMO-01', studentId:'STU-2026-20673', studentName:'Peter Njoroge', department:'Computer Studies', severity:'minor', date:'2026-07-02T09:00:00.000Z', offense:'Late to class three times this week', action:'Verbal warning issued', recordedBy:'Front Office', timestamp:'2026-07-02T09:00:00.000Z' }
-],
-
 mealOrders: [],
 messWindowOverrides: { morning: null, afternoon: null, evening: null },
 messBoarders: [],
@@ -133,9 +120,6 @@ messReceivedFromDean: [],
                   { id:'HS-DEMO-003', category:'Bill Sent to Finance', studentId:'STU-2026-20675', studentName:'Kevin Oduya', department:'Computer Studies', description:'Medical treatment — Grade 1 ankle sprain', amount:200, timestamp:'2026-06-20T15:00:00.000Z' },
                     { id:'HS-DEMO-004', category:'Rejected Visit', studentId:'STU-2026-20673', studentName:'Peter Njoroge', department:'Computer Studies', description:'Visit rejected — Reason: Student did not show up for consultation', timestamp:'2026-06-23T13:30:00.000Z' }
 ],
-            financeReceived: [
-                { id: 'FIN-001', from: 'Hospital', fromRole: 'hospital', subject: 'Medical Bill — Kevin Oduya', message: 'Student: Kevin Oduya (STU-2026-20675), Department: Computer Studies. Treatment cost: KSh 200. Description: Medical treatment — Grade 1 ankle sprain. Please add to student fee account.', amount: 200, studentId: 'STU-2026-20675', studentName: 'Kevin Oduya', timestamp: '2026-06-20T15:00:00.000Z', read: false, addedToFees: false }
-            ], 
             disciplineRecords: [
                 { id: 'DR-001', studentId: 'STU-2026-20669', studentName: 'John Mwangi', department: 'Computer Studies', offense: 'Unauthorized absence from examination hall', date: '2026-05-10', severity: 'minor', action: 'Written warning issued. Student counselled by Dean.', recordedBy: 'Dean of Students', status: 'active', sentToAdmin: false, timestamp: '2026-05-10T09:00:00.000Z' },
                 { id: 'DR-002', studentId: 'STU-2026-20675', studentName: 'Kevin Oduya', department: 'Computer Studies', offense: 'Repeated disruption of class and insubordination to Lecturer', date: '2026-06-01', severity: 'moderate', action: 'Suspended 3 days. Parents notified. On probation for rest of semester.', recordedBy: 'Dean of Students', status: 'active', sentToAdmin: true, timestamp: '2026-06-01T11:00:00.000Z' }
@@ -237,6 +221,12 @@ messReceivedFromDean: [],
                 },
                 {
                     id: 'STU-2026-20672', name: 'Mary Wambui', department: 'Computer Studies', class: 'Form 3C',
+                    passcode: '3456', phone: '0745678901', email: 'mary.wambui@student.pck.ac.ke',
+                    gender: 'Female', dob: '2004-05-18', county: 'Nakuru',
+                    level: 'Diploma', programCode: 'DCS-P', learningMode: 'CDACC (CBET)',
+                    enrollmentDate: '2024-01-01', programDuration: '3 years', totalModules: 18,
+                    feeBalance: 15000, totalFee: 65000, status: 'active', deferReason: null,
+                    paymentHistory: [], attendance: { total: 45, attended: 39 }, examHistory: {}, results: []
                 }
             ],
 
@@ -437,6 +427,7 @@ function repairMissingFields() {
         admin: { id:'ADMIN-001', name:'System Administrator', email:'admin@kinyanjuitechnical.ac.ke', phone:'0797510552', password:'Admin@2026' },
         hostel_matron: { id:'MATRON-001', name:'Mama Rose', password:'matron123', gender:'Female' },
         hostel_patron: { id:'PATRON-001', name:'Baba John', password:'patron123', gender:'Male' },
+        kitco: { id:'KITCO-001', name:'KITCO Chairperson', password:'kitco123' },
     };
     Object.keys(requiredSingles).forEach(key => {
         if (!data[key]) { data[key] = requiredSingles[key]; changed = true; }
@@ -516,9 +507,16 @@ function renderCBET() {
 // ==================== NAVIGATE TO ROLE ====================
 // ==================== HOME ====================
 function showHome() {
-    document.getElementById('schoolInfoPanel').style.display = 'block';
-    document.getElementById('loginFormContainer').style.display = 'none';
-    document.getElementById('dashboardContainer').style.display = 'none';
+    // Ensure core panels exist (Magazine pages may have wiped dynamicContent)
+    ensureCorePanels();
+
+    const schoolPanel = document.getElementById('schoolInfoPanel');
+    const loginPanel  = document.getElementById('loginFormContainer');
+    const dashPanel   = document.getElementById('dashboardContainer');
+
+    if (schoolPanel) schoolPanel.style.display = 'block';
+    if (loginPanel)  loginPanel.style.display  = 'none';
+    if (dashPanel)   dashPanel.style.display   = 'none';
 
     // Reset active states
     document.querySelectorAll('.sidebar-menu li').forEach(l => l.classList.remove('active'));
@@ -557,10 +555,11 @@ function showHome() {
         <!-- Other sections like CBET, etc. can be added here if needed -->
     `;
 
-    document.getElementById('schoolInfoPanel').innerHTML = homeHTML;
+    const sp = document.getElementById('schoolInfoPanel');
+    if (sp) sp.innerHTML = homeHTML;
 
     // Re-run rendering functions
-    renderPrincipals();
+    if (typeof renderPrincipals === 'function') renderPrincipals();
     // Re-run typing animation
     let i = 0, j = 0;
     const title = 'PC KINYANJUI TECHNICAL TRAINING INSTITUTE';
@@ -941,8 +940,20 @@ function navigateToRole(role) {
         return;
     }
     if (role === 'magazine_admin') {
-    showMagazineManagement();
-    return;
+        // Redirect top-level Magazine Management into System Admin dashboard
+        // so the left Admin Menu stays visible.
+        const data = getData();
+        const adminUser = data.admin || { role: 'admin', name: 'System Administrator' };
+        sessionStorage.setItem('currentUser', JSON.stringify({ role: 'admin', ...adminUser }));
+        showDashboard('admin', adminUser);
+        // Small delay so the admin layout is rendered before we open the magazine section
+        setTimeout(() => {
+            const btn = [...document.querySelectorAll('.admin-nav-btn')]
+                .find(b => (b.getAttribute('onclick') || '').includes("'magazine'"));
+            if (btn) adminSection('magazine', btn);
+            else showMagazineManagement();
+        }, 150);
+        return;
     }
 
     // Highlight sidebar item
@@ -986,20 +997,64 @@ const loginTitles = {
 
 };
 
+function ensureCorePanels() {
+    const dyn = document.getElementById('dynamicContent');
+    if (!dyn) return;
+
+    if (!document.getElementById('schoolInfoPanel') ||
+        !document.getElementById('loginFormContainer') ||
+        !document.getElementById('dashboardContainer')) {
+
+        dyn.innerHTML = `
+            <div id="schoolInfoPanel"></div>
+            <div id="loginFormContainer" style="display:none;">
+                <div class="login-card">
+                    <h2 id="loginTitle"><i class="fas fa-sign-in-alt"></i> Login</h2>
+                    <div id="loginFields"></div>
+                    <button id="loginBtn" class="btn-primary" style="width:100%;">Login <i class="fas fa-arrow-right"></i></button>
+                    <p class="access-note"><i class="fas fa-key"></i> Forgot password? Contact your Class Teacher or System Admin</p>
+                </div>
+            </div>
+            <div id="dashboardContainer" style="display:none;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                    <h2 id="dashboardTitle"><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                    <button id="logoutBtn" class="btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+                <div id="dashboardContent"></div>
+            </div>`;
+
+        // Re-bind login + logout
+        const loginBtn = document.getElementById('loginBtn');
+        if (loginBtn) loginBtn.addEventListener('click', handleLogin);
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) logoutBtn.addEventListener('click', () => { sessionStorage.clear(); showHome(); });
+    }
+}
+
 function showLoginForm(role) {
     if (role === 'hostels') { showHostelSubLogin(); return; }
     selectedRole = role;
-    document.getElementById('schoolInfoPanel').style.display = 'none';
-    document.getElementById('loginFormContainer').style.display = 'block';
-    document.getElementById('dashboardContainer').style.display = 'none';
 
-    document.getElementById('loginTitle').innerHTML =
-        `<i class="fas fa-sign-in-alt"></i> ${loginTitles[role] || role.toUpperCase() + ' Login'}`;
+    ensureCorePanels();
+
+    const schoolPanel = document.getElementById('schoolInfoPanel');
+    const loginPanel  = document.getElementById('loginFormContainer');
+    const dashPanel   = document.getElementById('dashboardContainer');
+
+    if (schoolPanel) schoolPanel.style.display = 'none';
+    if (loginPanel)  loginPanel.style.display  = 'block';
+    if (dashPanel)   dashPanel.style.display   = 'none';
+
+    const titleEl = document.getElementById('loginTitle');
+    if (titleEl) {
+        titleEl.innerHTML = `<i class="fas fa-sign-in-alt"></i> ${loginTitles[role] || role.toUpperCase() + ' Login'}`;
+    }
 
     const fields = document.getElementById('loginFields');
+    if (!fields) return;
 
     // Roles that only need password (no separate ID field)
-    const passOnlyRoles = ['deputy_acad', 'deputy_infra', 'admin', 'dean', 'examoffice', 'principal', 'hospital', 'library', 'hostel_matron', 'hostel_patron', 'mess'];
+    const passOnlyRoles = ['deputy_acad', 'deputy_infra', 'admin', 'dean', 'examoffice', 'principal', 'hospital', 'library', 'hostel_matron', 'hostel_patron', 'mess', 'kitco'];
     if (passOnlyRoles.includes(role)) {
         fields.innerHTML = `<input type="password" id="loginPass" placeholder="Password" class="login-input">`;
     } else {
@@ -1109,6 +1164,12 @@ function handleLogin() {
             // Support both data-driven password and hardcoded fallback
             if (pass === data.mess?.password || pass === 'mess-4321') {
                 user = data.mess || { id: 'MESS-001', name: 'Mess Supervisor', role: 'mess' };
+            }
+            break;
+
+        case 'kitco':
+            if (data.kitco && pass === data.kitco.password) {
+                user = data.kitco;
             }
             break;
 
@@ -2953,12 +3014,12 @@ window.deputyAcadSection = function(section, btn) {
         send:           deputyAcadSendHTML,
         examapprovals:  function(){ return typeof deputyAcadExamApprovalsHTML === 'function' ? deputyAcadExamApprovalsHTML() : '<p>Exam Approvals section not found — keeping old function name intact.</p>'; },
         uncleared:      function(){ return typeof deputyAcadUnclearedHTML === 'function' ? deputyAcadUnclearedHTML() : '<p>Uncleared Fees section not found.</p>'; },
-        calendar:       function(){ return typeof deputyAcadCalendarHTML === 'function' ? deputyAcadCalendarHTML() : '<p>Academic Calendar section not found.</p>'; },
-        statistics:     function(){ return typeof deputyAcadStatisticsHTML === 'function' ? deputyAcadStatisticsHTML() : '<p>Statistics section not found.</p>'; },
-        policy:         function(){ return typeof deputyAcadPolicyHTML === 'function' ? deputyAcadPolicyHTML() : '<p>Policy Board section not found.</p>'; },
-        staffreport:    function(){ return typeof deputyAcadStaffReportHTML === 'function' ? deputyAcadStaffReportHTML() : '<p>Staff Report section not found.</p>'; },
-        deptcompare:    function(){ return typeof deputyAcadDeptCompareHTML === 'function' ? deputyAcadDeptCompareHTML() : '<p>Dept Comparison section not found.</p>'; },
-        notices:        function(){ return typeof deputyAcadNoticesHTML === 'function' ? deputyAcadNoticesHTML() : '<p>Acad Notices section not found.</p>'; },
+        calendar:       acadCalendarHTML,
+        statistics:     acadStatsHTML,
+        policy:         acadPolicyHTML,
+        staffreport:    acadStaffReportHTML,
+        deptcompare:    acadDeptCompareHTML,
+        notices:        acadNoticesHTML,
         report:         deputyAcadReportHTML
     };
     document.getElementById('deputyAcadMain').innerHTML = (map[section] || map.profile)();
@@ -3236,14 +3297,14 @@ window.acadAddEvent = function() {
     if (!data.academicCalendar) data.academicCalendar = [];
     data.academicCalendar.push({title, date, endDate: end || null, type});
     saveData(data); adminLog(`Added calendar event: ${title} on ${date}`);
-    document.getElementById('acadMain').innerHTML = acadCalendarHTML();
+    document.getElementById('deputyAcadMain').innerHTML = acadCalendarHTML();
 };
 
 window.acadDeleteEvent = function(idx) {
     const data = getData();
     data.academicCalendar.splice(idx, 1);
     saveData(data);
-    document.getElementById('acadMain').innerHTML = acadCalendarHTML();
+    document.getElementById('deputyAcadMain').innerHTML = acadCalendarHTML();
 };
 
 /* 4 — Statistics */
@@ -3320,14 +3381,14 @@ window.acadAddPolicy = function() {
     if (!data.academicPolicies) data.academicPolicies = [];
     data.academicPolicies.push({title, body, date: new Date().toISOString()});
     saveData(data); adminLog(`Added policy: ${title}`);
-    document.getElementById('acadMain').innerHTML = acadPolicyHTML();
+    document.getElementById('deputyAcadMain').innerHTML = acadPolicyHTML();
 };
 
 window.acadDeletePolicy = function(idx) {
     const data = getData();
     data.academicPolicies.splice(idx, 1);
     saveData(data);
-    document.getElementById('acadMain').innerHTML = acadPolicyHTML();
+    document.getElementById('deputyAcadMain').innerHTML = acadPolicyHTML();
 };
 
 /* 6 — Staff Academic Report */
@@ -3429,7 +3490,7 @@ window.acadPostNotice = function() {
     data.noticeboard.push({id:'n'+Date.now(), sender:'Deputy (Academics)', message: msg, timestamp: new Date().toISOString(), recipient:'staff'});
     saveData(data); adminLog(`Deputy Acad posted notice: ${msg.substring(0,40)}`);
     alert('✅ Notice broadcast to academic staff!');
-    document.getElementById('acadMain').innerHTML = acadNoticesHTML();
+    document.getElementById('deputyAcadMain').innerHTML = acadNoticesHTML();
 };
 
 /* ══════════════════ REPORT — SVG summary ══════════════════ */
@@ -4523,7 +4584,7 @@ function frontOfficeReceivedHTML() {
         </div>`;
     }).join('');
 
-    const hostelPending = (data.hostelClearances?.female?.filter(h=>!h.read).length || 0) + (data.hostelClearances?.male?.filter(h=>!h.read).length || 0);
+    const hostelPending = (data.hostelClearances || []).filter(h => h.sentToDean && !h.read).length;
     const hostelsCard = `
     <div onclick="frontOfficeOpenHostelsInbox()" style="cursor:pointer;background:linear-gradient(135deg,#f9731622,#f9731611);border:1px solid #f9731655;border-radius:16px;padding:1.2rem;text-align:center;transition:transform .25s, box-shadow .25s;"
          onmouseover="this.style.transform='translateY(-6px) scale(1.02)';this.style.boxShadow='0 12px 24px #f9731633';"
@@ -4577,9 +4638,11 @@ window.frontOfficeOpenSenderInbox = function(key) {
 /* Hostels — matches image 5 layout exactly */
 window.frontOfficeOpenHostelsInbox = function() {
     const data = getData();
-    data.hostelClearances = data.hostelClearances || { female: [], male: [] };
-    data.hostelClearances.female.forEach(h => h.read = true);
-    data.hostelClearances.male.forEach(h => h.read = true);
+    data.hostelClearances = Array.isArray(data.hostelClearances) ? data.hostelClearances : [];
+    const sent   = data.hostelClearances.filter(h => h.sentToDean);
+    const female = sent.filter(h => h.gender === 'Female');
+    const male   = sent.filter(h => h.gender === 'Male');
+    sent.forEach(h => h.read = true);
     saveData(data);
 
     const buildList = (list, wingLabel, clearer) => `
@@ -4589,8 +4652,8 @@ window.frontOfficeOpenHostelsInbox = function() {
                 ${list.length === 0 ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No ${wingLabel.toLowerCase()} clearances received yet.</p>` :
                 list.slice().reverse().map(h => `
                 <div style="padding:0.7rem 0;border-bottom:1px solid var(--border);font-size:0.84rem;">
-                    <strong>${h.studentName}</strong> <span style="color:var(--text-secondary);">(${h.studentId})</span> • ${h.department}
-                    <div style="font-size:0.7rem;color:var(--text-secondary);margin-top:2px;">Cleared ${new Date(h.date).toLocaleDateString()}</div>
+                    <strong>${h.studentName}</strong> <span style="color:var(--text-secondary);">(${h.studentId})</span> • ${h.room || h.department || ''}
+                    <div style="font-size:0.7rem;color:var(--text-secondary);margin-top:2px;">Cleared ${h.clearanceDate || new Date(h.timestamp).toLocaleDateString()}</div>
                 </div>`).join('')}
             </div>
         </div>`;
@@ -4603,8 +4666,8 @@ window.frontOfficeOpenHostelsInbox = function() {
                 vacated their room. Generate clearance slips per student from here.
             </p>
         </div>
-        ${buildList(data.hostelClearances.female, '👧 Female Wing', 'Matron')}
-        ${buildList(data.hostelClearances.male, '👦 Male Wing', 'Patron')}`;
+        ${buildList(female, '👧 Female Wing', 'Matron')}
+        ${buildList(male, '👦 Male Wing', 'Patron')}`;
 };
 
 window.frontOfficeConfirmItem = function(id) {
@@ -4954,11 +5017,16 @@ function deputyDeanReportHTML(user) {
    DEAN ADMIN PORTAL
 ══════════════════════════════════════════ */
 function showDeanSubLogin() {
-    document.getElementById('schoolInfoPanel').style.display = 'none';
-    document.getElementById('loginFormContainer').style.display = 'block';
-    document.getElementById('dashboardContainer').style.display = 'none';
+    ensureCorePanels();
+    const schoolPanel = document.getElementById('schoolInfoPanel');
+    const loginPanel  = document.getElementById('loginFormContainer');
+    const dashPanel   = document.getElementById('dashboardContainer');
+    if (schoolPanel) schoolPanel.style.display = 'none';
+    if (loginPanel)  loginPanel.style.display  = 'block';
+    if (dashPanel)   dashPanel.style.display   = 'none';
 
-    document.getElementById('loginTitle').innerHTML = "💛 Dean's Office — Select Portal";
+    const titleEl = document.getElementById('loginTitle');
+    if (titleEl) titleEl.innerHTML = "💛 Dean's Office — Select Portal";
 
     const portals = [
         { role:'dean_admin',   name:'Dean of Students', sub:'Admin Office',   color:'#ec4899', img:'https://i.pravatar.cc/300?img=47' },
@@ -4988,8 +5056,10 @@ function showDeanSubLogin() {
 
     cardsHTML += '</div>';
 
-    document.getElementById('loginFields').innerHTML = cardsHTML;
-    document.getElementById('loginBtn').style.display = 'none';
+    const fieldsEl = document.getElementById('loginFields');
+    if (fieldsEl) fieldsEl.innerHTML = cardsHTML;
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) loginBtn.style.display = 'none';
 }
 
 window.deanSubSelect = function(role) {
@@ -8591,47 +8661,25 @@ window.hospitalRejectVisit = function(visitId) {
     const data = getData();
     const visit = (data.hospitalVisits || []).find(v => v.id === visitId);
     if (!visit) return;
+
     visit.status = 'rejected';
     visit.rejectionReason = reason;
+
+    data.hospitalStorage = data.hospitalStorage || [];
+    data.hospitalStorage.push({
+        id: 'HS-' + Date.now(),
+        category: 'Rejected Visit',
+        studentId: visit.studentId,
+        studentName: visit.studentName,
+        department: visit.department,
+        description: `Visit rejected — Reason: ${reason}`,
+        timestamp: new Date().toISOString()
+    });
+
     saveData(data);
     alert(`❌ Visit rejected. Student will see: "${reason}"`);
     const user = JSON.parse(sessionStorage.getItem('currentUser'));
     document.getElementById('hospitalMain').innerHTML = hospitalReceivedHTML(user);
-   
-    data.hospitalStorage = data.hospitalStorage || [];
-data.hospitalStorage.push({
-    id: 'HS-' + Date.now(), category: 'Rejected Visit',
-    studentId: visit.studentId, studentName: visit.studentName, department: visit.department,
-    description: `Visit rejected — Reason: ${reason}`,
-    timestamp: new Date().toISOString()
-});
-
-data.hospitalStorage = data.hospitalStorage || [];
-data.hospitalStorage.push({
-    id: 'HS-' + Date.now(), category: 'Medical Record',
-    studentId, studentName, department,
-    description: `Diagnosis: ${diagnosis}. Treatment: ${treatment}.`,
-    amount: cost,
-    timestamp: new Date().toISOString()
-});
-
-data.hospitalStorage = data.hospitalStorage || [];
-data.hospitalStorage.push({
-    id: 'HS-' + Date.now(), category: 'Bill Sent to Finance',
-    studentId: bill.studentId, studentName: bill.studentName, department: bill.department,
-    description: bill.description, amount: bill.amount,
-    timestamp: new Date().toISOString()
-});
-
-data.hospitalStorage = data.hospitalStorage || [];
-data.hospitalStorage.push({
-    id: 'HS-' + Date.now() + Math.random().toString(36).slice(2,5), category: 'Bill Sent to Finance',
-    studentId: b.studentId, studentName: b.studentName, department: b.department,
-    description: b.description, amount: b.amount,
-    timestamp: new Date().toISOString()
-});
-
-
 };
 
 
@@ -10644,6 +10692,7 @@ function renderAdminPanel() {
             </button>
             <button class="admin-nav-btn" onclick="adminSection('studentwall',this)"><i class="fas fa-users"></i> Student Wall</button>
             <button class="admin-nav-btn" onclick="adminSection('tourmanagement',this)"><i class="fas fa-video"></i> Tour Management</button>
+            <button class="admin-nav-btn" onclick="adminSection('magazine',this)"><i class="fas fa-book-open"></i> Magazine Management</button>
              
         </div>
  
@@ -10656,35 +10705,39 @@ function renderAdminPanel() {
 
 /* ── Section switcher ── */
 window.adminSection = function(section, btn) {
-    // Student Wall is a full-screen overlay (like the public magazine-nav version),
-    // not an inline adminMain panel — handle it separately and stop here.
+    // Student Wall is a full-screen overlay — handle separately
     if (section === 'studentwall') {
         document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         showStudentWall();
         return;
     }
+    // Magazine Management also takes over the content area
+    if (section === 'magazine') {
+        document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showMagazineManagement();
+        return;
+    }
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const main = document.getElementById('adminMain');
     const map = {
-        profile:     adminProfileHTML,
+        profile:       adminProfileHTML,
         portalcontrol: adminPortalControlHTML,
-        guidecontrol: adminGuideControlHTML,
+        guidecontrol:  adminGuideControlHTML,
         tourmanagement: adminTourManagementHTML,
-        received: adminReceivedHTML,
-         magazine: showMagazineManagement,
-        users:       adminUsersHTML,
-        principals:  adminPrincipalsHTML,
-        departments: adminDepartmentsHTML,
-        courses:     adminCoursesHTML,
-        announce:    adminAnnounceHTML,
-        idcards:     adminIDCardsHTML,
-       logs:        adminLogsHTML,
-        backup:      adminBackupHTML,
-         messaccess : adminMessAccessHTML,
-        export:      adminExportHTML
-        
+        received:      adminReceivedHTML,
+        users:         adminUsersHTML,
+        principals:    adminPrincipalsHTML,
+        departments:   adminDepartmentsHTML,
+        courses:       adminCoursesHTML,
+        announce:      adminAnnounceHTML,
+        idcards:       adminIDCardsHTML,
+        logs:          adminLogsHTML,
+        backup:        adminBackupHTML,
+        messaccess:    adminMessAccessHTML,
+        export:        adminExportHTML
     };
     main.innerHTML = (map[section] || adminUsersHTML)();
 };
@@ -12675,13 +12728,11 @@ function initMagazineNav() {
                 showGlobalNoticeBoard();
             } else if (page === 'studentwall') {
                 showStudentWall();
+            } else if (page === 'magazine') {
+                showMagazinePage();
             } else {
                 alert("Page coming soon...");
             }
-            if (page === 'magazine') {
-    showMagazinePage();
-    return;
-} 
         });
     });
 }
@@ -12729,7 +12780,7 @@ if (!data.messReceivedFromDean){ data.messReceivedFromDean= []; changed = true; 
         { id:'HR-003', studentId:'STU-2026-20673', studentName:'Peter Njoroge',  gender:'Male',   room:'Room 8C',  wing:'Male Wing',   admittedDate:'2024-01-10', status:'resident', clearedForExit:false },
         { id:'HR-004', studentId:'STU-2026-20675', studentName:'Kevin Oduya',    gender:'Male',   room:'Room 12A', wing:'Male Wing',   admittedDate:'2024-01-10', status:'resident', clearedForExit:false }
     ]; changed = true; }
-    if (!data.hostelClearances) { data.hostelClearances = { female: [], male: [] }; changed = true; }
+    if (!data.hostelClearances || !Array.isArray(data.hostelClearances)) { data.hostelClearances = []; changed = true; }
     if (!data.disciplineRecords) { data.disciplineRecords = []; changed = true; }
     if (!data.hostelClearances)  { data.hostelClearances   = []; changed = true; }
     if (!data.disciplineRecords) { data.disciplineRecords  = []; changed = true; }
@@ -13154,239 +13205,976 @@ window.toggleSettingsSection = function(id) {
 
 
 /* ============================================================
-   MAGAZINE MODULE — Fully connected to Supabase
+   MAGAZINE MODULE — Full structure (Public + Admin Control)
+   Quote: “Excellence is not a destination — it is the standard we set every semester.”
+   Data stored in localStorage key: pck_magazine
    ============================================================ */
 
 const SUPABASE_URL = 'https://iwnoohankjcagxqougmw.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_VYpUdga0QoeewO3TUL4udA_AT-oBRi8';
+let supabaseClient = null;
+try {
+    if (window.supabase) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+} catch (e) { console.warn('Supabase not available', e); }
 
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ---------- Data helpers ----------
+function getMagazineData() {
+    const raw = localStorage.getItem('pck_magazine');
+    if (raw) {
+        try { return JSON.parse(raw); } catch (e) {}
+    }
+    // default structure
+    const defaults = {
+        settings: {
+            quote: 'Excellence is not a destination — it is the standard we set every semester.',
+            academicYear: '2025/2026',
+            currentSemester: 'Term 1'
+        },
+        leadership: [],
+        highlights: [],
+        events: [],
+        sectionPublished: { education: true, sports: true, projects: true, events: true }
+    };
+    localStorage.setItem('pck_magazine', JSON.stringify(defaults));
+    return defaults;
+}
 
-// ----------------------------------------------------------
-// PUBLIC MAGAZINE PAGE (when user clicks the Magazine button)
-// ----------------------------------------------------------
-window.showMagazinePage = async function () {
+function saveMagazineData(data) {
+    localStorage.setItem('pck_magazine', JSON.stringify(data));
+}
+
+// ---------- PUBLIC LANDING PAGE ----------
+window.showMagazinePage = function () {
     const container = document.getElementById('dynamicContent');
     if (!container) return;
+    const mag = getMagazineData();
+    const quote = mag.settings.quote || 'Excellence is not a destination — it is the standard we set every semester.';
 
     container.innerHTML = `
-        <div style="max-width:1100px;margin:0 auto;padding:1rem;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:12px;">
-                <h2 style="color:#a855f7;margin:0;font-family:'Playfair Display',serif;">
-                    <i class="fas fa-book-open"></i> PC Kinyanjui Magazine
-                </h2>
+        <div style="max-width:1100px;margin:0 auto;padding:1rem 1rem 3rem;">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:1rem;">
                 <button onclick="showHome()" class="btn-secondary" style="padding:8px 16px;">← Back to Home</button>
             </div>
 
-            <div id="magazinePublicContent">
-                <p style="color:#9ca3af;text-align:center;padding:3rem 0;">Loading magazine issues…</p>
+            <!-- HERO -->
+            <div style="text-align:center;margin-bottom:2.5rem;padding:2.2rem 1.2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:20px;position:relative;overflow:hidden;">
+                <div style="position:absolute;top:-50px;left:-50px;width:200px;height:200px;background:var(--accent-purple);opacity:.18;filter:blur(55px);border-radius:50%;"></div>
+                <div style="position:absolute;bottom:-50px;right:-50px;width:200px;height:200px;background:var(--accent-pink);opacity:.15;filter:blur(55px);border-radius:50%;"></div>
+                <h1 style="font-family:'Playfair Display',serif;font-size:clamp(1.7rem,4vw,2.5rem);color:#fff;margin:0 0 0.9rem;position:relative;z-index:1;">
+                    PC Kinyanjui Magazine
+                </h1>
+                <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.05rem,2.6vw,1.3rem);color:var(--accent-cyan);max-width:720px;margin:0 auto 1rem;line-height:1.55;position:relative;z-index:1;">
+                    “${quote}”
+                </p>
+                <p style="color:var(--text-secondary);font-size:0.82rem;letter-spacing:1.2px;text-transform:uppercase;position:relative;z-index:1;">
+                    Official Magazine of P.C. Kinyanjui Technical Training Institute
+                </p>
+            </div>
+
+            <!-- FOUR BIG BUTTONS -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.1rem;margin-bottom:2.5rem;">
+                <button class="btn-3d" style="flex-direction:column;padding:1.7rem 1rem;height:auto;min-height:135px;" onclick="showMagazineSection('education')">
+                    <span style="font-size:2.1rem;margin-bottom:0.5rem;">📚</span>
+                    <span style="font-size:0.95rem;">Education</span>
+                </button>
+                <button class="btn-3d" style="flex-direction:column;padding:1.7rem 1rem;height:auto;min-height:135px;" onclick="showMagazineSection('sports')">
+                    <span style="font-size:2.1rem;margin-bottom:0.5rem;">⚽</span>
+                    <span style="font-size:0.95rem;">Sports</span>
+                </button>
+                <button class="btn-3d" style="flex-direction:column;padding:1.7rem 1rem;height:auto;min-height:135px;" onclick="showMagazineSection('projects')">
+                    <span style="font-size:2.1rem;margin-bottom:0.5rem;">🛠️</span>
+                    <span style="font-size:0.95rem;">Projects</span>
+                </button>
+                <button class="btn-3d" style="flex-direction:column;padding:1.7rem 1rem;height:auto;min-height:135px;" onclick="showMagazineSection('events')">
+                    <span style="font-size:2.1rem;margin-bottom:0.5rem;">🎉</span>
+                    <span style="font-size:0.95rem;">School Events</span>
+                </button>
+            </div>
+
+            <!-- Traditional Issues (optional) -->
+            <div style="margin-top:1.5rem;">
+                <h3 style="color:var(--accent-purple);margin-bottom:1rem;font-size:0.95rem;text-transform:uppercase;letter-spacing:0.5px;">
+                    <i class="fas fa-book-open"></i> Magazine Issues
+                </h3>
+                <div id="magazineIssuesList">
+                    <p style="color:#9ca3af;text-align:center;padding:1.5rem 0;font-size:0.9rem;">Loading issues…</p>
+                </div>
             </div>
         </div>
     `;
+    loadMagazineIssuesList();
+};
 
+async function loadMagazineIssuesList() {
+    const el = document.getElementById('magazineIssuesList');
+    if (!el) return;
+    if (!supabaseClient) {
+        el.innerHTML = `<div style="text-align:center;padding:2rem;background:var(--bg-card);border-radius:14px;border:1px solid var(--border);color:var(--text-secondary);">
+            Traditional issues require Supabase. The main Magazine sections above work offline.
+        </div>`;
+        return;
+    }
     try {
         const { data: issues, error } = await supabaseClient
-            .from('magazine_issues')
-            .select('*')
-            .eq('status', 'published')
+            .from('magazine_issues').select('*').eq('status', 'published')
             .order('published_at', { ascending: false });
-
         if (error) throw error;
-
-        const el = document.getElementById('magazinePublicContent');
         if (!issues || issues.length === 0) {
-            el.innerHTML = `
-                <div style="text-align:center;padding:4rem 1rem;background:var(--bg-card);border-radius:16px;border:1px solid var(--border);">
-                    <div style="font-size:3rem;margin-bottom:1rem;">📖</div>
-                    <h3 style="color:#fff;margin-bottom:0.5rem;">No published issues yet</h3>
-                    <p style="color:#9ca3af;">The first magazine issue will appear here once the System Admin publishes it.</p>
-                </div>`;
+            el.innerHTML = `<div style="text-align:center;padding:2rem;background:var(--bg-card);border-radius:14px;border:1px solid var(--border);color:var(--text-secondary);">
+                No published issues yet.
+            </div>`;
             return;
         }
-
-        el.innerHTML = `
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;">
-                ${issues.map(issue => `
-                    <div class="tour-card" style="cursor:pointer;" onclick="openMagazineIssue('${issue.id}')">
-                        <div style="height:160px;background:#1a1330;border-radius:12px;overflow:hidden;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;">
-                            ${issue.cover_photo_url 
-                                ? `<img src="${issue.cover_photo_url}" style="width:100%;height:100%;object-fit:cover;">` 
-                                : `<span style="font-size:3rem;">📖</span>`}
-                        </div>
-                        <h3 style="margin:0 0 0.4rem;color:#fff;">${issue.title}</h3>
-                        <p style="color:#c4b5fd;font-size:0.85rem;margin:0 0 0.6rem;">${issue.description || ''}</p>
-                        <small style="color:#a5b4fc;">
-                            ${issue.academic_year || ''} ${issue.term ? '• ' + issue.term : ''}
-                        </small>
+        el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;">
+            ${issues.map(i => `
+                <div class="tour-card" style="cursor:pointer;" onclick="openMagazineIssue('${i.id}')">
+                    <div style="height:120px;background:#1a1330;border-radius:10px;overflow:hidden;margin-bottom:0.7rem;display:flex;align-items:center;justify-content:center;">
+                        ${i.cover_photo_url ? `<img src="${i.cover_photo_url}" style="width:100%;height:100%;object-fit:cover;">` : `<span style="font-size:2rem;">📖</span>`}
                     </div>
-                `).join('')}
-            </div>`;
+                    <h3 style="margin:0 0 0.25rem;color:#fff;font-size:0.95rem;">${i.title}</h3>
+                    <small style="color:#a5b4fc;">${i.academic_year || ''}</small>
+                </div>`).join('')}
+        </div>`;
     } catch (err) {
-        console.error(err);
-        document.getElementById('magazinePublicContent').innerHTML = 
-            `<p style="color:#f87171;text-align:center;">Failed to load magazine. Please try again later.</p>`;
+        el.innerHTML = `<div style="text-align:center;padding:1.5rem;color:var(--text-secondary);font-size:0.9rem;">Could not load traditional issues (Supabase offline). Main sections still work.</div>`;
     }
+}
+
+// ---------- PUBLIC SECTION PAGES ----------
+window.showMagazineSection = function (section) {
+    const container = document.getElementById('dynamicContent');
+    if (!container) return;
+    const mag = getMagazineData();
+    const titles = {
+        education: { icon: '📚', title: 'Education' },
+        sports:    { icon: '⚽', title: 'Sports' },
+        projects:  { icon: '🛠️', title: 'Projects' },
+        events:    { icon: '🎉', title: 'School Events' }
+    };
+    const t = titles[section] || { icon: '📖', title: section };
+
+    let body = '';
+
+    if (section === 'education') {
+        const leaders = (mag.leadership || []).filter(l => l.section === 'education' && l.active !== false)
+            .sort((a,b) => (a.sortOrder||99) - (b.sortOrder||99));
+        const students = (mag.highlights || []).filter(h => h.type === 'student' && h.published !== false);
+
+        // Hierarchical layout
+        const principal = leaders.filter(l => l.rank === 'principal');
+        const deputies  = leaders.filter(l => l.rank === 'deputy_acad' || l.rank === 'deputy_infra');
+        const others    = leaders.filter(l => !['principal','deputy_acad','deputy_infra'].includes(l.rank));
+
+        body = `
+            <div class="section-card" style="margin-bottom:1.5rem;">
+                <h3><i class="fas fa-users"></i> Leadership Gallery</h3>
+                ${leaders.length === 0 ? `<p style="color:var(--text-secondary);text-align:center;padding:1.5rem;">No leadership cards published yet.</p>` : `
+                <div style="display:flex;flex-direction:column;align-items:center;gap:1.4rem;margin-top:1rem;">
+                    ${principal.length ? `<div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">${principal.map(p => renderLeaderCard(p, {width:180,height:240})).join('')}</div>` : ''}
+                    ${deputies.length ? `<div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">${deputies.map(d => renderLeaderCard(d, {width:155,height:210})).join('')}</div>` : ''}
+                    ${others.length ? `<div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">${others.map(o => renderLeaderCard(o, {width:145,height:200})).join('')}</div>` : ''}
+                </div>`}
+            </div>
+            <div class="section-card">
+                <h3><i class="fas fa-trophy"></i> Best Students</h3>
+                ${students.length === 0 ? `<p style="color:var(--text-secondary);text-align:center;padding:1.5rem;">No best students published yet.</p>` :
+                `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-top:1rem;">
+                    ${students.map(renderHighlightCard).join('')}
+                </div>`}
+            </div>`;
+    }
+    else if (section === 'sports') {
+        const leaders = (mag.leadership || []).filter(l => l.section === 'sports' && l.active !== false);
+        const performers = (mag.highlights || []).filter(h => h.type === 'sport' && h.published !== false);
+        body = `
+            <div class="section-card" style="margin-bottom:1.5rem;">
+                <h3><i class="fas fa-users"></i> Sports Leadership</h3>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:1rem;">
+                    ${leaders.length ? leaders.map(renderLeaderCard).join('') : '<p style="color:var(--text-secondary);">No sports leadership published.</p>'}
+                </div>
+            </div>
+            <div class="section-card" style="margin-bottom:1.5rem;">
+                <h3><i class="fas fa-calendar-alt"></i> Sports Calendar</h3>
+                <div style="display:grid;gap:10px;margin-top:1rem;">
+                    <div style="background:var(--bg-elevated);padding:12px 16px;border-radius:10px;border:1px solid var(--border);">
+                        <strong style="color:var(--accent-cyan);">Term 1 (Jan–Mar)</strong><br>
+                        <span style="font-size:0.85rem;color:var(--text-secondary);">Athletics, Cross Country, Volleyball</span>
+                    </div>
+                    <div style="background:var(--bg-elevated);padding:12px 16px;border-radius:10px;border:1px solid var(--border);">
+                        <strong style="color:var(--accent-cyan);">Term 2 (May–Jul)</strong><br>
+                        <span style="font-size:0.85rem;color:var(--text-secondary);">Football, Netball, Basketball, Handball</span>
+                    </div>
+                    <div style="background:var(--bg-elevated);padding:12px 16px;border-radius:10px;border:1px solid var(--border);">
+                        <strong style="color:var(--accent-cyan);">Term 3 (Sep–Nov)</strong><br>
+                        <span style="font-size:0.85rem;color:var(--text-secondary);">Indoor games, Table Tennis, Badminton, Chess</span>
+                    </div>
+                </div>
+            </div>
+            <div class="section-card">
+                <h3><i class="fas fa-medal"></i> Best Performers</h3>
+                ${performers.length === 0 ? `<p style="color:var(--text-secondary);text-align:center;padding:1.5rem;">No best performers published yet.</p>` :
+                `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin-top:1rem;">
+                    ${performers.map(renderHighlightCard).join('')}
+                </div>`}
+            </div>`;
+    }
+    else if (section === 'projects') {
+        const leaders = (mag.leadership || []).filter(l => l.section === 'projects' && l.active !== false);
+        const projects = (mag.highlights || []).filter(h => h.type === 'project' && h.published !== false);
+        body = `
+            <div class="section-card" style="margin-bottom:1.5rem;">
+                <h3><i class="fas fa-users"></i> Projects Leadership</h3>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:1rem;">
+                    ${leaders.length ? leaders.map(renderLeaderCard).join('') : '<p style="color:var(--text-secondary);">No projects leadership published.</p>'}
+                </div>
+            </div>
+            <div class="section-card">
+                <h3><i class="fas fa-lightbulb"></i> Project Showcase (Jitume)</h3>
+                ${projects.length === 0 ? `<p style="color:var(--text-secondary);text-align:center;padding:1.5rem;">No projects published yet.</p>` :
+                `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:1rem;">
+                    ${projects.map(renderHighlightCard).join('')}
+                </div>`}
+            </div>`;
+    }
+    else if (section === 'events') {
+        body = `
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem;">
+                <button class="btn-3d" style="flex-direction:column;padding:1.3rem;" onclick="showMagazineEvent('tours')">
+                    <span style="font-size:1.7rem;">🚌</span><span>Tours</span>
+                </button>
+                <button class="btn-3d" style="flex-direction:column;padding:1.3rem;" onclick="showMagazineEvent('cultural')">
+                    <span style="font-size:1.7rem;">🎭</span><span>Cultural Event</span>
+                </button>
+                <button class="btn-3d" style="flex-direction:column;padding:1.3rem;" onclick="showMagazineEvent('awards')">
+                    <span style="font-size:1.7rem;">🏆</span><span>Awards & Endorsements</span>
+                </button>
+            </div>
+            <div class="section-card">
+                <p style="color:var(--text-secondary);text-align:center;padding:1.2rem;">Select a category above to view content managed by System Admin.</p>
+            </div>`;
+    }
+
+    container.innerHTML = `
+        <div style="max-width:1100px;margin:0 auto;padding:1rem 1rem 3rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.4rem;flex-wrap:wrap;gap:10px;">
+                <h2 style="color:#a855f7;margin:0;font-family:'Playfair Display',serif;">${t.icon} ${t.title}</h2>
+                <button onclick="showMagazinePage()" class="btn-secondary" style="padding:8px 16px;">← Back to Magazine</button>
+            </div>
+            ${body}
+        </div>`;
 };
 
-window.openMagazineIssue = async function (issueId) {
+window.showMagazineEvent = function (type) {
+    const mag = getMagazineData();
+    const titles = { tours: '🚌 Tours', cultural: '🎭 Cultural Event', awards: '🏆 Awards & Endorsements' };
     const container = document.getElementById('dynamicContent');
-    container.innerHTML = `<p style="text-align:center;padding:3rem;color:#9ca3af;">Loading issue…</p>`;
+    if (!container) return;
 
-    try {
-        const { data: issue } = await supabaseClient
-            .from('magazine_issues')
-            .select('*')
-            .eq('id', issueId)
-            .single();
+    // CULTURAL EVENT → title holders in 2-3-2 formation (flip cards)
+    if (type === 'cultural') {
+        const holders = (mag.highlights || []).filter(h => h.type === 'cultural' && h.published !== false);
+        // Rank order for 2-3-2 layout
+        const order = ['mr_kinyanjui','mrs_kinyanjui','first_runner_mr','first_runner_mrs','second_runner_mr','second_runner_mrs','popularity_mr','popularity_mrs','mr_flex','mrs_curvy'];
+        const rankMap = {
+            'mr kinyanjui': 'mr_kinyanjui', 'mrs kinyanjui': 'mrs_kinyanjui',
+            'mr. kinyanjui': 'mr_kinyanjui', 'mrs. kinyanjui': 'mrs_kinyanjui',
+            '1st runner': 'first_runner_mr', '1st runners up': 'first_runner_mr',
+            '2nd runner': 'second_runner_mr', 'popularity': 'popularity_mr',
+            'mr flex': 'mr_flex', 'mrs curvy': 'mrs_curvy'
+        };
 
-        const { data: articles } = await supabaseClient
-            .from('magazine_articles')
-            .select('*, magazine_categories(name, icon)')
-            .eq('issue_id', issueId)
-            .eq('status', 'published')
-            .order('sort_order');
+        // Normalize rank for sorting
+        holders.forEach(h => {
+            const r = (h.rank || '').toLowerCase().trim();
+            h._sortKey = rankMap[r] || r.replace(/\s+/g,'_') || 'zzz';
+        });
+
+        const row1 = holders.filter(h => /kinyanjui/i.test(h.rank || h.name || ''));
+        const row2 = holders.filter(h => /runner|popularity|1st|2nd/i.test(h.rank || ''));
+        const row3 = holders.filter(h => /flex|curvy/i.test(h.rank || ''));
+        // Fallback: if filters miss, just distribute
+        const used = new Set([...row1, ...row2, ...row3]);
+        const rest = holders.filter(h => !used.has(h));
+        if (row1.length === 0 && row2.length === 0 && row3.length === 0) {
+            // simple split
+            const all = holders;
+            row1.push(...all.slice(0, 2));
+            row2.push(...all.slice(2, 5));
+            row3.push(...all.slice(5, 7));
+            rest.length = 0;
+        }
+
+        const card = (h) => {
+            const fakeLeader = {
+                name: h.name,
+                rank: (h.rank || '').toLowerCase().replace(/\s+/g, '_'),
+                rankLabel: h.rank || '',
+                photo: h.photo,
+                note: h.note || h.performanceNote || '',
+                employedDate: h.semester || h.date || ''
+            };
+            return renderLeaderCard(fakeLeader, { width: 150, height: 210 });
+        };
 
         container.innerHTML = `
-            <div style="max-width:900px;margin:0 auto;padding:1rem;">
-                <button onclick="showMagazinePage()" class="btn-secondary" style="margin-bottom:1.5rem;">← Back to all issues</button>
-                
-                <div style="background:var(--bg-card);border-radius:20px;padding:2rem;border:1px solid var(--border);margin-bottom:2rem;">
-                    ${issue.cover_photo_url ? `<img src="${issue.cover_photo_url}" style="width:100%;max-height:320px;object-fit:cover;border-radius:14px;margin-bottom:1.5rem;">` : ''}
-                    <h1 style="color:#fff;font-family:'Playfair Display',serif;margin:0 0 0.5rem;">${issue.title}</h1>
-                    <p style="color:#c4b5fd;">${issue.description || ''}</p>
+            <div style="max-width:1000px;margin:0 auto;padding:1rem 1rem 3rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.3rem;flex-wrap:wrap;gap:10px;">
+                    <h2 style="color:#a855f7;margin:0;font-family:'Playfair Display',serif;">🎭 Cultural Event</h2>
+                    <button onclick="showMagazineSection('events')" class="btn-secondary" style="padding:8px 16px;">← Back to Events</button>
                 </div>
-
-                <div style="display:flex;flex-direction:column;gap:1.2rem;">
-                    ${(articles || []).map(a => `
-                        <div style="background:var(--bg-card);border-radius:16px;padding:1.4rem;border:1px solid var(--border);">
-                            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:0.6rem;">
-                                <h3 style="color:#a855f7;margin:0;">${a.title}</h3>
-                                ${a.magazine_categories ? `<span style="font-size:0.75rem;background:rgba(168,85,247,0.15);color:#c4b5fd;padding:3px 10px;border-radius:20px;">${a.magazine_categories.icon || ''} ${a.magazine_categories.name}</span>` : ''}
-                            </div>
-                            <p style="color:#9ca3af;font-size:0.9rem;margin:0 0 0.8rem;">${a.summary || ''}</p>
-                            ${a.featured_image_url ? `<img src="${a.featured_image_url}" style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-bottom:0.8rem;">` : ''}
-                            <div style="color:#e5e7eb;line-height:1.7;font-size:0.95rem;">${a.content || ''}</div>
-                        </div>
-                    `).join('') || '<p style="color:#9ca3af;">No articles in this issue yet.</p>'}
+                <div class="section-card">
+                    <h3><i class="fas fa-crown"></i> Title Holders</h3>
+                    <p style="color:var(--text-secondary);font-size:0.82rem;margin-bottom:1.2rem;">Mr & Mrs Kinyanjui and other elected titles</p>
+                    ${holders.length === 0
+                        ? `<p style="color:var(--text-secondary);text-align:center;padding:2rem;">No title holders published yet.<br>Admin → Magazine Management → Highlights + → Type: Cultural Title</p>`
+                        : `<div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;margin-top:0.5rem;">
+                            ${row1.length ? `<div style="display:flex;justify-content:center;gap:18px;flex-wrap:wrap;">${row1.map(card).join('')}</div>` : ''}
+                            ${row2.length ? `<div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">${row2.map(card).join('')}</div>` : ''}
+                            ${row3.length || rest.length ? `<div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">${[...row3, ...rest].map(card).join('')}</div>` : ''}
+                           </div>`}
                 </div>
             </div>`;
-    } catch (err) {
-        console.error(err);
-        container.innerHTML = `<p style="color:#f87171;text-align:center;">Could not load this issue.</p>`;
+        return;
     }
+
+    // Tours & Awards — simple event cards
+    const events = (mag.events || []).filter(e => e.type === type && e.published !== false);
+    container.innerHTML = `
+        <div style="max-width:900px;margin:0 auto;padding:1rem;">
+            <button onclick="showMagazineSection('events')" class="btn-secondary" style="margin-bottom:1.3rem;">← Back to Events</button>
+            <div class="section-card">
+                <h3>${titles[type] || type}</h3>
+                ${events.length === 0
+                    ? `<p style="color:var(--text-secondary);margin-top:1rem;">No ${type} published yet. System Admin can add them from Magazine Management.</p>`
+                    : `<div style="display:grid;gap:1rem;margin-top:1rem;">
+                        ${events.map(e => `
+                            <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:1rem;">
+                                <strong style="color:#fff;">${e.title}</strong>
+                                <div style="font-size:0.8rem;color:var(--text-secondary);margin-top:4px;">${e.date || ''}</div>
+                                <p style="color:var(--text-secondary);font-size:0.88rem;margin-top:0.6rem;">${e.description || ''}</p>
+                                ${e.photo ? `<img src="${e.photo}" style="width:100%;max-height:220px;object-fit:cover;border-radius:8px;margin-top:0.8rem;">` : ''}
+                            </div>`).join('')}
+                       </div>`}
+            </div>
+        </div>`;
 };
 
-// ----------------------------------------------------------
-// MAGAZINE MANAGEMENT (System Admin)
-// ----------------------------------------------------------
+// ---------- RENDER HELPERS ----------
+function renderLeaderCard(l, opts = {}) {
+    const badgeColors = {
+        principal: '#f59e0b', deputy_acad: '#3b82f6', deputy_infra: '#06b6d4',
+        dean: '#10b981', finance: '#f59e0b', exam: '#8b5cf6',
+        sports_leader: '#ef4444', jitume_leader: '#a855f7', kitco: '#ec4899',
+        mr_kinyanjui: '#f59e0b', mrs_kinyanjui: '#ec4899',
+        first_runner: '#94a3b8', second_runner: '#a78bfa',
+        popularity: '#f472b6', mr_flex: '#22d3ee', mrs_curvy: '#fb7185'
+    };
+    const color = l.badgeColor || badgeColors[l.rank] || '#a855f7';
+    const w = opts.width || (l.rank === 'principal' ? 180 : 155);
+    const h = opts.height || (l.rank === 'principal' ? 240 : 210);
+    return `
+        <div class="principal-flip" style="width:${w}px;height:${h}px;flex-shrink:0;">
+            <div class="principal-flip-inner" style="width:100%;height:100%;">
+                <div class="principal-front" style="border:2px solid ${color};">
+                    ${l.photo
+                        ? `<img src="${l.photo}" alt="${l.name || ''}" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">`
+                        : `<div style="width:100%;height:100%;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;font-size:2.5rem;">👤</div>`}
+                    <div class="principal-front-overlay">
+                        <div class="principal-front-name">${l.name || 'Name'}</div>
+                        <div class="principal-front-years" style="color:${color};">${l.rankLabel || l.rank || ''}</div>
+                    </div>
+                </div>
+                <div class="principal-back" style="border-color:${color};">
+                    <div class="principal-back-name">${l.name || ''}</div>
+                    <div class="principal-back-years">${l.rankLabel || l.rank || ''}</div>
+                    <div class="principal-back-title">${l.employedDate ? 'Since ' + l.employedDate : (l.date || '')}</div>
+                    <div class="principal-back-tenure" style="border-color:${color};color:${color};">${l.note || ''}</div>
+                </div>
+            </div>
+        </div>`;
+}
+
+function renderHighlightCard(h) {
+    const rankBadge = h.rank ? `<span style="font-size:0.65rem;background:rgba(168,85,247,.2);color:#c4b5fd;padding:2px 8px;border-radius:12px;">${h.rank}</span>` : '';
+    const sub = [h.admissionNo || h.category, h.course].filter(Boolean).join(' · ');
+    return `
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1rem;text-align:center;">
+            ${h.photo
+                ? `<img src="${h.photo}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:0.6rem;border:2px solid var(--accent-purple);">`
+                : `<div style="width:80px;height:80px;border-radius:50%;background:var(--bg-elevated);margin:0 auto 0.6rem;display:flex;align-items:center;justify-content:center;font-size:1.8rem;">👤</div>`}
+            <div style="font-weight:700;color:#fff;font-size:0.9rem;">${h.name || ''}</div>
+            <div style="font-size:0.75rem;color:var(--text-secondary);margin:3px 0;">${sub}</div>
+            ${rankBadge}
+            <div style="font-size:0.78rem;color:var(--text-secondary);margin-top:6px;">${h.note || h.performanceNote || ''}</div>
+        </div>`;
+}
+
+// ---------- ADMIN MAGAZINE MANAGEMENT ----------
 window.showMagazineManagement = async function () {
-    const container = document.getElementById('dashboardContent') || document.getElementById('dynamicContent');
+    let container = document.getElementById('adminMain');
+    if (!container) {
+        const dash = document.getElementById('dashboardContainer');
+        if (dash) {
+            document.getElementById('schoolInfoPanel').style.display = 'none';
+            document.getElementById('loginFormContainer').style.display = 'none';
+            dash.style.display = 'block';
+            container = document.getElementById('dashboardContent');
+        }
+    }
     if (!container) return;
 
     container.innerHTML = `
-        <div style="max-width:1200px;margin:0 auto;">
-            <h2 style="color:#a855f7;margin-bottom:1.5rem;">
+        <div style="max-width:1100px;">
+            <h2 style="color:#a855f7;margin-bottom:0.35rem;font-size:1.2rem;">
                 <i class="fas fa-book-open"></i> Magazine Management
             </h2>
-
-            <div style="display:flex;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap;">
-                <button class="btn-primary" onclick="magazineShowTab('issues')">Issues</button>
-                <button class="btn-secondary" onclick="magazineShowTab('articles')">Articles</button>
-                <button class="btn-secondary" onclick="magazineShowTab('photos')">Photos</button>
-                <button class="btn-secondary" onclick="magazineShowTab('categories')">Categories</button>
+            <p style="color:var(--text-secondary);font-size:0.8rem;margin-bottom:1.2rem;">
+                System Admin controls everything that appears in the public Magazine.
+            </p>
+            <div style="display:flex;gap:7px;margin-bottom:1.2rem;flex-wrap:wrap;">
+                <button class="btn-primary" onclick="magazineAdminTab('overview')">Overview</button>
+                <button class="btn-secondary" onclick="magazineAdminTab('leadership')">Leadership +</button>
+                <button class="btn-secondary" onclick="magazineAdminTab('highlights')">Highlights +</button>
+                <button class="btn-secondary" onclick="magazineAdminTab('events')">Events +</button>
+                <button class="btn-secondary" onclick="magazineAdminTab('issues')">Issues</button>
+                <button class="btn-secondary" onclick="magazineAdminTab('settings')">Settings</button>
             </div>
-
-            <div id="magazineAdminPanel">
-                <p style="color:#9ca3af;">Loading…</p>
-            </div>
-        </div>
-    `;
-
-    window.magazineShowTab('issues');
+            <div id="magazineAdminPanel"><p style="color:#9ca3af;">Loading…</p></div>
+        </div>`;
+    window.magazineAdminTab('overview');
 };
 
-window.magazineShowTab = async function (tab) {
+window.magazineAdminTab = function (tab) {
     const panel = document.getElementById('magazineAdminPanel');
     if (!panel) return;
+    const mag = getMagazineData();
 
-    if (tab === 'issues') {
-        const { data: issues } = await supabaseClient
-            .from('magazine_issues')
-            .select('*')
-            .order('created_at', { ascending: false });
-
+    if (tab === 'overview') {
         panel.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-                <h3 style="color:#fff;margin:0;">Magazine Issues</h3>
-                <button class="btn-primary" onclick="magazineCreateIssue()">+ New Issue</button>
+            <div class="admin-card">
+                <div class="admin-card-title">Magazine Overview</div>
+                <p style="color:var(--text-secondary);font-size:0.88rem;line-height:1.7;margin-top:0.7rem;">
+                    Use the tabs above to manage every part of the public Magazine.
+                </p>
+                <ul style="color:var(--text-secondary);font-size:0.85rem;line-height:1.85;margin:0.8rem 0 0 1.1rem;">
+                    <li><strong>Leadership +</strong> — Principal, Deputies, Dean, Finance, Exam, Sports Leader, Jitume, KITCO…</li>
+                    <li><strong>Highlights +</strong> — Best Students, Sports performers, Project winners, Cultural titles</li>
+                    <li><strong>Events +</strong> — Tours and Awards & Endorsements only (Cultural titles go under Highlights +)</li>
+                    <li><strong>Issues</strong> — Traditional magazine issues (Supabase)</li>
+                    <li><strong>Settings</strong> — Quote, academic year</li>
+                </ul>
+                <p style="color:var(--accent-cyan);font-size:0.82rem;margin-top:1.1rem;">
+                    Current quote:<br><em style="color:#fff;">“${mag.settings.quote}”</em>
+                </p>
+                <p style="color:var(--text-secondary);font-size:0.8rem;margin-top:0.6rem;">
+                    Leadership cards: <strong style="color:#fff;">${(mag.leadership||[]).length}</strong> &nbsp;|&nbsp;
+                    Highlights: <strong style="color:#fff;">${(mag.highlights||[]).length}</strong> &nbsp;|&nbsp;
+                    Events: <strong style="color:#fff;">${(mag.events||[]).length}</strong>
+                </p>
+            </div>`;
+    }
+
+    else if (tab === 'leadership') {
+        const list = mag.leadership || [];
+        panel.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px;">
+                <h3 style="color:#fff;margin:0;font-size:1rem;">Leadership Cards (${list.length})</h3>
+                <button class="btn-primary" onclick="magazineShowAddLeadership()">+ Add Leadership</button>
             </div>
-            <div style="display:grid;gap:12px;">
-                ${(issues || []).map(i => `
-                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-                        <div>
-                            <strong style="color:#fff;">${i.title}</strong>
-                            <div style="font-size:0.8rem;color:#9ca3af;margin-top:2px;">
-                                Status: <span style="color:${i.status === 'published' ? '#10b981' : '#f59e0b'}">${i.status}</span>
-                                ${i.academic_year ? ' • ' + i.academic_year : ''}
+            <div id="leadershipFormArea"></div>
+            <div style="display:grid;gap:10px;margin-top:0.8rem;">
+                ${list.length === 0
+                    ? `<div class="admin-card" style="text-align:center;color:var(--text-secondary);">No leadership cards yet. Click + Add Leadership.</div>`
+                    : list.map((l, idx) => `
+                        <div class="admin-card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                ${l.photo ? `<img src="${l.photo}" style="width:42px;height:42px;border-radius:50%;object-fit:cover;">` : `<div style="width:42px;height:42px;border-radius:50%;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;">👤</div>`}
+                                <div>
+                                    <strong style="color:#fff;">${l.name}</strong>
+                                    <div style="font-size:0.75rem;color:var(--text-secondary);">${l.rankLabel || l.rank} · ${l.section} ${l.active === false ? '· <span style="color:#f87171;">Hidden</span>' : ''}</div>
+                                </div>
                             </div>
-                        </div>
-                        <div style="display:flex;gap:8px;">
-                            <button class="admin-action-btn edit" onclick="magazineEditIssue('${i.id}')">Edit</button>
-                            <button class="admin-action-btn danger" onclick="magazineDeleteIssue('${i.id}')">Delete</button>
-                        </div>
-                    </div>
-                `).join('') || '<p style="color:#9ca3af;">No issues yet. Create the first one.</p>'}
-            </div>
-        `;
+                            <div style="display:flex;gap:6px;">
+                                <button class="admin-action-btn edit" onclick="magazineEditLeadership(${idx})">Edit</button>
+                                <button class="admin-action-btn danger" onclick="magazineDeleteLeadership(${idx})">Delete</button>
+                            </div>
+                        </div>`).join('')}
+            </div>`;
     }
 
-    // Simple placeholders for other tabs (we can expand later)
-    if (tab === 'articles') {
-        panel.innerHTML = `<p style="color:#9ca3af;">Articles management coming in the next update. You can already create Issues.</p>`;
-    }
-    if (tab === 'photos') {
-        panel.innerHTML = `<p style="color:#9ca3af;">Photos management coming next.</p>`;
-    }
-    if (tab === 'categories') {
-        const { data: cats } = await supabaseClient.from('magazine_categories').select('*').order('sort_order');
+    else if (tab === 'highlights') {
+        const list = mag.highlights || [];
         panel.innerHTML = `
-            <h3 style="color:#fff;margin-bottom:1rem;">Categories</h3>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
-                ${(cats || []).map(c => `
-                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:12px;">
-                        <span style="font-size:1.3rem;">${c.icon || '📁'}</span>
-                        <div style="color:#fff;font-weight:600;margin-top:4px;">${c.name}</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px;">
+                <h3 style="color:#fff;margin:0;font-size:1rem;">Highlights & Best Performers (${list.length})</h3>
+                <button class="btn-primary" onclick="magazineShowAddHighlight()">+ Add Highlight</button>
+            </div>
+            <div id="highlightFormArea"></div>
+            <div style="display:grid;gap:10px;margin-top:0.8rem;">
+                ${list.length === 0
+                    ? `<div class="admin-card" style="text-align:center;color:var(--text-secondary);">No highlights yet. Click + Add Highlight.</div>`
+                    : list.map((h, idx) => `
+                        <div class="admin-card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                            <div>
+                                <strong style="color:#fff;">${h.name}</strong>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);">${h.type} · ${h.rank || ''} · ${h.semester || ''} ${h.published === false ? '· <span style="color:#f87171;">Unpublished</span>' : ''}</div>
+                            </div>
+                            <div style="display:flex;gap:6px;">
+                                <button class="admin-action-btn edit" onclick="magazineEditHighlight(${idx})">Edit</button>
+                                <button class="admin-action-btn danger" onclick="magazineDeleteHighlight(${idx})">Delete</button>
+                            </div>
+                        </div>`).join('')}
+            </div>`;
+    }
+
+    else if (tab === 'events') {
+        const list = mag.events || [];
+        panel.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px;">
+                <h3 style="color:#fff;margin:0;font-size:1rem;">Events & Galleries (${list.length})</h3>
+                <button class="btn-primary" onclick="magazineShowAddEvent()">+ Add Event</button>
+            </div>
+            <div id="eventFormArea"></div>
+            <div style="display:grid;gap:10px;margin-top:0.8rem;">
+                ${list.length === 0
+                    ? `<div class="admin-card" style="text-align:center;color:var(--text-secondary);">No events yet. Click + Add Event.</div>`
+                    : list.map((e, idx) => `
+                        <div class="admin-card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                            <div>
+                                <strong style="color:#fff;">${e.title}</strong>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);">${e.type} · ${e.date || ''} ${e.published === false ? '· <span style="color:#f87171;">Unpublished</span>' : ''}</div>
+                            </div>
+                            <div style="display:flex;gap:6px;">
+                                <button class="admin-action-btn edit" onclick="magazineEditEvent(${idx})">Edit</button>
+                                <button class="admin-action-btn danger" onclick="magazineDeleteEvent(${idx})">Delete</button>
+                            </div>
+                        </div>`).join('')}
+            </div>`;
+    }
+
+    else if (tab === 'issues') {
+        panel.innerHTML = `
+            <div class="admin-card">
+                <div class="admin-card-title">Traditional Magazine Issues</div>
+                <p style="color:var(--text-secondary);font-size:0.88rem;margin-top:0.7rem;">
+                    This tab uses Supabase. If Supabase is offline you will see an error. The main Leadership / Highlights / Events above work fully offline via localStorage.
+                </p>
+                <button class="btn-primary" style="margin-top:1rem;" onclick="alert('Create Issue requires a working Supabase connection.')">+ New Issue</button>
+            </div>`;
+    }
+
+    else if (tab === 'settings') {
+        panel.innerHTML = `
+            <div class="admin-card">
+                <div class="admin-card-title">Magazine Settings</div>
+                <div style="margin-top:1rem;">
+                    <label style="font-size:0.72rem;color:var(--text-secondary);display:block;margin-bottom:4px;">MAIN QUOTE</label>
+                    <textarea id="magQuote" class="admin-input" rows="2" style="width:100%;">${mag.settings.quote || ''}</textarea>
+                </div>
+                <div style="margin-top:0.9rem;">
+                    <label style="font-size:0.72rem;color:var(--text-secondary);display:block;margin-bottom:4px;">ACADEMIC YEAR</label>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <button type="button" class="btn-secondary" style="padding:6px 12px;" onclick="magazineYearStep(-1)">▲</button>
+                        <input id="magYear" class="admin-input" value="${mag.settings.academicYear || '2025/2026'}" style="flex:1;text-align:center;">
+                        <button type="button" class="btn-secondary" style="padding:6px 12px;" onclick="magazineYearStep(1)">▼</button>
                     </div>
-                `).join('')}
+                </div>
+                <div style="margin-top:0.9rem;">
+                    <label style="font-size:0.72rem;color:var(--text-secondary);display:block;margin-bottom:4px;">CURRENT SEMESTER</label>
+                    <input id="magSemester" class="admin-input" value="${mag.settings.currentSemester || 'Term 1'}" style="width:100%;">
+                </div>
+                <button class="btn-primary" style="margin-top:1.1rem;" onclick="magazineSaveSettings()">Save Settings</button>
             </div>`;
     }
 };
 
-window.magazineCreateIssue = async function () {
-    const title = prompt('Issue title (e.g. Term 1 2026):');
-    if (!title) return;
-
-    const { error } = await supabaseClient.from('magazine_issues').insert({
-        title,
-        slug: title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
-        status: 'draft',
-        academic_year: '2025/2026'
-    });
-
-    if (error) {
-        alert('Error: ' + error.message);
-    } else {
-        alert('Issue created successfully!');
-        window.magazineShowTab('issues');
+// ---------- ADMIN FORMS & ACTIONS ----------
+window.magazineShowAddLeadership = function () {
+    const area = document.getElementById('leadershipFormArea');
+    if (!area) return;
+    area.innerHTML = `
+        <div class="admin-card" style="margin-bottom:1rem;border-color:var(--accent-purple);">
+            <div class="admin-card-title">+ Add Leadership Card</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:0.8rem;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">SECTION</label>
+                    <select id="leadSection" class="admin-input">
+                        <option value="education">Education</option>
+                        <option value="sports">Sports</option>
+                        <option value="projects">Projects</option>
+                        <option value="events">Events</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">RANK</label>
+                    <select id="leadRank" class="admin-input">
+                        <option value="principal">Principal</option>
+                        <option value="deputy_acad">Deputy Academic</option>
+                        <option value="deputy_infra">Deputy Infrastructure</option>
+                        <option value="dean">Dean of Students</option>
+                        <option value="finance">Finance Officer</option>
+                        <option value="exam">Examination Officer</option>
+                        <option value="sports_leader">Sports Leader</option>
+                        <option value="jitume_leader">Jitume Leader</option>
+                        <option value="kitco">KITCO Chair</option>
+                    </select>
+                </div>
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">FULL NAME</label>
+                <input id="leadName" class="admin-input" placeholder="e.g. Dr. Elizabeth Wanjiku">
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">RANK LABEL (shown on card)</label>
+                <input id="leadRankLabel" class="admin-input" placeholder="e.g. Principal">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">EMPLOYED DATE</label>
+                    <input id="leadDate" type="date" class="admin-input">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">NOTE / YEARS SERVED</label>
+                    <input id="leadNote" class="admin-input" placeholder="e.g. 2 years in office">
+                </div>
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">PHOTO — Upload or paste URL</label>
+                <input type="file" id="leadPhotoFile" accept="image/*" class="admin-input" style="padding:6px;">
+                <input id="leadPhoto" class="admin-input" placeholder="Or paste image URL (optional)" style="margin-top:6px;">
+                <div id="leadPhotoPreview" style="margin-top:8px;"></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px;">
+                <button class="btn-primary" onclick="magazineSaveLeadership()">Save Leadership</button>
+                <button class="btn-secondary" onclick="document.getElementById('leadershipFormArea').innerHTML=''">Cancel</button>
+            </div>
+        </div>`;
+    // live preview when file chosen
+    const fileInput = document.getElementById('leadPhotoFile');
+    if (fileInput) {
+        fileInput.addEventListener('change', function() {
+            const f = this.files[0];
+            if (!f) return;
+            compressImageFile(f, function(dataUrl) {
+                window._magTempPhoto = dataUrl;
+                document.getElementById('leadPhotoPreview').innerHTML =
+                    `<img src="${dataUrl}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:2px solid var(--accent-purple);">`;
+            }, 600, 0.7);
+        });
     }
 };
 
-window.magazineDeleteIssue = async function (id) {
-    if (!confirm('Delete this issue and all its articles?')) return;
-    await supabaseClient.from('magazine_issues').delete().eq('id', id);
-    window.magazineShowTab('issues');
+window.magazineSaveLeadership = function () {
+    const mag = getMagazineData();
+    const urlVal = (document.getElementById('leadPhoto') || {}).value || '';
+    const photo = window._magTempPhoto || urlVal.trim() || null;
+    window._magTempPhoto = null;
+    const item = {
+        id: 'LEAD-' + Date.now(),
+        section: document.getElementById('leadSection').value,
+        rank: document.getElementById('leadRank').value,
+        rankLabel: document.getElementById('leadRankLabel').value || document.getElementById('leadRank').value,
+        name: document.getElementById('leadName').value.trim(),
+        employedDate: document.getElementById('leadDate').value.trim(),
+        note: document.getElementById('leadNote').value.trim(),
+        photo: photo,
+        active: true,
+        sortOrder: (mag.leadership || []).length + 1
+    };
+    if (!item.name) return alert('Name is required');
+    mag.leadership = mag.leadership || [];
+    mag.leadership.push(item);
+    saveMagazineData(mag);
+    alert('Leadership card added!');
+    magazineAdminTab('leadership');
 };
 
-window.magazineEditIssue = function (id) {
-    alert('Full edit form coming in the next step. For now you can create and delete issues.');
+window.magazineDeleteLeadership = function (idx) {
+    if (!confirm('Delete this leadership card?')) return;
+    const mag = getMagazineData();
+    mag.leadership.splice(idx, 1);
+    saveMagazineData(mag);
+    magazineAdminTab('leadership');
+};
+
+window.magazineEditLeadership = function (idx) {
+    alert('Edit form coming in next iteration. For now you can Delete and re-Add.');
+};
+
+window.magazineShowAddHighlight = function () {
+    const area = document.getElementById('highlightFormArea');
+    if (!area) return;
+    area.innerHTML = `
+        <div class="admin-card" style="margin-bottom:1rem;border-color:var(--accent-purple);">
+            <div class="admin-card-title">+ Add Highlight / Best Performer</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:0.8rem;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">TYPE</label>
+                    <select id="hlType" class="admin-input" onchange="magazineHlTypeHint()">
+                        <option value="student">Best Student (Education)</option>
+                        <option value="sport">Sports Performer</option>
+                        <option value="project">Project / Jitume</option>
+                        <option value="cultural">Cultural Title (Mr/Mrs etc.)</option>
+                        <option value="award">Award / Endorsement</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);" id="hlRankLabel">RANK / POSITION</label>
+                    <input id="hlRank" class="admin-input" placeholder="1st / Gold / Mr Kinyanjui">
+                    <small id="hlRankHint" style="color:var(--text-secondary);font-size:0.68rem;"></small>
+                </div>
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">NAME</label>
+                <input id="hlName" class="admin-input" placeholder="Full name">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);" id="hlAdmLabel">ADMISSION NO</label>
+                    <input id="hlAdm" class="admin-input" placeholder="STU-2026-...">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);" id="hlCourseLabel">COURSE</label>
+                    <input id="hlCourse" class="admin-input" placeholder="e.g. Computer Science">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">SEMESTER</label>
+                    <input id="hlSem" class="admin-input" placeholder="Term 1 2026">
+                </div>
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);" id="hlNoteLabel">PERFORMANCE</label>
+                <input id="hlNote" class="admin-input" placeholder="Overall Average 89% – Competent in all modules">
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">PHOTO — Upload or paste URL</label>
+                <input type="file" id="hlPhotoFile" accept="image/*" class="admin-input" style="padding:6px;">
+                <input id="hlPhoto" class="admin-input" placeholder="Or paste image URL (optional)" style="margin-top:6px;">
+                <div id="hlPhotoPreview" style="margin-top:8px;"></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px;">
+                <button class="btn-primary" onclick="magazineSaveHighlight()">Save Highlight</button>
+                <button class="btn-secondary" onclick="document.getElementById('highlightFormArea').innerHTML=''">Cancel</button>
+            </div>
+        </div>`;
+    magazineHlTypeHint();
+    const fileInput = document.getElementById('hlPhotoFile');
+    if (fileInput) {
+        fileInput.addEventListener('change', function() {
+            const f = this.files[0];
+            if (!f) return;
+            compressImageFile(f, function(dataUrl) {
+                window._magTempPhoto = dataUrl;
+                document.getElementById('hlPhotoPreview').innerHTML =
+                    `<img src="${dataUrl}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:2px solid var(--accent-purple);">`;
+            }, 600, 0.7);
+        });
+    }
+};
+
+window.magazineHlTypeHint = function () {
+    const type = document.getElementById('hlType')?.value;
+    const rankLabel = document.getElementById('hlRankLabel');
+    const admLabel  = document.getElementById('hlAdmLabel');
+    const courseLabel = document.getElementById('hlCourseLabel');
+    const noteLabel = document.getElementById('hlNoteLabel');
+    const hint = document.getElementById('hlRankHint');
+    const rankInput = document.getElementById('hlRank');
+    const noteInput = document.getElementById('hlNote');
+    const admInput = document.getElementById('hlAdm');
+    const courseInput = document.getElementById('hlCourse');
+
+    if (type === 'cultural') {
+        if (rankLabel) rankLabel.textContent = 'CATEGORY (TITLE / RANK)';
+        if (admLabel) admLabel.textContent = 'ADMISSION NO';
+        if (courseLabel) courseLabel.textContent = 'COURSE';
+        if (noteLabel) noteLabel.textContent = 'JUDGE MARKS / SCORE';
+        if (hint) hint.textContent = 'Use: Mr Kinyanjui | Mrs Kinyanjui | 1st Runner | 2nd Runner | Popularity | Mr Flex | Mrs Curvy';
+        if (rankInput) rankInput.placeholder = 'Mr Kinyanjui / Mrs Curvy';
+        if (noteInput) noteInput.placeholder = 'e.g. 92 / 100 – Judges score';
+        if (admInput) admInput.placeholder = 'STU-2026-...';
+        if (courseInput) courseInput.placeholder = 'e.g. Fashion Design';
+    } else if (type === 'student') {
+        if (rankLabel) rankLabel.textContent = 'RANK / POSITION';
+        if (admLabel) admLabel.textContent = 'ADMISSION NO';
+        if (courseLabel) courseLabel.textContent = 'COURSE';
+        if (noteLabel) noteLabel.textContent = 'PERFORMANCE';
+        if (hint) hint.textContent = '';
+        if (rankInput) rankInput.placeholder = '1st / 2nd / 3rd';
+        if (noteInput) noteInput.placeholder = 'Overall Average 89% – Competent in all modules';
+        if (admInput) admInput.placeholder = 'STU-2026-...';
+        if (courseInput) courseInput.placeholder = 'e.g. Computer Science';
+    } else if (type === 'sport') {
+        if (rankLabel) rankLabel.textContent = 'RANK / MEDAL';
+        if (admLabel) admLabel.textContent = 'CATEGORY (SPORT)';
+        if (courseLabel) courseLabel.textContent = 'COURSE (optional)';
+        if (noteLabel) noteLabel.textContent = 'PERFORMANCE';
+        if (hint) hint.textContent = '';
+        if (rankInput) rankInput.placeholder = 'Gold / Silver / 1st';
+        if (noteInput) noteInput.placeholder = 'e.g. 100m – 10.8s';
+        if (admInput) admInput.placeholder = 'Football / Athletics';
+    } else {
+        if (rankLabel) rankLabel.textContent = 'RANK / POSITION';
+        if (admLabel) admLabel.textContent = 'CATEGORY';
+        if (courseLabel) courseLabel.textContent = 'COURSE / DEPT';
+        if (noteLabel) noteLabel.textContent = 'PERFORMANCE / NOTE';
+        if (hint) hint.textContent = '';
+        if (rankInput) rankInput.placeholder = '1st / Gold / Most Innovative';
+        if (noteInput) noteInput.placeholder = 'Short description';
+    }
+};
+
+window.magazineSaveHighlight = function () {
+    const mag = getMagazineData();
+    const urlVal = (document.getElementById('hlPhoto') || {}).value || '';
+    const photo = window._magTempPhoto || urlVal.trim() || null;
+    window._magTempPhoto = null;
+    const item = {
+        id: 'HL-' + Date.now(),
+        type: document.getElementById('hlType').value,
+        rank: document.getElementById('hlRank').value.trim(),
+        name: document.getElementById('hlName').value.trim(),
+        admissionNo: document.getElementById('hlAdm').value.trim(),
+        category: document.getElementById('hlAdm').value.trim(),
+        course: (document.getElementById('hlCourse') || {}).value?.trim() || '',
+        semester: document.getElementById('hlSem').value.trim(),
+        note: document.getElementById('hlNote').value.trim(),
+        performanceNote: document.getElementById('hlNote').value.trim(),
+        photo: photo,
+        published: true
+    };
+    if (!item.name) return alert('Name is required');
+    mag.highlights = mag.highlights || [];
+    mag.highlights.push(item);
+    saveMagazineData(mag);
+    alert('Highlight added!');
+    magazineAdminTab('highlights');
+};
+
+window.magazineDeleteHighlight = function (idx) {
+    if (!confirm('Delete this highlight?')) return;
+    const mag = getMagazineData();
+    mag.highlights.splice(idx, 1);
+    saveMagazineData(mag);
+    magazineAdminTab('highlights');
+};
+
+window.magazineEditHighlight = function (idx) {
+    alert('Edit form coming next. For now Delete + re-Add.');
+};
+
+window.magazineShowAddEvent = function () {
+    const area = document.getElementById('eventFormArea');
+    if (!area) return;
+    area.innerHTML = `
+        <div class="admin-card" style="margin-bottom:1rem;border-color:var(--accent-purple);">
+            <div class="admin-card-title">+ Add Event</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:0.8rem;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">TYPE</label>
+                    <select id="evType" class="admin-input">
+                        <option value="tours">Tour</option>
+                        <option value="awards">Award / Endorsement</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">DATE</label>
+                    <input id="evDate" type="date" class="admin-input">
+                </div>
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">TITLE</label>
+                <input id="evTitle" class="admin-input" placeholder="e.g. Industrial Visit – Nairobi">
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">DESCRIPTION</label>
+                <textarea id="evDesc" class="admin-input" rows="2"></textarea>
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">PHOTO — Upload or paste URL</label>
+                <input type="file" id="evPhotoFile" accept="image/*" class="admin-input" style="padding:6px;">
+                <input id="evPhoto" class="admin-input" placeholder="Or paste image URL (optional)" style="margin-top:6px;">
+                <div id="evPhotoPreview" style="margin-top:8px;"></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px;">
+                <button class="btn-primary" onclick="magazineSaveEvent()">Save Event</button>
+                <button class="btn-secondary" onclick="document.getElementById('eventFormArea').innerHTML=''">Cancel</button>
+            </div>
+        </div>`;
+    const fileInput = document.getElementById('evPhotoFile');
+    if (fileInput) {
+        fileInput.addEventListener('change', function() {
+            const f = this.files[0];
+            if (!f) return;
+            compressImageFile(f, function(dataUrl) {
+                window._magTempPhoto = dataUrl;
+                document.getElementById('evPhotoPreview').innerHTML =
+                    `<img src="${dataUrl}" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;">`;
+            }, 800, 0.72);
+        });
+    }
+};
+
+window.magazineSaveEvent = function () {
+    const mag = getMagazineData();
+    const urlVal = (document.getElementById('evPhoto') || {}).value || '';
+    const photo = window._magTempPhoto || urlVal.trim() || null;
+    window._magTempPhoto = null;
+    const item = {
+        id: 'EV-' + Date.now(),
+        type: document.getElementById('evType').value,
+        title: document.getElementById('evTitle').value.trim(),
+        date: document.getElementById('evDate').value.trim(),
+        description: document.getElementById('evDesc').value.trim(),
+        photo: photo,
+        published: true
+    };
+    if (!item.title) return alert('Title is required');
+    mag.events = mag.events || [];
+    mag.events.push(item);
+    saveMagazineData(mag);
+    alert('Event added!');
+    magazineAdminTab('events');
+};
+
+window.magazineDeleteEvent = function (idx) {
+    if (!confirm('Delete this event?')) return;
+    const mag = getMagazineData();
+    mag.events.splice(idx, 1);
+    saveMagazineData(mag);
+    magazineAdminTab('events');
+};
+
+window.magazineEditEvent = function (idx) {
+    alert('Edit form coming next. For now Delete + re-Add.');
+};
+
+window.magazineYearStep = function (dir) {
+    const el = document.getElementById('magYear');
+    if (!el) return;
+    // Expect format like 2025/2026
+    let m = (el.value || '2025/2026').match(/(\d{4})\s*\/\s*(\d{4})/);
+    let y1 = m ? parseInt(m[1], 10) : new Date().getFullYear();
+    let y2 = m ? parseInt(m[2], 10) : y1 + 1;
+    y1 += dir;
+    y2 += dir;
+    el.value = y1 + '/' + y2;
+};
+
+window.magazineSaveSettings = function () {
+    const mag = getMagazineData();
+    mag.settings.quote = document.getElementById('magQuote').value.trim();
+    mag.settings.academicYear = document.getElementById('magYear').value.trim();
+    mag.settings.currentSemester = document.getElementById('magSemester').value.trim();
+    saveMagazineData(mag);
+    alert('Settings saved!');
+};
+
+// Keep traditional issue open (graceful)
+window.openMagazineIssue = async function (issueId) {
+    const container = document.getElementById('dynamicContent');
+    container.innerHTML = `<p style="text-align:center;padding:2rem;color:#9ca3af;">Traditional issues require Supabase. Use the main Magazine sections instead.</p>
+        <div style="text-align:center;"><button onclick="showMagazinePage()" class="btn-secondary">← Back to Magazine</button></div>`;
 };
