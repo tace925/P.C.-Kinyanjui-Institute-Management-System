@@ -560,113 +560,227 @@ function showHome() {
 
     // Re-run rendering functions
     if (typeof renderPrincipals === 'function') renderPrincipals();
-    // Re-run typing animation
+    // Re-run typing animation (null-safe)
     let i = 0, j = 0;
     const title = 'PC KINYANJUI TECHNICAL TRAINING INSTITUTE';
     const subtitle = 'Excellence in Technology';
     function type() {
+        const tEl = document.getElementById('typingText');
+        const sEl = document.getElementById('subtitleText');
         if (i < title.length) {
-            document.getElementById('typingText').innerHTML += title.charAt(i++);
+            if (tEl) tEl.innerHTML += title.charAt(i++);
             setTimeout(type, 55);
         } else if (j < subtitle.length) {
-            document.getElementById('subtitleText').innerHTML += subtitle.charAt(j++);
+            if (sEl) sEl.innerHTML += subtitle.charAt(j++);
             setTimeout(type, 75);
         }
     }
     type();
 }
 
-function showTourPage() {
-    document.getElementById('schoolInfoPanel').style.display = 'block';
-    document.getElementById('loginFormContainer').style.display = 'none';
-    document.getElementById('dashboardContainer').style.display = 'none';
+/** Show a public page inside schoolInfoPanel (recreates panels if wiped) */
+function showPublicContent(html) {
+    ensureCorePanels();
+    const schoolPanel = document.getElementById('schoolInfoPanel');
+    const loginPanel  = document.getElementById('loginFormContainer');
+    const dashPanel   = document.getElementById('dashboardContainer');
+    if (schoolPanel) {
+        schoolPanel.style.display = 'block';
+        schoolPanel.innerHTML = html;
+    }
+    if (loginPanel) loginPanel.style.display = 'none';
+    if (dashPanel)  dashPanel.style.display  = 'none';
+}
+
+/** Map location key → public category for Tour filters */
+function tourLocCategory(loc) {
+    if (loc.group) return loc.group;
+    const k = loc.key || '';
+    if (k === 'school_aerial') return 'Overview';
+    if (['front_gate','parking','admin_block'].includes(k)) return 'Buildings';
+    if (['academic_blocks','library','exam_block'].includes(k)) return 'Learning';
+    if (k === 'workshops') return 'Workshops';
+    if (k === 'sports_complex') return 'Sports';
+    if (k.startsWith('hostel') || k === 'mess') return 'Hostels';
+    return 'Campus';
+}
+
+function tourLocCover(loc) {
+    if (loc.type === 'single_image' && loc.image) return loc.image;
+    const first = (loc.categories || []).flatMap(c => c.images || [])[0];
+    return first ? first.url : null;
+}
+
+function tourLocMediaCount(loc) {
+    if (loc.type === 'single_image') return loc.image ? 1 : 0;
+    return (loc.categories || []).reduce((s, c) => s + (c.images || []).length + (c.videoLinks || []).length, 0);
+}
+
+function showTourPage(filterGroup) {
+    ensureCorePanels();
+    const schoolPanel = document.getElementById('schoolInfoPanel');
+    const loginPanel  = document.getElementById('loginFormContainer');
+    const dashPanel   = document.getElementById('dashboardContainer');
+    if (schoolPanel) schoolPanel.style.display = 'block';
+    if (loginPanel)  loginPanel.style.display  = 'none';
+    if (dashPanel)   dashPanel.style.display   = 'none';
 
     const data = getData();
     const locations = (data.tourManagement && data.tourManagement.locations) || [];
     const story = (data.tourManagement && data.tourManagement.story) || {};
+    const activeFilter = filterGroup || window._tourFilter || 'All';
+    window._tourFilter = activeFilter;
 
-    const cards = locations.map(loc => {
-        let thumb, subtitle;
-        if (loc.type === 'single_image') {
-            thumb = loc.image
-                ? `<img src="${loc.image}" style="width:100%;height:180px;object-fit:contain;background:#1a1a2e;border-radius:12px;">`
-                : `<div class="tour-img-placeholder" style="background:linear-gradient(#4c1d95,#6c3fcf); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">${loc.icon}</div>`;
-            subtitle = loc.image ? 'Aerial view available' : 'Coming soon';
-        } else {
-            const firstImg = (loc.categories || []).flatMap(c => c.images || [])[0];
-            thumb = firstImg
-                ? `<img src="${firstImg.url}" style="width:100%;height:180px;object-fit:contain;background:#1a1a2e;border-radius:12px;">`
-                : `<div class="tour-img-placeholder" style="background:linear-gradient(#1e3a8a,#3b82f6); height:180px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem;">${loc.icon}</div>`;
-            const catCount = (loc.categories || []).length;
-            subtitle = catCount === 0 ? 'Coming soon' : `${catCount} area${catCount === 1 ? '' : 's'} to explore`;
-        }
+    const groups = ['All', 'Overview', 'Buildings', 'Learning', 'Workshops', 'Sports', 'Hostels', 'Campus'];
+    const withMeta = locations.map(loc => ({
+        ...loc,
+        group: tourLocCategory(loc),
+        cover: tourLocCover(loc),
+        mediaCount: tourLocMediaCount(loc)
+    }));
+    const filtered = activeFilter === 'All'
+        ? withMeta
+        : withMeta.filter(l => l.group === activeFilter);
+
+    const totalLoc = locations.length;
+    const withPhotos = withMeta.filter(l => l.mediaCount > 0).length;
+    const featured = withMeta.filter(l => l.mediaCount > 0).slice(0, 6);
+
+    const storyHTML = (story.history || story.challenges || story.quote) ? `
+        <div style="max-width:900px;margin:0 auto 1.8rem;">
+            ${story.history ? `
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.3rem;margin-bottom:0.9rem;">
+                <h3 style="color:#fbbf24;margin:0 0 0.6rem;font-size:1rem;"><i class="fas fa-landmark"></i> Our History</h3>
+                <p style="color:var(--text-secondary);line-height:1.7;margin:0;font-size:0.9rem;">${story.history}</p>
+            </div>` : ''}
+            ${story.challenges ? `
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.3rem;margin-bottom:0.9rem;">
+                <h3 style="color:#fbbf24;margin:0 0 0.6rem;font-size:1rem;"><i class="fas fa-exclamation-triangle"></i> Challenges We've Faced</h3>
+                <p style="color:var(--text-secondary);line-height:1.7;margin:0;font-size:0.9rem;">${story.challenges}</p>
+            </div>` : ''}
+            ${story.quote ? `
+            <div style="border-left:4px solid #fbbf24;background:rgba(251,191,36,0.08);border-radius:12px;padding:1rem 1.3rem;">
+                <p style="color:#fde68a;font-style:italic;font-weight:600;margin:0;">“${story.quote}”</p>
+            </div>` : ''}
+        </div>` : '';
+
+    const featuredHTML = featured.length ? `
+        <div style="margin-bottom:1.8rem;">
+            <div style="font-size:0.75rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Featured stops</div>
+            <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;">
+                ${featured.map(loc => `
+                    <div onclick="showTourLocationDetail('${loc.key}')" style="min-width:160px;cursor:pointer;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;flex-shrink:0;">
+                        ${loc.cover
+                            ? `<img src="${loc.cover}" style="width:100%;height:100px;object-fit:cover;display:block;">`
+                            : `<div style="height:100px;background:linear-gradient(135deg,#4c1d95,#6d28d9);display:flex;align-items:center;justify-content:center;font-size:2rem;">${loc.icon}</div>`}
+                        <div style="padding:0.7rem;">
+                            <div style="font-weight:700;color:#fff;font-size:0.82rem;">${loc.label}</div>
+                            <div style="font-size:0.68rem;color:var(--accent-cyan);">${loc.group}</div>
+                        </div>
+                    </div>`).join('')}
+            </div>
+        </div>` : '';
+
+    const cards = filtered.map(loc => {
+        const subtitle = loc.mediaCount === 0
+            ? 'Photos coming soon'
+            : `${loc.mediaCount} media item${loc.mediaCount === 1 ? '' : 's'}`;
         return `
-        <div class="tour-card" style="cursor:pointer;" onclick="showTourLocationDetail('${loc.key}')">
-            ${thumb}
-            <h3>${loc.icon} ${loc.label}</h3>
-            <p>${subtitle}</p>
+        <div class="tour-card" style="cursor:pointer;overflow:hidden;padding:0;" onclick="showTourLocationDetail('${loc.key}')">
+            ${loc.cover
+                ? `<img src="${loc.cover}" style="width:100%;height:160px;object-fit:cover;display:block;">`
+                : `<div style="height:160px;background:linear-gradient(135deg,#1e1b4b,#4c1d95);display:flex;align-items:center;justify-content:center;font-size:2.8rem;">${loc.icon}</div>`}
+            <div style="padding:1rem 1.1rem 1.2rem;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                    <h3 style="margin:0;font-size:1rem;color:#fff;">${loc.icon} ${loc.label}</h3>
+                    <span style="font-size:0.65rem;background:rgba(168,85,247,.15);color:#c4b5fd;padding:2px 8px;border-radius:10px;white-space:nowrap;">${loc.group}</span>
+                </div>
+                <p style="margin:6px 0 0;font-size:0.8rem;color:var(--text-secondary);">${subtitle}</p>
+            </div>
         </div>`;
     }).join('');
 
-    const storyHTML = (story.history || story.challenges || story.quote) ? `
-        <div style="max-width:900px;margin:0 auto 2.5rem;">
-            ${story.history ? `
-            <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:1.5rem;margin-bottom:1rem;">
-                <h3 style="color:#fbbf24;margin-bottom:0.8rem;"><i class="fas fa-landmark"></i> Our History</h3>
-                <p style="color:#e5e7eb;line-height:1.7;">${story.history}</p>
-            </div>` : ''}
-            ${story.challenges ? `
-            <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:1.5rem;margin-bottom:1rem;">
-                <h3 style="color:#fbbf24;margin-bottom:0.8rem;"><i class="fas fa-exclamation-triangle"></i> Challenges We've Faced</h3>
-                <p style="color:#e5e7eb;line-height:1.7;">${story.challenges}</p>
-            </div>` : ''}
-            ${story.quote ? `
-            <div style="border-left:4px solid #fbbf24;background:rgba(251,191,36,0.08);border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:0.5rem;">
-                <p style="color:#fde68a;font-style:italic;font-weight:600;margin:0;">"${story.quote}"</p>
-            </div>` : ''}
-            <p style="text-align:center;color:#6b7280;font-size:0.72rem;margin-top:0.5rem;">Content in this section is managed by System Admin → Tour Management.</p>
-        </div>` : '';
+    const emptyHTML = filtered.length === 0
+        ? `<div style="text-align:center;padding:2.5rem;color:var(--text-secondary);background:var(--bg-card);border-radius:16px;border:1px solid var(--border);">No stops in this category yet.</div>`
+        : '';
 
     const tourHTML = `
-        <div style="max-width:1200px; margin:0 auto; padding:2rem 1rem;">
-            <h2 style="text-align:center; color:white; margin-bottom:2rem; font-size:2.2rem;">
-                <i class="fas fa-map-marked-alt"></i> School Tour
-            </h2>
-            ${storyHTML}
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1.5rem;">
-                ${cards}
-            </div>
-            <div style="margin-top:3rem; text-align:center;">
-                <button onclick="showHome()" class="btn-secondary" style="padding:1rem 2rem;">
-                    ← Back to Home
+        <div style="max-width:1200px;margin:0 auto;padding:1.5rem 1rem 3rem;">
+            <!-- HERO -->
+            <div style="text-align:center;margin-bottom:1.8rem;padding:2rem 1.2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:20px;position:relative;overflow:hidden;">
+                <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:var(--accent-purple);opacity:.2;filter:blur(50px);border-radius:50%;"></div>
+                <h1 style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.3rem);color:#fff;margin:0 0 0.5rem;position:relative;">
+                    <i class="fas fa-map-marked-alt" style="color:var(--accent-purple);"></i> Explore PC Kinyanjui
+                </h1>
+                <p style="color:var(--text-secondary);margin:0 auto 1.2rem;max-width:520px;font-size:0.9rem;position:relative;">
+                    A guided look at our campus — buildings, workshops, hostels and more.
+                </p>
+                <button class="btn-primary" style="position:relative;" onclick="document.getElementById('tourStopsGrid')?.scrollIntoView({behavior:'smooth'})">
+                    Start Tour ↓
                 </button>
             </div>
-        </div>
-    `;
 
-    document.getElementById('schoolInfoPanel').innerHTML = tourHTML;
+            <!-- STATS -->
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem;">
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:8px 16px;font-size:0.82rem;color:var(--text-secondary);">
+                    <strong style="color:#fff;">${totalLoc}</strong> locations
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:8px 16px;font-size:0.82rem;color:var(--text-secondary);">
+                    <strong style="color:#fff;">${withPhotos}</strong> with photos
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:8px 16px;font-size:0.82rem;color:var(--text-secondary);">
+                    Managed by <strong style="color:#fff;">System Admin</strong>
+                </div>
+            </div>
+
+            ${storyHTML}
+            ${featuredHTML}
+
+            <!-- CATEGORY FILTERS -->
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.2rem;justify-content:center;">
+                ${groups.map(g => `
+                    <button onclick="showTourPage('${g}')"
+                        class="${activeFilter === g ? 'btn-primary' : 'btn-secondary'}"
+                        style="padding:7px 14px;font-size:0.78rem;border-radius:20px;">
+                        ${g}
+                    </button>`).join('')}
+            </div>
+
+            <!-- GRID -->
+            <div id="tourStopsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.2rem;">
+                ${cards || emptyHTML}
+            </div>
+
+            <div style="margin-top:2.5rem;text-align:center;">
+                <button onclick="showHome()" class="btn-secondary" style="padding:0.9rem 1.8rem;">← Back to Home</button>
+            </div>
+        </div>`;
+
+    if (schoolPanel) schoolPanel.innerHTML = tourHTML;
 }
 
-window.showTourLocationDetail = function(key) {
+window.showTourLocationDetail = function (key) {
+    ensureCorePanels();
     const data = getData();
     const loc = (data.tourManagement && data.tourManagement.locations || []).find(l => l.key === key);
     if (!loc) return;
 
+    const group = tourLocCategory(loc);
     let bodyHTML;
     if (loc.type === 'single_image') {
         bodyHTML = loc.image
-            ? `<div style="max-width:800px;margin:0 auto;"><img src="${loc.image}" style="width:100%;border-radius:16px;"></div>`
-            : `<p style="text-align:center;color:#c4b5fd;">No image uploaded yet — check back soon.</p>`;
+            ? `<div style="max-width:860px;margin:0 auto;"><img src="${loc.image}" style="width:100%;border-radius:16px;display:block;"></div>`
+            : `<div style="text-align:center;padding:2rem;color:var(--text-secondary);background:var(--bg-card);border-radius:14px;border:1px solid var(--border);">No image uploaded yet — check back soon.</div>`;
     } else if (!loc.categories || loc.categories.length === 0) {
-        bodyHTML = `<p style="text-align:center;color:#c4b5fd;">Content for this area is coming soon.</p>`;
+        bodyHTML = `<div style="text-align:center;padding:2rem;color:var(--text-secondary);background:var(--bg-card);border-radius:14px;border:1px solid var(--border);">Content for this area is coming soon. System Admin can add photos from Tour Management.</div>`;
     } else {
         bodyHTML = loc.categories.map(cat => {
             const imgsHTML = (cat.images || []).length === 0 ? '' : `
-                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:12px;">
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:12px;">
                     ${cat.images.map(img => `
-                        <div>
-                            <img src="${img.url}" style="width:100%;height:140px;object-fit:contain;background:#1a1a2e;border-radius:12px;">
-                            ${img.caption ? `<div style="font-size:0.78rem;color:#c4b5fd;margin-top:4px;">${img.caption}</div>` : ''}
+                        <div style="background:var(--bg-elevated);border-radius:12px;overflow:hidden;border:1px solid var(--border);">
+                            <img src="${img.url}" style="width:100%;height:140px;object-fit:cover;display:block;">
+                            ${img.caption ? `<div style="font-size:0.75rem;color:var(--text-secondary);padding:6px 8px;">${img.caption}</div>` : ''}
                         </div>`).join('')}
                 </div>`;
             const vidsHTML = (cat.videoLinks || []).length === 0 ? '' : `
@@ -674,9 +788,10 @@ window.showTourLocationDetail = function(key) {
                     ${cat.videoLinks.map(v => renderTourVideoEmbed(v)).join('')}
                 </div>`;
             return `
-            <div class="tour-card" style="margin-bottom:1.5rem;">
-                <h3>📁 ${cat.name}</h3>
-                ${(!cat.images || cat.images.length === 0) && (!cat.videoLinks || cat.videoLinks.length === 0) ? '<p style="color:#94a3b8;font-size:0.85rem;">No media added yet.</p>' : ''}
+            <div class="section-card" style="margin-bottom:1.2rem;">
+                <h3 style="margin:0 0 0.4rem;">📁 ${cat.name}</h3>
+                ${(!cat.images || cat.images.length === 0) && (!cat.videoLinks || cat.videoLinks.length === 0)
+                    ? '<p style="color:var(--text-secondary);font-size:0.85rem;margin:0;">No media added yet.</p>' : ''}
                 ${imgsHTML}
                 ${vidsHTML}
             </div>`;
@@ -684,15 +799,19 @@ window.showTourLocationDetail = function(key) {
     }
 
     const html = `
-        <div style="max-width:1100px; margin:0 auto; padding:2rem 1rem; color:white;">
-            <h2 style="text-align:center; margin-bottom:0.5rem; font-size:2.2rem;">${loc.icon} ${loc.label}</h2>
-            <div style="text-align:center;margin-bottom:2rem;">
-                <button onclick="showTourPage()" class="btn-secondary" style="padding:0.7rem 1.5rem;">← Back to Tour</button>
+        <div style="max-width:1100px;margin:0 auto;padding:1.5rem 1rem 3rem;color:white;">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:1.2rem;">
+                <div>
+                    <span style="font-size:0.7rem;background:rgba(168,85,247,.15);color:#c4b5fd;padding:3px 10px;border-radius:12px;">${group}</span>
+                    <h2 style="margin:0.4rem 0 0;font-size:clamp(1.4rem,3vw,2rem);">${loc.icon} ${loc.label}</h2>
+                </div>
+                <button onclick="showTourPage()" class="btn-secondary" style="padding:8px 16px;">← Back to Tour</button>
             </div>
             ${bodyHTML}
         </div>`;
 
-    document.getElementById('schoolInfoPanel').innerHTML = html;
+    const sp = document.getElementById('schoolInfoPanel');
+    if (sp) sp.innerHTML = html;
 };
 
 function renderTourVideoEmbed(v) {
@@ -713,9 +832,13 @@ function renderTourVideoEmbed(v) {
 }
 
 function showNewsletterPage() {
-    document.getElementById('schoolInfoPanel').style.display = 'block';
-    document.getElementById('loginFormContainer').style.display = 'none';
-    document.getElementById('dashboardContainer').style.display = 'none';
+    ensureCorePanels();
+    const _sp = document.getElementById('schoolInfoPanel');
+    const _lp = document.getElementById('loginFormContainer');
+    const _dp = document.getElementById('dashboardContainer');
+    if (_sp) _sp.style.display = 'block';
+    if (_lp) _lp.style.display = 'none';
+    if (_dp) _dp.style.display = 'none';
 
     const newsletterHTML = `
         <div style="max-width:1100px; margin:0 auto; padding:2rem 1rem; color:white;">
@@ -770,7 +893,7 @@ function showNewsletterPage() {
         </div>
     `;
 
-    document.getElementById('schoolInfoPanel').innerHTML = newsletterHTML;
+    if (_sp) _sp.innerHTML = newsletterHTML;
 }
 
 // Helper for newsletter subscription from the new page
@@ -797,9 +920,13 @@ window.subscribeNewsletterFromPage = function() {
 };
 
 function showExaminationPage() {
-    document.getElementById('schoolInfoPanel').style.display = 'block';
-    document.getElementById('loginFormContainer').style.display = 'none';
-    document.getElementById('dashboardContainer').style.display = 'none';
+    ensureCorePanels();
+    const _sp = document.getElementById('schoolInfoPanel');
+    const _lp = document.getElementById('loginFormContainer');
+    const _dp = document.getElementById('dashboardContainer');
+    if (_sp) _sp.style.display = 'block';
+    if (_lp) _lp.style.display = 'none';
+    if (_dp) _dp.style.display = 'none';
 
     const examHTML = `
         <div style="max-width:1100px; margin:0 auto; padding:2rem 1rem; color:white;">
@@ -854,13 +981,17 @@ function showExaminationPage() {
         </div>
     `;
 
-    document.getElementById('schoolInfoPanel').innerHTML = examHTML;
+    if (_sp) _sp.innerHTML = examHTML;
 }
 
 function showGlobalNoticeBoard() {
-    document.getElementById('schoolInfoPanel').style.display = 'block';
-    document.getElementById('loginFormContainer').style.display = 'none';
-    document.getElementById('dashboardContainer').style.display = 'none';
+    ensureCorePanels();
+    const _sp = document.getElementById('schoolInfoPanel');
+    const _lp = document.getElementById('loginFormContainer');
+    const _dp = document.getElementById('dashboardContainer');
+    if (_sp) _sp.style.display = 'block';
+    if (_lp) _lp.style.display = 'none';
+    if (_dp) _dp.style.display = 'none';
 
     const data = getData();
     const notices = data.noticeboard || [];
@@ -898,7 +1029,7 @@ function showGlobalNoticeBoard() {
         </div>
     `;
 
-    document.getElementById('schoolInfoPanel').innerHTML = html;
+    if (_sp) _sp.innerHTML = html;
 }
 
 
@@ -3961,26 +4092,34 @@ window.infraPostNotice = function() {
 ══════════════════════════════════════════ */
 
 function renderExamOfficePanel(user) {
-    const unread = (getData().examOfficeReceived || []).filter(r => !r.read).length;
+    const data = getData();
+    const unread = (data.examOfficeReceived || []).filter(r => !r.read).length;
+    const pendingExam = (data.examRegistrations || []).filter(r => r.status === 'pending_exam').length;
     return `
     <div class="admin-layout">
         <div class="admin-sidenav">
             <div class="admin-sidenav-title"><i class="fas fa-building"></i> Exam Office Menu</div>
+            <button class="admin-nav-btn active" onclick="examOfficeSection('dashboard',this)"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
             <button class="admin-nav-btn" onclick="examOfficeSection('profile',this)"><i class="fas fa-user"></i> Profile</button>
-            <button class="admin-nav-btn active" onclick="examOfficeSection('received',this)">
+            <button class="admin-nav-btn" onclick="examOfficeSection('received',this)">
                 <i class="fas fa-bell"></i> Received
                 ${unread > 0 ? `<span style="background:var(--danger);color:#fff;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${unread}</span>` : ''}
             </button>
-            <button class="admin-nav-btn" onclick="examOfficeSection('pending',this)"><i class="fas fa-clock"></i> Pending Final Approval</button>
-            <button class="admin-nav-btn" onclick="examOfficeSection('registered',this)"><i class="fas fa-check-circle"></i> Registered Students</button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('registrations',this)">
+                <i class="fas fa-clipboard-list"></i> Registrations
+                ${pendingExam > 0 ? `<span style="background:var(--warning);color:#000;border-radius:12px;padding:2px 7px;font-size:0.65rem;margin-left:4px;">${pendingExam}</span>` : ''}
+            </button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('pending',this)"><i class="fas fa-clock"></i> Pending Approval</button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('special',this)"><i class="fas fa-star"></i> Special Sittings</button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('registered',this)"><i class="fas fa-check-circle"></i> Registered</button>
             <button class="admin-nav-btn" onclick="examOfficeSection('booking',this)"><i class="fas fa-calendar-check"></i> Booking</button>
             <button class="admin-nav-btn" onclick="examOfficeSection('store',this)"><i class="fas fa-archive"></i> My Store</button>
             <button class="admin-nav-btn" onclick="examOfficeSection('send',this)"><i class="fas fa-paper-plane"></i> Send</button>
             <button class="admin-nav-btn" onclick="examOfficeSection('register',this)"><i class="fas fa-list"></i> Exam Register</button>
-            <button class="admin-nav-btn" onclick="examOfficeSection('report',this)"><i class="fas fa-chart-bar"></i> Report</button>
+            <button class="admin-nav-btn" onclick="examOfficeSection('report',this)"><i class="fas fa-chart-bar"></i> Reports</button>
         </div>
         <div class="admin-main" id="examOfficeMain">
-            ${examOfficeReceivedHTML()}
+            ${examOfficeDashboardHTML()}
         </div>
     </div>`;
 }
@@ -3989,17 +4128,364 @@ window.examOfficeSection = function(section, btn) {
     document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
     const map = {
-        profile:    examOfficeProfileHTML,
-        received:   examOfficeReceivedHTML,
-        pending:    examOfficePendingHTML,
-        registered: examOfficeRegisteredHTML,
-        booking:    () => examOfficeBookingHTML(window._examBookingFilters || {}),
-        store:      () => examOfficeStoreHTML(window._examStoreFilters || {}),
-        send:       examOfficeSendHTML,
-        register:   examOfficeRegisterHTML,
-        report:     examOfficeReportHTML
+        dashboard:     examOfficeDashboardHTML,
+        profile:       examOfficeProfileHTML,
+        received:      examOfficeReceivedHTML,
+        registrations: () => examOfficeRegistrationsHTML(window._examRegFilters || {}),
+        pending:       examOfficePendingHTML,
+        special:       examOfficeSpecialSittingsHTML,
+        registered:    examOfficeRegisteredHTML,
+        booking:       () => examOfficeBookingHTML(window._examBookingFilters || {}),
+        store:         () => examOfficeStoreHTML(window._examStoreFilters || {}),
+        send:          examOfficeSendHTML,
+        register:      examOfficeRegisterHTML,
+        report:        examOfficeReportHTML
     };
-    document.getElementById('examOfficeMain').innerHTML = (map[section] || examOfficeReceivedHTML)();
+    const main = document.getElementById('examOfficeMain');
+    if (main) main.innerHTML = (map[section] || examOfficeDashboardHTML)();
+};
+
+/* ══════════════════ DASHBOARD (Option D) ══════════════════ */
+function examOfficeDashboardHTML() {
+    const data = getData();
+    const regs = data.examRegistrations || [];
+    const counts = {
+        pending:  regs.filter(r => r.status === 'pending_exam').length,
+        approved: regs.filter(r => r.status === 'approved').length,
+        special:  regs.filter(r => r.status === 'special' || r.specialSitting).length,
+        rejected: regs.filter(r => r.status === 'rejected').length,
+        pipeline: regs.filter(r => ['pending_deo','pending_hod','pending_finance','pending_deputy'].includes(r.status)).length
+    };
+    const sittings = data.examSpecialSittings || [];
+    const upcoming = sittings.filter(s => s.date && s.date >= new Date().toISOString().slice(0,10)).length;
+
+    return `
+        <div class="admin-section-head">📋 Exam Office Dashboard</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:1.2rem;">
+            <div class="stat-card" style="cursor:pointer;" onclick="examOfficeSection('registrations',null); document.querySelectorAll('.admin-nav-btn').forEach(b=>b.classList.remove('active'));">
+                <h3 style="color:var(--warning);">${counts.pending}</h3><p>Pending exam</p>
+            </div>
+            <div class="stat-card"><h3 style="color:var(--success);">${counts.approved}</h3><p>Approved / cleared</p></div>
+            <div class="stat-card"><h3 style="color:#a855f7;">${counts.special}</h3><p>Special sittings</p></div>
+            <div class="stat-card"><h3 style="color:var(--danger);">${counts.rejected}</h3><p>Rejected</p></div>
+            <div class="stat-card"><h3>${counts.pipeline}</h3><p>Still in pipeline</p></div>
+            <div class="stat-card"><h3 style="color:var(--accent-cyan);">${upcoming}</h3><p>Upcoming sittings</p></div>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Status pipeline</div>
+            <p style="font-size:0.8rem;color:var(--text-secondary);margin:0.5rem 0 0;">
+                Student → DEO → HOD → Finance → Deputy → <strong style="color:#c4b5fd;">Exam Office</strong> → Cleared
+            </p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn-primary" onclick="examOfficeSection('registrations',null)">Open Registrations</button>
+            <button class="btn-secondary" onclick="examOfficeSection('special',null)">Special Sittings</button>
+            <button class="btn-secondary" onclick="examOfficeSection('report',null)">Reports</button>
+        </div>`;
+}
+
+/* ══════════════════ REGISTRATIONS + BULK (Option D) ══════════════════ */
+function examOfficeRegistrationsHTML(filters) {
+    filters = filters || {};
+    const data = getData();
+    let regs = (data.examRegistrations || []).slice();
+
+    const q = (filters.search || '').toLowerCase().trim();
+    const statusF = filters.status || '';
+    if (q) {
+        regs = regs.filter(r => {
+            const st = data.students.find(s => s.id === r.studentId) || {};
+            return (r.studentId || '').toLowerCase().includes(q) ||
+                   (st.name || '').toLowerCase().includes(q) ||
+                   (st.department || r.department || '').toLowerCase().includes(q);
+        });
+    }
+    if (statusF) regs = regs.filter(r => r.status === statusF);
+
+    const statusBadge = (st) => {
+        const map = {
+            pending_exam: ['⏳ Pending exam', 'var(--warning)'],
+            approved: ['✅ Approved', 'var(--success)'],
+            rejected: ['❌ Rejected', 'var(--danger)'],
+            special: ['⭐ Special', '#a855f7'],
+            pending_deo: ['DEO', '#94a3b8'],
+            pending_hod: ['HOD', '#94a3b8'],
+            pending_finance: ['Finance', '#94a3b8'],
+            pending_deputy: ['Deputy', '#94a3b8']
+        };
+        const [label, color] = map[st] || [st || '—', '#94a3b8'];
+        return `<span style="font-size:0.68rem;padding:2px 8px;border-radius:10px;background:${color}22;border:1px solid ${color};color:${color};">${label}</span>`;
+    };
+
+    const rows = regs.length === 0
+        ? `<tr><td colspan="7" style="text-align:center;padding:1.5rem;color:var(--text-secondary);">No registrations match this filter.</td></tr>`
+        : regs.map(reg => {
+            const st = data.students.find(s => s.id === reg.studentId) || {};
+            const units = (reg.units || []).length;
+            return `
+            <tr>
+                <td><input type="checkbox" class="examRegCb" value="${reg.id}"></td>
+                <td style="font-weight:600;color:#fff;">${st.name || reg.studentId}</td>
+                <td style="font-size:0.78rem;">${reg.studentId}</td>
+                <td style="font-size:0.78rem;">${st.department || reg.department || '—'}</td>
+                <td style="font-size:0.78rem;">${units} unit${units===1?'':'s'}</td>
+                <td>${statusBadge(reg.status)}</td>
+                <td style="white-space:nowrap;">
+                    ${reg.status === 'pending_exam' ? `
+                        <button class="admin-btn-primary" style="font-size:0.68rem;padding:4px 8px;" onclick="examOfficeRegisterStudent('${reg.id}')">Approve</button>
+                        <button class="admin-action-btn danger" style="font-size:0.68rem;padding:4px 8px;" onclick="examOfficeReject('${reg.id}')">Reject</button>
+                        <button class="admin-btn-secondary" style="font-size:0.68rem;padding:4px 8px;" onclick="examOfficeMoveToSpecial('${reg.id}')">Special</button>
+                    ` : `<span style="font-size:0.72rem;color:var(--text-secondary);">—</span>`}
+                </td>
+            </tr>`;
+        }).join('');
+
+    return `
+        <div class="admin-section-head">📋 Registrations (${regs.length})</div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;align-items:end;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">SEARCH</label>
+                    <input id="examRegSearch" class="admin-input" placeholder="Name or admission no" value="${filters.search || ''}">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">STATUS</label>
+                    <select id="examRegStatus" class="admin-input">
+                        <option value="">All statuses</option>
+                        <option value="pending_exam" ${statusF==='pending_exam'?'selected':''}>Pending exam</option>
+                        <option value="approved" ${statusF==='approved'?'selected':''}>Approved</option>
+                        <option value="special" ${statusF==='special'?'selected':''}>Special</option>
+                        <option value="rejected" ${statusF==='rejected'?'selected':''}>Rejected</option>
+                    </select>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="btn-primary" onclick="examOfficeApplyRegFilter()">Filter</button>
+                    <button class="btn-secondary" onclick="examOfficeClearRegFilter()">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                <strong style="font-size:0.8rem;color:var(--text-secondary);">Bulk:</strong>
+                <button class="btn-primary" style="font-size:0.75rem;padding:6px 12px;" onclick="examOfficeBulkAction('approve')">Approve selected</button>
+                <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px;" onclick="examOfficeBulkAction('reject')">Reject selected</button>
+                <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px;" onclick="examOfficeBulkAction('special')">Move to special</button>
+                <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px;" onclick="examOfficeExportRegs()">Export CSV</button>
+            </div>
+        </div>
+        <div class="admin-card" style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+                <thead>
+                    <tr style="text-align:left;color:var(--text-secondary);border-bottom:1px solid var(--border);">
+                        <th style="padding:8px;"><input type="checkbox" onclick="document.querySelectorAll('.examRegCb').forEach(c=>c.checked=this.checked)"></th>
+                        <th style="padding:8px;">Student</th>
+                        <th style="padding:8px;">Admission</th>
+                        <th style="padding:8px;">Course</th>
+                        <th style="padding:8px;">Units</th>
+                        <th style="padding:8px;">Status</th>
+                        <th style="padding:8px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>`;
+}
+
+window.examOfficeApplyRegFilter = function () {
+    window._examRegFilters = {
+        search: (document.getElementById('examRegSearch') || {}).value || '',
+        status: (document.getElementById('examRegStatus') || {}).value || ''
+    };
+    const main = document.getElementById('examOfficeMain');
+    if (main) main.innerHTML = examOfficeRegistrationsHTML(window._examRegFilters);
+};
+
+window.examOfficeClearRegFilter = function () {
+    window._examRegFilters = {};
+    const main = document.getElementById('examOfficeMain');
+    if (main) main.innerHTML = examOfficeRegistrationsHTML({});
+};
+
+window.examOfficeBulkAction = function (action) {
+    const ids = [...document.querySelectorAll('.examRegCb:checked')].map(c => c.value);
+    if (ids.length === 0) return alert('Select at least one registration.');
+    if (action === 'reject') {
+        const reason = prompt('Reason for rejection (applies to all selected):');
+        if (!reason) return;
+        const data = getData();
+        ids.forEach(id => {
+            const reg = data.examRegistrations.find(r => r.id === id);
+            if (reg && reg.status === 'pending_exam') {
+                reg.status = 'rejected';
+                reg.rejectedBy = 'Exam Office';
+                reg.rejectionReason = reason;
+            }
+        });
+        saveData(data);
+        alert(ids.length + ' registration(s) rejected.');
+    } else if (action === 'approve') {
+        const data = getData();
+        ids.forEach(id => {
+            const reg = data.examRegistrations.find(r => r.id === id);
+            if (reg && reg.status === 'pending_exam') {
+                reg.status = 'approved';
+                reg.examApproved = true;
+                reg.examApprovedDate = new Date().toISOString();
+            }
+        });
+        saveData(data);
+        alert(ids.length + ' registration(s) approved.');
+    } else if (action === 'special') {
+        const data = getData();
+        ids.forEach(id => {
+            const reg = data.examRegistrations.find(r => r.id === id);
+            if (reg) {
+                reg.status = 'special';
+                reg.specialSitting = true;
+            }
+        });
+        saveData(data);
+        alert(ids.length + ' moved to special sittings.');
+    }
+    examOfficeApplyRegFilter();
+};
+
+window.examOfficeMoveToSpecial = function (regId) {
+    const data = getData();
+    const reg = data.examRegistrations.find(r => r.id === regId);
+    if (!reg) return;
+    reg.status = 'special';
+    reg.specialSitting = true;
+    saveData(data);
+    showSuccessAlert('Moved to Special Sittings.');
+    const main = document.getElementById('examOfficeMain');
+    if (main) main.innerHTML = examOfficeRegistrationsHTML(window._examRegFilters || {});
+};
+
+window.examOfficeExportRegs = function () {
+    const data = getData();
+    const regs = data.examRegistrations || [];
+    const headers = 'ID,StudentId,Name,Department,Status,Units,Fee';
+    const body = regs.map(r => {
+        const st = data.students.find(s => s.id === r.studentId) || {};
+        return `"${r.id}","${r.studentId}","${st.name||''}","${st.department||r.department||''}","${r.status}","${(r.units||[]).length}","${r.totalExamFee||0}"`;
+    }).join('\n');
+    const blob = new Blob([headers + '\n' + body], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'exam_registrations.csv';
+    a.click();
+};
+
+/* ══════════════════ SPECIAL SITTINGS (Option D) ══════════════════ */
+function examOfficeSpecialSittingsHTML() {
+    const data = getData();
+    data.examSpecialSittings = data.examSpecialSittings || [];
+    const sittings = data.examSpecialSittings;
+    const specialRegs = (data.examRegistrations || []).filter(r => r.status === 'special' || r.specialSitting);
+
+    const sittingCards = sittings.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No special sittings scheduled yet.</p>`
+        : sittings.map((s, idx) => `
+            <div class="admin-card" style="margin-bottom:10px;border-left:4px solid #a855f7;">
+                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                    <div>
+                        <strong style="color:#fff;">${s.title || 'Special Sitting'}</strong>
+                        <div style="font-size:0.78rem;color:var(--text-secondary);margin-top:4px;">
+                            📅 ${s.date || '—'} · ${s.course || 'All courses'} · Fee: KSh ${(s.fee || 0).toLocaleString()}
+                        </div>
+                        ${s.units ? `<div style="font-size:0.75rem;color:var(--text-secondary);">Units: ${s.units}</div>` : ''}
+                        ${s.note ? `<div style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">${s.note}</div>` : ''}
+                    </div>
+                    <button class="admin-action-btn danger" style="font-size:0.7rem;padding:4px 10px;" onclick="examOfficeDeleteSitting(${idx})">Delete</button>
+                </div>
+            </div>`).join('');
+
+    const candidateRows = specialRegs.length === 0
+        ? `<p style="color:var(--text-secondary);font-size:0.85rem;">No students marked for special sitting yet. Use Registrations → Special.</p>`
+        : specialRegs.map(reg => {
+            const st = data.students.find(s => s.id === reg.studentId) || {};
+            return `
+            <div class="admin-card" style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                <div>
+                    <strong>${st.name || reg.studentId}</strong>
+                    <div style="font-size:0.75rem;color:var(--text-secondary);">${reg.studentId} · ${st.department || '—'}</div>
+                </div>
+                <button class="admin-btn-primary" style="font-size:0.7rem;padding:4px 10px;" onclick="examOfficeRegisterStudent('${reg.id}')">Approve as cleared</button>
+            </div>`;
+        }).join('');
+
+    return `
+        <div class="admin-section-head">⭐ Special Sittings</div>
+        <div class="admin-card" style="margin-bottom:1rem;border:2px dashed var(--accent-purple);">
+            <div class="admin-card-title">+ Schedule Special Sitting</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">TITLE</label>
+                    <input id="ssTitle" class="admin-input" placeholder="e.g. Retake — Module 3">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">DATE</label>
+                    <input id="ssDate" type="date" class="admin-input">
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">COURSE</label>
+                    <input id="ssCourse" class="admin-input" placeholder="Computer Studies">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">UNITS</label>
+                    <input id="ssUnits" class="admin-input" placeholder="CS101, CS102">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">FEE (KSh)</label>
+                    <input id="ssFee" type="number" class="admin-input" placeholder="200" value="200">
+                </div>
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">NOTE</label>
+                <input id="ssNote" class="admin-input" placeholder="Optional note">
+            </div>
+            <button class="btn-primary" style="margin-top:12px;" onclick="examOfficeSaveSitting()">Save Special Sitting</button>
+        </div>
+        <div class="admin-card" style="margin-bottom:1rem;">
+            <div class="admin-card-title">Scheduled sittings</div>
+            ${sittingCards}
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-title">Candidates (status = special)</div>
+            ${candidateRows}
+        </div>`;
+}
+
+window.examOfficeSaveSitting = function () {
+    const title = (document.getElementById('ssTitle') || {}).value?.trim();
+    if (!title) return alert('Title is required');
+    const data = getData();
+    data.examSpecialSittings = data.examSpecialSittings || [];
+    data.examSpecialSittings.push({
+        id: 'SS-' + Date.now(),
+        title,
+        date: (document.getElementById('ssDate') || {}).value || '',
+        course: (document.getElementById('ssCourse') || {}).value?.trim() || '',
+        units: (document.getElementById('ssUnits') || {}).value?.trim() || '',
+        fee: parseInt((document.getElementById('ssFee') || {}).value, 10) || 0,
+        note: (document.getElementById('ssNote') || {}).value?.trim() || ''
+    });
+    saveData(data);
+    alert('Special sitting scheduled.');
+    const main = document.getElementById('examOfficeMain');
+    if (main) main.innerHTML = examOfficeSpecialSittingsHTML();
+};
+
+window.examOfficeDeleteSitting = function (idx) {
+    if (!confirm('Delete this special sitting?')) return;
+    const data = getData();
+    data.examSpecialSittings.splice(idx, 1);
+    saveData(data);
+    const main = document.getElementById('examOfficeMain');
+    if (main) main.innerHTML = examOfficeSpecialSittingsHTML();
 };
 
 /* ══════════════════ PROFILE ══════════════════ */
@@ -4399,31 +4885,34 @@ window.examOfficeSendToDepartment = function() {
 /* ══════════════════ PENDING FINAL APPROVAL (kept) ══════════════════ */
 function examOfficePendingHTML() {
     const data = getData();
-    let pending = data.examRegistrations.filter(r => r.status === 'pending_exam');
+    const pending = (data.examRegistrations || []).filter(r => r.status === 'pending_exam');
 
     if (pending.length === 0) {
-        pending = [{
-            id: "REG-687074", studentId: "STU-2026-20670", status: "pending_exam",
-            totalExamFee: 4700, units: [{name:"Computer Essentials", code:"CS101"}],
-            submittedDate: new Date().toISOString()
-        }];
+        return `
+            <div class="admin-section-head">📋 Pending Final Approval (0)</div>
+            <div class="admin-card" style="text-align:center;padding:2rem;color:var(--text-secondary);">
+                No registrations awaiting Exam Office approval.<br>
+                <button class="btn-secondary" style="margin-top:12px;" onclick="examOfficeSection('registrations',null)">View all registrations</button>
+            </div>`;
     }
 
     const cards = pending.map(reg => {
-        const student = data.students.find(s => s.id === reg.studentId) || {name: "Sarah Achieng"};
+        const student = data.students.find(s => s.id === reg.studentId) || { name: reg.studentId };
+        const units = reg.units || [];
         return `
         <div class="admin-card" style="margin-bottom:15px;">
-            <div style="font-weight:700;">${student.name}</div>
+            <div style="font-weight:700;color:#fff;">${student.name}</div>
             <div style="color:var(--text-secondary);font-size:0.8rem;">
-                ${reg.studentId} • ${student.department || 'Computer Studies'}
+                ${reg.studentId} • ${student.department || reg.department || '—'}
             </div>
-            <div style="margin:12px 0;background:var(--bg-elevated);padding:12px;border-radius:10px;">
-                <strong>Units:</strong> ${reg.units.length}<br>
+            <div style="margin:12px 0;background:var(--bg-elevated);padding:12px;border-radius:10px;font-size:0.85rem;">
+                <strong>Units:</strong> ${units.length}<br>
                 <strong>Exam Fee:</strong> KSh ${(reg.totalExamFee || 0).toLocaleString()}
             </div>
-            <div style="display:flex;gap:10px;">
-                <button class="admin-btn-primary" onclick="examOfficeRegisterStudent('${reg.id}')">✅ Register for Exams</button>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="admin-btn-primary" onclick="examOfficeRegisterStudent('${reg.id}')">✅ Approve</button>
                 <button class="admin-action-btn danger" onclick="examOfficeReject('${reg.id}')">❌ Reject</button>
+                <button class="admin-btn-secondary" onclick="examOfficeMoveToSpecial('${reg.id}')">⭐ Special</button>
             </div>
         </div>`;
     }).join('');
@@ -4438,9 +4927,15 @@ window.examOfficeRegisterStudent = function(regId) {
     reg.status = 'approved';
     reg.examApproved = true;
     reg.examApprovedDate = new Date().toISOString();
+    reg.specialSitting = false;
     saveData(data);
     showSuccessAlert(`Registration ${regId} approved successfully!<br>Student is now fully registered for exams.`);
-    document.getElementById('examOfficeMain').innerHTML = examOfficePendingHTML();
+    const main = document.getElementById('examOfficeMain');
+    if (main) {
+        // stay on current view if possible
+        if (window._examRegFilters) main.innerHTML = examOfficeRegistrationsHTML(window._examRegFilters);
+        else main.innerHTML = examOfficePendingHTML();
+    }
 };
 
 window.examOfficeReject = function(regId) {
@@ -4454,7 +4949,11 @@ window.examOfficeReject = function(regId) {
         reg.rejectionReason = reason;
         saveData(data);
         showSuccessAlert(`Registration ${regId} has been rejected.`);
-        document.getElementById('examOfficeMain').innerHTML = examOfficePendingHTML();
+        const main = document.getElementById('examOfficeMain');
+        if (main) {
+            if (window._examRegFilters) main.innerHTML = examOfficeRegistrationsHTML(window._examRegFilters);
+            else main.innerHTML = examOfficePendingHTML();
+        }
     }
 };
 
@@ -10705,11 +11204,11 @@ function renderAdminPanel() {
 
 /* ── Section switcher ── */
 window.adminSection = function(section, btn) {
-    // Student Wall is a full-screen overlay — handle separately
+    // Student Wall inside System Admin — keep left sidebar
     if (section === 'studentwall') {
         document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        showStudentWall();
+        showStudentWall({ fromAdmin: true });
         return;
     }
     // Magazine Management also takes over the content area
@@ -11425,6 +11924,7 @@ function adminTourManagementHTML() {
             <button class="admin-action-btn edit" style="margin-top:6px;width:100%;font-size:0.68rem;" onclick="adminOpenTourLocation('${loc.key}')">
                 ⚙ Manage Categories &amp; Videos
             </button>
+            ${loc.custom ? `<button class="admin-action-btn danger" style="margin-top:6px;width:100%;font-size:0.68rem;" onclick="adminDeleteTourLocation('${loc.key}')">🗑 Delete Location</button>` : ''}
         </div>`;
     }).join('');
 
@@ -11432,12 +11932,26 @@ function adminTourManagementHTML() {
         <div class="admin-section-head">🎥 Tour Management</div>
         <div class="admin-card" style="margin-bottom:1rem;">
             <p style="font-size:0.78rem;color:var(--text-secondary);">
-                Controls exactly what visitors see on the public School Tour page. Click a location to add,
-                rename, or delete categories, upload images (auto-compressed for storage), and add video links
-                (paste any link now — swap for the real one anytime).
+                Controls exactly what visitors see on the public School Tour page. Add new buildings or areas,
+                upload images, manage categories, and edit the school story.
             </p>
         </div>
         ${storyCard}
+
+        <!-- ADD NEW TOUR LOCATION -->
+        <div class="admin-card" style="margin-bottom:1rem;border:2px dashed var(--accent-purple);">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                <div>
+                    <div class="admin-card-title" style="margin:0;">+ Add Tour Location</div>
+                    <p style="font-size:0.75rem;color:var(--text-secondary);margin:4px 0 0;">
+                        New building, workshop, hostel wing, or any campus area.
+                    </p>
+                </div>
+                <button class="btn-primary" onclick="adminShowAddTourLocationForm()">+ Add Location</button>
+            </div>
+            <div id="addTourLocationForm" style="margin-top:12px;"></div>
+        </div>
+
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;">
             ${cards}
         </div>
@@ -11453,6 +11967,91 @@ window.adminSaveTourStory = function() {
     saveData(data);
     adminLog('Admin updated School Story (History/Challenges/Quote)');
     alert('✅ School Story published to the Tour page.');
+};
+
+window.adminShowAddTourLocationForm = function () {
+    const area = document.getElementById('addTourLocationForm');
+    if (!area) return;
+    area.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div>
+                <label style="font-size:0.7rem;color:var(--text-secondary);">LOCATION NAME</label>
+                <input id="newTourLabel" class="admin-input" placeholder="e.g. New ICT Block">
+            </div>
+            <div>
+                <label style="font-size:0.7rem;color:var(--text-secondary);">ICON (emoji)</label>
+                <input id="newTourIcon" class="admin-input" placeholder="🏛️" value="🏛️">
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+            <div>
+                <label style="font-size:0.7rem;color:var(--text-secondary);">CATEGORY (filter group)</label>
+                <select id="newTourGroup" class="admin-input">
+                    <option value="Buildings">Buildings</option>
+                    <option value="Learning">Learning</option>
+                    <option value="Workshops">Workshops</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Hostels">Hostels</option>
+                    <option value="Overview">Overview</option>
+                    <option value="Campus">Campus</option>
+                </select>
+            </div>
+            <div>
+                <label style="font-size:0.7rem;color:var(--text-secondary);">TYPE</label>
+                <select id="newTourType" class="admin-input">
+                    <option value="categorized">Categories + photo gallery</option>
+                    <option value="single_image">Single cover image only</option>
+                </select>
+            </div>
+        </div>
+        <div style="margin-top:8px;">
+            <label style="font-size:0.7rem;color:var(--text-secondary);">SHORT DESCRIPTION (optional)</label>
+            <input id="newTourDesc" class="admin-input" placeholder="e.g. Opened 2026 — houses Computer Studies labs">
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+            <button class="btn-primary" onclick="adminSaveNewTourLocation()">Save Location</button>
+            <button class="btn-secondary" onclick="document.getElementById('addTourLocationForm').innerHTML=''">Cancel</button>
+        </div>`;
+};
+
+window.adminSaveNewTourLocation = function () {
+    const label = (document.getElementById('newTourLabel') || {}).value?.trim();
+    if (!label) return alert('Location name is required');
+    const icon = (document.getElementById('newTourIcon') || {}).value?.trim() || '🏛️';
+    const group = (document.getElementById('newTourGroup') || {}).value || 'Campus';
+    const type = (document.getElementById('newTourType') || {}).value || 'categorized';
+    const desc = (document.getElementById('newTourDesc') || {}).value?.trim() || '';
+
+    const data = getData();
+    data.tourManagement = data.tourManagement || { story: {}, locations: [] };
+    data.tourManagement.locations = data.tourManagement.locations || [];
+
+    const key = 'loc_' + Date.now() + '_' + label.toLowerCase().replace(/[^a-z0-9]+/g, '_').slice(0, 20);
+    const loc = {
+        key,
+        label,
+        icon,
+        group,
+        description: desc,
+        custom: true,
+        type,
+        categories: type === 'categorized' ? [] : undefined,
+        image: type === 'single_image' ? null : undefined
+    };
+    data.tourManagement.locations.push(loc);
+    saveData(data);
+    if (typeof adminLog === 'function') adminLog('Admin added tour location: ' + label);
+    alert('✅ Location added. It will appear on the public Tour page.');
+    document.getElementById('adminMain').innerHTML = adminTourManagementHTML();
+};
+
+window.adminDeleteTourLocation = function (key) {
+    if (!confirm('Delete this tour location and all its photos? This cannot be undone.')) return;
+    const data = getData();
+    data.tourManagement.locations = (data.tourManagement.locations || []).filter(l => l.key !== key);
+    saveData(data);
+    if (typeof adminLog === 'function') adminLog('Admin deleted tour location: ' + key);
+    document.getElementById('adminMain').innerHTML = adminTourManagementHTML();
 };
 
 /* Quick-upload straight from the main grid card.
@@ -12840,114 +13439,333 @@ if (!data.examOfficeReceived) { data.examOfficeReceived  = []; changed = true; }
    STUDENT WALL — Self-contained overlay (works regardless of page layout)
 ══════════════════════════════════════════ */
 
-window.showStudentWall = function() {
+/* ============================================================
+   STUDENT WALL — Option D Hybrid (Alumni / Graduates)
+   Filters: Course + Year + Search
+   Grouped: Year → Course → cards
+   ============================================================ */
+
+function getAlumniRecords() {
+    const data = getData();
+    // Prefer graduated; include all that have yearGraduated or status graduated
+    return (data.studentWallRecords || []).filter(r =>
+        r.status === 'graduated' || r.yearGraduated || r.graduationDate
+    );
+}
+
+function studentWallCard(r) {
+    const dateStr = r.graduationDate || (r.yearGraduated ? String(r.yearGraduated) : '');
+    const course = r.course || r.department || '';
+    const photo = r.photo
+        ? `<img src="${r.photo}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--accent-purple);">`
+        : `<div style="width:72px;height:72px;border-radius:50%;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;font-size:1.6rem;border:2px solid var(--border);">🎓</div>`;
+    return `
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1rem;display:flex;gap:12px;align-items:center;">
+            ${photo}
+            <div style="min-width:0;flex:1;">
+                <div style="font-weight:700;color:#fff;font-size:0.95rem;">${r.name || ''}</div>
+                <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:2px;">${r.admissionNo || ''} · ${course}</div>
+                <div style="font-size:0.72rem;color:var(--accent-cyan);margin-top:4px;">🎓 ${dateStr || 'Graduated'}</div>
+                ${r.note ? `<div style="font-size:0.72rem;color:var(--text-secondary);margin-top:4px;font-style:italic;">${r.note}</div>` : ''}
+            </div>
+        </div>`;
+}
+
+function studentWallPublicHTML(filters) {
+    filters = filters || window._studentWallFilters || {};
+    let records = getAlumniRecords();
+
+    const q = (filters.search || '').toLowerCase().trim();
+    const courseF = (filters.course || '').trim();
+    const yearF = (filters.year || '').trim();
+
+    if (q) {
+        records = records.filter(r =>
+            (r.name || '').toLowerCase().includes(q) ||
+            (r.admissionNo || '').toLowerCase().includes(q) ||
+            (r.course || r.department || '').toLowerCase().includes(q)
+        );
+    }
+    if (courseF) {
+        records = records.filter(r => (r.course || r.department || '') === courseF);
+    }
+    if (yearF) {
+        records = records.filter(r => {
+            const y = r.yearGraduated || (r.graduationDate || '').slice(0, 4);
+            return String(y) === String(yearF);
+        });
+    }
+
+    // Unique courses & years for filters
+    const all = getAlumniRecords();
+    const courses = [...new Set(all.map(r => r.course || r.department).filter(Boolean))].sort();
+    const years = [...new Set(all.map(r => r.yearGraduated || (r.graduationDate || '').slice(0, 4)).filter(Boolean))]
+        .map(Number).filter(n => !isNaN(n)).sort((a, b) => b - a);
+
+    // Group Year → Course
+    const byYear = {};
+    records.forEach(r => {
+        const y = r.yearGraduated || (r.graduationDate || '').slice(0, 4) || 'Unknown';
+        if (!byYear[y]) byYear[y] = {};
+        const c = r.course || r.department || 'General';
+        if (!byYear[y][c]) byYear[y][c] = [];
+        byYear[y][c].push(r);
+    });
+    const yearKeys = Object.keys(byYear).sort((a, b) => {
+        if (a === 'Unknown') return 1;
+        if (b === 'Unknown') return -1;
+        return Number(b) - Number(a);
+    });
+
+    let body = '';
+    if (yearKeys.length === 0) {
+        body = `<div class="section-card" style="text-align:center;color:var(--text-secondary);padding:2rem;">
+            No graduates match this filter. Admin can add alumni from Magazine / Student Wall management.
+        </div>`;
+    } else {
+        yearKeys.forEach(y => {
+            const coursesInYear = Object.keys(byYear[y]).sort();
+            let courseBlocks = coursesInYear.map(c => {
+                const cards = byYear[y][c].map(studentWallCard).join('');
+                return `
+                    <div style="margin-bottom:1rem;">
+                        <div style="font-size:0.8rem;color:var(--accent-cyan);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.4px;">
+                            ${c} <span style="color:var(--text-secondary);font-weight:500;">(${byYear[y][c].length})</span>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">${cards}</div>
+                    </div>`;
+            }).join('');
+            body += `
+                <div class="section-card" style="margin-bottom:1.2rem;">
+                    <h3 style="margin:0 0 1rem;color:#a855f7;">📅 Class of ${y}</h3>
+                    ${courseBlocks}
+                </div>`;
+        });
+    }
+
+    // Recent strip (top 6 newest)
+    const recent = getAlumniRecords()
+        .slice()
+        .sort((a, b) => {
+            const ya = a.yearGraduated || 0;
+            const yb = b.yearGraduated || 0;
+            return yb - ya;
+        })
+        .slice(0, 6);
+
+    const recentHTML = recent.length ? `
+        <div style="margin-bottom:1.4rem;">
+            <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Recent graduates</div>
+            <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;">
+                ${recent.map(r => `
+                    <div style="min-width:140px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:0.8rem;text-align:center;flex-shrink:0;">
+                        ${r.photo
+                            ? `<img src="${r.photo}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;margin-bottom:6px;border:2px solid var(--accent-purple);">`
+                            : `<div style="width:56px;height:56px;border-radius:50%;background:var(--bg-elevated);margin:0 auto 6px;display:flex;align-items:center;justify-content:center;">🎓</div>`}
+                        <div style="font-weight:700;color:#fff;font-size:0.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.name}</div>
+                        <div style="font-size:0.68rem;color:var(--text-secondary);">${r.course || r.department || ''}</div>
+                        <div style="font-size:0.65rem;color:var(--accent-cyan);">${r.yearGraduated || ''}</div>
+                    </div>`).join('')}
+            </div>
+        </div>` : '';
+
+    const total = getAlumniRecords().length;
+    const courseCount = courses.length;
+
+    return `
+        <div style="margin-bottom:1.2rem;">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem;">
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:10px 16px;font-size:0.85rem;color:var(--text-secondary);">
+                    <strong style="color:#fff;">${total}</strong> graduates
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:10px 16px;font-size:0.85rem;color:var(--text-secondary);">
+                    <strong style="color:#fff;">${courseCount}</strong> courses
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:10px 16px;font-size:0.85rem;color:var(--text-secondary);">
+                    Since <strong style="color:#fff;">1979</strong>
+                </div>
+            </div>
+
+            <div class="section-card" style="margin-bottom:1rem;">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;align-items:end;">
+                    <div>
+                        <label style="font-size:0.7rem;color:var(--text-secondary);">SEARCH</label>
+                        <input id="swSearch" class="admin-input" placeholder="Name or admission no" value="${filters.search || ''}">
+                    </div>
+                    <div>
+                        <label style="font-size:0.7rem;color:var(--text-secondary);">COURSE</label>
+                        <select id="swCourse" class="admin-input">
+                            <option value="">All courses</option>
+                            ${courses.map(c => `<option value="${c}" ${courseF === c ? 'selected' : ''}>${c}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:0.7rem;color:var(--text-secondary);">YEAR</label>
+                        <select id="swYear" class="admin-input">
+                            <option value="">All years</option>
+                            ${years.map(y => `<option value="${y}" ${String(yearF) === String(y) ? 'selected' : ''}>${y}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn-primary" onclick="studentWallApplyFilter()">Filter</button>
+                        <button class="btn-secondary" onclick="studentWallClearFilter()">Clear</button>
+                    </div>
+                </div>
+            </div>
+
+            ${recentHTML}
+            ${body}
+        </div>`;
+}
+
+window.showStudentWall = function (opts) {
+    opts = opts || {};
+
+    // ONLY when opened from System Admin menu — keep left sidebar
+    if (opts.fromAdmin === true) {
+        const adminMain = document.getElementById('adminMain');
+        if (adminMain) {
+            adminMain.innerHTML = `
+                <div style="max-width:1100px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:10px;">
+                        <h2 style="color:#a855f7;margin:0;font-size:1.2rem;"><i class="fas fa-users"></i> Student Wall (Alumni)</h2>
+                        <button class="btn-primary" onclick="studentWallShowAddForm()">+ Add Graduate</button>
+                    </div>
+                    <div id="studentWallAdminForm"></div>
+                    <div id="studentWallInner"></div>
+                </div>`;
+            document.getElementById('studentWallInner').innerHTML = studentWallPublicHTML({});
+            return;
+        }
+    }
+
+    // Public top-nav / front page — always full-screen overlay
     let overlay = document.getElementById('studentWallOverlay');
     if (overlay) overlay.remove();
-
     overlay = document.createElement('div');
     overlay.id = 'studentWallOverlay';
     overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#0b0b16;z-index:99999;overflow-y:auto;padding:20px;';
-    overlay.innerHTML =
-        '<div style="max-width:1100px;margin:0 auto;">' +
-            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">' +
-                '<h2 style="color:#a855f7;margin:0;">👥 Student Wall — Since 1979</h2>' +
-                '<button onclick="closeStudentWall()" style="background:#ef4444;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-weight:700;cursor:pointer;">✕ Close</button>' +
-            '</div>' +
-            '<div id="studentWallInner"></div>' +
-        '</div>';
+    overlay.innerHTML = `
+        <div style="max-width:1100px;margin:0 auto;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+                <h2 style="color:#a855f7;margin:0;">👥 Student Wall — Alumni</h2>
+                <button onclick="closeStudentWall()" class="btn-danger" style="padding:10px 18px;">✕ Close</button>
+            </div>
+            <div id="studentWallInner"></div>
+        </div>`;
     document.body.appendChild(overlay);
     document.getElementById('studentWallInner').innerHTML = studentWallPublicHTML({});
 };
 
-window.closeStudentWall = function() {
+window.closeStudentWall = function () {
     const overlay = document.getElementById('studentWallOverlay');
     if (overlay) overlay.remove();
 };
 
-function studentWallPublicHTML(filters) {
-    filters = filters || {};
-    const data = getData();
-    let records = (data.studentWallRecords || []).slice();
-
-    const q = (filters.search || '').toLowerCase().trim();
-    const onlyGraduated = filters.graduatedOnly === true;
-
-    if (q) {
-        records = records.filter(function(r) {
-            return r.admissionNo.toLowerCase().indexOf(q) !== -1 || r.name.toLowerCase().indexOf(q) !== -1;
-        });
-    }
-    if (onlyGraduated) records = records.filter(function(r) { return r.status === 'graduated'; });
-
-    const byYear = {};
-    records.forEach(function(r) {
-        if (!byYear[r.yearJoined]) byYear[r.yearJoined] = [];
-        byYear[r.yearJoined].push(r);
-    });
-    const years = Object.keys(byYear).map(Number).sort(function(a,b) { return b - a; });
-
-    let yearBlocks = '';
-    if (years.length === 0) {
-        yearBlocks = '<p style="color:#9ca3af;">No students match this filter.</p>';
-    } else {
-        years.forEach(function(y) {
-            let studentCards = byYear[y].map(function(r) {
-                const color = r.status === 'graduated' ? '#10b981' : '#f59e0b';
-                const badge = r.status === 'graduated'
-                    ? '🎓 Graduated ' + (r.yearGraduated || '')
-                    : '📖 Current / Not Graduated';
-                return (
-                    '<div style="background:#1a1e2c;border-radius:14px;padding:1rem;border-left:4px solid ' + color + ';">' +
-                        '<strong style="color:#fff;">' + r.name + '</strong>' +
-                        '<div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">' + r.admissionNo + ' • ' + r.department + '</div>' +
-                        '<span style="margin-top:8px;display:inline-block;font-size:0.7rem;padding:3px 10px;border-radius:20px;background:' + color + '22;border:1px solid ' + color + ';color:' + color + ';">' + badge + '</span>' +
-                    '</div>'
-                );
-            }).join('');
-            yearBlocks +=
-                '<div style="background:#12121f;border:1px solid #2a2a3d;border-radius:14px;padding:1.2rem;margin-bottom:1.2rem;">' +
-                    '<div style="color:#a855f7;font-weight:700;margin-bottom:12px;">📅 Intake ' + y + '</div>' +
-                    '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">' + studentCards + '</div>' +
-                '</div>';
-        });
-    }
-
-    const inputStyle = 'width:100%;padding:10px 12px;border-radius:10px;border:1px solid #2a2a3d;background:#1a1e2c;color:#fff;box-sizing:border-box;';
-    const btnPrimary = 'background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-weight:700;cursor:pointer;';
-    const btnSecondary = 'background:#2a2a3d;color:#fff;border:none;padding:10px 18px;border-radius:10px;font-weight:700;cursor:pointer;';
-
-    return (
-        '<div style="background:#12121f;border:1px solid #2a2a3d;border-radius:14px;padding:1.2rem;margin-bottom:1.2rem;">' +
-            '<input id="swSearch" style="' + inputStyle + 'margin-bottom:10px;" placeholder="Search by admission no or name" value="' + (filters.search || '') + '">' +
-            '<label style="display:flex;align-items:center;gap:8px;color:#e5e7eb;font-size:0.85rem;">' +
-                '<input type="checkbox" id="swGradOnly" ' + (filters.graduatedOnly ? 'checked' : '') + '> Show graduated students only' +
-            '</label>' +
-            '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">' +
-                '<button type="button" style="' + btnPrimary + '" onclick="studentWallApplyFilter()">Filter</button>' +
-                '<button type="button" style="' + btnSecondary + '" onclick="studentWallClearFilter()">Clear</button>' +
-                '<button type="button" style="' + btnSecondary + '" onclick="studentWallExport(\'pdf\')">📄 PDF</button>' +
-                '<button type="button" style="' + btnSecondary + '" onclick="studentWallExport(\'excel\')">📊 Excel</button>' +
-                '<button type="button" style="' + btnSecondary + '" onclick="studentWallExport(\'csv\')">📑 CSV</button>' +
-            '</div>' +
-        '</div>' +
-        yearBlocks
-    );
-}
-
-window.studentWallApplyFilter = function() {
-    const searchEl = document.getElementById('swSearch');
-    const gradEl = document.getElementById('swGradOnly');
+window.studentWallApplyFilter = function () {
     const filters = {
-        search: searchEl ? searchEl.value : '',
-        graduatedOnly: gradEl ? gradEl.checked : false
+        search: (document.getElementById('swSearch') || {}).value || '',
+        course: (document.getElementById('swCourse') || {}).value || '',
+        year: (document.getElementById('swYear') || {}).value || ''
     };
     window._studentWallFilters = filters;
-    document.getElementById('studentWallInner').innerHTML = studentWallPublicHTML(filters);
+    const inner = document.getElementById('studentWallInner');
+    if (inner) inner.innerHTML = studentWallPublicHTML(filters);
 };
 
-window.studentWallClearFilter = function() {
+window.studentWallClearFilter = function () {
     window._studentWallFilters = {};
-    document.getElementById('studentWallInner').innerHTML = studentWallPublicHTML({});
+    const inner = document.getElementById('studentWallInner');
+    if (inner) inner.innerHTML = studentWallPublicHTML({});
+};
+
+window.studentWallShowAddForm = function () {
+    const area = document.getElementById('studentWallAdminForm');
+    if (!area) return;
+    const data = getData();
+    const depts = data.departments || ['Computer Studies', 'Electrical Engineering', 'Automotive Engineering', 'Business', 'Hospitality'];
+    area.innerHTML = `
+        <div class="admin-card" style="margin-bottom:1rem;border-color:var(--accent-purple);">
+            <div class="admin-card-title">+ Add Graduate</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:0.8rem;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">FULL NAME</label>
+                    <input id="swName" class="admin-input" placeholder="Full name">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">ADMISSION NO</label>
+                    <input id="swAdm" class="admin-input" placeholder="STU-2015-00390">
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px;">
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">COURSE</label>
+                    <select id="swAddCourse" class="admin-input">
+                        ${depts.map(d => `<option value="${d}">${d}</option>`).join('')}
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">GRADUATION DATE</label>
+                    <input id="swGradDate" type="date" class="admin-input">
+                </div>
+                <div>
+                    <label style="font-size:0.7rem;color:var(--text-secondary);">YEAR GRADUATED</label>
+                    <input id="swGradYear" type="number" class="admin-input" placeholder="2017" min="1979" max="2099">
+                </div>
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">SHORT NOTE (optional)</label>
+                <input id="swNote" class="admin-input" placeholder="e.g. Now working at Safaricom">
+            </div>
+            <div style="margin-top:8px;">
+                <label style="font-size:0.7rem;color:var(--text-secondary);">PHOTO</label>
+                <input type="file" id="swPhotoFile" accept="image/*" class="admin-input" style="padding:6px;">
+                <div id="swPhotoPreview" style="margin-top:8px;"></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px;">
+                <button class="btn-primary" onclick="studentWallSaveGraduate()">Save Graduate</button>
+                <button class="btn-secondary" onclick="document.getElementById('studentWallAdminForm').innerHTML=''">Cancel</button>
+            </div>
+        </div>`;
+    const fi = document.getElementById('swPhotoFile');
+    if (fi) {
+        fi.addEventListener('change', function () {
+            const f = this.files[0];
+            if (!f) return;
+            compressImageFile(f, function (dataUrl) {
+                window._swTempPhoto = dataUrl;
+                document.getElementById('swPhotoPreview').innerHTML =
+                    `<img src="${dataUrl}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:2px solid var(--accent-purple);">`;
+            }, 600, 0.7);
+        });
+    }
+};
+
+window.studentWallSaveGraduate = function () {
+    const name = (document.getElementById('swName') || {}).value?.trim();
+    if (!name) return alert('Name is required');
+    const data = getData();
+    data.studentWallRecords = data.studentWallRecords || [];
+    const year = parseInt((document.getElementById('swGradYear') || {}).value, 10) || null;
+    const gradDate = (document.getElementById('swGradDate') || {}).value || '';
+    data.studentWallRecords.push({
+        id: 'SW-' + Date.now(),
+        admissionNo: (document.getElementById('swAdm') || {}).value?.trim() || '',
+        name,
+        department: (document.getElementById('swAddCourse') || {}).value || '',
+        course: (document.getElementById('swAddCourse') || {}).value || '',
+        yearJoined: year ? year - 2 : null,
+        yearGraduated: year,
+        graduationDate: gradDate,
+        status: 'graduated',
+        note: (document.getElementById('swNote') || {}).value?.trim() || '',
+        photo: window._swTempPhoto || null,
+        statusHistory: []
+    });
+    window._swTempPhoto = null;
+    saveData(data);
+    alert('Graduate added!');
+    showStudentWall({ fromAdmin: true });
 };
 
 window.studentWallExport = function(type) {
